@@ -1,0 +1,19 @@
+%YAML:1.0
+---
+# the number of inner corners on board width
+chessboard_width: 9
+# the number of inner corners on board height
+chessboard_height: 6
+# square size in some user-defined units
+square_size: 0.026
+#fix aspect ratio (fx/fy)
+aspect_ration: 1
+# number of frames to calibrate the camera
+nb_frames: 10
+# OpenCV Flags for camera calibration
+flags: 0
+# delay between each frame in milliseconds
+delay: 2000
+
+
+  

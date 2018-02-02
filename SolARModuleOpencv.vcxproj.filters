@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{cac296f5-2a66-4a5d-b886-2edabcf8c20b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interfaces">
+      <UniqueIdentifier>{963dc1ce-d697-492c-9bd5-ca4618cb872d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\SolARDescriptorsExtractorSURF128Opencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARHomographyEstimationOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARImageConvertorOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARImageFilterOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARImageLoaderOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARImageViewerOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARKeypointDetectorOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARMarker2DNaturalImageOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARMarker2DSquaredBinaryOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARModuleManagerOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolAROpenCVHelper.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARPerspectiveControllerOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARPoseEstimationOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARSideBySideOverlayOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolAR2DOverlayOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolAR3DOverlayOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARCameraCalibrationOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARCameraOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARModuleOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARContoursExtractorOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARContoursFilterBinaryMarkerOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARDescriptorMatcherKNNOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARDescriptorMatcherRadiusOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARDescriptorsExtractorORBOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARDescriptorsExtractorSBPatternOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARDescriptorsExtractorSIFTOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARDescriptorsExtractorSURF64Opencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="interfaces\SolARHomographyEstimationOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARHomographyFinderOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARImageConvertorOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARImageFilterOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARImageLoaderOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARImageViewerOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARKeypointDetectorOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARMarker2DNaturalImageOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARMarker2DSquaredBinaryOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARModuleManagerOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolAROpencvAPI.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolAROpenCVHelper.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARPerspectiveControllerOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARPoseEstimationOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARSideBySideOverlayOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolAR2DOverlayOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolAR3DOverlayOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARCameraCalibrationOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARCameraOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARContoursExtractorOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARContoursFilterBinaryMarkerOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARDescriptorMatcherKNNOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARDescriptorMatcherRadiusOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARDescriptorsExtractorORBOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARDescriptorsExtractorSBPatternOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARDescriptorsExtractorSIFTOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARDescriptorsExtractorSURF64Opencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARDescriptorsExtractorSURF128Opencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

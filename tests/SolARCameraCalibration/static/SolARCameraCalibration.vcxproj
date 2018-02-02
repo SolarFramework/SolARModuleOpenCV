@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SolARCameraCalibrationOpenCVTest.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{57266294-9E86-4F00-B65E-FDAE9320FE60}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SolARCameraCalibrationOpenCV</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(BCOMDEVROOT)\bcombuild\SolARModuleOpencv\0.3.0\interfaces;$(BCOMDEVROOT)\bcomBuild\SolARFramework\0.3.0\interfaces;$(BCOMDEVROOT)\thirdParties\xpcf\1.0.0\interfaces;$(BCOMDEVROOT)\thirdParties\boost\1.64.0\interfaces;$(BCOMDEVROOT)\thirdParties\eigen\3.3.4\interfaces;$(BCOMDEVROOT)\thirdParties\spdlog\0.14.0\interfaces;$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\interfaces;$(BCOMDEVROOT)\bcomBuild\SolARModuleTools\0.3.0\interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(BCOMDEVROOT)\bcombuild\SolARModuleOpencv\0.3.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\bcomBuild\SolARFramework\0.3.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\thirdParties\xpcf\1.0.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\bcombuild\SolARModuleTools\0.3.0\lib\x86_64\shared\$(configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolARModuleOpencv.lib;SolARFramework.lib;SolARModuleTools.lib;xpcf.lib;opencv_core320.lib;opencv_calib3d320.lib;opencv_video320.lib;opencv_videoio320.lib;opencv_flann320.lib;opencv_highgui320.lib;opencv_imgcodecs320.lib;opencv_features2d320.lib;opencv_xfeatures2d320.lib;opencv_imgproc320.lib</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_core320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_calib3d320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_features2d320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_flann320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_highgui320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_imgcodecs320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_imgproc320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_videoio320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_xfeatures2d320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_ffmpeg320_64.dll" "$(OutDir)"
+
+
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_filesystem.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_system.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_timer.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_log.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_chrono.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_thread.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_date_time.dll" "$(OutDir)"
+
+xcopy  /y  "$(BCOMDEVROOT)\bcomBuild\SolARModuleOpencv\0.3.0\lib\x86_64\shared\$(configuration)\SolARModuleOpencv.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\bcomBuild\SolARFramework\0.3.0\lib\x86_64\shared\$(configuration)\SolARFramework.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\bcomBuild\SolARModuleTools\0.3.0\lib\x86_64\shared\$(configuration)\SolARModuleTools.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\xpcf\1.0.0\lib\x86_64\shared\$(configuration)\xpcf.dll" "$(OutDir)"
+
+
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(BCOMDEVROOT)\bcombuild\SolARModuleOpencv\0.3.0\interfaces;$(BCOMDEVROOT)\bcomBuild\SolARFramework\0.3.0\interfaces;$(BCOMDEVROOT)\thirdParties\xpcf\1.0.0\interfaces;$(BCOMDEVROOT)\thirdParties\boost\1.64.0\interfaces;$(BCOMDEVROOT)\thirdParties\eigen\3.3.4\interfaces;$(BCOMDEVROOT)\thirdParties\spdlog\0.14.0\interfaces;$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\interfaces;$(BCOMDEVROOT)\bcomBuild\SolARModuleTools\0.3.0\interfaces;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(BCOMDEVROOT)\bcombuild\SolARModuleOpencv\0.3.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\bcomBuild\SolARFramework\0.3.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\thirdParties\xpcf\1.0.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\bcombuild\SolARModuleTools\0.3.0\lib\x86_64\shared\$(configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolARModuleOpencv.lib;SolARFramework.lib;SolARModuleTools.lib;xpcf.lib;opencv_core320.lib;opencv_calib3d320.lib;opencv_video320.lib;opencv_videoio320.lib;opencv_flann320.lib;opencv_highgui320.lib;opencv_imgcodecs320.lib;opencv_features2d320.lib;opencv_xfeatures2d320.lib;opencv_imgproc320.lib</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_core320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_calib3d320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_features2d320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_flann320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_highgui320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_imgcodecs320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_imgproc320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_videoio320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_xfeatures2d320.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration)\opencv_ffmpeg320_64.dll" "$(OutDir)"
+
+
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_filesystem.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_system.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_timer.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_log.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_chrono.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_thread.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)\boost_date_time.dll" "$(OutDir)"
+
+xcopy  /y  "$(BCOMDEVROOT)\bcomBuild\SolARModuleOpencv\0.3.0\lib\x86_64\shared\$(configuration)\SolARModuleOpencv.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\bcomBuild\SolARFramework\0.3.0\lib\x86_64\shared\$(configuration)\SolARFramework.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\bcomBuild\SolARModuleTools\0.3.0\lib\x86_64\shared\$(configuration)\SolARModuleTools.dll" "$(OutDir)"
+xcopy  /y  "$(BCOMDEVROOT)\thirdParties\xpcf\1.0.0\lib\x86_64\shared\$(configuration)\xpcf.dll" "$(OutDir)"
+
+
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

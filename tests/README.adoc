@@ -1,0 +1,4 @@
+= SolARContainerOpenCV demo application
+
+This application demonstrates the SolARContainerOpenCV container.
+

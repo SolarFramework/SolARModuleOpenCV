@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SolARCameraCalibration", "SolARCameraCalibration.vcxproj", "{57266294-9E86-4F00-B65E-FDAE9320FE60}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57266294-9E86-4F00-B65E-FDAE9320FE60}.Debug|x64.ActiveCfg = Debug|x64
+		{57266294-9E86-4F00-B65E-FDAE9320FE60}.Debug|x64.Build.0 = Debug|x64
+		{57266294-9E86-4F00-B65E-FDAE9320FE60}.Debug|x86.ActiveCfg = Debug|Win32
+		{57266294-9E86-4F00-B65E-FDAE9320FE60}.Debug|x86.Build.0 = Debug|Win32
+		{57266294-9E86-4F00-B65E-FDAE9320FE60}.Release|x64.ActiveCfg = Release|x64
+		{57266294-9E86-4F00-B65E-FDAE9320FE60}.Release|x64.Build.0 = Release|x64
+		{57266294-9E86-4F00-B65E-FDAE9320FE60}.Release|x86.ActiveCfg = Release|Win32
+		{57266294-9E86-4F00-B65E-FDAE9320FE60}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE642DDB-9131-4C40-8888-D7842D7A86F9}
+	EndGlobalSection
+EndGlobal
