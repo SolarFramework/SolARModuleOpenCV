@@ -35,8 +35,9 @@ public:
     ~SolARImageViewerOpencv();
     void unloadComponent () override final;
     FrameworkReturnCode display(const char * title, SRef<Image> img) override;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, const char* exitKey) override;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, uint32_t duration);
+    FrameworkReturnCode display(const char * title, SRef<Image> img, int w_window, int h_window) override;
+    FrameworkReturnCode display(const char * title, SRef<Image> img, int w_window, int h_window, const char* exitKey) override;
+    FrameworkReturnCode display(const char * title, SRef<Image> img, int w_window, int h_window, uint32_t duration);
 
     XPCF_DECLARE_UUID("19ea4e13-7085-4e3f-92ca-93f200ffb01b");
 
