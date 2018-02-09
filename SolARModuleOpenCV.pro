@@ -64,6 +64,8 @@ interfaces/SolARDescriptorMatcherRadiusOpencv.h \
 interfaces/SolARSideBySideOverlayOpencv.h \
 interfaces/SolAR3DOverlayOpencv.h \
 interfaces/SolAR2DOverlayOpencv.h \
+interfaces/SolARGeometricMatchesFilterOpencv.h \
+interfaces/SolARBasicMatchesFilterOpencv.h \
 interfaces/SolARModuleManagerOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
@@ -92,6 +94,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
     src/SolAR3DOverlayOpencv.cpp \
     src/SolARModuleManagerOpencv.cpp \
+    src/SolARGeometricMatchesFilterOpencv.cpp \
+    src/SolARBasicMatchesFilterOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp
 
 unix {

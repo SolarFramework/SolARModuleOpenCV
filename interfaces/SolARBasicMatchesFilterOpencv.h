@@ -1,0 +1,51 @@
+#ifndef SOLARBASICMATCHESFILTEROPENCV_H
+#define SOLARBASICMATCHESFILTEROPENCV_H
+
+#include "api/features/IMatchesFilter.h"
+#include "ComponentBase.h"
+#include "SolAROpencvAPI.h"
+
+#include "opencv2/opencv.hpp"
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
+#include <vector>
+
+namespace SolAR {
+using namespace datastructure;
+namespace MODULES {
+namespace OPENCV {
+
+class SOLAROPENCV_EXPORT_API SolARBasicMatchesFilterOpencv : public org::bcom::xpcf::ComponentBase,
+        public api::features::IMatchesFilter {
+public:
+
+   SolARBasicMatchesFilterOpencv();
+   ~SolARBasicMatchesFilterOpencv();
+
+   /*
+    void filter(std::vector<DescriptorMatch>&inputMatches,
+                std::vector<DescriptorMatch>&outputMatches,
+                std::vector<Keypoint>&inputKeyPoints,
+                std::vector<Keypoint>&outputKeyPoints);
+*/
+   void filter(std::vector<DescriptorMatch>&inputMatches,
+               std::vector<DescriptorMatch>&outputMatches,
+               std::vector<SRef<Keypoint>>&inputKeyPoints,
+               std::vector<SRef<Keypoint>>&outputKeyPoints);
+    void unloadComponent () override final;
+
+        XPCF_DECLARE_UUID("cbb620c3-a7fc-42d7-bcbf-f59b475b23b0");
+
+ private:
+
+};
+
+}
+}
+}
+
+
+
+
+#endif // SOLARMATCHESFILTEROPENCV_H
