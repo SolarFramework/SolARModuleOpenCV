@@ -194,7 +194,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(
      for(auto currentMatch : good_matches) {
             matches.push_back(DescriptorMatch(currentMatch.queryIdx, currentMatch.trainIdx,currentMatch.distance ));
      }
- 
+
      return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
  
 }
