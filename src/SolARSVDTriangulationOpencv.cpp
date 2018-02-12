@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "SolARSVDTriangulationOpencv.h".h"
+#include "SolARSVDTriangulationOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/core.hpp"
 #include "opencv2/features2d.hpp"
