@@ -91,6 +91,7 @@ using namespace datastructure;
 
                    cv::Mat_<double> R1(3, 3);
                    cv::Mat_<double> R2(3, 3);
+
                    cv::Mat_<double> t1(1, 3);
                    cv::Mat_<double> t2(1, 3);
 
@@ -99,10 +100,6 @@ using namespace datastructure;
                    t1 = svd_u.col(2); //u3
                    t2 = -svd_u.col(2); //u3
 
-                   sptrnms::shared_ptr<Pose> p1 = sptrnms::make_shared<Pose>();
-                   sptrnms::shared_ptr<Pose> p2 = sptrnms::make_shared<Pose>();
-                   sptrnms::shared_ptr<Pose> p3 = sptrnms::make_shared<Pose>();
-                   sptrnms::shared_ptr<Pose> p4 = sptrnms::make_shared<Pose>();
 
                    sptrnms::shared_ptr<Pose> pose_temp[4];
                    for(int p = 0; p < 4; ++p)
@@ -110,11 +107,6 @@ using namespace datastructure;
 
                    for(int i =0; i <3; ++i){
                        for(int j = 0; j < 3; ++j){
-                           p1->m_poseTransform(i,j) = R1(i,j);
-                           p2->m_poseTransform(i,j) = R1(i,j);
-                           p3->m_poseTransform(i,j) = R2(i,j);
-                           p4->m_poseTransform(i,j) = R2(i,j);
-
                            pose_temp[0]->m_poseTransform(i,j) = R1(i,j);
                            pose_temp[1]->m_poseTransform(i,j) = R1(i,j);
                            pose_temp[2]->m_poseTransform(i,j) = R2(i,j);
@@ -123,16 +115,10 @@ using namespace datastructure;
                        }
                    }
                    for(int i = 0; i < 3; ++i){
-                       p1->m_poseTransform(i,3) = t1(0,i);
-                       p2->m_poseTransform(i,3) = t2(0,i);
-                       p3->m_poseTransform(i,3) = t1(0,i);
-                       p4->m_poseTransform(i,3) = t2(0,i);
-
-                       pose_temp[0]->m_poseTransform(i,3) = t1(0,i);
-                       pose_temp[1]->m_poseTransform(i,3) = t2(0,i);
-                       pose_temp[2]->m_poseTransform(i,3) = t1(0,i);
-                       pose_temp[3]->m_poseTransform(i,3) = t2(0,i);
-
+                       pose_temp[0]->m_poseTransform(i,3) = t1(i);
+                       pose_temp[1]->m_poseTransform(i,3) = t2(i);
+                       pose_temp[2]->m_poseTransform(i,3) = t1(i);
+                       pose_temp[3]->m_poseTransform(i,3) = t2(i);
                    }
 
                    for(int p = 0; p < 4; ++p){
