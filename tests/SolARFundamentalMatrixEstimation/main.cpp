@@ -66,12 +66,11 @@ void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2
     }
   ox.close();
 }
-int run()
+int run( std::string& path_points1, std::string& path_points2,std::string& path_fileout)
 {
 
  // declarations
     xpcf::utils::uuids::string_generator              gen;
-    SRef<image::IImageLoader>                         imageLoader;
     SRef<solver::pose::IFundamentalMatrixEstimation>  fundamentalFinder;
     SRef<display::IImageViewer>                       viewer;
     SRef<display::ISideBySideOverlay>                 overlay;
@@ -92,20 +91,9 @@ int run()
     char escape_key = 27;
 
  // component creation
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader);
-    xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(gen(display::ISideBySideOverlay::UUID ), overlay);
-    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), viewer);
+   xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), viewer);
    xpcf::ComponentFactory::createComponent<SolARFundamentalMatrixEstimationOpencv>(gen(solver::pose::IFundamentalMatrixEstimation::UUID ), fundamentalFinder);
-   // Load the first image
-   if (imageLoader->loadImage("D:/graf1.png",
-                               image) != FrameworkReturnCode::_SUCCESS)
-   {
-      LOG_ERROR("Cannot load image with path {}", std::string());
-      return -1;
-   }
 
-   std::string path_points1 = "D:/triangulation_temp/fundamental/pt1.txt";
-   std::string path_points2 = "D:/triangulation_temp/fundamental/pt2.txt";
    const int points_no = 6953;
 
    load_2dpoints(path_points1,points_no, points_view1);
@@ -120,35 +108,41 @@ int run()
        std::cout<<std::endl;
    }
 
-
-   bool process = true;
-   while (process){
-       viewer->display("original matches", image,1280,480);
-       if(cv::waitKey(0) == 27){
-           process = false;
-       }
+   std::ofstream ox(path_fileout.c_str());
+   for (int ii = 0; ii < 3; ++ii) {
+	   for (int jj = 0; jj < 3; ++jj) {
+		   ox << F(ii, jj) << " ";
+	   }
+	   ox << std::endl;
    }
+   ox.close();
+
+
    return 0;
 }
 
 int printHelp(){
         printf(" usage :\n");
-        printf(" exe firstImagePath secondImagePath configFilePath\n");
+        printf(" exe path_points1 path_points2 fileOut\n");
         return 1;
 }
 
 int main(int argc, char **argv){
 
-    run();
 
-    /*
-    if(argc == 3){
-        run(argc,argv);
-         return 1;
+
+    if(argc == 4){
+		std::string path_points1 = std::string(argv[1]);
+		std::string path_points2 = std::string(argv[2]);
+		std::string path_fileout = std::string(argv[3]);
+
+        run(path_points1, path_points2, path_fileout);
+
+        return 1;
     }
     else
         return(printHelp());
-        */
+        
 }
 
 
