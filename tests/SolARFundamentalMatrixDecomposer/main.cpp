@@ -65,9 +65,9 @@ void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2
     }
   ox.close();
 }
-int run(){
-
-    cv::namedWindow("main window",0);
+int run(std::string& path_points1,std::string& path_points2, std::string& outPosesFilePath) {
+	
+	cv::namedWindow("main window",0);
  // declarations
     xpcf::utils::uuids::string_generator              gen;
     SRef<solver::pose::IFundamentalMatrixEstimation>  fundamentalFinder;
@@ -89,9 +89,6 @@ int run(){
     xpcf::ComponentFactory::createComponent<SolARSVDFundamentalMatrixDecomposerOpencv>(gen(solver::pose::IFundamentalMatrixDecomposer::UUID ), fundamentalDecomposer);
 
 
-   std::string path_points1 = "D:/triangulation_temp/fundamental/pt1.txt";
-   std::string path_points2 = "D:/triangulation_temp/fundamental/pt2.txt";
-
    const int points_no = 6953;
    load_2dpoints(path_points1,points_no, points_view1);
    load_2dpoints(path_points2,points_no, points_view2);
@@ -100,7 +97,7 @@ int run(){
 
    fundamentalFinder->findFundamental(points_view1, points_view2, F);
    fundamentalDecomposer->decompose(F,K,poses);
-   std::ofstream ox("D:/triangulation_temp/decomposeF/poses.txt");
+   std::ofstream ox(outPosesFilePath.c_str());
    for(int k = 0; k <poses.size(); ++k){
        ox<<"--pose: "<<k<<std::endl;
        for(int ii = 0; ii < 4; ++ii){
@@ -117,12 +114,21 @@ int run(){
 
 int printHelp(){
         printf(" usage :\n");
-        printf(" exe firstImagePath secondImagePath configFilePath\n");
+        printf(" exe firstImagePath secondImagePath outPosesFilePath\n");
         return 1;
 }
 
 int main(int argc, char **argv){
-    run();
+	if (argc != 4) {
+		printHelp();
+		return 1;
+	}
+
+	std::string firstImagePath = std::string(argv[1]);
+	std::string secondImagePath = std::string(argv[2]);
+	std::string outPosesFilePath = std::string(argv[3]);
+
+	run(firstImagePath,secondImagePath,outPosesFilePath);
     return 0;
 }
 
