@@ -21,8 +21,12 @@
   <ItemGroup>
     <ClCompile Include="src\SolAR2DOverlayOpencv.cpp" />
     <ClCompile Include="src\SolAR3DOverlayOpencv.cpp" />
+    <ClCompile Include="src\SolARBasicMatchesFilterOpencv.cpp" />
     <ClCompile Include="src\SolARCameraCalibrationOpencv.cpp" />
     <ClCompile Include="src\SolARCameraOpencv.cpp" />
+    <ClCompile Include="src\SolARFundamentalMatrixDecompositionValidationOpencv.cpp" />
+    <ClCompile Include="src\SolARFundamentalMatrixEstimationOpencv.cpp" />
+    <ClCompile Include="src\SolARGeometricMatchesFilterOpencv.cpp" />
     <ClCompile Include="src\SolARModuleOpencv.cpp" />
     <ClCompile Include="src\SolARContoursExtractorOpencv.cpp" />
     <ClCompile Include="src\SolARContoursFilterBinaryMarkerOpencv.cpp" />
@@ -46,10 +50,13 @@
     <ClCompile Include="src\SolARPerspectiveControllerOpencv.cpp" />
     <ClCompile Include="src\SolARPoseEstimationOpencv.cpp" />
     <ClCompile Include="src\SolARSideBySideOverlayOpencv.cpp" />
+    <ClCompile Include="src\SolARSVDFundamentalMatrixDecomposerOpencv.cpp" />
+    <ClCompile Include="src\SolARSVDTriangulationOpencv.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="interfaces\SolAR2DOverlayOpencv.h" />
     <ClInclude Include="interfaces\SolAR3DOverlayOpencv.h" />
+    <ClInclude Include="interfaces\SolARBasicMatchesFilterOpencv.h" />
     <ClInclude Include="interfaces\SolARCameraCalibrationOpencv.h" />
     <ClInclude Include="interfaces\SolARCameraOpencv.h" />
     <ClInclude Include="interfaces\SolARContoursExtractorOpencv.h" />
@@ -61,6 +68,9 @@
     <ClInclude Include="interfaces\SolARDescriptorsExtractorSIFTOpencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorsExtractorSURF128Opencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorsExtractorSURF64Opencv.h" />
+    <ClInclude Include="interfaces\SolARFundamentalMatrixDecompositionValidationOpencv.h" />
+    <ClInclude Include="interfaces\SolARFundamentalMatrixEstimationOpencv.h" />
+    <ClInclude Include="interfaces\SolARGeometricMatchesFilterOpencv.h" />
     <ClInclude Include="interfaces\SolARHomographyEstimationOpencv.h" />
     <ClInclude Include="interfaces\SolARHomographyFinderOpencv.h" />
     <ClInclude Include="interfaces\SolARImageConvertorOpencv.h" />
@@ -76,6 +86,8 @@
     <ClInclude Include="interfaces\SolARPerspectiveControllerOpencv.h" />
     <ClInclude Include="interfaces\SolARPoseEstimationOpencv.h" />
     <ClInclude Include="interfaces\SolARSideBySideOverlayOpencv.h" />
+    <ClInclude Include="interfaces\SolARSVDFundamentalMatrixDecomposerOpencv.h" />
+    <ClInclude Include="interfaces\SolARSVDTriangulationOpencv.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

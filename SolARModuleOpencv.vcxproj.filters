@@ -90,6 +90,24 @@
     <ClCompile Include="src\SolARDescriptorsExtractorSURF64Opencv.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\SolARBasicMatchesFilterOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARGeometricMatchesFilterOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARFundamentalMatrixDecompositionValidationOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARFundamentalMatrixEstimationOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARSVDFundamentalMatrixDecomposerOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARSVDTriangulationOpencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="interfaces\SolARHomographyEstimationOpencv.h">
@@ -174,6 +192,24 @@
       <Filter>interfaces</Filter>
     </ClInclude>
     <ClInclude Include="interfaces\SolARDescriptorsExtractorSURF128Opencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARBasicMatchesFilterOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARGeometricMatchesFilterOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARFundamentalMatrixDecompositionValidationOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARFundamentalMatrixEstimationOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARSVDFundamentalMatrixDecomposerOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARSVDTriangulationOpencv.h">
       <Filter>interfaces</Filter>
     </ClInclude>
   </ItemGroup>
