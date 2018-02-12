@@ -101,5 +101,11 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="a801354a-3e00-467c-b390-48c76fa8c53a" description="ISideBySideOverlay"/>
         </component>
+        </component>
+                <component uuid="85274ecd-2914-4f12-96de-37c6040633a4" description="SolARSVDTriangulationOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="3a01b0e9-9a76-43f5-97b3-85bb6979b953" description="ITriangulator"/>
+        </component>
+
     </container>
 </xpcf-registry>

@@ -58,6 +58,8 @@ interfaces/SolARDescriptorsExtractorSURF128Opencv.h \
 interfaces/SolARDescriptorsExtractorSIFTOpencv.h \
 interfaces/SolARDescriptorsExtractorORBOpencv.h \
 interfaces/SolARHomographyEstimationOpencv.h \
+interfaces/SolARFundamentalMatrixEstimationOpencv.h \
+interfaces/SolARFundamentalMatrixDecompositionValidationOpencv.h \
 interfaces/SolARPoseEstimationOpencv.h \
 interfaces/SolARDescriptorMatcherKNNOpencv.h \
 interfaces/SolARDescriptorMatcherRadiusOpencv.h \
@@ -66,7 +68,9 @@ interfaces/SolAR3DOverlayOpencv.h \
 interfaces/SolAR2DOverlayOpencv.h \
 interfaces/SolARGeometricMatchesFilterOpencv.h \
 interfaces/SolARBasicMatchesFilterOpencv.h \
-interfaces/SolARModuleManagerOpencv.h
+interfaces/SolARModuleManagerOpencv.h\
+interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h \
+interfaces/SolARSVDTriangulationOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
@@ -96,8 +100,11 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARModuleManagerOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolARBasicMatchesFilterOpencv.cpp \
-    src/SolARHomographyEstimationOpencv.cpp
-
+    src/SolARHomographyEstimationOpencv.cpp\
+    src/SolARFundamentalMatrixEstimationOpencv.cpp \
+    src/SolARFundamentalMatrixDecompositionValidationOpencv.cpp \
+    src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
+    src/SolARSVDTriangulationOpencv.cpp
 unix {
 }
 
