@@ -18,7 +18,7 @@
 #define SOLARCAMERACALIBRATIONOPENCV_H
 
 #include <string>
-#include "opencv/cv.h"
+#include "opencv2/videoio.hpp"
 #include "ComponentBase.h"
 #include "api/input/devices/ICameraCalibration.h"
 
@@ -34,8 +34,9 @@ public:
     SolARCameraCalibrationOpencv();
     ~SolARCameraCalibrationOpencv();
 
-    bool calibrate(int camera_id, std::string&output);
-    bool setParameters(std::string&config_file);
+	bool calibrate(std::string&inputVideo, std::string&output);
+	bool calibrate(int camera_id, std::string&output);
+	bool setParameters(std::string&config_file);
     void unloadComponent () override final;
 
     XPCF_DECLARE_UUID("702a7f53-e5ec-45d2-887d-daa99a34a33c");
@@ -51,7 +52,10 @@ private:
 
     int m_nframes;
     int m_flags ;
-    int m_delay;
+    int m_delay;	
+	
+	bool process(cv::VideoCapture&, std::string& );
+
 };
 
 }

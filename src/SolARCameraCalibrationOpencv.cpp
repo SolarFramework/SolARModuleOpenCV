@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include "SolARCameraCalibrationOpencv.h"
 #include <iostream>
 #include <utility>
 #include "core/Log.h"
@@ -33,6 +32,8 @@
 
 #include <fstream>
 #include <string>
+
+#include "SolARCameraCalibrationOpencv.h"
 
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv);
@@ -202,17 +203,39 @@ static bool runAndSave(const std::string& outputFilename,
     return ok;
 }
 
+bool SolARCameraCalibrationOpencv::calibrate(std::string& inputVideo, std::string&output) {
+	cv::VideoCapture capture;
 
-bool SolARCameraCalibrationOpencv::calibrate(int camera_id, std::string&output){
-    cv::Size imageSize;
-    int i;
-    cv::VideoCapture capture;
-    clock_t prevTimestamp = 0;
-    int mode = DETECTION;
-    std::vector<std::vector<cv::Point2f> > imagePoints;
+	if (!capture.open(inputVideo)) // videoFile
+	{
+		LOG_ERROR("Video with url {} does not exist", inputVideo);
+		return false;
+	}
+
+	return process(capture, output);
+}
+
+bool SolARCameraCalibrationOpencv::calibrate(int camera_id, std::string&output) {
+	cv::VideoCapture capture;
+
+	if (!capture.open(camera_id)) // camera id
+	{
+		LOG_ERROR("cannot open camera id #{} ", camera_id);
+		return false;
+	}
+
+	return process(capture, output);
+}
 
 
-    capture.open(camera_id);
+bool SolARCameraCalibrationOpencv::process(cv::VideoCapture& capture, std::string&output) {
+
+	cv::Size imageSize;
+	int i;
+	clock_t prevTimestamp = 0;
+	int mode = DETECTION;
+	std::vector<std::vector<cv::Point2f> > imagePoints;
+
     for (i = 0;; i++){
         cv::Mat view, viewGray;
         bool blink = false;
@@ -284,6 +307,89 @@ bool SolARCameraCalibrationOpencv::calibrate(int camera_id, std::string&output){
     }
     return true;
 }
+
+//
+//bool SolARCameraCalibrationOpencv::calibrate(int camera_id, std::string&output) {
+//	cv::Size imageSize;
+//	int i;
+//	cv::VideoCapture capture;
+//	clock_t prevTimestamp = 0;
+//	int mode = DETECTION;
+//	std::vector<std::vector<cv::Point2f> > imagePoints;
+//
+//
+//	capture.open(camera_id);
+//	for (i = 0;; i++) {
+//		cv::Mat view, viewGray;
+//		bool blink = false;
+//
+//		if (capture.isOpened())
+//		{
+//			cv::Mat view0;
+//			capture >> view0;
+//			view0.copyTo(view);
+//		}
+//		imageSize = view.size();
+//
+//		std::vector<cv::Point2f> pointbuf;
+//		cv::cvtColor(view, viewGray, cv::COLOR_BGR2GRAY);
+//		bool found;
+//		found = cv::findChessboardCorners(view, m_boardSize, pointbuf,
+//			cv::CALIB_CB_ADAPTIVE_THRESH);
+//
+//		// improve the found corners' coordinate accuracy
+//		if (found) cornerSubPix(viewGray, pointbuf, cv::Size(11, 11),
+//			cv::Size(-1, -1), cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 30, 0.1));
+//
+//		if (mode == CAPTURING && found &&
+//			(!capture.isOpened() || clock() - prevTimestamp > m_delay*1e-3*CLOCKS_PER_SEC)) {
+//			imagePoints.push_back(pointbuf);
+//			prevTimestamp = clock();
+//			blink = capture.isOpened();
+//		}
+//
+//		if (found)
+//			cv::drawChessboardCorners(view, m_boardSize, cv::Mat(pointbuf), found);
+//
+//		std::string msg = mode == CAPTURING ? "100/100" :
+//			mode == CALIBRATED ? "Calibrated" : "Press 'g' to start";
+//		int baseLine = 0;
+//
+//		cv::Size textSize = cv::getTextSize(msg, 1, 1, 1, &baseLine);
+//		cv::Point textOrigin(view.cols - 2 * textSize.width - 10, view.rows - 2 * baseLine - 10);
+//
+//		if (mode == CAPTURING)
+//			msg = cv::format("%d/%d", (int)imagePoints.size(), m_nframes);
+//
+//		cv::putText(view, msg, textOrigin, 1, 1,
+//			mode != CALIBRATED ? cv::Scalar(0, 0, 255) : cv::Scalar(0, 255, 0));
+//
+//		if (blink)
+//			cv::bitwise_not(view, view);
+//
+//		cv::imshow("Image View", view);
+//		char key = (char)cv::waitKey(capture.isOpened() ? 50 : 500);
+//
+//		if (key == 27)
+//			break;
+//
+//		if (capture.isOpened() && key == 'g') {
+//			mode = CAPTURING;
+//			imagePoints.clear();
+//		}
+//		if (mode == CAPTURING && imagePoints.size() >= (unsigned)m_nframes) {
+//			if (runAndSave(output, imagePoints, imageSize,
+//				m_boardSize, m_squareSize, m_aspectRatio,
+//				m_flags, m_camMatrix, m_camDistorsion))
+//				mode = CALIBRATED;
+//			else
+//				mode = DETECTION;
+//			if (!capture.isOpened())
+//				break;
+//		}
+//	}
+//	return true;
+//}
 
 bool SolARCameraCalibrationOpencv::setParameters(std::string &config_file){
     cv::FileStorage fs(config_file, cv::FileStorage::READ);
