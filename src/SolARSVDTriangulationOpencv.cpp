@@ -155,7 +155,7 @@ bool SolARSVDTriangulationOpencv::triangulate(std::vector<SRef<Point2Df>>& pt2d_
         }
 
         for(int i = 0; i < 4; ++i){
-            dist.at<double>(i,0) = distorsion(i,0);
+            dist.at<double>(i) = distorsion(i);
         }
 
         cv::invert(K,Kinv);
