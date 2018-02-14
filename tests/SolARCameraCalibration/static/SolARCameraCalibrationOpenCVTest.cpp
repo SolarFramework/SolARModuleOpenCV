@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
 		std::string cameraArg = std::string(argv[1]);
 
 		//  checks if a video is given in parameters
-		if (cameraArg.find("mp4") != std::string::npos || cameraArg.find("wmv") != std::string::npos || cameraArg.find("avi") != std::string::npos)
+		if (cameraArg.find("mp4") != std::string::npos || cameraArg.find("mov") != std::string::npos || cameraArg.find("wmv") != std::string::npos || cameraArg.find("avi") != std::string::npos)
 		{
 			return calibratio_run(cameraArg);
 		}
