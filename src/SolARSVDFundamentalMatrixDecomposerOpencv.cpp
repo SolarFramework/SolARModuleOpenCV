@@ -133,6 +133,8 @@ using namespace datastructure;
 
                 //   decomposedPoses.push_back(p1);decomposedPoses.push_back(p2);
                 //   decomposedPoses.push_back(p3);decomposedPoses.push_back(p4);
+
+				   return true;
             }
         }
     }
