@@ -23,7 +23,6 @@
 #include "SolARImageLoaderOpencv.h"
 #include "SolARCameraOpencv.h"
 #include "SolARKeypointDetectorOpencv.h"
-#include "SolARDescriptorsExtractorSIFTOpencv.h"
 #include "SolARDescriptorsExtractorSURF128Opencv.h"
 
 //#include "SolARDescriptorMatcherKNNOpencv.h"
@@ -97,14 +96,20 @@ void fillPoseCanonique(SRef<Pose>&pcano){
     pcano->m_poseTransform(3,3) = 1.0;
 }
 
-int run(/*int argc, char **argv*/)
+
+
+
+
+int run(std::string& firstImagePath, std::string& secondImagePath, std::string& cameraParameters)
 {
 
  // declarations
     xpcf::utils::uuids::string_generator                 gen;
+
+	SRef<input::devices::ICamera>                        camera;
+
     SRef<image::IImageLoader>                            imageLoader;
     SRef<features::IKeypointDetector>                    keypointsDetector;
-    SRef<features::IDescriptorsExtractor>                extractorSIFT;
     SRef<features::IDescriptorsExtractor>                extractorSURF;
 
     SRef<features::IDescriptorMatcher>                   matcher;
@@ -156,9 +161,10 @@ int run(/*int argc, char **argv*/)
     char escape_key = 27;
 
  // component creation
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader);
+
+	xpcf::ComponentFactory::createComponent<SolARCameraOpencv>(gen(input::devices::ICamera::UUID), camera);
+	xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader);
     xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(gen(features::IKeypointDetector::UUID ), keypointsDetector);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorSIFTOpencv>(gen(features::IDescriptorsExtractor::UUID ), extractorSIFT);
     xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorSURF128Opencv>(gen(features::IDescriptorsExtractor::UUID ), extractorSURF);
     xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherRadiusOpencv>(gen(features::IDescriptorMatcher::UUID ), matcher);
     xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(gen(display::ISideBySideOverlay::UUID ), overlay);
@@ -177,19 +183,23 @@ int run(/*int argc, char **argv*/)
     xpcf::ComponentFactory::createComponent<SolARSVDTriangulationOpencv>(gen(solver::map::ITriangulator::UUID ),
                                                                                         mapper);
 
-     keypointsDetector->setType(KeypointDetectorType::SIFT);
+
+	// load camera parameters from yml input file
+	camera->loadCameraParameters(cameraParameters);
+
+     keypointsDetector->setType(KeypointDetectorType::SURF);
   //   keypointsDetector->setType(KeypointDetectorType::SURF);
 
    // Load the first image
-   if (imageLoader->loadImage(std::string("D:/mySLAM/my_validdata_4/frame_0004.png"),
+   if (imageLoader->loadImage(firstImagePath,
                                image1) != FrameworkReturnCode::_SUCCESS)
    {
-      LOG_ERROR("Cannot load image with path {}",std::string());
+      LOG_ERROR("Cannot load image with path {}", firstImagePath);
       return -1;
    }
 
    // Load the second image
-   if (imageLoader->loadImage(std::string("D:/mySLAM/my_validdata_4/frame_0006.png"), image2) != FrameworkReturnCode::_SUCCESS)
+   if (imageLoader->loadImage(secondImagePath, image2) != FrameworkReturnCode::_SUCCESS)
    {
       LOG_ERROR("Cannot load image with path {}", std::string());
       return -1;
@@ -201,11 +211,11 @@ int run(/*int argc, char **argv*/)
    // Detect the keypoints of the second image
    keypointsDetector->detect(image2, keypoints2);
 
-   // Compute the SIFT descriptor for each keypoint extracted from the first image
-   extractorSIFT->extract(image1, keypoints1, descriptors1);
+   // Compute the SURF descriptor for each keypoint extracted from the first image
+   extractorSURF->extract(image1, keypoints1, descriptors1);
 
-   // Compute the SIFT descriptor for each keypoint extracted from the second image
-   extractorSIFT->extract(image2, keypoints2, descriptors2);
+   // Compute the SURF descriptor for each keypoint extracted from the second image
+   extractorSURF->extract(image2, keypoints2, descriptors2);
 
    // Compute the matches between the keypoints of the first image and the keypoints of the second image
    matcher->match(descriptors1, descriptors2, matches);
@@ -262,6 +272,7 @@ int run(/*int argc, char **argv*/)
     }
 
     fillK(K);
+	fillDistorsion(dist);
 
     std::cout<<"->K: "<<std::endl;
     for(int ii = 0; ii < 3; ++ii){
@@ -313,7 +324,7 @@ int run(/*int argc, char **argv*/)
      mapper->triangulate(ggmatchedKeypoints1,ggmatchedKeypoints2,pose_canonique,poses[k],K,dist,gcloud);
 
      std::cout<<"--saving cloud: "<<std::endl;
-    std::ofstream log_cloud("D:/triangulation_temp/solar_cloud" +std::to_string(k)+ ".txt");
+    std::ofstream log_cloud("solar_cloud" +std::to_string(k)+ ".txt");
     log_cloud<<gcloud.size()<<std::endl;
      for(int kk = 0; kk < gcloud.size(); ++kk){
             log_cloud<<gcloud[kk]->getX()<<" "<<gcloud[kk]->getY()<<" "<<gcloud[kk]->getZ()<<std::endl;
@@ -337,21 +348,23 @@ int run(/*int argc, char **argv*/)
 
 int printHelp(){
         printf(" usage :\n");
-        printf(" exe firstImagePath secondImagePath configFilePath\n");
+        printf(" exe firstImagePath secondImagePath camaraParameters\n");
         return 1;
 }
 
 int main(int argc, char **argv){
-    run();
 
-    /*
-    if(argc == 3){
-        run(argc,argv);
-         return 1;
-    }
-    else
-        return(printHelp());
-        */
+	if (argc == 4) {
+		std::string firstImagePath = std::string(argv[1]);
+		std::string secondImagePath = std::string(argv[2]);
+		std::string camaraParameters = std::string(argv[3]);
+
+		run(firstImagePath, secondImagePath, camaraParameters);
+
+		return 1;
+	}
+	else
+		return(printHelp());
 
 }
 
