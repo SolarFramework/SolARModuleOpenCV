@@ -52,25 +52,6 @@ using namespace SolAR::MODULES::OPENCV;
 namespace xpcf  = org::bcom::xpcf;
 
 
-void fillK(CamCalibration&cam){
-    cam(0,0) = 2759.48;
-    cam(0,1) = 0.0;
-    cam(0,2) = 1520.69;
-
-    cam(1,0) = 0.0;
-    cam(1,1) = 2764.16;
-    cam(1,2) = 1006.81;
-
-    cam(2,0) = 0.0;
-    cam(2,1) = 0.0;
-    cam(2,2) = 1.0;
-}
-void fillDistorsion(CamDistortion&dist){
-    for(int i = 0; i < 5; ++i){
-        dist(i,0) = 0;
-    }
-    dist(4,0) = 0.0;
-}
 void fillPoseCanonique(SRef<Pose>&pcano){
 
     pcano = sptrnms::make_shared<Pose>();
@@ -271,8 +252,9 @@ int run(std::string& firstImagePath, std::string& secondImagePath, std::string& 
         std::cout<<std::endl;
     }
 
-    fillK(K);
-	fillDistorsion(dist);
+ 
+	K = camera->getIntrinsicsParameters();
+	dist = camera->getDistorsionParameters();
 
     std::cout<<"->K: "<<std::endl;
     for(int ii = 0; ii < 3; ++ii){
