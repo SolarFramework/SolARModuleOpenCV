@@ -41,18 +41,6 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="2e2bde18-ce39-11e7-abc4-cec278b6b50a" description="IDescriptorsExtractorSBPattern"/>
         </component>
-        <component uuid="3787eaa6-d0a0-11e7-8fab-cec278b6b50a" description="SolARDescriptorsExtractorSIFTOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" description="IDescriptorsExtractor"/>
-        </component>
-        <component uuid="fe14a310-d0a2-11e7-8fab-cec278b6b50a" description="SolARDescriptorsExtractorSURF128Opencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" description="IDescriptorsExtractor"/>
-        </component>
-        <component uuid="1a437804-d0a3-11e7-8fab-cec278b6b50a" description="SolARDescriptorsExtractorSURF64Opencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" description="IDescriptorsExtractor"/>
-        </component>
 		<component uuid="fb9dac20-2a44-44b2-aa42-2871eec31427" description="SolARHomographyEstimationOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="188e4ca3-3dff-4dde-a381-c1724b3e312f" description="IHomographyEstimation"/>

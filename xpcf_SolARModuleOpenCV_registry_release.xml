@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry>
-    <container uuid="15e1990b-86b2-445c-8194-0cbe80ede970" filepath="D:/BCOMDEVROOT/windows/bcomBuild/SolARContainerOpenCV/0.3.0/lib/x86_64/shared/release/SolARModuleOpenCV.dll">
+    <container uuid="15e1990b-86b2-445c-8194-0cbe80ede970" filepath="/SolAR/BCOMDEVROOT/bcomBuild/SolARModuleOpenCV/0.3.0/lib/x86_64/shared/release/libSolARModuleOpenCV.so">
         <component uuid="cc51d685-9797-4ffd-a9dd-cec4f367fa6a" description="SolAR2DOverlayOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="62b8b0b5-9344-40e6-a288-e609eb3ff0f1" description="I2DOverlay"/>
