@@ -17,6 +17,7 @@
 #include <iostream>
 #include <string>
 #include "SolARModuleManagerOpencv.h"
+#include "SolARModuleManagerNonFreeOpencv.h"
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
@@ -34,12 +35,20 @@ int run(int argc,char** argv)
         return -1;
     }
 
+    MODULES::NONFREEOPENCV::SolARModuleManagerOpencvNonFree opencvNonFreeModule(argv[2]);
+    if (!opencvNonFreeModule.isLoaded()) // xpcf library load has failed
+    {
+        LOG_ERROR("XPCF library load has failed")
+        return -1;
+    }    
+
  // declarations and creation of components
     SRef<image::IImageLoader> imageLoader = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    SRef<features::IKeypointDetector> keypointsDetector = opencvModule.createComponent<features::IKeypointDetector>(MODULES::OPENCV::UUID::KEYPOINT_DETECTOR);
-    SRef<features::IDescriptorsExtractor> extractorSIFT = opencvModule.createComponent<features::IDescriptorsExtractor>(MODULES::OPENCV::UUID::DESCRIPTORS_EXTRACTOR_SIFT);
     SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
     SRef<display::I2DOverlay> overlay = opencvModule.createComponent<display::I2DOverlay>(MODULES::OPENCV::UUID::OVERLAY2D);
+    SRef<features::IKeypointDetector> keypointsDetector = opencvNonFreeModule.createComponent<features::IKeypointDetector>(MODULES::NONFRFEEOPENCV::UUID::KEYPOINT_DETECTOR);
+    SRef<features::IDescriptorsExtractor> extractorSIFT = opencvNonFreeModule.createComponent<features::IDescriptorsExtractor>(MODULES::NONFRFEEOPENCV::UUID::DESCRIPTORS_EXTRACTOR_SIFT);
+    
 
     if (!imageLoader || !keypointsDetector || !extractorSIFT || !viewer || !overlay)
     {
