@@ -1,4 +1,5 @@
 SolARModuleOpenCV|0.3.0|SolARModuleOpenCV|bcomBuild|url_repo_artifactory
+SolARModuleNonFreeOpenCV|0.3.0|SolARModuleNonFreeOpenCV|bcomBuild|url_repo_artifactory
 SolARFramework|0.3.0|SolARFramework|bcomBuild|url_repo_artifactory
 xpcf|1.0.0|xpcf|thirdParties|http://repository.b-com.com/
 boost|1.64.0|boost|thirdParties|http://repository.b-com.com/

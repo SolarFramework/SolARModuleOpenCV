@@ -32,6 +32,8 @@ using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
 using namespace SolAR::MODULES::OPENCV;
+using namespace SolAR::MODULES::NONFREEOPENCV;
+
 
 namespace xpcf  = org::bcom::xpcf;
 
