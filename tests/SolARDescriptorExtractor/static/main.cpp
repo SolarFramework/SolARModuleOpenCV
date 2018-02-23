@@ -20,7 +20,7 @@
 // ADD COMPONENTS HEADERS HERE, e.g #include "SolarComponent.h"
 
 #include "SolARImageLoaderOpencv.h"
-#include "SolARKeypointDetectorOpencv.h"
+#include "SolARKeypointDetectorNonFreeOpencv.h"
 #include "SolARDescriptorsExtractorSIFTOpencv.h"
 #include "SolARImageViewerOpencv.h"
 #include "SolAR2DOverlayOpencv.h"
@@ -29,6 +29,7 @@ using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
 using namespace SolAR::MODULES::OPENCV;
+using namespace SolAR::MODULES::NONFREEOPENCV;
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -52,7 +53,7 @@ int run(int argc, char **argv)
 
     // component creation
     xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader);
-    xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(gen(features::IKeypointDetector::UUID ), keypointsDetector);
+    xpcf::ComponentFactory::createComponent<SolARKeypointDetectorNonFreeOpencv>(gen(features::IKeypointDetector::UUID ), keypointsDetector);
     xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorSIFTOpencv>(gen(features::IDescriptorsExtractor::UUID ), extractorSIFT);
     xpcf::ComponentFactory::createComponent<SolAR2DOverlayOpencv>(gen(display::I2DOverlay::UUID ), overlay);
     xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), viewer);

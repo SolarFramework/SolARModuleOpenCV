@@ -46,8 +46,9 @@ int run(int argc,char** argv)
     SRef<image::IImageLoader> imageLoader = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
     SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
     SRef<display::I2DOverlay> overlay = opencvModule.createComponent<display::I2DOverlay>(MODULES::OPENCV::UUID::OVERLAY2D);
-    SRef<features::IKeypointDetector> keypointsDetector = opencvNonFreeModule.createComponent<features::IKeypointDetector>(MODULES::NONFRFEEOPENCV::UUID::KEYPOINT_DETECTOR);
-    SRef<features::IDescriptorsExtractor> extractorSIFT = opencvNonFreeModule.createComponent<features::IDescriptorsExtractor>(MODULES::NONFRFEEOPENCV::UUID::DESCRIPTORS_EXTRACTOR_SIFT);
+    SRef<features::IKeypointDetector> keypointsDetector = opencvNonFreeModule.createComponent<features::IKeypointDetector>(MODULES::NONFREEOPENCV::UUID::KEYPOINT_DETECTOR_NONFREEOPENCV);
+    SRef<features::IDescriptorsExtractor> extractorSIFT = opencvNonFreeModule.createComponent<features::IDescriptorsExtractor>(MODULES::NONFREEOPENCV::UUID::DESCRIPTORS_EXTRACTOR_SIFT);
+
     
 
     if (!imageLoader || !keypointsDetector || !extractorSIFT || !viewer || !overlay)
