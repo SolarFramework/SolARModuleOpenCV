@@ -53,12 +53,12 @@ public:
                                                   cv::Matx34d&P1);
 
 
-    bool triangulate(std::vector<SRef<Point2Df>>& pt2d_1,
-                     std::vector<SRef<Point2Df>>& pt2d_2,
-                     SRef<Pose>&p1,
-                     SRef<Pose>&p2,
-                     CamCalibration&cam,
-                     CamDistortion&dist,
+    bool triangulate(const std::vector<SRef<Point2Df>>& pt2d_1,
+                     const std::vector<SRef<Point2Df>>& pt2d_2,
+                     const SRef<Pose>&p1,
+                     const SRef<Pose>&p2,
+                     const CamCalibration&cam,
+                     const CamDistortion&dist,
                      std::vector<SRef<Point3Df>>& pt3d);
 
     void unloadComponent () override final;
