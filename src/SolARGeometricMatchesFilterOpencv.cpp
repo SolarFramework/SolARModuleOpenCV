@@ -25,9 +25,9 @@ SolARGeometricMatchesFilterOpencv::~SolARGeometricMatchesFilterOpencv(){
 
 
 
-void SolARGeometricMatchesFilterOpencv::filter(std::vector<DescriptorMatch>&inputMatches,
+void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch>&inputMatches,
                                                std::vector<DescriptorMatch>&outputMatches,
-                                               std::vector<SRef<Keypoint>>&inputKeyPoints,
+                                               const std::vector<SRef<Keypoint>>&inputKeyPoints,
                                                std::vector<SRef<Keypoint>>&outputKeyPoints){
     std::vector<uchar> status(inputKeyPoints.size());
         std::vector<cv::Point2f> pts1, pts2;

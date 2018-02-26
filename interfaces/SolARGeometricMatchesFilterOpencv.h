@@ -23,15 +23,9 @@ public:
     SolARGeometricMatchesFilterOpencv();
    ~SolARGeometricMatchesFilterOpencv();
 
-/*
-  void filter(std::vector<DescriptorMatch>&inputMatches,
-              std::vector<DescriptorMatch>&outputMatches,
-              std::vector<Keypoint>&inputKeyPoints,
-              std::vector<Keypoint>&outputKeyPoints);
-*/
-    void filter(std::vector<DescriptorMatch>&inputMatches,
+    void filter(const std::vector<DescriptorMatch>&inputMatches,
                 std::vector<DescriptorMatch>&outputMatches,
-                std::vector<SRef<Keypoint>>&inputKeyPoints,
+                const std::vector<SRef<Keypoint>>&inputKeyPoints,
                 std::vector<SRef<Keypoint>>&outputKeyPoints);
 
     void unloadComponent () override final;
