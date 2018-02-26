@@ -48,7 +48,6 @@ using namespace SolAR::MODULES::OPENCV;
 namespace xpcf  = org::bcom::xpcf;
 
 void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2Df>>&pt2d){
-    cv::namedWindow("toto debug",0);
     std::ifstream ox(path_file);
     float pt[2];
   //  Point2Df point_temp;
@@ -67,7 +66,6 @@ void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2
 
 
 void load_pose(std::string &path_file, SRef<Pose>&P){
-    cv::namedWindow("debug",0);
     std::ifstream ox(path_file);
 
     Eigen::Matrix3f Rpose;
@@ -104,12 +102,10 @@ void load_pose(std::string &path_file, SRef<Pose>&P){
         }
         std::cout<<std::endl;
     }
-    cv::waitKey(0);
    ox.close();
 }
 
 void load_camMatrix(std::string &path_file, CamCalibration&intrinsic){
-    cv::namedWindow("toto debug",0);
     std::ifstream ox(path_file);
     std::string dummy;
     float v;
@@ -122,13 +118,11 @@ void load_camMatrix(std::string &path_file, CamCalibration&intrinsic){
         }
         std::cout<<std::endl;
     }
-    cv::waitKey(0);
     ox.close();
 }
 
 void load_distorsion(std::string&path_file, CamDistortion&dist){
-    cv::namedWindow("toto debug",0);
-    std::ifstream ox(path_file);
+     std::ifstream ox(path_file);
     std::string dummy;
     float v;
     for(int i = 0; i < 4; ++i){
@@ -138,7 +132,7 @@ void load_distorsion(std::string&path_file, CamDistortion&dist){
     }
     dist(4,0) = 0.0;
     std::cout<<dist<<std::endl;
-    cv::waitKey(0);
+
 }
 
 int run()
@@ -150,7 +144,6 @@ int run()
     SRef<display::IImageViewer>             imageViewer;
     SRef<display::ISideBySideOverlay>       overlay;
     SRef<solver::map::ITriangulator>        mapper;
-    SRef<Image>                             image;
 
 
 
@@ -165,22 +158,14 @@ int run()
     xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), imageViewer);
     xpcf::ComponentFactory::createComponent<SolARSVDTriangulationOpencv>(gen(solver::map::ITriangulator::UUID ), mapper);
 
-   if (imageLoader->loadImage(std::string("D:/graf1.png"),
-                               image) != FrameworkReturnCode::_SUCCESS)
-   {
-      LOG_ERROR("Cannot load image with path {}", std::string());
-      return -1;
-   }
 
 
-
-   cv::namedWindow("tata",0);
-   std::string path_pt1 = "D:/triangulation_temp/pt2d_1.txt";
-   std::string path_pt2 = "D:/triangulation_temp/pt2d_2.txt";
-   std::string path_pose1 = "D:/triangulation_temp/pose_1.txt";
-   std::string path_pose2 = "D:/triangulation_temp/pose_2.txt";
-   std::string path_intrinsic = "D:/triangulation_temp/K.txt";
-   std::string path_distorsion = "D:/triangulation_temp/dist.txt";
+   std::string path_pt1 = "./pt1_F.txt";
+   std::string path_pt2 = "./pt2_F.txt";
+   std::string path_pose1 = "./pose_1.txt";
+   std::string path_pose2 = "./pose_2.txt";
+   std::string path_intrinsic = "./K.txt";
+   std::string path_distorsion = "./dist.txt";
 
    std::cout<<" wthat's happenning here.."<<std::endl;
 
@@ -189,23 +174,24 @@ int run()
    std::vector<SRef<Point3Df>>pt3d;
 
    SRef<Pose> pose_1;
-   SRef<Pose> pose_2;
+   SRef<Pose> pose_2 = xpcf::utils::make_shared<Pose>();
    CamCalibration K;
    CamDistortion dist;
 
       const int points_no = 6703;
       std::cout<<"->load points 2d view 1: "<<std::endl;
       load_2dpoints(path_pt1, points_no, pt2d_1);
+
       std::cout<<"->load points 2d view 2: "<<std::endl;
       load_2dpoints(path_pt2, points_no, pt2d_2);
 
-      std::cout<<"-> load Pose view 1: "<<std::endl;
-      load_pose(path_pose1,pose_1);
+	  std::cout << "-> load Pose view 1: " << std::endl;
+	  load_pose(path_pose1, pose_1);
 
-      std::cout<<"-> load Pose view 2: "<<std::endl;
-      load_pose(path_pose2,pose_2);
+	  std::cout << "-> load Pose view 2: " << std::endl;
+	  load_pose(path_pose2, pose_2);
 
-      std::cout<<"->load K: "<<std::endl;
+     std::cout<<"->load K: "<<std::endl;
       load_camMatrix(path_intrinsic,K);
 
       std::cout<<"->load K: "<<std::endl;
@@ -214,31 +200,18 @@ int run()
       mapper->triangulate(pt2d_1, pt2d_2,pose_1,pose_2,K,dist,pt3d);
 
 
-      std::ofstream log_cloud("D:/triangulation_temp/solar_cloud.txt");
+      std::ofstream log_cloud("./solar_cloud.txt");
       log_cloud<<pt3d.size()<<std::endl;
       for(int k = 0; k < pt3d.size(); ++k){
           log_cloud<<pt3d[k]->getX()<<" "<<pt3d[k]->getY()<<" "<<pt3d[k]->getZ()<<std::endl;
       }
       log_cloud.close();
 
-   bool process = true;
-   while (process){
-       imageViewer->display("original matches", image,1280,480);
-       if(cv::waitKey(0) == 27){
-           process = false;
-       }
-   }
+	  return(0);
 }
-
-int printHelp(){
-        printf(" usage :\n");
-        printf(" exe firstImagePath secondImagePath configFilePath\n");
-        return 1;
-}
-
-
 
 int main(){
-run();
-cv::waitKey(0);
+	run();
+	std::cout << "\n\n\nHit return key, please\n";
+	getchar();
 }
