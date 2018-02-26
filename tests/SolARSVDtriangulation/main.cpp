@@ -146,11 +146,6 @@ int run()
     SRef<solver::map::ITriangulator>        mapper;
 
 
-
-
-    // The escape key to exit the sample
-    char escape_key = 27;
-
  // component creation
     xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader);
     xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(gen(display::ISideBySideOverlay::UUID ), overlay);
@@ -178,7 +173,7 @@ int run()
    CamCalibration K;
    CamDistortion dist;
 
-      const int points_no = 6703;
+      const int points_no = 6954;
       std::cout<<"->load points 2d view 1: "<<std::endl;
       load_2dpoints(path_pt1, points_no, pt2d_1);
 
