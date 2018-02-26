@@ -197,7 +197,7 @@ int printHelp(){
 }
 
 int main(int argc, char **argv){
-    if(argc == 3){
+    if(argc == 4){
         run(argc,argv);
          return 1;
     }
