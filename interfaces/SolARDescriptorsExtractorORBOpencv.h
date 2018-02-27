@@ -25,7 +25,6 @@
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
-#include "opencv2/xfeatures2d.hpp"
 #include "datastructure/DescriptorBuffer.h"
 #include "datastructure/Keypoint.h"
 
