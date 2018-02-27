@@ -19,7 +19,8 @@
 #include "SolAROpenCVHelper.h"
 
 
-using namespace org::bcom::xpcf;
+namespace xpcf  = org::bcom::xpcf;
+
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageFilterOpencv);
 
 namespace SolAR {
@@ -38,29 +39,42 @@ SolARImageFilterOpencv::~SolARImageFilterOpencv(){
 
 }
 
-void SolARImageFilterOpencv::threshold(SRef<Image>input,
-                   SRef<Image>output,
+FrameworkReturnCode SolARImageFilterOpencv::threshold(SRef<Image>input,
+                   SRef<Image>& output,
                    int threshold){
-    }
+    return FrameworkReturnCode::_SUCCESS;
+}
 
-void SolARImageFilterOpencv::binarize(SRef<Image>input,
-              SRef<Image>output,
+FrameworkReturnCode SolARImageFilterOpencv::binarize(SRef<Image>input,
+              SRef<Image>& output,
               int min,
               int max){
+    if (input->getImageLayout() != Image::ImageLayout::LAYOUT_GREY)
+    {
+        LOG_ERROR ("binarize method take as input only Grey images");
+        return FrameworkReturnCode::_ERROR_;
+    }
 
-    LOG_DEBUG("<SolarImage binarization>:")
+    if (output == nullptr)
+        output = xpcf::utils::make_shared<Image> (Image::ImageLayout::LAYOUT_GREY, input->getPixelOrder(), input->getDataType());
 
     output->setSize(input->getWidth(),input->getHeight());
-    cv::Mat imgSource(input->getHeight(),output->getWidth(),CV_8UC1, input->data());
-    cv::Mat imgFiltred(output->getHeight(),output->getWidth(),CV_8UC1,output->data());
+
+     cv::Mat imgSource, imgFiltred;
+    SolAROpenCVHelper::mapToOpenCV(input,imgSource);
+    SolAROpenCVHelper::mapToOpenCV(output,imgFiltred);
+    //cv::Mat imgSource(input->getHeight(),output->getWidth(),CV_8UC1, input->data());
+    //cv::Mat imgFiltred(output->getHeight(),output->getWidth(),CV_8UC1,output->data());
     if (min>=0)
         cv::threshold(imgSource, imgFiltred, min, max, cv::THRESH_BINARY);
     else
         cv::threshold(imgSource, imgFiltred, 0, max, cv::THRESH_BINARY | cv::THRESH_OTSU);
+
+    return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARImageFilterOpencv::adaptiveBinarize(SRef<Image>input,
-               SRef<Image>output,
+FrameworkReturnCode SolARImageFilterOpencv::adaptiveBinarize(SRef<Image>input,
+               SRef<Image>& output,
                int max,
                int blockSize,
                int C){
@@ -70,10 +84,12 @@ void SolARImageFilterOpencv::adaptiveBinarize(SRef<Image>input,
     cv::Mat imgSource(input->getHeight(),output->getWidth(),CV_8UC1, input->data());
     cv::Mat imgFiltred(output->getHeight(),output->getWidth(),CV_8UC1,output->data());
     cv::adaptiveThreshold(imgSource, imgFiltred, max, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, blockSize, C);
+
+    return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARImageFilterOpencv::blur(SRef<Image>input,
-          SRef<Image>output,
+FrameworkReturnCode SolARImageFilterOpencv::blur(SRef<Image>input,
+          SRef<Image>& output,
           int kernerl_id,
           int kernel_width,
           int kernel_height,
@@ -107,10 +123,12 @@ void SolARImageFilterOpencv::blur(SRef<Image>input,
     default:
         break;
     }
+
+    return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARImageFilterOpencv::gradient(SRef<Image>input,
-              SRef<Image>output,
+FrameworkReturnCode SolARImageFilterOpencv::gradient(SRef<Image>input,
+              SRef<Image>& output,
               int x_order,
               int y_order){
 
@@ -128,20 +146,20 @@ void SolARImageFilterOpencv::gradient(SRef<Image>input,
     std::cout<<"imgfiltred depth: "<<imgFiltred.depth()<<std::endl;
     std::cout<<"imgfiltred type: "<<imgFiltred.type()<<std::endl;
     */
-
+    return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARImageFilterOpencv::laplacian(SRef<Image>input,
-               SRef<Image>output,
+FrameworkReturnCode SolARImageFilterOpencv::laplacian(SRef<Image>input,
+               SRef<Image>& output,
                int method){
     /*
      * UNDER CONSTRUCTION
      */
-
+    return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARImageFilterOpencv::erode(SRef<Image>input,
-               SRef<Image>output,
+FrameworkReturnCode SolARImageFilterOpencv::erode(SRef<Image>input,
+               SRef<Image>& output,
                int erosion_elem,
                int erosion_size){
     LOG_ERROR("<Image erosion>:")
@@ -161,11 +179,13 @@ void SolARImageFilterOpencv::erode(SRef<Image>input,
 
 
     cv::erode(imgSource,imgFiltred,element);
+
+    return FrameworkReturnCode::_SUCCESS;
 }
 
 
-void SolARImageFilterOpencv::dilate(SRef<Image>input,
-                                    SRef<Image>output,
+FrameworkReturnCode SolARImageFilterOpencv::dilate(SRef<Image>input,
+                                    SRef<Image>& output,
                                     int dilate_elem,
                                     int dilate_size ){
 
@@ -187,15 +207,16 @@ void SolARImageFilterOpencv::dilate(SRef<Image>input,
 
     cv::dilate(imgSource,imgFiltred,element);
 
+    return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARImageFilterOpencv::equalize(SRef<Image>input,
-               SRef<Image>output,
+FrameworkReturnCode SolARImageFilterOpencv::equalize(SRef<Image>input,
+               SRef<Image>& output,
                int method){
     /*
      * UNDER CONSTRUCTION
        */
-
+    return FrameworkReturnCode::_SUCCESS;
 }
 
 }

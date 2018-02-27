@@ -39,8 +39,8 @@ public:
     SolARImageConvertorOpencv();
     ~SolARImageConvertorOpencv();
 
-    int convert(SRef<Image> imgSrc, SRef<Image>& imgDst) override;
-    int convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
+    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst) override;
+    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
 
     void unloadComponent () override final;
     XPCF_DECLARE_UUID("fd7fb607-144f-418c-bcf2-f7cf71532c22");
