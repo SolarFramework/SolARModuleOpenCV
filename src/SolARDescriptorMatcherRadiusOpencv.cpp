@@ -48,7 +48,8 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
     {
  
         // check if the descriptors type match
-        if(desc1->getDescriptorType() != desc2->getDescriptorType()){
+        
+        if (desc1->getDescriptorDataType() != desc2->getDescriptorDataType() ){
             return DescriptorMatcher::DESCRIPTORS_DONT_MATCH;
         }
  
@@ -67,14 +68,14 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
  
         cv::Mat cvDescriptors2(desc2->getNbDescriptors(), desc1->getNbElements(), type_conversion);
         cvDescriptors2.data=(uchar*)desc2->data();
- 
+ /*
         if (desc1->getDescriptorDataType() != DescriptorBuffer::TYPE_32F){
             cvDescriptors1.convertTo(cvDescriptors1, CV_32F);
         }
         if (desc2->getDescriptorDataType() != DescriptorBuffer::TYPE_32F){
             cvDescriptors2.convertTo(cvDescriptors2, CV_32F);
         }
- 
+ */
         m_matcher.radiusMatch(cvDescriptors1, cvDescriptors2, cv_matches, m_maxDistance);
  
         matches.clear();

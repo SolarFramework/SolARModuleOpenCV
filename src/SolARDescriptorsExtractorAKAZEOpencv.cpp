@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "SolARDescriptorsExtractorORBOpencv.h"
+#include "SolARDescriptorsExtractorAKAZEOpencv.h"
 #include "SolARImageConvertorOpencv.h"
 #include <iostream>
 #include "SolAROpenCVHelper.h"
@@ -23,9 +23,10 @@
 #include <array>
 
 //#include <boost/thread/thread.hpp>
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv);
 
 namespace xpcf = org::bcom::xpcf;
+using namespace cv;
 
 namespace SolAR {
 using namespace datastructure;
@@ -33,24 +34,28 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorsExtractorORBOpencv::SolARDescriptorsExtractorORBOpencv()
+SolARDescriptorsExtractorAKAZEOpencv::SolARDescriptorsExtractorAKAZEOpencv()
 {
-    setUUID(SolARDescriptorsExtractorORBOpencv::UUID);
+    setUUID(SolARDescriptorsExtractorAKAZEOpencv::UUID);
     addInterface<api::features::IDescriptorsExtractor>(this,api::features::IDescriptorsExtractor::UUID, "interface SolARDescriptorsExtractorOpencv");
-    LOG_DEBUG(" SolARDescriptorsExtractorORBOpencv constructor")
+    LOG_DEBUG(" SolARDescriptorsExtractorAKAZEOpencv constructor")
+    // m_extractor must have a default implementation : initialize default extractor type
+    m_extractor=AKAZE::create();
+    const double akaze_thresh = 3e-4;
+    m_extractor->setThreshold(akaze_thresh);
 }
 
 
-SolARDescriptorsExtractorORBOpencv::~SolARDescriptorsExtractorORBOpencv()
+SolARDescriptorsExtractorAKAZEOpencv::~SolARDescriptorsExtractorAKAZEOpencv()
 {
-    LOG_DEBUG(" SolARDescriptorsExtractorORBOpencv destructor")
+    LOG_DEBUG(" SolARDescriptorsExtractorAKAZEOpencv destructor")
 }
 
-void SolARDescriptorsExtractorORBOpencv::extract(const SRef<Image> image, const std::vector<SRef<Keypoint> > &keypoints, SRef<DescriptorBuffer>& descriptors){
+void SolARDescriptorsExtractorAKAZEOpencv::extract(const SRef<Image> image, const std::vector<SRef<Keypoint> > &keypoints, SRef<DescriptorBuffer>& descriptors){
 
 
     //transform all SolAR data to openCv data
-   
+
     SRef<Image> convertedImage = image;
 
     if (image->getImageLayout() != Image::ImageLayout::LAYOUT_GREY) {
@@ -83,8 +88,8 @@ void SolARDescriptorsExtractorORBOpencv::extract(const SRef<Image> image, const 
 
    m_extractor->compute(opencvImage, transform_to_data, out_mat_descps);
 
-    descriptors.reset( new DescriptorBuffer(out_mat_descps.data,DescriptorBuffer::ORB, DescriptorBuffer::TYPE_8U, 32, out_mat_descps.rows)) ;
-    
+   descriptors.reset( new DescriptorBuffer(out_mat_descps.data,DescriptorBuffer::AKAZE, DescriptorBuffer::TYPE_8U, 128, out_mat_descps.rows)) ;
+
 }
 
 }

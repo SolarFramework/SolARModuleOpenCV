@@ -76,6 +76,7 @@ const string CONTOURS_FILTER_BINARY_MARKER="4309dcc6-cc73-11e7-abc4-cec278b6b50a
 const string DESCRIPTOR_MATCHER_KNN="7823dac8-1597-41cf-bdef-59aa22f3d40a";
 const string DESCRIPTOR_MATCHER_RADIUS="904e64f6-d502-11e7-9296-cec278b6b50a";
 const string DESCRIPTORS_EXTRACTOR_ORB="0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a";
+const string DESCRIPTORS_EXTRACTOR_AKAZE="c8cc68db-9abd-4dab-9204-2fe4e9d010cd";
 const string DESCRIPTORS_EXTRACTOR_SBPATTERN="d25625ba-ce3a-11e7-abc4-cec278b6b50a";
 const string HOMOGRAPHY_ESTIMATION="fb9dac20-2a44-44b2-aa42-2871eec31427";
 const string HOMOGRAPHY_VALIDATION="dcc94624-dd32-11e7-9296-cec278b6b50a";
@@ -91,6 +92,8 @@ const string MARKER2D_SQUARED_BINARY="5d2b8da9-528e-4e5e-96c1-f883edcf3b1c";
 const string PERSPECTIVE_CONTROLLER="9c960f2a-cd6e-11e7-abc4-cec278b6b50a";
 const string POSE_ESTIMATION="0753ade1-7932-4e29-a71c-66155e309a53";
 const string SBPATTERN_REINDEXER="46b7dd26-d558-11e7-9296-cec278b6b50a";
+
+
 }  // End namespace UUID
 
 using namespace SolAR;

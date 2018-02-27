@@ -53,6 +53,7 @@ interfaces/SolARPerspectiveControllerOpencv.h \
 interfaces/SolARMarker2DSquaredBinaryOpencv.h \
 interfaces/SolARContoursFilterBinaryMarkerOpencv.h \
 interfaces/SolARDescriptorsExtractorSBPatternOpencv.h \
+interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
 interfaces/SolARDescriptorsExtractorORBOpencv.h \
 interfaces/SolARHomographyEstimationOpencv.h \
 interfaces/SolARPoseEstimationOpencv.h \
@@ -78,6 +79,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARMarker2DSquaredBinaryOpencv.cpp \
     src/SolARContoursFilterBinaryMarkerOpencv.cpp \
     src/SolARDescriptorsExtractorSBPatternOpencv.cpp \
+    src/SolARDescriptorsExtractorAKAZEOpencv.cpp \
     src/SolARDescriptorsExtractorORBOpencv.cpp \
     src/SolARPoseEstimationOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \

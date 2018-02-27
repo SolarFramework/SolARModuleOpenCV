@@ -23,15 +23,16 @@
 #include "SolARImageLoaderOpencv.h"
 #include "SolARCameraOpencv.h"
 #include "SolARKeypointDetectorOpencv.h"
-#include "SolARDescriptorsExtractorSIFTOpencv.h"
 #include "SolARDescriptorMatcherKNNOpencv.h"
 #include "SolARImageViewerOpencv.h"
 #include "SolARSideBySideOverlayOpencv.h"
 
+#include "SolARDescriptorsExtractorAKAZEOpencv.h"
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
 using namespace SolAR::MODULES::OPENCV;
+
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -42,7 +43,7 @@ int run(int argc,char** argv)
     SRef<image::IImageLoader>               imageLoader1;
     SRef<image::IImageLoader>               imageLoader2;
     SRef<features::IKeypointDetector>       keypointsDetector;
-    SRef<features::IDescriptorsExtractor>   extractorSIFT;
+    SRef<features::IDescriptorsExtractor>   extractorAKAZE;
     SRef<features::IDescriptorMatcher>      matcher;
     SRef<display::IImageViewer>             viewer;
     SRef<display::ISideBySideOverlay>       overlay;
@@ -65,7 +66,7 @@ int run(int argc,char** argv)
     xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader1);
     xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader2);
     xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(gen(features::IKeypointDetector::UUID ), keypointsDetector);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorSIFTOpencv>(gen(features::IDescriptorsExtractor::UUID ), extractorSIFT);
+    xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorAKAZEOpencv>(gen(features::IDescriptorsExtractor::UUID ), extractorAKAZE);
     xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherKNNOpencv>(gen(features::IDescriptorMatcher::UUID ), matcher);
     xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(gen(display::ISideBySideOverlay::UUID ), overlay);
     xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), viewer);
@@ -92,13 +93,19 @@ int run(int argc,char** argv)
    keypointsDetector->detect(image1, keypoints1);
 
    // Detect the keypoints of the second image
-   keypointsDetector->detect(image2, keypoints2);
+    keypointsDetector->detect(image2, keypoints2);
 
+    int size_k1 = keypoints1.size();
+    int size_k2 = keypoints2.size();
+    
    // Compute the SIFT descriptor for each keypoint extracted from the first image
-   extractorSIFT->extract(image1, keypoints1, descriptors1);
+   extractorAKAZE->extract(image1, keypoints1, descriptors1);
 
    // Compute the SIFT descriptor for each keypoint extracted from the second image
-   extractorSIFT->extract(image2, keypoints2, descriptors2);
+   extractorAKAZE->extract(image2, keypoints2, descriptors2);
+
+    int size_d1 =  descriptors1->getNbDescriptors();
+    int size_d2 = descriptors2->getNbDescriptors();
 
    // Compute the matches between the keypoints of the first image and the keypoints of the second image
    matcher->match(descriptors1, descriptors2, matches);

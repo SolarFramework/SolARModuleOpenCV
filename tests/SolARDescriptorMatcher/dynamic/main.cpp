@@ -39,12 +39,12 @@ int run(int argc,char** argv)
     SRef<image::IImageLoader> imageLoader1 = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
     SRef<image::IImageLoader> imageLoader2 = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
     SRef<features::IKeypointDetector> keypointsDetector = opencvModule.createComponent<features::IKeypointDetector>(MODULES::OPENCV::UUID::KEYPOINT_DETECTOR);
-    SRef<features::IDescriptorsExtractor> extractorSIFT = opencvModule.createComponent<features::IDescriptorsExtractor>(MODULES::OPENCV::UUID::DESCRIPTORS_EXTRACTOR_SIFT);
+    SRef<features::IDescriptorsExtractor> extractorAKAZE = opencvModule.createComponent<features::IDescriptorsExtractor>(MODULES::OPENCV::UUID::DESCRIPTORS_EXTRACTOR_AKAZE);
     SRef<features::IDescriptorMatcher> matcher = opencvModule.createComponent<features::IDescriptorMatcher>(MODULES::OPENCV::UUID::DESCRIPTOR_MATCHER_KNN);
     SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
     SRef<display::ISideBySideOverlay> overlay = opencvModule.createComponent<display::ISideBySideOverlay>(MODULES::OPENCV::UUID::OVERLAYSBS);
 
-    if (!imageLoader1 || !imageLoader2 || !keypointsDetector || !extractorSIFT || !matcher || !viewer || !overlay)
+    if (!imageLoader1 || !imageLoader2 || !keypointsDetector || !extractorAKAZE || !matcher || !viewer || !overlay)
     {
         LOG_ERROR("One or more component creations have failed");
         return -1;
@@ -89,10 +89,10 @@ int run(int argc,char** argv)
     keypointsDetector->detect(image2, keypoints2);
 
     // Compute the SIFT descriptor for each keypoint extracted from the first image
-    extractorSIFT->extract(image1, keypoints1, descriptors1);
+    extractorAKAZE->extract(image1, keypoints1, descriptors1);
 
     // Compute the SIFT descriptor for each keypoint extracted from the second image
-    extractorSIFT->extract(image2, keypoints2, descriptors2);
+    extractorAKAZE->extract(image2, keypoints2, descriptors2);
 
     // Compute the matches between the keypoints of the first image and the keypoints of the second image
     matcher->match(descriptors1, descriptors2, matches);
