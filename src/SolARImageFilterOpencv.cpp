@@ -63,8 +63,6 @@ FrameworkReturnCode SolARImageFilterOpencv::binarize(SRef<Image>input,
      cv::Mat imgSource, imgFiltred;
     SolAROpenCVHelper::mapToOpenCV(input,imgSource);
     SolAROpenCVHelper::mapToOpenCV(output,imgFiltred);
-    //cv::Mat imgSource(input->getHeight(),output->getWidth(),CV_8UC1, input->data());
-    //cv::Mat imgFiltred(output->getHeight(),output->getWidth(),CV_8UC1,output->data());
     if (min>=0)
         cv::threshold(imgSource, imgFiltred, min, max, cv::THRESH_BINARY);
     else
@@ -79,10 +77,21 @@ FrameworkReturnCode SolARImageFilterOpencv::adaptiveBinarize(SRef<Image>input,
                int blockSize,
                int C){
 
-    LOG_DEBUG("<Image adaptive binarization>:")
+    if (input->getImageLayout() != Image::ImageLayout::LAYOUT_GREY)
+    {
+        LOG_ERROR ("binarize method take as input only Grey images");
+        return FrameworkReturnCode::_ERROR_;
+    }
+
+    if (output == nullptr)
+        output = xpcf::utils::make_shared<Image> (Image::ImageLayout::LAYOUT_GREY, input->getPixelOrder(), input->getDataType());
+
     output->setSize(input->getWidth(),input->getHeight());
-    cv::Mat imgSource(input->getHeight(),output->getWidth(),CV_8UC1, input->data());
-    cv::Mat imgFiltred(output->getHeight(),output->getWidth(),CV_8UC1,output->data());
+
+    cv::Mat imgSource, imgFiltred;
+    SolAROpenCVHelper::mapToOpenCV(input,imgSource);
+    SolAROpenCVHelper::mapToOpenCV(output,imgFiltred);
+
     cv::adaptiveThreshold(imgSource, imgFiltred, max, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, blockSize, C);
 
     return FrameworkReturnCode::_SUCCESS;
@@ -95,10 +104,14 @@ FrameworkReturnCode SolARImageFilterOpencv::blur(SRef<Image>input,
           int kernel_height,
           int direction){
 
-    LOG_DEBUG("<Image blurring>:")
+    if (output == nullptr)
+        output = xpcf::utils::make_shared<Image> (input->getImageLayout(), input->getPixelOrder(), input->getDataType());
+
     output->setSize(input->getWidth(),input->getHeight());
-    cv::Mat imgSource(input->getHeight(),output->getWidth(),CV_8UC3, input->data());
-    cv::Mat imgFiltred(output->getHeight(),output->getWidth(),CV_8UC3,output->data());
+    cv::Mat imgSource, imgFiltred;
+    SolAROpenCVHelper::mapToOpenCV(input,imgSource);
+    SolAROpenCVHelper::mapToOpenCV(output,imgFiltred);
+
     switch (direction) {
     case 0:{
         LOG_DEBUG("    <Homogeneous blurring>:")
@@ -162,11 +175,15 @@ FrameworkReturnCode SolARImageFilterOpencv::erode(SRef<Image>input,
                SRef<Image>& output,
                int erosion_elem,
                int erosion_size){
-    LOG_ERROR("<Image erosion>:")
-    output->setSize(input->getWidth(),input->getHeight());
-    cv::Mat imgSource(input->getHeight(),output->getWidth(),CV_8UC3, input->data());
-    cv::Mat imgFiltred(output->getHeight(),output->getWidth(),CV_8UC3,output->data());
 
+    if (output == nullptr)
+        output = xpcf::utils::make_shared<Image> (input->getImageLayout(), input->getPixelOrder(), input->getDataType());
+
+    output->setSize(input->getWidth(),input->getHeight());
+
+    cv::Mat imgSource, imgFiltred;
+    SolAROpenCVHelper::mapToOpenCV(input,imgSource);
+    SolAROpenCVHelper::mapToOpenCV(output,imgFiltred);
 
     int erosion_type;
     if( erosion_elem == 0 ){ erosion_type = cv::MORPH_RECT; }
@@ -189,11 +206,14 @@ FrameworkReturnCode SolARImageFilterOpencv::dilate(SRef<Image>input,
                                     int dilate_elem,
                                     int dilate_size ){
 
-    LOG_DEBUG("<Image dilatation>:")
-    output->setSize(input->getWidth(),input->getHeight());
-    cv::Mat imgSource(input->getHeight(),output->getWidth(),CV_8UC3, input->data());
-    cv::Mat imgFiltred(output->getHeight(),output->getWidth(),CV_8UC3,output->data());
+    if (output == nullptr)
+        output = xpcf::utils::make_shared<Image> (input->getImageLayout(), input->getPixelOrder(), input->getDataType());
 
+    output->setSize(input->getWidth(),input->getHeight());
+
+    cv::Mat imgSource, imgFiltred;
+    SolAROpenCVHelper::mapToOpenCV(input,imgSource);
+    SolAROpenCVHelper::mapToOpenCV(output,imgFiltred);
 
     int dilate_type;
     if(dilate_elem == 0 ){ dilate_type = cv::MORPH_RECT; }
