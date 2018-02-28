@@ -50,7 +50,7 @@ using namespace datastructure;
                 svd_w = svd.w;
             }
 
-            bool SolARSVDFundamentalMatrixDecomposerOpencv::decompose(const Transform2Df&F,const CamCalibration&K, std::vector<SRef<Pose>>& decomposedPoses){
+            bool SolARSVDFundamentalMatrixDecomposerOpencv::decompose(const Transform2Df&F,const CamCalibration&K, const CamDistortion& dist, std::vector<SRef<Pose>>& decomposedPoses){
                //Using HZ E decomposition
                    cv::Mat svd_u, svd_vt, svd_w;
                    cv::Mat _K(3,3,CV_64FC1);

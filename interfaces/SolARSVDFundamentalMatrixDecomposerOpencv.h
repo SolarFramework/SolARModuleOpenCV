@@ -35,7 +35,7 @@ class SOLAROPENCV_EXPORT_API SolARSVDFundamentalMatrixDecomposerOpencv : public 
 public:
     SolARSVDFundamentalMatrixDecomposerOpencv();
     void takeSVDOfE(cv::Mat_<double>& E,cv::Mat& svd_u, cv::Mat& svd_vt,cv::Mat& svd_w);
-    bool decompose(const Transform2Df&F,const CamCalibration&K, std::vector<SRef<Pose>>& decomposedPoses) override;
+    bool decompose(const Transform2Df&F,const CamCalibration&K, const CamDistortion& dist, std::vector<SRef<Pose>>& decomposedPoses) override;
     void unloadComponent () override final;
     XPCF_DECLARE_UUID("31188e79-6bd5-43df-9633-6d6c5d7afb5c");
 

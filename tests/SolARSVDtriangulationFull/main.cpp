@@ -263,7 +263,7 @@ int run(std::string& firstImagePath, std::string& secondImagePath, std::string& 
         }
         std::cout<<std::endl;
     }
-    fundamentalDecomposer->decompose(F,K,poses);
+    fundamentalDecomposer->decompose(F,K,dist,poses);
 
     std::cout<<" Poses size: "<<poses.size()<<std::endl;
 
