@@ -25,6 +25,10 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="6b3de3a0-cc72-11e7-abc4-cec278b6b50a" description="IContoursFilter"/>
         </component>
+        <component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9" description="SolARDescriptorMatcherHammingBruteForceOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" description="IDescriptorMatcher"/>
+        </component>
 		<component uuid="7823dac8-1597-41cf-bdef-59aa22f3d40a" description="SolARDescriptorMatcherKNNOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" description="IDescriptorMatcher"/>

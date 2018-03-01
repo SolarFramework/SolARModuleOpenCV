@@ -57,6 +57,7 @@ interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
 interfaces/SolARDescriptorsExtractorORBOpencv.h \
 interfaces/SolARHomographyEstimationOpencv.h \
 interfaces/SolARPoseEstimationOpencv.h \
+interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
 interfaces/SolARDescriptorMatcherKNNOpencv.h \
 interfaces/SolARDescriptorMatcherRadiusOpencv.h \
 interfaces/SolARSideBySideOverlayOpencv.h \
@@ -82,6 +83,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZEOpencv.cpp \
     src/SolARDescriptorsExtractorORBOpencv.cpp \
     src/SolARPoseEstimationOpencv.cpp \
+    src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \
     src/SolARSideBySideOverlayOpencv.cpp \
