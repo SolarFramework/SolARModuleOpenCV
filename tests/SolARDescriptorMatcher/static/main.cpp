@@ -116,119 +116,12 @@ int run(int argc,char** argv)
 
     int size_k1 = keypoints1.size();
     int size_k2 = keypoints2.size();
-    
-    std::cout<<"keypoints size:"<<size_k1<<" "<<size_k2 <<std::endl;
-    
-   // Compute the SIFT descriptor for each keypoint extracted from the first image
+       
+   // Compute the AKAZE descriptor for each keypoint extracted from the first image
    extractorAKAZE->extract(image1, keypoints1, descriptors1);
 
-   // Compute the SIFT descriptor for each keypoint extracted from the second image
+   // Compute the AKAZE descriptor for each keypoint extracted from the second image
    extractorAKAZE->extract(image2, keypoints2, descriptors2);
-
-#ifdef cvhack
-    std::vector<cv::KeyPoint> kpts1, kpts2;
-
-    for(unsigned int k =0; k < keypoints1.size(); ++k)
-    {
-        kpts1.push_back(
-                    //instantiate keypoint
-                     cv::KeyPoint(keypoints1[k]->getX(),
-                                  keypoints1[k]->getY(),
-                                  keypoints1[k]->getSize(),
-                                  keypoints1[k]->getAngle(),
-                                  keypoints1[k]->getResponse(),
-                                  keypoints1[k]->getOctave(),
-                                  keypoints1[k]->getClassId())
-                    );
-    }
-
-    for(unsigned int k =0; k < keypoints2.size(); ++k)
-    {
-        kpts2.push_back(
-                    //instantiate keypoint
-                     cv::KeyPoint(keypoints2[k]->getX(),
-                                  keypoints2[k]->getY(),
-                                  keypoints2[k]->getSize(),
-                                  keypoints2[k]->getAngle(),
-                                  keypoints2[k]->getResponse(),
-                                  keypoints2[k]->getOctave(),
-                                  keypoints2[k]->getClassId())
-                    );
-    }
-
-
-   
-    uint32_t type_conversion= SolAROpenCVHelper::deduceOpenDescriptorCVType(descriptors1->getDescriptorDataType());
-    cv::Mat desc1(descriptors1->getNbDescriptors(), descriptors1->getNbElements(), type_conversion);
-    desc1.data=(uchar*)descriptors1->data();
-   
-    cv::Mat desc2(descriptors2->getNbDescriptors(), descriptors2->getNbElements(), type_conversion);
-    desc2.data=(uchar*)descriptors2->data();
-
-    BFMatcher matcher2(NORM_HAMMING);
-    vector< vector<DMatch> > nn_matches;
-    matcher2.knnMatch(desc1, desc2, nn_matches, 2);
-    vector<KeyPoint> matched1, matched2, inliers1, inliers2;
-    vector<DMatch> good_matches;
-////
-
-    for(unsigned i = 0; i < nn_matches.size(); i++) {
-        if(nn_matches[i][0].distance < nn_match_ratio * nn_matches[i][1].distance) {
-            matched1.push_back(kpts1[nn_matches[i][0].queryIdx]);
-            matched2.push_back(kpts2[nn_matches[i][0].trainIdx]);
-        }
-    }
-    Mat homography;
-    Mat inlier_mask;
-    vector<cv::DMatch> inlier_matches;
-    /*
-    if(matched1.size() >= 4) {
-        homography = findHomography(Points(matched1), Points(matched2),
-                                    cv::RANSAC, ransac_thresh, inlier_mask);
-        homography.convertTo(homography,CV_32F);
-    }
-
-    for(unsigned i = 0; i < matched1.size(); i++) {
-        if(inlier_mask.at<uchar>(i)) {
-            int new_i = static_cast<int>(inliers1.size());
-            inliers1.push_back(matched1[i]);
-            inliers2.push_back(matched2[i]);
-            inlier_matches.push_back(DMatch(new_i, new_i, 0));
-        }
-    }
-    */
-    Mat res;
-
-    cv::Mat cv_image1,cv_image2;
-    SolAROpenCVHelper::mapToOpenCV(image1,cv_image1);
-    SolAROpenCVHelper::mapToOpenCV(image2,cv_image2);
-
-    // all matches
-    cv::drawMatches(cv_image1, kpts1, cv_image2, kpts2, nn_matches,res,Scalar(255, 0, 0), Scalar(255, 0, 0));
-    cv::imshow("matches", res);
-
-    // only inliers
-    cv::drawMatches(cv_image1, inliers1, cv_image2, inliers2,
-                inlier_matches, res,
-                Scalar(255, 0, 0), Scalar(255, 0, 0));
-    cv::imshow("inliers", res);
-    while(1)
-        if(waitKey(1)==27) break; //quit on ESC button
-////
-
-    imwrite("res.png", res);
-    double inlier_ratio = inliers1.size() * 1.0 / matched1.size();
-    cout << "A-KAZE Matching Results" << endl;
-    cout << "*******************************" << endl;
-    cout << "# Keypoints 1:                        \t" << keypoints1.size() << endl;
-    cout << "# Keypoints 2:                        \t" << keypoints2.size() << endl;
-    cout << "# Matches:                            \t" << matched1.size() << endl;
-    cout << "# Inliers:                            \t" << inliers1.size() << endl;
-    cout << "# Inliers Ratio:                      \t" << inlier_ratio << endl;
-    cout << endl;
-
-#endif
-
 
     int size_d1 =  descriptors1->getNbDescriptors();
     int size_d2 = descriptors2->getNbDescriptors();
