@@ -9,9 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\SolARDescriptorsExtractorSURF128Opencv.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\SolARHomographyEstimationOpencv.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -84,10 +81,10 @@
     <ClCompile Include="src\SolARDescriptorsExtractorSBPatternOpencv.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\SolARDescriptorsExtractorSIFTOpencv.cpp">
+    <ClCompile Include="src\SolARDescriptorMatcherHammingBruteForceOpencv.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\SolARDescriptorsExtractorSURF64Opencv.cpp">
+    <ClCompile Include="src\SolARDescriptorsExtractorAKAZEOpencv.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -167,13 +164,10 @@
     <ClInclude Include="interfaces\SolARDescriptorsExtractorSBPatternOpencv.h">
       <Filter>interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="interfaces\SolARDescriptorsExtractorSIFTOpencv.h">
+    <ClInclude Include="interfaces\SolARDescriptorMatcherHammingBruteForceOpencv.h">
       <Filter>interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="interfaces\SolARDescriptorsExtractorSURF64Opencv.h">
-      <Filter>interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="interfaces\SolARDescriptorsExtractorSURF128Opencv.h">
+    <ClInclude Include="interfaces\SolARDescriptorsExtractorAKAZEOpencv.h">
       <Filter>interfaces</Filter>
     </ClInclude>
   </ItemGroup>

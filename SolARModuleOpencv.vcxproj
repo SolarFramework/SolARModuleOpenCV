@@ -23,6 +23,8 @@
     <ClCompile Include="src\SolAR3DOverlayOpencv.cpp" />
     <ClCompile Include="src\SolARCameraCalibrationOpencv.cpp" />
     <ClCompile Include="src\SolARCameraOpencv.cpp" />
+    <ClCompile Include="src\SolARDescriptorMatcherHammingBruteForceOpencv.cpp" />
+    <ClCompile Include="src\SolARDescriptorsExtractorAKAZEOpencv.cpp" />
     <ClCompile Include="src\SolARModuleOpencv.cpp" />
     <ClCompile Include="src\SolARContoursExtractorOpencv.cpp" />
     <ClCompile Include="src\SolARContoursFilterBinaryMarkerOpencv.cpp" />
@@ -30,9 +32,6 @@
     <ClCompile Include="src\SolARDescriptorMatcherRadiusOpencv.cpp" />
     <ClCompile Include="src\SolARDescriptorsExtractorORBOpencv.cpp" />
     <ClCompile Include="src\SolARDescriptorsExtractorSBPatternOpencv.cpp" />
-    <ClCompile Include="src\SolARDescriptorsExtractorSIFTOpencv.cpp" />
-    <ClCompile Include="src\SolARDescriptorsExtractorSURF128Opencv.cpp" />
-    <ClCompile Include="src\SolARDescriptorsExtractorSURF64Opencv.cpp" />
     <ClCompile Include="src\SolARHomographyEstimationOpencv.cpp" />
     <ClCompile Include="src\SolARImageConvertorOpencv.cpp" />
     <ClCompile Include="src\SolARImageFilterOpencv.cpp" />
@@ -54,13 +53,12 @@
     <ClInclude Include="interfaces\SolARCameraOpencv.h" />
     <ClInclude Include="interfaces\SolARContoursExtractorOpencv.h" />
     <ClInclude Include="interfaces\SolARContoursFilterBinaryMarkerOpencv.h" />
+    <ClInclude Include="interfaces\SolARDescriptorMatcherHammingBruteForceOpencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorMatcherKNNOpencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorMatcherRadiusOpencv.h" />
+    <ClInclude Include="interfaces\SolARDescriptorsExtractorAKAZEOpencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorsExtractorORBOpencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorsExtractorSBPatternOpencv.h" />
-    <ClInclude Include="interfaces\SolARDescriptorsExtractorSIFTOpencv.h" />
-    <ClInclude Include="interfaces\SolARDescriptorsExtractorSURF128Opencv.h" />
-    <ClInclude Include="interfaces\SolARDescriptorsExtractorSURF64Opencv.h" />
     <ClInclude Include="interfaces\SolARHomographyEstimationOpencv.h" />
     <ClInclude Include="interfaces\SolARHomographyFinderOpencv.h" />
     <ClInclude Include="interfaces\SolARImageConvertorOpencv.h" />
