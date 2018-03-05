@@ -102,14 +102,16 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
     cv::BFMatcher matcher(cv::NormTypes::NORM_HAMMING);
     std::vector< std::vector<cv::DMatch> > nn_matches;
     
-    matcher.knnMatch(cvDescriptor1, cvDescriptor2, nn_matches,1);
+    matcher.knnMatch(cvDescriptor1, cvDescriptor2, nn_matches,2);
 
     float nn_match_ratio = 0.8f;
     
     matches.clear();
     for(unsigned i = 0; i < nn_matches.size(); i++) {
-        if (nn_matches[i].size() >0 )
-            matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
+             if(nn_matches[i][0].distance < nn_match_ratio * nn_matches[i][1].distance) {
+                  
+                 matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
+             }
     }
   
      return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
@@ -158,12 +160,16 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
   
     cv::BFMatcher matcher(cv::NormTypes::NORM_HAMMING, true);
     std::vector< std::vector<cv::DMatch> > nn_matches;
-    matcher.knnMatch(cvDescriptors1, cvDescriptors2, nn_matches, 1);
+    matcher.knnMatch(cvDescriptors1, cvDescriptors2, nn_matches, 2);
 
-    matches.clear();
+    float nn_match_ratio = 0.8f;
+     matches.clear();
     for(unsigned i = 0; i < nn_matches.size(); i++) {
-        if (nn_matches[i].size() >0 )
-            matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx, nn_matches[i][0].distance ));
+    
+             if(nn_matches[i][0].distance < nn_match_ratio * nn_matches[i][1].distance) {
+                  
+                 matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx, nn_matches[i][0].distance ));
+             }
     }
     return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
  
