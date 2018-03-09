@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SOLARDESCRIPTORSEXTRACTORSURF128OPENCV_H
-#define SOLARDESCRIPTORSEXTRACTORSURF128OPENCV_H
+#ifndef SOLARDESCRIPTORSEXTRACTORAKAZEOPENCV_H
+#define SOLARDESCRIPTORSEXTRACTORAKAZEOPENCV_H
 
 #include "api/features/IDescriptorsExtractor.h"
 // Definition of SolARDescriptorExtractorOpencv Class //
@@ -25,27 +25,29 @@
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
-#include "opencv2/xfeatures2d.hpp"
+#include "opencv2/features2d.hpp"
+#include "datastructure/DescriptorBuffer.h"
+#include "datastructure/Keypoint.h"
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorSURF128Opencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorAKAZEOpencv : public org::bcom::xpcf::ComponentBase,
         public api::features::IDescriptorsExtractor {
 public:
-    SolARDescriptorsExtractorSURF128Opencv();
-    ~SolARDescriptorsExtractorSURF128Opencv();
+    SolARDescriptorsExtractorAKAZEOpencv();
+    ~SolARDescriptorsExtractorAKAZEOpencv();
     void unloadComponent () override final;
-    inline std::string getTypeString() override { return std::string("DescriptorExtractorType::SURF128") ;};
+    inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE") ;};
 
     void extract (const SRef<Image> image, const std::vector<SRef<Keypoint>> &keypoints, SRef<DescriptorBuffer>& descriptors) override;
 
-    XPCF_DECLARE_UUID("fe14a310-d0a2-11e7-8fab-cec278b6b50a");
+    XPCF_DECLARE_UUID("c8cc68db-9abd-4dab-9204-2fe4e9d010cd");
 
 private:
-    cv::Ptr<cv::Feature2D> m_extractor;
+    cv::Ptr<cv::AKAZE> m_extractor;
 };
 
 }
@@ -54,4 +56,4 @@ private:
 
 
 
-#endif // SOLARDESCRIPTORSEXTRACTORSURF128OPENCV_H
+#endif // SOLARDESCRIPTORSEXTRACTORAKAZEOPENCV_H

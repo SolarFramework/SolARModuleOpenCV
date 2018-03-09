@@ -50,7 +50,7 @@ void SolARDescriptorsExtractorORBOpencv::extract(const SRef<Image> image, const 
 
 
     //transform all SolAR data to openCv data
-   /*
+   
     SRef<Image> convertedImage = image;
 
     if (image->getImageLayout() != Image::ImageLayout::LAYOUT_GREY) {
@@ -84,7 +84,7 @@ void SolARDescriptorsExtractorORBOpencv::extract(const SRef<Image> image, const 
    m_extractor->compute(opencvImage, transform_to_data, out_mat_descps);
 
     descriptors.reset( new DescriptorBuffer(out_mat_descps.data,DescriptorBuffer::ORB, DescriptorBuffer::TYPE_8U, 32, out_mat_descps.rows)) ;
-    */
+    
 }
 
 }

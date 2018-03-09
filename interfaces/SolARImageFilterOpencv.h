@@ -39,51 +39,51 @@ public:
     SolARImageFilterOpencv();
    ~SolARImageFilterOpencv();
 
-    void threshold(SRef<Image>input,
-                   SRef<Image>output,
-                   int threshold);
+    FrameworkReturnCode threshold(SRef<Image>input,
+                   SRef<Image>& output,
+                   int threshold) override;
 
-    void binarize(SRef<Image>input,
-                  SRef<Image>output,
+    FrameworkReturnCode binarize(SRef<Image>input,
+                  SRef<Image>& output,
                   int min,
-                  int max);
+                  int max) override;
 
-    void adaptiveBinarize(SRef<Image>input,
-                   SRef<Image>output,
+    FrameworkReturnCode adaptiveBinarize(SRef<Image>input,
+                   SRef<Image>& output,
                    int max,
                    int blockSize,
-                   int C);
+                   int C) override;
 
-    void blur(SRef<Image>input,
-              SRef<Image>output,
+    FrameworkReturnCode blur(SRef<Image>input,
+              SRef<Image>& output,
               int kernerl_id,
               int kernel_width,
               int kernel_height,
-              int direction);
+              int direction) override;
 
-    void gradient(SRef<Image>input,
-                  SRef<Image>output,
+    FrameworkReturnCode gradient(SRef<Image>input,
+                  SRef<Image>& output,
                   int x_order,
-                  int y_order);
+                  int y_order) override;
 
-    void laplacian(SRef<Image>input,
-                   SRef<Image>output,
-                   int method);
+    FrameworkReturnCode laplacian(SRef<Image>input,
+                   SRef<Image>& output,
+                   int method) override;
 
-    void erode(SRef<Image>input,
-               SRef<Image>output,
+    FrameworkReturnCode erode(SRef<Image>input,
+               SRef<Image>& output,
                int erosion_type,
-               int erosion_size);
+               int erosion_size) override;
 
 
-    void dilate(SRef<Image>input,
-                SRef<Image>output,
+    FrameworkReturnCode dilate(SRef<Image>input,
+                SRef<Image>& output,
                 int dilatation_type,
-                int dilatation_size);
+                int dilatation_size) override;
 
-    void equalize(SRef<Image>input,
-                   SRef<Image>output,
-                   int method);
+    FrameworkReturnCode equalize(SRef<Image>input,
+                   SRef<Image>& output,
+                   int method) override;
 
     void unloadComponent () override final;
 

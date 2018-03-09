@@ -27,8 +27,6 @@
 #include "opencv2/videoio.hpp"
 #include "opencv2/highgui.hpp"
 
-#include <opencv2/xfeatures2d/nonfree.hpp>
-#include <opencv2/xfeatures2d.hpp>
 
 #include <fstream>
 #include <string>
