@@ -63,7 +63,13 @@ interfaces/SolARDescriptorMatcherRadiusOpencv.h \
 interfaces/SolARSideBySideOverlayOpencv.h \
 interfaces/SolAR3DOverlayOpencv.h \
 interfaces/SolAR2DOverlayOpencv.h \
-interfaces/SolARModuleManagerOpencv.h
+interfaces/SolARModuleManagerOpencv.h \
+    src/AKAZE2/AKAZEConfig.h \
+    src/AKAZE2/AKAZEFeatures.h \
+    src/AKAZE2/fed.h \
+    src/AKAZE2/nldiffusion_functions.h \
+    src/AKAZE2/TEvolution.h \
+    src/AKAZE2/utils.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
@@ -90,7 +96,12 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
     src/SolAR3DOverlayOpencv.cpp \
     src/SolARModuleManagerOpencv.cpp \
-    src/SolARHomographyEstimationOpencv.cpp
+    src/SolARHomographyEstimationOpencv.cpp \
+    src/SolARDescriptorsExtractorAKAZE2Opencv.cpp \
+    src/AKAZE2/akaze.cpp \
+    src/AKAZE2/AKAZEFeatures.cpp \
+    src/AKAZE2/fed.cpp \
+    src/AKAZE2/nldiffusion_functions.cpp
 
 unix {
 }
