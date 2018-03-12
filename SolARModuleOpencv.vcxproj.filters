@@ -7,6 +7,9 @@
     <Filter Include="interfaces">
       <UniqueIdentifier>{963dc1ce-d697-492c-9bd5-ca4618cb872d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Akaze2">
+      <UniqueIdentifier>{3122e01c-5b3f-4164-ace2-cc9b81d3deec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SolARHomographyEstimationOpencv.cpp">
@@ -86,6 +89,21 @@
     </ClCompile>
     <ClCompile Include="src\SolARDescriptorsExtractorAKAZEOpencv.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolARDescriptorsExtractorAKAZE2Opencv.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AKAZE2\akaze.cpp">
+      <Filter>src\Akaze2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AKAZE2\AKAZEFeatures.cpp">
+      <Filter>src\Akaze2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AKAZE2\fed.cpp">
+      <Filter>src\Akaze2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AKAZE2\nldiffusion_functions.cpp">
+      <Filter>src\Akaze2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +186,9 @@
       <Filter>interfaces</Filter>
     </ClInclude>
     <ClInclude Include="interfaces\SolARDescriptorsExtractorAKAZEOpencv.h">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\SolARDescriptorsExtractorAKAZE2Opencv.h">
       <Filter>interfaces</Filter>
     </ClInclude>
   </ItemGroup>

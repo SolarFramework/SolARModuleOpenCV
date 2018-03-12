@@ -19,11 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AKAZE2\akaze.cpp" />
+    <ClCompile Include="src\AKAZE2\AKAZEFeatures.cpp" />
+    <ClCompile Include="src\AKAZE2\fed.cpp" />
+    <ClCompile Include="src\AKAZE2\nldiffusion_functions.cpp" />
     <ClCompile Include="src\SolAR2DOverlayOpencv.cpp" />
     <ClCompile Include="src\SolAR3DOverlayOpencv.cpp" />
     <ClCompile Include="src\SolARCameraCalibrationOpencv.cpp" />
     <ClCompile Include="src\SolARCameraOpencv.cpp" />
     <ClCompile Include="src\SolARDescriptorMatcherHammingBruteForceOpencv.cpp" />
+    <ClCompile Include="src\SolARDescriptorsExtractorAKAZE2Opencv.cpp" />
     <ClCompile Include="src\SolARDescriptorsExtractorAKAZEOpencv.cpp" />
     <ClCompile Include="src\SolARModuleOpencv.cpp" />
     <ClCompile Include="src\SolARContoursExtractorOpencv.cpp" />
@@ -56,6 +61,7 @@
     <ClInclude Include="interfaces\SolARDescriptorMatcherHammingBruteForceOpencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorMatcherKNNOpencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorMatcherRadiusOpencv.h" />
+    <ClInclude Include="interfaces\SolARDescriptorsExtractorAKAZE2Opencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorsExtractorAKAZEOpencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorsExtractorORBOpencv.h" />
     <ClInclude Include="interfaces\SolARDescriptorsExtractorSBPatternOpencv.h" />
@@ -195,7 +201,7 @@ xcopy  /y  ".\interfaces" "$(BCOMDEVROOT)\bcomBuild\SolARModuleOpencv\0.3.0\inte
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(BCOMDEVROOT)\bcomBuild\SolARFramework\0.3.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\thirdParties\opencv\3.2.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\thirdParties\xpcf\1.0.0\lib\x86_64\shared\$(configuration);$(BCOMDEVROOT)\thirdParties\boost\1.64.0\lib\x86_64\shared\$(configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_core320.lib;opencv_calib3d320.lib;opencv_video320.lib;opencv_videoio320.lib;opencv_flann320.lib;opencv_highgui320.lib;opencv_imgcodecs320.lib;opencv_features2d320.lib;opencv_xfeatures2d320.lib;opencv_imgproc320.lib;xpcf.lib;SolARFramework.lib;boost_filesystem.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core320.lib;opencv_calib3d320.lib;opencv_video320.lib;opencv_videoio320.lib;opencv_flann320.lib;opencv_highgui320.lib;opencv_imgcodecs320.lib;opencv_features2d320.lib;opencv_xfeatures2d320.lib;opencv_imgproc320.lib;opencv_videostab320.lib;xpcf.lib;SolARFramework.lib;boost_filesystem.lib;opencv_ml320.lib;opencv_objdetect320.lib;opencv_photo320.lib;opencv_shape320.lib;opencv_stitching320.lib;opencv_superres320.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy  /y  "$(OutDir)$(TargetName)$(TargetExt)" "$(BCOMDEVROOT)\bcomBuild\SolARModuleOpencv\0.3.0\lib\x86_64\shared\$(configuration)\"
