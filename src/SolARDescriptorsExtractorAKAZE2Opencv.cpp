@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "SolARDescriptorsExtractorAKAZEOpencv.h"
+#include "SolARDescriptorsExtractorAKAZE2Opencv.h"
 #include "SolARImageConvertorOpencv.h"
 #include <iostream>
 #include "SolAROpenCVHelper.h"
@@ -23,7 +23,7 @@
 #include <array>
 
 //#include <boost/thread/thread.hpp>
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv);
 
 namespace xpcf = org::bcom::xpcf;
 using namespace cv;
@@ -34,24 +34,24 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorsExtractorAKAZEOpencv::SolARDescriptorsExtractorAKAZEOpencv()
+SolARDescriptorsExtractorAKAZE2Opencv::SolARDescriptorsExtractorAKAZE2Opencv()
 {
-    setUUID(SolARDescriptorsExtractorAKAZEOpencv::UUID);
+    setUUID(SolARDescriptorsExtractorAKAZE2Opencv::UUID);
     addInterface<api::features::IDescriptorsExtractor>(this,api::features::IDescriptorsExtractor::UUID, "interface SolARDescriptorsExtractorOpencv");
-    LOG_DEBUG(" SolARDescriptorsExtractorAKAZEOpencv constructor")
+    LOG_DEBUG(" SolARDescriptorsExtractorAKAZE2Opencv constructor")
     // m_extractor must have a default implementation : initialize default extractor type
-    m_extractor=AKAZE::create();
+    m_extractor=AKAZE2::create();
     const double akaze_thresh = 3e-4;
     m_extractor->setThreshold(akaze_thresh);
 }
 
 
-SolARDescriptorsExtractorAKAZEOpencv::~SolARDescriptorsExtractorAKAZEOpencv()
+SolARDescriptorsExtractorAKAZE2Opencv::~SolARDescriptorsExtractorAKAZE2Opencv()
 {
-    LOG_DEBUG(" SolARDescriptorsExtractorAKAZEOpencv destructor")
+    LOG_DEBUG(" SolARDescriptorsExtractorAKAZE2Opencv destructor")
 }
 
-void SolARDescriptorsExtractorAKAZEOpencv::extract(const SRef<Image> image, const std::vector<SRef<Keypoint> > &keypoints, SRef<DescriptorBuffer>& descriptors){
+void SolARDescriptorsExtractorAKAZE2Opencv::extract(const SRef<Image> image, const std::vector<SRef<Keypoint> > &keypoints, SRef<DescriptorBuffer>& descriptors){
 
 
     //transform all SolAR data to openCv data

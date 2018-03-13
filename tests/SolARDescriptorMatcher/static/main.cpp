@@ -24,10 +24,19 @@
 #include "SolARCameraOpencv.h"
 #include "SolARKeypointDetectorOpencv.h"
 #include "SolARDescriptorMatcherKNNOpencv.h"
+#include "SolARDescriptorMatcherHammingBruteForceOpencv.h"
 #include "SolARImageViewerOpencv.h"
 #include "SolARSideBySideOverlayOpencv.h"
 
 #include "SolARDescriptorsExtractorAKAZEOpencv.h"
+
+#include "SolAROpenCVHelper.h"
+
+#include <opencv2/features2d.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/opencv.hpp>
+#include <vector>
+
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
@@ -35,6 +44,14 @@ using namespace SolAR::MODULES::OPENCV;
 
 
 namespace xpcf  = org::bcom::xpcf;
+
+using namespace std;
+using namespace cv;
+const float inlier_threshold = 2.5f; // Distance threshold to identify inliers
+const float nn_match_ratio = 0.8f;   // Nearest neighbor matching ratio
+const double ransac_thresh = 2.5f; // RANSAC inlier threshold
+const double akaze_thresh = 3e-4; // AKAZE detection threshold set to locate about 1000 keypoints
+
 
 int run(int argc,char** argv)
 {
@@ -67,7 +84,7 @@ int run(int argc,char** argv)
     xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader2);
     xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(gen(features::IKeypointDetector::UUID ), keypointsDetector);
     xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorAKAZEOpencv>(gen(features::IDescriptorsExtractor::UUID ), extractorAKAZE);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherKNNOpencv>(gen(features::IDescriptorMatcher::UUID ), matcher);
+    xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherHammingBruteForceOpencv>(gen(features::IDescriptorMatcher::UUID ), matcher);
     xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(gen(display::ISideBySideOverlay::UUID ), overlay);
     xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), viewer);
 
@@ -89,7 +106,9 @@ int run(int argc,char** argv)
       return -1;
    }
 
+    keypointsDetector->setType(KeypointDetectorType::AKAZE);
    // Detect the keypoints of the first image
+ 
    keypointsDetector->detect(image1, keypoints1);
 
    // Detect the keypoints of the second image
@@ -97,11 +116,11 @@ int run(int argc,char** argv)
 
     int size_k1 = keypoints1.size();
     int size_k2 = keypoints2.size();
-    
-   // Compute the SIFT descriptor for each keypoint extracted from the first image
+       
+   // Compute the AKAZE descriptor for each keypoint extracted from the first image
    extractorAKAZE->extract(image1, keypoints1, descriptors1);
 
-   // Compute the SIFT descriptor for each keypoint extracted from the second image
+   // Compute the AKAZE descriptor for each keypoint extracted from the second image
    extractorAKAZE->extract(image2, keypoints2, descriptors2);
 
     int size_d1 =  descriptors1->getNbDescriptors();
