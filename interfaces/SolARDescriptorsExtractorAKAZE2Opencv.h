@@ -40,11 +40,11 @@ public:
     SolARDescriptorsExtractorAKAZE2Opencv();
     ~SolARDescriptorsExtractorAKAZE2Opencv();
     void unloadComponent () override final;
-    inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE") ;};
+    inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE2") ;};
 
     void extract (const SRef<Image> image, const std::vector<SRef<Keypoint>> &keypoints, SRef<DescriptorBuffer>& descriptors) override;
 
-    XPCF_DECLARE_UUID("c8cc68db-9abd-4dab-9204-2fe4e9d010cd");
+    XPCF_DECLARE_UUID("21238c00-26dd-11e8-b467-0ed5f89f718b");
 
 private:
     cv::Ptr<cv::AKAZE2> m_extractor;

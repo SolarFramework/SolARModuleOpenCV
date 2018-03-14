@@ -78,6 +78,7 @@ const string DESCRIPTOR_MATCHER_KNN="7823dac8-1597-41cf-bdef-59aa22f3d40a";
 const string DESCRIPTOR_MATCHER_RADIUS="904e64f6-d502-11e7-9296-cec278b6b50a";
 const string DESCRIPTORS_EXTRACTOR_ORB="0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a";
 const string DESCRIPTORS_EXTRACTOR_AKAZE="c8cc68db-9abd-4dab-9204-2fe4e9d010cd";
+const string DESCRIPTORS_EXTRACTOR_AKAZE2="21238c00-26dd-11e8-b467-0ed5f89f718b";
 const string DESCRIPTORS_EXTRACTOR_SBPATTERN="d25625ba-ce3a-11e7-abc4-cec278b6b50a";
 const string HOMOGRAPHY_ESTIMATION="fb9dac20-2a44-44b2-aa42-2871eec31427";
 const string HOMOGRAPHY_VALIDATION="dcc94624-dd32-11e7-9296-cec278b6b50a";
@@ -233,6 +234,15 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
              LOG_ERROR("AKAZE descriptors extractor component creation has failed");
         return res;
     }
+
+    else if (uuid == UUID::DESCRIPTORS_EXTRACTOR_AKAZE2) //AKAZE keypoint descriptors extractors component
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorsExtractor::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("AKAZE2 descriptors extractor component creation has failed");
+        return res;
+    }
+
     else if (uuid == UUID::DESCRIPTORS_EXTRACTOR_ORB) // keypoint descriptors extractors component
     {
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorsExtractor::UUID), compRef);

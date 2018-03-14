@@ -25,6 +25,8 @@
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
+#include "features2d_akaze2.hpp"  // Define AKAZE2;
+
 
 
 namespace SolAR {

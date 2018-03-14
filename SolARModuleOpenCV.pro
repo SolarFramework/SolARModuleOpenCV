@@ -54,6 +54,7 @@ interfaces/SolARMarker2DSquaredBinaryOpencv.h \
 interfaces/SolARContoursFilterBinaryMarkerOpencv.h \
 interfaces/SolARDescriptorsExtractorSBPatternOpencv.h \
 interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
+interfaces/SolARDescriptorsExtractorAKAZE2Opencv.h \
 interfaces/SolARDescriptorsExtractorORBOpencv.h \
 interfaces/SolARHomographyEstimationOpencv.h \
 interfaces/SolARPoseEstimationOpencv.h \
