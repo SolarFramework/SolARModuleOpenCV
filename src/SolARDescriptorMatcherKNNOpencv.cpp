@@ -169,6 +169,11 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(
     if (desc1->getNbDescriptors() == 0 || desc2->getNbDescriptors() == 0)
         return DescriptorMatcher::RetCode::DESCRIPTOR_EMPTY;
  
+	if (desc1->getNbDescriptors()<2 || desc2->getNbDescriptors()<2) {  
+		matches.clear();
+		return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;  // not enough descriptors to use opencv::knnMatch
+	}
+
     std::vector<std::vector<cv::DMatch>> initial_matches;
     std::vector<cv::DMatch> good_matches;
  
