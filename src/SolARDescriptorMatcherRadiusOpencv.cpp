@@ -62,20 +62,20 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
  
         //since it is an openCV implementation we need to convert back the descriptors from SolAR to Opencv
         uint32_t type_conversion= SolAROpenCVHelper::deduceOpenDescriptorCVType(desc1->getDescriptorDataType());
- 
+
         cv::Mat cvDescriptors1(desc1->getNbDescriptors(), desc1->getNbElements(), type_conversion);
         cvDescriptors1.data=(uchar*)desc1->data();
  
-        cv::Mat cvDescriptors2(desc2->getNbDescriptors(), desc1->getNbElements(), type_conversion);
+        cv::Mat cvDescriptors2(desc2->getNbDescriptors(), desc2->getNbElements(), type_conversion);
         cvDescriptors2.data=(uchar*)desc2->data();
- /*
+
         if (desc1->getDescriptorDataType() != DescriptorBuffer::TYPE_32F){
             cvDescriptors1.convertTo(cvDescriptors1, CV_32F);
         }
         if (desc2->getDescriptorDataType() != DescriptorBuffer::TYPE_32F){
             cvDescriptors2.convertTo(cvDescriptors2, CV_32F);
         }
- */
+
         m_matcher.radiusMatch(cvDescriptors1, cvDescriptors2, cv_matches, m_maxDistance);
  
         matches.clear();
