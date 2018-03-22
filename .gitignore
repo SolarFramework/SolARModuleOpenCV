@@ -42,7 +42,6 @@
 
 *.rej
 *.stash
-*make*
 *.rc
 *.res
 *.exp
