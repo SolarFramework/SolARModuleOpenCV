@@ -44,10 +44,10 @@ set(FILES_TO_COPY
 	$ENV{BCOMDEVROOT}/thirdParties/boost/1.64.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}boost_thread.${LIBEXTENSION}
 	$ENV{BCOMDEVROOT}/thirdParties/boost/1.64.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}boost_date_time.${LIBEXTENSION}
 
-	$ENV{BCOMDEVROOT}/bcomBuild/SolARModuleOpencv/0.3.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}SolARModuleOpencv.${LIBEXTENSION}
-	$ENV{BCOMDEVROOT}/bcomBuild/SolARModuleNonFreeOpencv/0.3.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}SolARModuleNonFreeOpencv.${LIBEXTENSION}
-	$ENV{BCOMDEVROOT}/bcomBuild/SolARFramework/0.3.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}SolARFramework.${LIBEXTENSION}
-	$ENV{BCOMDEVROOT}/bcomBuild/SolARModuleTools/0.3.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}SolARModuleTools.${LIBEXTENSION}
+	$ENV{BCOMDEVROOT}/bcomBuild/SolARModuleOpencv/0.4.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}SolARModuleOpencv.${LIBEXTENSION}
+	$ENV{BCOMDEVROOT}/bcomBuild/SolARModuleNonFreeOpencv/0.4.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}SolARModuleNonFreeOpencv.${LIBEXTENSION}
+	$ENV{BCOMDEVROOT}/bcomBuild/SolARFramework/0.4.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}SolARFramework.${LIBEXTENSION}
+	$ENV{BCOMDEVROOT}/bcomBuild/SolARModuleTools/0.4.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}SolARModuleTools.${LIBEXTENSION}
 	$ENV{BCOMDEVROOT}/thirdParties/xpcf/1.0.0/lib/x86_64/shared/${CMAKE_DEBUG_OR_RELEASE}/${LIBPREFIX}xpcf.${LIBEXTENSION}
 	)
 # define targets (library, install and uninstall)
