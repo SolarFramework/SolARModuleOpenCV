@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.7.2)
 
 ##################################################
 set (VERSION_NUMBER "0.3.1")
