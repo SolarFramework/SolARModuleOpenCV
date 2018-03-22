@@ -67,11 +67,15 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
         */
     m_type=type;
     switch (m_type) {
-    case (KeypointDetectorType::AKAZE):
-        LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
-        m_detector=AKAZE::create();
-        break;
-    case (KeypointDetectorType::ORB):
+	case (KeypointDetectorType::AKAZE):
+		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
+		m_detector = AKAZE::create();
+		break;
+	case (KeypointDetectorType::AKAZE2):
+		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE2)");
+		m_detector = AKAZE2::create();
+		break;
+	case (KeypointDetectorType::ORB):
         LOG_DEBUG("KeypointDetectorImp::setType(ORB)");
         m_detector=ORB::create();
         break;

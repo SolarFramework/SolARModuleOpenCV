@@ -22,7 +22,6 @@
 
 #include <array>
 
-//#include <boost/thread/thread.hpp>
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv);
 
 namespace xpcf = org::bcom::xpcf;
@@ -37,6 +36,7 @@ SolARDescriptorsExtractorORBOpencv::SolARDescriptorsExtractorORBOpencv()
 {
     setUUID(SolARDescriptorsExtractorORBOpencv::UUID);
     addInterface<api::features::IDescriptorsExtractor>(this,api::features::IDescriptorsExtractor::UUID, "interface SolARDescriptorsExtractorOpencv");
+    m_extractor=cv::ORB::create();
     LOG_DEBUG(" SolARDescriptorsExtractorORBOpencv constructor")
 }
 

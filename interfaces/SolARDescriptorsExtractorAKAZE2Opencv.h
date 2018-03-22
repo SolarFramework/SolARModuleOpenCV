@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SOLARDESCRIPTORSEXTRACTOORBROPENCV_H
-#define SOLARDESCRIPTORSEXTRACTOORBROPENCV_H
+#ifndef SOLARDESCRIPTORSEXTRACTORAKAZE2OPENCV_H
+#define SOLARDESCRIPTORSEXTRACTORAKAZE2OPENCV_H
 
 #include "api/features/IDescriptorsExtractor.h"
 // Definition of SolARDescriptorExtractorOpencv Class //
@@ -25,7 +25,7 @@
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
-#include "opencv2/features2d.hpp"
+#include "features2d_akaze2.hpp"  // Define AKAZE2;
 #include "datastructure/DescriptorBuffer.h"
 #include "datastructure/Keypoint.h"
 
@@ -34,20 +34,20 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorORBOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorAKAZE2Opencv : public org::bcom::xpcf::ComponentBase,
         public api::features::IDescriptorsExtractor {
 public:
-    SolARDescriptorsExtractorORBOpencv();
-    ~SolARDescriptorsExtractorORBOpencv();
+    SolARDescriptorsExtractorAKAZE2Opencv();
+    ~SolARDescriptorsExtractorAKAZE2Opencv();
     void unloadComponent () override final;
-    inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::ORB") ;};
+    inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE2") ;};
 
     void extract (const SRef<Image> image, const std::vector<SRef<Keypoint>> &keypoints, SRef<DescriptorBuffer>& descriptors) override;
 
-    XPCF_DECLARE_UUID("0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a");
+    XPCF_DECLARE_UUID("21238c00-26dd-11e8-b467-0ed5f89f718b");
 
 private:
-    cv::Ptr<cv::Feature2D> m_extractor;
+    cv::Ptr<cv::AKAZE2> m_extractor;
 };
 
 }
@@ -56,4 +56,4 @@ private:
 
 
 
-#endif // SOLARDESCRIPTORSEXTRACTOORBROPENCV_H
+#endif // SOLARDESCRIPTORSEXTRACTORAKAZE2OPENCV_H

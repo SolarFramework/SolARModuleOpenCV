@@ -73,10 +73,12 @@ const string CAMERA_CALIBRATION="702a7f53-e5ec-45d2-887d-daa99a34a33c";
 const string CAMERA="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4";
 const string CONTOURS_EXTRACTOR="6acf8de2-cc63-11e7-abc4-cec278b6b50a";
 const string CONTOURS_FILTER_BINARY_MARKER="4309dcc6-cc73-11e7-abc4-cec278b6b50a";
+const string DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9";
 const string DESCRIPTOR_MATCHER_KNN="7823dac8-1597-41cf-bdef-59aa22f3d40a";
 const string DESCRIPTOR_MATCHER_RADIUS="904e64f6-d502-11e7-9296-cec278b6b50a";
 const string DESCRIPTORS_EXTRACTOR_ORB="0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a";
 const string DESCRIPTORS_EXTRACTOR_AKAZE="c8cc68db-9abd-4dab-9204-2fe4e9d010cd";
+const string DESCRIPTORS_EXTRACTOR_AKAZE2="21238c00-26dd-11e8-b467-0ed5f89f718b";
 const string DESCRIPTORS_EXTRACTOR_SBPATTERN="d25625ba-ce3a-11e7-abc4-cec278b6b50a";
 const string HOMOGRAPHY_ESTIMATION="fb9dac20-2a44-44b2-aa42-2871eec31427";
 const string HOMOGRAPHY_VALIDATION="dcc94624-dd32-11e7-9296-cec278b6b50a";
@@ -209,11 +211,35 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         return res;
     }
 
-    else if (uuid == UUID::DESCRIPTOR_MATCHER_KNN || uuid == UUID::DESCRIPTOR_MATCHER_RADIUS) // descriptor matcher components
+    else if (uuid == UUID::DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE ) // descriptor matcher components
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorMatcher::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("BFM descriptor matcher component creation has failed");
+        return res;
+    }
+
+    else if ( uuid == UUID::DESCRIPTOR_MATCHER_KNN || uuid == UUID::DESCRIPTOR_MATCHER_RADIUS) // descriptor matcher components
     {
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorMatcher::UUID), compRef);
         if (res == -1)
              LOG_ERROR("KNN descriptor matcher component creation has failed");
+        return res;
+    }
+
+    else if (uuid == UUID::DESCRIPTORS_EXTRACTOR_AKAZE) //AKAZE keypoint descriptors extractors component
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorsExtractor::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("AKAZE descriptors extractor component creation has failed");
+        return res;
+    }
+
+    else if (uuid == UUID::DESCRIPTORS_EXTRACTOR_AKAZE2) //AKAZE keypoint descriptors extractors component
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorsExtractor::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("AKAZE2 descriptors extractor component creation has failed");
         return res;
     }
 
