@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.7.2)
 
 ##################################################
-set (VERSION_NUMBER "0.3.1")
+set (VERSION_NUMBER "0.4.0")
 project("SolARModuleOpenCV")
 set (SOURCES 
 	src/SolARModuleOpencv.cpp
@@ -39,7 +39,7 @@ set (SOURCES
 ##################################################
 
 # various macros
-include("macros.cmake")
+include("$ENV{BCOMDEVROOT}/bcomBuild/SolARFramework/macros.cmake")
 # config setup
 setup()
 # process packagedependencies.txt
