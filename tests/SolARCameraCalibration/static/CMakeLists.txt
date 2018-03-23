@@ -45,7 +45,6 @@ set(FILES_TO_COPY
 	$ENV{BCOMDEVROOT}/thirdParties/boost/1.64.0/lib/x86_64/shared/$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>/${LIBPREFIX}boost_date_time.${LIBEXTENSION}
 
 	$ENV{BCOMDEVROOT}/bcomBuild/SolARModuleOpencv/0.4.0/lib/x86_64/shared/$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>/${LIBPREFIX}SolARModuleOpencv.${LIBEXTENSION}
-	$ENV{BCOMDEVROOT}/bcomBuild/SolARModuleNonFreeOpencv/0.4.0/lib/x86_64/shared/$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>/${LIBPREFIX}SolARModuleNonFreeOpencv.${LIBEXTENSION}
 	$ENV{BCOMDEVROOT}/bcomBuild/SolARFramework/0.4.0/lib/x86_64/shared/$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>/${LIBPREFIX}SolARFramework.${LIBEXTENSION}
 	$ENV{BCOMDEVROOT}/bcomBuild/SolARModuleTools/0.4.0/lib/x86_64/shared/$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>/${LIBPREFIX}SolARModuleTools.${LIBEXTENSION}
 	$ENV{BCOMDEVROOT}/thirdParties/xpcf/1.0.0/lib/x86_64/shared/$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>/${LIBPREFIX}xpcf.${LIBEXTENSION}
