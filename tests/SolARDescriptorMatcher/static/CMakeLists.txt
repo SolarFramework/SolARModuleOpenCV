@@ -6,7 +6,7 @@ set (SOURCES main.cpp)
 ##################################################
 
 # various macros
-include("$ENV{BCOMDEVROOT}/bcomBuild/SolARFramework/macros.cmake")
+include("$ENV{BCOMDEVROOT}/bcomBuild/SolARFramework/solarmacros.cmake")
 # config setup
 setup()
 # process packagedependencies.txt
