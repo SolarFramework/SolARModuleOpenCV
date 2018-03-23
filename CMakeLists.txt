@@ -39,7 +39,7 @@ set (SOURCES
 ##################################################
 
 # various macros
-include("macros.cmake")
+include("$ENV{BCOMDEVROOT}/bcomBuild/SolARFramework/macros.cmake")
 # config setup
 setup()
 # process packagedependencies.txt
