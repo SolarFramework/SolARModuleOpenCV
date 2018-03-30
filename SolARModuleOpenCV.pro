@@ -102,7 +102,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/AKAZE2/akaze.cpp \
     src/AKAZE2/AKAZEFeatures.cpp \
     src/AKAZE2/fed.cpp \
-    src/AKAZE2/nldiffusion_functions.cpp
+    src/AKAZE2/nldiffusion_functions.cpp \
+    src/SolARSVDTriangulationOpencv.cpp
 
 unix {
 }
