@@ -28,32 +28,11 @@ namespace SolAR {
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARCameraCalibrationOpencv : public org::bcom::xpcf::ComponentBase,
-        public api::input::devices::ICameraCalibration {
+class SOLAROPENCV_EXPORT_API SolARCameraCalibrationOpencv :
+	public org::bcom::xpcf::ComponentBase,
+	public api::input::devices::ICameraCalibration
+{
 public:
-    SolARCameraCalibrationOpencv();
-    virtual ~SolARCameraCalibrationOpencv();
-
-	bool calibrate(std::string&inputVideo, std::string&output);
-	bool calibrate(int camera_id, std::string&output);
-	bool setParameters(std::string&config_file);
-    virtual void unloadComponent () override;
-
-    XPCF_DECLARE_UUID("702a7f53-e5ec-45d2-887d-daa99a34a33c");
-
-protected:
-    cv::Size m_boardSize;
-    cv::Size m_imageSize;
-    cv::Mat m_camMatrix;
-    cv::Mat m_camDistorsion;
-
-    float m_squareSize;
-    float m_aspectRatio;
-
-    int m_nframes;
-    int m_flags ;
-    int m_delay;	
-	
 	enum ProcessMode
 	{
 		SOLAR_DETECT = 0,
@@ -61,13 +40,33 @@ protected:
 		SOLAR_CALIBRATED = 2
 	};
 
-	virtual bool process(cv::VideoCapture&, std::string& );
-};
+public:
+	SolARCameraCalibrationOpencv();
+	virtual ~SolARCameraCalibrationOpencv();
 
+	bool calibrate(std::string&inputVideo, std::string&output);
+	bool calibrate(int camera_id, std::string&output);
+	bool setParameters(std::string&config_file);
+	virtual void unloadComponent() override;
+
+	XPCF_DECLARE_UUID("702a7f53-e5ec-45d2-887d-daa99a34a33c");
+
+protected:
+	cv::Size m_boardSize;
+	cv::Size m_imageSize;
+	cv::Mat m_camMatrix;
+	cv::Mat m_camDistorsion;
+
+	float m_squareSize;
+	float m_aspectRatio;
+
+	int m_nframes;
+	int m_flags;
+	int m_delay;
+
+	virtual bool process(cv::VideoCapture&, std::string&);
+};
 }
 }
 }  // end of namespace Solar
-
-
-
 #endif // SOLARCAMERACALIBRATIONOPENCV_H
