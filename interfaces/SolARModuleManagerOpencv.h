@@ -73,13 +73,13 @@ const string CAMERA_CALIBRATION="702a7f53-e5ec-45d2-887d-daa99a34a33c";
 const string CAMERA="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4";
 const string CONTOURS_EXTRACTOR="6acf8de2-cc63-11e7-abc4-cec278b6b50a";
 const string CONTOURS_FILTER_BINARY_MARKER="4309dcc6-cc73-11e7-abc4-cec278b6b50a";
+const string DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9";
 const string DESCRIPTOR_MATCHER_KNN="7823dac8-1597-41cf-bdef-59aa22f3d40a";
 const string DESCRIPTOR_MATCHER_RADIUS="904e64f6-d502-11e7-9296-cec278b6b50a";
 const string DESCRIPTORS_EXTRACTOR_ORB="0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a";
+const string DESCRIPTORS_EXTRACTOR_AKAZE="c8cc68db-9abd-4dab-9204-2fe4e9d010cd";
+const string DESCRIPTORS_EXTRACTOR_AKAZE2="21238c00-26dd-11e8-b467-0ed5f89f718b";
 const string DESCRIPTORS_EXTRACTOR_SBPATTERN="d25625ba-ce3a-11e7-abc4-cec278b6b50a";
-const string DESCRIPTORS_EXTRACTOR_SIFT="3787eaa6-d0a0-11e7-8fab-cec278b6b50a";
-const string DESCRIPTORS_EXTRACTOR_SURF128="fe14a310-d0a2-11e7-8fab-cec278b6b50a";
-const string DESCRIPTORS_EXTRACTOR_SURF64="1a437804-d0a3-11e7-8fab-cec278b6b50a";
 const string HOMOGRAPHY_ESTIMATION="fb9dac20-2a44-44b2-aa42-2871eec31427";
 const string HOMOGRAPHY_VALIDATION="dcc94624-dd32-11e7-9296-cec278b6b50a";
 const string IMAGE2WORLD_MAPPER="d7fee286-5931-4954-b3d1-bb302259c7ef";
@@ -94,6 +94,8 @@ const string MARKER2D_SQUARED_BINARY="5d2b8da9-528e-4e5e-96c1-f883edcf3b1c";
 const string PERSPECTIVE_CONTROLLER="9c960f2a-cd6e-11e7-abc4-cec278b6b50a";
 const string POSE_ESTIMATION="0753ade1-7932-4e29-a71c-66155e309a53";
 const string SBPATTERN_REINDEXER="46b7dd26-d558-11e7-9296-cec278b6b50a";
+
+
 }  // End namespace UUID
 
 using namespace SolAR;
@@ -209,7 +211,15 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         return res;
     }
 
-    else if (uuid == UUID::DESCRIPTOR_MATCHER_KNN || uuid == UUID::DESCRIPTOR_MATCHER_RADIUS) // descriptor matcher components
+    else if (uuid == UUID::DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE ) // descriptor matcher components
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorMatcher::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("BFM descriptor matcher component creation has failed");
+        return res;
+    }
+
+    else if ( uuid == UUID::DESCRIPTOR_MATCHER_KNN || uuid == UUID::DESCRIPTOR_MATCHER_RADIUS) // descriptor matcher components
     {
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorMatcher::UUID), compRef);
         if (res == -1)
@@ -217,7 +227,23 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         return res;
     }
 
-    else if (uuid == UUID::DESCRIPTORS_EXTRACTOR_ORB || uuid == UUID::DESCRIPTORS_EXTRACTOR_SIFT || uuid == UUID::DESCRIPTORS_EXTRACTOR_SURF128 || uuid == UUID::DESCRIPTORS_EXTRACTOR_SURF64) // keypoint descriptors extractors component
+    else if (uuid == UUID::DESCRIPTORS_EXTRACTOR_AKAZE) //AKAZE keypoint descriptors extractors component
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorsExtractor::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("AKAZE descriptors extractor component creation has failed");
+        return res;
+    }
+
+    else if (uuid == UUID::DESCRIPTORS_EXTRACTOR_AKAZE2) //AKAZE keypoint descriptors extractors component
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorsExtractor::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("AKAZE2 descriptors extractor component creation has failed");
+        return res;
+    }
+
+    else if (uuid == UUID::DESCRIPTORS_EXTRACTOR_ORB) // keypoint descriptors extractors component
     {
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorsExtractor::UUID), compRef);
         if (res == -1)

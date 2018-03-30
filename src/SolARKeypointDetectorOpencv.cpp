@@ -29,7 +29,6 @@ XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetecto
 namespace xpcf = org::bcom::xpcf;
 
 using namespace cv;
-using namespace cv::xfeatures2d;
 
 namespace SolAR {
 using namespace datastructure;
@@ -68,23 +67,15 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
         */
     m_type=type;
     switch (m_type) {
-    case (KeypointDetectorType::SIFT):
-        LOG_DEBUG("KeypointDetectorImp::setType(SIFT)");
-        m_detector=SIFT::create();
-        break;
-    case (KeypointDetectorType::SURF):
-        LOG_DEBUG("KeypointDetectorImp::setType(SURF)");
-        m_detector=SURF::create();
-        break;
-    case (KeypointDetectorType::DAISY):
-        LOG_DEBUG("KeypointDetectorImp::setType(DAISY)");
-        m_detector=DAISY::create();
-        break;
-    case (KeypointDetectorType::AKAZE):
-        LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
-        m_detector=AKAZE::create();
-        break;
-    case (KeypointDetectorType::ORB):
+	case (KeypointDetectorType::AKAZE):
+		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
+		m_detector = AKAZE::create();
+		break;
+	case (KeypointDetectorType::AKAZE2):
+		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE2)");
+		m_detector = AKAZE2::create();
+		break;
+	case (KeypointDetectorType::ORB):
         LOG_DEBUG("KeypointDetectorImp::setType(ORB)");
         m_detector=ORB::create();
         break;

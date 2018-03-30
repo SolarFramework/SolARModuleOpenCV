@@ -25,7 +25,9 @@
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
-#include "opencv2/xfeatures2d.hpp"
+#include "features2d_akaze2.hpp"  // Define AKAZE2;
+
+
 
 namespace SolAR {
 using namespace datastructure;
@@ -55,7 +57,7 @@ private:
 
     //TODO: user parameters to expose
     unsigned int m_select_best_N_features = 1000; //select the first 1000 best features
-    float m_ratio=1.f;//resize image to speedup computation.
+    float m_ratio=1.0f;//resize image to speedup computation.
 };
 
 extern int deduceOpenCVType(SRef<Image> img);

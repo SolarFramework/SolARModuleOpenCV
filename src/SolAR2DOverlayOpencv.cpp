@@ -20,7 +20,6 @@
 #include "opencv2/features2d.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
-#include "opencv2/xfeatures2d.hpp"
 #include "opencv2/videoio/videoio.hpp"
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
@@ -94,8 +93,11 @@ void SolAR2DOverlayOpencv::drawCircles(std::vector<SRef<Keypoint>>& keypoints, u
     {
         // check that center of cirlcle is inside the image
         if ((*itr)->x()>= 0 && (*itr)->y() >= 0 && (*itr)->x() <= displayImage->getWidth() && (*itr)->y() < displayImage->getHeight())
-            cv::circle(displayedImage,cv::Point2f((*itr)->x(), (*itr)->y()) ,radius,cv::Scalar(uni(rng), uni(rng), uni(rng)),thickness);
-    }
+			cv::circle(displayedImage, cv::Point2f((*itr)->x(), (*itr)->y()), radius, cv::Scalar(uni(rng), uni(rng), uni(rng)), thickness);
+		//cv::circle(displayedImage, cv::Point2f((*itr)->x(), (*itr)->y()), radius, cv::Scalar(uni(rng), uni(rng), uni(rng)), thickness);
+		cv::circle(displayedImage, cv::Point2f((*itr)->x(), (*itr)->y()), radius, cv::Scalar(0,255, 0), thickness);
+
+	}
 
 }
 

@@ -127,9 +127,9 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(SRef<Descripto
     matches.clear();
 
     // check if the descriptors type match
-    if(descriptors1->getDescriptorType()!=descriptors2->getDescriptorType()){
-        return DescriptorMatcher::DESCRIPTORS_DONT_MATCH;
-    }
+    if (descriptors1->getDescriptorDataType() != descriptors2->getDescriptorDataType() ){
+            return DescriptorMatcher::DESCRIPTORS_DONT_MATCH;
+     }
 
     if(descriptors1->getNbDescriptors()==0 || descriptors2->getNbDescriptors()==0){
         return DescriptorMatcher::DESCRIPTOR_EMPTY;
@@ -147,12 +147,12 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(SRef<Descripto
 
     cv::Mat cvDescriptor2(descriptors2->getNbDescriptors(), descriptors2->getNbElements(), type_conversion);
     cvDescriptor2.data=(uchar*)descriptors2->data();
-
+/*
     if (descriptors1->getDescriptorDataType() != DescriptorBuffer::TYPE_32F)
        cvDescriptor1.convertTo(cvDescriptor1, CV_32F);
     if (descriptors2->getDescriptorDataType() != DescriptorBuffer::TYPE_32F)
        cvDescriptor2.convertTo(cvDescriptor2, CV_32F);
-
+*/
     m_matcher.knnMatch(cvDescriptor1, cvDescriptor2, matches,nbOfMatches);
 
     return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
@@ -169,6 +169,11 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(
     if (desc1->getNbDescriptors() == 0 || desc2->getNbDescriptors() == 0)
         return DescriptorMatcher::RetCode::DESCRIPTOR_EMPTY;
  
+	if (desc1->getNbDescriptors()<2 || desc2->getNbDescriptors()<2) {  
+		matches.clear();
+		return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;  // not enough descriptors to use opencv::knnMatch
+	}
+
     std::vector<std::vector<cv::DMatch>> initial_matches;
     std::vector<cv::DMatch> good_matches;
  
