@@ -21,24 +21,7 @@
 // ADD COMPONENTS HEADERS HERE
 
 #include "SolARSVDTriangulationOpencv.h"
-#include "SolARImageLoaderOpencv.h"
-#include "SolARCameraOpencv.h"
-#include "SolARKeypointDetectorOpencv.h"
-#include "SolARDescriptorsExtractorSIFTOpencv.h"
-//#include "SolARDescriptorMatcherKNNOpencv.h"
-#include "SolARDescriptorMatcherRadiusOpencv.h"
-#include "SolARImageViewerOpencv.h"
-#include "SolARSideBySideOverlayOpencv.h"
-#include "SolARBasicMatchesFilterOpencv.h"
-#include "SolARGeometricMatchesFilterOpencv.h"
 
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/xfeatures2d/cuda.hpp"
-#include "opencv2/opencv_modules.hpp"
-#include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/xfeatures2d.hpp>
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
@@ -140,17 +123,11 @@ int run()
 
  // declarations
     xpcf::utils::uuids::string_generator    gen;
-    SRef<image::IImageLoader>               imageLoader;
-    SRef<display::IImageViewer>             imageViewer;
-    SRef<display::ISideBySideOverlay>       overlay;
     SRef<solver::map::ITriangulator>        mapper;
 
 
  // component creation
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader);
-    xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(gen(display::ISideBySideOverlay::UUID ), overlay);
 
-    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), imageViewer);
     xpcf::ComponentFactory::createComponent<SolARSVDTriangulationOpencv>(gen(solver::map::ITriangulator::UUID ), mapper);
 
 
@@ -207,6 +184,4 @@ int run()
 
 int main(){
 	run();
-	std::cout << "\n\n\nHit return key, please\n";
-	getchar();
 }
