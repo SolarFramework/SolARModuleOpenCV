@@ -23,10 +23,9 @@
 #include "SolARImageLoaderOpencv.h"
 #include "SolARCameraOpencv.h"
 #include "SolARKeypointDetectorOpencv.h"
-#include "SolARDescriptorsExtractorSURF128Opencv.h"
+#include "SolARDescriptorsExtractorAKAZE2Opencv.h"
 
-//#include "SolARDescriptorMatcherKNNOpencv.h"
-#include "SolARDescriptorMatcherRadiusOpencv.h"
+#include "SolARDescriptorMatcherKNNOpencv.h"
 #include "SolARImageViewerOpencv.h"
 #include "SolARSideBySideOverlayOpencv.h"
 #include "SolARBasicMatchesFilterOpencv.h"
@@ -39,10 +38,10 @@
 #include "opencv2/core.hpp"
 #include "opencv2/features2d.hpp"
 #include "opencv2/highgui.hpp"
-#include "opencv2/xfeatures2d/cuda.hpp"
+//#include "opencv2/xfeatures2d/cuda.hpp"
 #include "opencv2/opencv_modules.hpp"
 #include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/xfeatures2d.hpp>
+//#include <opencv2/xfeatures2d.hpp>
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
@@ -91,7 +90,7 @@ int run(std::string& firstImagePath, std::string& secondImagePath, std::string& 
 
     SRef<image::IImageLoader>                            imageLoader;
     SRef<features::IKeypointDetector>                    keypointsDetector;
-    SRef<features::IDescriptorsExtractor>                extractorSURF;
+    SRef<features::IDescriptorsExtractor>                descriptorExtractor;
 
     SRef<features::IDescriptorMatcher>                   matcher;
     SRef<display::IImageViewer>                          viewer;
@@ -146,8 +145,8 @@ int run(std::string& firstImagePath, std::string& secondImagePath, std::string& 
 	xpcf::ComponentFactory::createComponent<SolARCameraOpencv>(gen(input::devices::ICamera::UUID), camera);
 	xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader);
     xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(gen(features::IKeypointDetector::UUID ), keypointsDetector);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorSURF128Opencv>(gen(features::IDescriptorsExtractor::UUID ), extractorSURF);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherRadiusOpencv>(gen(features::IDescriptorMatcher::UUID ), matcher);
+	xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorAKAZE2Opencv>(gen(features::IDescriptorsExtractor::UUID), descriptorExtractor);
+	xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherKNNOpencv>(gen(features::IDescriptorMatcher::UUID), matcher);
     xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(gen(display::ISideBySideOverlay::UUID ), overlay);
     xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), viewer);
     xpcf::ComponentFactory::createComponent<SolARBasicMatchesFilterOpencv>(gen(features::IMatchesFilter::UUID ),
@@ -164,14 +163,10 @@ int run(std::string& firstImagePath, std::string& secondImagePath, std::string& 
     xpcf::ComponentFactory::createComponent<SolARSVDTriangulationOpencv>(gen(solver::map::ITriangulator::UUID ),
                                                                                         mapper);
 
-
 	// load camera parameters from yml input file
 	camera->loadCameraParameters(cameraParameters);
 
-     keypointsDetector->setType(KeypointDetectorType::SURF);
-  //   keypointsDetector->setType(KeypointDetectorType::SURF);
-
-   // Load the first image
+  // Load the first image
    if (imageLoader->loadImage(firstImagePath,
                                image1) != FrameworkReturnCode::_SUCCESS)
    {
@@ -186,17 +181,20 @@ int run(std::string& firstImagePath, std::string& secondImagePath, std::string& 
       return -1;
    }
 
+   // Set keypoints type
+   keypointsDetector->setType(features::KeypointDetectorType::AKAZE2);
+
    // Detect the keypoints of the first image
    keypointsDetector->detect(image1, keypoints1);
 
    // Detect the keypoints of the second image
    keypointsDetector->detect(image2, keypoints2);
 
-   // Compute the SURF descriptor for each keypoint extracted from the first image
-   extractorSURF->extract(image1, keypoints1, descriptors1);
+   // Compute the  descriptor for each keypoint extracted from the first image
+   descriptorExtractor->extract(image1, keypoints1, descriptors1);
 
-   // Compute the SURF descriptor for each keypoint extracted from the second image
-   extractorSURF->extract(image2, keypoints2, descriptors2);
+   // Compute the  descriptor for each keypoint extracted from the second image
+   descriptorExtractor->extract(image2, keypoints2, descriptors2);
 
    // Compute the matches between the keypoints of the first image and the keypoints of the second image
    matcher->match(descriptors1, descriptors2, matches);
