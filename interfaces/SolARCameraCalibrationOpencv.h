@@ -65,6 +65,7 @@ protected:
 	int m_delay;
 
 	virtual bool process(cv::VideoCapture&, std::string&);
+	static bool runAndSave(const std::string&, const std::vector<std::vector<cv::Point2f> >&, cv::Size, cv::Size, float, float, int, cv::Mat&, cv::Mat&);
 };
 }
 }

@@ -174,7 +174,7 @@ static void saveCameraParams(const std::string& filename,
 }
 
 
-static bool runAndSave(const std::string& outputFilename,
+bool SolARCameraCalibrationOpencv::runAndSave(const std::string& outputFilename,
                        const std::vector<std::vector<cv::Point2f> >& imagePoints,
                        cv::Size imageSize,
                        cv::Size boardSize,
