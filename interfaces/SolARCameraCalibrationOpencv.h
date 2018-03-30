@@ -32,16 +32,16 @@ class SOLAROPENCV_EXPORT_API SolARCameraCalibrationOpencv : public org::bcom::xp
         public api::input::devices::ICameraCalibration {
 public:
     SolARCameraCalibrationOpencv();
-    ~SolARCameraCalibrationOpencv();
+    virtual ~SolARCameraCalibrationOpencv();
 
 	bool calibrate(std::string&inputVideo, std::string&output);
 	bool calibrate(int camera_id, std::string&output);
 	bool setParameters(std::string&config_file);
-    void unloadComponent () override final;
+    virtual void unloadComponent () override;
 
     XPCF_DECLARE_UUID("702a7f53-e5ec-45d2-887d-daa99a34a33c");
-private:
 
+protected:
     cv::Size m_boardSize;
     cv::Size m_imageSize;
     cv::Mat m_camMatrix;
@@ -54,8 +54,7 @@ private:
     int m_flags ;
     int m_delay;	
 	
-	bool process(cv::VideoCapture&, std::string& );
-
+	virtual bool process(cv::VideoCapture&, std::string& );
 };
 
 }
