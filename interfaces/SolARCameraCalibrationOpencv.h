@@ -65,7 +65,46 @@ protected:
 	int m_delay;
 
 	virtual bool process(cv::VideoCapture&, std::string&);
-	static bool runAndSave(const std::string&, const std::vector<std::vector<cv::Point2f> >&, cv::Size, cv::Size, float, float, int, cv::Mat&, cv::Mat&);
+	
+	static double computeReprojectionErrors(const std::vector<std::vector<cv::Point3f> >& objectPoints,
+		const std::vector<std::vector<cv::Point2f> >& imagePoints,
+		const std::vector<cv::Mat>& rvecs, const std::vector<cv::Mat>& tvecs,
+		const cv::Mat& cameraMatrix, const cv::Mat& distCoeffs,
+		std::vector<float>& perViewErrors);
+
+	static void calcChessboardCorners(cv::Size boardSize, float squareSize, std::vector<cv::Point3f>& corners);
+
+	static bool runCalibration(std::vector<std::vector<cv::Point2f>>imagePoints,
+		cv::Size imageSize,
+		cv::Size boardSize,
+		float squareSize,
+		float aspectRatio,
+		int flags,
+		cv::Mat& cameraMatrix,
+		cv::Mat& distCoeffs,
+		std::vector<cv::Mat>& rvecs,
+		std::vector<cv::Mat>& tvecs,
+		std::vector<float>& reprojErrs,
+		double& totalAvgErr);
+
+	static void saveCameraParams(const std::string& filename,
+		cv::Size imageSize,
+		cv::Size boardSize,
+		float squareSize,
+		float aspectRatio,
+		int flags,
+		const cv::Mat& cameraMatrix,
+		const cv::Mat& distCoeffs);
+
+	static bool runAndSave(const std::string& outputFilename,
+		const std::vector<std::vector<cv::Point2f> >& imagePoints,
+		cv::Size imageSize,
+		cv::Size boardSize,
+		float squareSize,
+		float aspectRatio,
+		int flags,
+		cv::Mat& cameraMatrix,
+		cv::Mat& distCoeffs);
 };
 }
 }

@@ -57,11 +57,11 @@ SolARCameraCalibrationOpencv::~SolARCameraCalibrationOpencv()
 
 
 
-static double computeReprojectionErrors(const std::vector<std::vector<cv::Point3f> >& objectPoints,
-                                        const std::vector<std::vector<cv::Point2f> >& imagePoints,
-                                        const std::vector<cv::Mat>& rvecs, const std::vector<cv::Mat>& tvecs,
-                                        const cv::Mat& cameraMatrix, const cv::Mat& distCoeffs,
-                                        std::vector<float>& perViewErrors)
+double SolARCameraCalibrationOpencv::computeReprojectionErrors(const std::vector<std::vector<cv::Point3f> >& objectPoints,
+															const std::vector<std::vector<cv::Point2f> >& imagePoints,
+															const std::vector<cv::Mat>& rvecs, const std::vector<cv::Mat>& tvecs,
+															const cv::Mat& cameraMatrix, const cv::Mat& distCoeffs,
+															std::vector<float>& perViewErrors)
 {
     std::vector<cv::Point2f> imagePoints2;
     int i, totalPoints = 0;
@@ -81,8 +81,8 @@ static double computeReprojectionErrors(const std::vector<std::vector<cv::Point3
     return std::sqrt(totalErr / totalPoints);
 }
 
-static void calcChessboardCorners(cv::Size boardSize, float squareSize,
-                                  std::vector<cv::Point3f>& corners){
+void SolARCameraCalibrationOpencv::calcChessboardCorners(cv::Size boardSize, float squareSize, std::vector<cv::Point3f>& corners)
+{
     corners.resize(0);
     for (int i = 0; i < boardSize.height; i++)
         for (int j = 0; j < boardSize.width; j++)
@@ -90,18 +90,18 @@ static void calcChessboardCorners(cv::Size boardSize, float squareSize,
                 float(i*squareSize), 0));
 }
 
-static bool runCalibration(std::vector<std::vector<cv::Point2f>>imagePoints,
-                           cv::Size imageSize,
-                           cv::Size boardSize,
-                           float squareSize,
-                           float aspectRatio,
-                           int flags,
-                           cv::Mat& cameraMatrix,
-                           cv::Mat& distCoeffs,
-                           std::vector<cv::Mat>& rvecs,
-                           std::vector<cv::Mat>& tvecs,
-                           std::vector<float>& reprojErrs,
-                           double& totalAvgErr)
+bool SolARCameraCalibrationOpencv::runCalibration(std::vector<std::vector<cv::Point2f>>imagePoints,
+												cv::Size imageSize,
+												cv::Size boardSize,
+												float squareSize,
+												float aspectRatio,
+												int flags,
+												cv::Mat& cameraMatrix,
+												cv::Mat& distCoeffs,
+												std::vector<cv::Mat>& rvecs,
+												std::vector<cv::Mat>& tvecs,
+												std::vector<float>& reprojErrs,
+												double& totalAvgErr)
 {
     cameraMatrix = cv::Mat::eye(3, 3, CV_64F);
     if (flags & cv::CALIB_FIX_ASPECT_RATIO)
@@ -127,15 +127,14 @@ static bool runCalibration(std::vector<std::vector<cv::Point2f>>imagePoints,
     return ok;
 }
 
-
-static void saveCameraParams(const std::string& filename,
-                             cv::Size imageSize,
-                             cv::Size boardSize,
-                             float squareSize,
-                             float aspectRatio,
-                             int flags,
-                             const cv::Mat& cameraMatrix,
-                             const cv::Mat& distCoeffs)
+void SolARCameraCalibrationOpencv::saveCameraParams(const std::string& filename,
+													cv::Size imageSize,
+													cv::Size boardSize,
+													float squareSize,
+													float aspectRatio,
+													int flags,
+													const cv::Mat& cameraMatrix,
+													const cv::Mat& distCoeffs)
 {
     cv::FileStorage fs(filename, cv::FileStorage::WRITE);
 
@@ -175,14 +174,14 @@ static void saveCameraParams(const std::string& filename,
 
 
 bool SolARCameraCalibrationOpencv::runAndSave(const std::string& outputFilename,
-                       const std::vector<std::vector<cv::Point2f> >& imagePoints,
-                       cv::Size imageSize,
-                       cv::Size boardSize,
-                       float squareSize,
-                       float aspectRatio,
-                       int flags,
-                       cv::Mat& cameraMatrix,
-    cv::Mat& distCoeffs)
+											const std::vector<std::vector<cv::Point2f> >& imagePoints,
+											cv::Size imageSize,
+											cv::Size boardSize,
+											float squareSize,
+											float aspectRatio,
+											int flags,
+											cv::Mat& cameraMatrix,
+											cv::Mat& distCoeffs)
 {
     std::vector<cv::Mat> rvecs, tvecs;
     std::vector<float> reprojErrs;
@@ -201,7 +200,8 @@ bool SolARCameraCalibrationOpencv::runAndSave(const std::string& outputFilename,
     return ok;
 }
 
-bool SolARCameraCalibrationOpencv::calibrate(std::string& inputVideo, std::string&output) {
+bool SolARCameraCalibrationOpencv::calibrate(std::string& inputVideo, std::string&output)
+{
 	cv::VideoCapture capture;
 
 	if (!capture.open(inputVideo)) // videoFile
@@ -213,7 +213,8 @@ bool SolARCameraCalibrationOpencv::calibrate(std::string& inputVideo, std::strin
 	return process(capture, output);
 }
 
-bool SolARCameraCalibrationOpencv::calibrate(int camera_id, std::string&output) {
+bool SolARCameraCalibrationOpencv::calibrate(int camera_id, std::string&output)
+{
 	cv::VideoCapture capture;
 
 	if (!capture.open(camera_id)) // camera id
@@ -226,8 +227,8 @@ bool SolARCameraCalibrationOpencv::calibrate(int camera_id, std::string&output) 
 }
 
 
-bool SolARCameraCalibrationOpencv::process(cv::VideoCapture& capture, std::string&output) {
-
+bool SolARCameraCalibrationOpencv::process(cv::VideoCapture& capture, std::string&output)
+{
 	cv::Size imageSize;
 	int i;
 	clock_t prevTimestamp = 0;
@@ -389,7 +390,8 @@ bool SolARCameraCalibrationOpencv::process(cv::VideoCapture& capture, std::strin
 //	return true;
 //}
 
-bool SolARCameraCalibrationOpencv::setParameters(std::string &config_file){
+bool SolARCameraCalibrationOpencv::setParameters(std::string &config_file)
+{
     cv::FileStorage fs(config_file, cv::FileStorage::READ);
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(4, 1, CV_32FC1);
