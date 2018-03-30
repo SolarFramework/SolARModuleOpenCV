@@ -54,6 +54,13 @@ protected:
     int m_flags ;
     int m_delay;	
 	
+	enum ProcessMode
+	{
+		SOLAR_DETECT = 0,
+		SOLAR_CAPTURE = 1,
+		SOLAR_CALIBRATED = 2
+	};
+
 	virtual bool process(cv::VideoCapture&, std::string& );
 };
 

@@ -41,7 +41,7 @@ namespace SolAR {
 namespace MODULES {
 namespace OPENCV {
 
-enum { DETECTION = 0, CAPTURING = 1, CALIBRATED = 2 };
+
 
 SolARCameraCalibrationOpencv::SolARCameraCalibrationOpencv()
 {
@@ -231,7 +231,7 @@ bool SolARCameraCalibrationOpencv::process(cv::VideoCapture& capture, std::strin
 	cv::Size imageSize;
 	int i;
 	clock_t prevTimestamp = 0;
-	int mode = DETECTION;
+	ProcessMode mode = SOLAR_DETECT;
 	std::vector<std::vector<cv::Point2f> > imagePoints;
 
     for (i = 0;; i++){
@@ -256,7 +256,7 @@ bool SolARCameraCalibrationOpencv::process(cv::VideoCapture& capture, std::strin
         if (found) cornerSubPix(viewGray, pointbuf, cv::Size(11, 11),
             cv::Size(-1, -1), cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 30, 0.1));
 
-        if (mode == CAPTURING && found &&
+        if (mode == SOLAR_CAPTURE && found &&
             (!capture.isOpened() || clock() - prevTimestamp > m_delay*1e-3*CLOCKS_PER_SEC)){
             imagePoints.push_back(pointbuf);
             prevTimestamp = clock();
@@ -266,18 +266,18 @@ bool SolARCameraCalibrationOpencv::process(cv::VideoCapture& capture, std::strin
         if (found)
             cv::drawChessboardCorners(view, m_boardSize, cv::Mat(pointbuf), found);
 
-        std::string msg = mode == CAPTURING ? "100/100" :
-            mode == CALIBRATED ? "Calibrated" : "Press 'g' to start";
+        std::string msg = mode == SOLAR_CAPTURE ? "100/100" :
+            mode == SOLAR_CALIBRATED ? "Calibrated" : "Press 'g' to start";
         int baseLine = 0;
 
         cv::Size textSize = cv::getTextSize(msg, 1, 1, 1, &baseLine);
         cv::Point textOrigin(view.cols - 2 * textSize.width - 10, view.rows - 2 * baseLine - 10);
 
-        if (mode == CAPTURING)
+        if (mode == SOLAR_CAPTURE)
                 msg = cv::format("%d/%d", (int)imagePoints.size(), m_nframes);
 
         cv::putText(view, msg, textOrigin, 1, 1,
-            mode != CALIBRATED ? cv::Scalar(0, 0, 255) : cv::Scalar(0, 255, 0));
+            mode != SOLAR_CALIBRATED ? cv::Scalar(0, 0, 255) : cv::Scalar(0, 255, 0));
 
         if (blink)
             cv::bitwise_not(view, view);
@@ -289,16 +289,16 @@ bool SolARCameraCalibrationOpencv::process(cv::VideoCapture& capture, std::strin
             break;
 
         if (capture.isOpened() && key == 'g'){
-            mode = CAPTURING;
+            mode = SOLAR_CAPTURE;
             imagePoints.clear();
         }
-        if (mode == CAPTURING && imagePoints.size() >= (unsigned)m_nframes){
+        if (mode == SOLAR_CAPTURE && imagePoints.size() >= (unsigned)m_nframes){
             if (runAndSave(output, imagePoints, imageSize,
                 m_boardSize, m_squareSize, m_aspectRatio,
                 m_flags, m_camMatrix, m_camDistorsion))
-                mode = CALIBRATED;
+                mode = SOLAR_CALIBRATED;
             else
-                mode = DETECTION;
+                mode = SOLAR_DETECT;
             if (!capture.isOpened())
                 break;
         }
