@@ -103,7 +103,12 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/AKAZE2/AKAZEFeatures.cpp \
     src/AKAZE2/fed.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
-    src/SolARSVDTriangulationOpencv.cpp
+    src/SolARSVDTriangulationOpencv.cpp \
+    src/SolARBasicMatchesFilterOpencv.cpp \
+    src/SolARFundamentalMatrixDecompositionValidationOpencv.cpp \
+    src/SolARFundamentalMatrixEstimationOpencv.cpp \
+    src/SolARGeometricMatchesFilterOpencv.cpp \
+    src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
 
 unix {
 }
