@@ -199,7 +199,7 @@ int run(std::string& firstImagePath, std::string& secondImagePath, std::string& 
    // Compute the matches between the keypoints of the first image and the keypoints of the second image
    matcher->match(descriptors1, descriptors2, matches);
 
-  int vizPoints0 = int(matches.size()/3);
+  int vizPoints0 = int(matches.size());
    std::cout<<"->original matches: "<<matches.size()<<std::endl;
 
    matchedKeypoints1.clear();
@@ -223,7 +223,7 @@ int run(std::string& firstImagePath, std::string& secondImagePath, std::string& 
        gmatchedKeypoints1.push_back(xpcf::utils::make_shared<Point2Df>(keypoints1[gmatches[i].getIndexInDescriptorA()]->getX(),keypoints1[ gmatches[i].getIndexInDescriptorA()]->getY()));
        gmatchedKeypoints2.push_back(xpcf::utils::make_shared<Point2Df>(keypoints2[gmatches[i].getIndexInDescriptorB()]->getX(),keypoints2[ gmatches[i].getIndexInDescriptorB()]->getY()));
     }
-    int vizPoints1 = int(gmatches.size()/2.5);
+    int vizPoints1 = int(gmatches.size());
      overlay->drawMatchesLines(image1, image2, viewerImage2, gmatchedKeypoints1, gmatchedKeypoints2,vizPoints1);
 
     matchesFilterGeometric->filter(gmatches,ggmatches,keypoints1, keypoints2);
