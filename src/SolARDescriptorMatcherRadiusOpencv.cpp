@@ -58,8 +58,6 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
  
  
         std::vector<std::vector<cv::DMatch>> cv_matches;
-        std::vector<cv::DMatch> cv_matchesSingle;
-
         std::vector<cv::DMatch> good_matches;
  
         //since it is an openCV implementation we need to convert back the descriptors from SolAR to Opencv
@@ -81,7 +79,6 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
         m_matcher.radiusMatch(cvDescriptors1, cvDescriptors2, cv_matches, m_maxDistance);
  
         matches.clear();
-        /*
         for (std::vector<std::vector<cv::DMatch>>::iterator itr=cv_matches.begin();itr!=cv_matches.end();++itr){
             for (std::vector<cv::DMatch>::iterator jtr = itr->begin(); jtr != itr->end(); ++jtr){
             
@@ -89,12 +86,6 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
           
             }
         }
-         */
-
-        for (std::vector<cv::DMatch>::iterator itr=cv_matchesSingle.begin();itr!=cv_matchesSingle.end();++itr){
-                matches.push_back(DescriptorMatch(itr->queryIdx, itr->trainIdx,itr->distance ));
-        }
-
 
      if (matches.size()>0)
         return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
