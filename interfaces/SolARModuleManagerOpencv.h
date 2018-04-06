@@ -32,6 +32,7 @@
 #include "api/features/IKeypointDetector.h"
 #include "api/features/ISBPatternReIndexer.h"
 #include "api/features/IKeypointsReIndexer.h"
+#include "api/features/IMatchesFilter.h"
 
 #include "api/geom/I2DTransform.h"
 #include "api/geom/I3DTransform.h"
@@ -76,6 +77,8 @@ const string CONTOURS_FILTER_BINARY_MARKER="4309dcc6-cc73-11e7-abc4-cec278b6b50a
 const string DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9";
 const string DESCRIPTOR_MATCHER_KNN="7823dac8-1597-41cf-bdef-59aa22f3d40a";
 const string DESCRIPTOR_MATCHER_RADIUS="904e64f6-d502-11e7-9296-cec278b6b50a";
+const string BASIC_MATCHES_FILTER="cbb620c3-a7fc-42d7-bcbf-f59b475b23b0";
+const string GEOMETRIC_MATCHES_FILTER="3731691e-2c4c-4d37-a2ce-06d1918f8d41";
 const string DESCRIPTORS_EXTRACTOR_ORB="0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a";
 const string DESCRIPTORS_EXTRACTOR_AKAZE="c8cc68db-9abd-4dab-9204-2fe4e9d010cd";
 const string DESCRIPTORS_EXTRACTOR_AKAZE2="21238c00-26dd-11e8-b467-0ed5f89f718b";
@@ -223,7 +226,15 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
     {
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorMatcher::UUID), compRef);
         if (res == -1)
-             LOG_ERROR("KNN descriptor matcher component creation has failed");
+             LOG_ERROR("Descriptor matcher component creation has failed");
+        return res;
+    }
+
+    else if ( uuid == UUID::GEOMETRIC_MATCHES_FILTER || uuid == UUID::BASIC_MATCHES_FILTER) // matches filter components
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IMatchesFilter::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("Matches filter component creation has failed");
         return res;
     }
 

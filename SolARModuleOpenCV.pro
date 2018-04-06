@@ -61,6 +61,8 @@ interfaces/SolARPoseEstimationOpencv.h \
 interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
 interfaces/SolARDescriptorMatcherKNNOpencv.h \
 interfaces/SolARDescriptorMatcherRadiusOpencv.h \
+interfaces/SolARBasicMatchesFilterOpencv.h \
+interfaces/SolARGeometricMatchesFilterOpencv.h \
 interfaces/SolARSideBySideOverlayOpencv.h \
 interfaces/SolAR3DOverlayOpencv.h \
 interfaces/SolAR2DOverlayOpencv.h \
@@ -93,6 +95,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \
+    src/SolARBasicMatchesFilterOpencv.cpp \
+    src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolARSideBySideOverlayOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
     src/SolAR3DOverlayOpencv.cpp \
@@ -104,10 +108,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/AKAZE2/fed.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
-    src/SolARBasicMatchesFilterOpencv.cpp \
     src/SolARFundamentalMatrixDecompositionValidationOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
-    src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
 
 unix {

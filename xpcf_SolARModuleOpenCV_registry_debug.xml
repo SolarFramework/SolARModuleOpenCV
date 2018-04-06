@@ -37,6 +37,14 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" description="IDescriptorMatcher"/>
         </component>
+		<component uuid="cbb620c3-a7fc-42d7-bcbf-f59b475b23b0" description="SolARBasicMatchesFilterOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="e0d6cc82-6af2-493d-901a-2384fca0b16f" description="IMatchesFilter"/>
+        </component>
+		<component uuid="3731691e-2c4c-4d37-a2ce-06d1918f8d41" description="SolARGeometricMatchesFilterOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="e0d6cc82-6af2-493d-901a-2384fca0b16f" description="IMatchesFilter"/>
+        </component>
         <component uuid="c8cc68db-9abd-4dab-9204-2fe4e9d010cd" description="SolARDescriptorsExtractorAKAZEOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" description="IDescriptorsExtractor"/>

@@ -28,6 +28,8 @@
 #include "SolARDescriptorMatcherHammingBruteForceOpencv.h"
 #include "SolARDescriptorMatcherKNNOpencv.h"
 #include "SolARDescriptorMatcherRadiusOpencv.h"
+#include "SolARBasicMatchesFilterOpencv.h"
+#include "SolARGeometricMatchesFilterOpencv.h"
 #include "SolARHomographyEstimationOpencv.h"
 #include "SolARImageConvertorOpencv.h"
 #include "SolARImageFilterOpencv.h"
@@ -56,6 +58,8 @@ extern "C" XPCF_EXPORT_API void XPCF_getComponent(const boost::uuids::uuid& comp
     boost::uuids::uuid uuidOf_XPCF_CID_SolARDescriptorMatcherHammingBruteForceMatcherOpencv  = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARDescriptorMatcherKNNOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARDescriptorMatcherRadiusOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv::UUID );
+    boost::uuids::uuid uuidOf_XPCF_CID_SolARBasicMatchesFilterOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARBasicMatchesFilterOpencv::UUID );
+    boost::uuids::uuid uuidOf_XPCF_CID_SolARGeometricMatchesFilterOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARImageConvertorOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARImageFilterOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARImageFilterOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARImageLoaderOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv::UUID );
@@ -93,6 +97,14 @@ extern "C" XPCF_EXPORT_API void XPCF_getComponent(const boost::uuids::uuid& comp
     else if (componentUUID==uuidOf_XPCF_CID_SolARDescriptorMatcherRadiusOpencv)
     {
         xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv>(interfaceRef);
+    }
+    else if (componentUUID==uuidOf_XPCF_CID_SolARBasicMatchesFilterOpencv)
+    {
+        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARBasicMatchesFilterOpencv>(interfaceRef);
+    }
+    else if (componentUUID==uuidOf_XPCF_CID_SolARGeometricMatchesFilterOpencv)
+    {
+        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv>(interfaceRef);
     }
     else if (componentUUID==uuidOf_XPCF_CID_SolARDescriptorExtractorAKAZEOpencv)
 	{
@@ -181,6 +193,8 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv::UUID,"Component SolARDescriptorsExtractorSBPatternOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv::UUID,"Component SolARDescriptorMatcherKNNOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv::UUID,"Component SolARDescriptorMatcherRadiusOpencv")
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARBasicMatchesFilterOpencv::UUID,"Component SolARBasicMatchesFilterOpencv")
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv::UUID,"Component SolARGeometricMatchesFilterOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv::UUID,"Component SolARImageConvertorOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterOpencv::UUID,"Component SolARImageFilterOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv::UUID,"Component SolARImageLoaderOpencv")
