@@ -55,9 +55,11 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
 
         for (unsigned int i = 0; i<status.size(); i++) {
             if (status[i]) {
-                   outputMatches.push_back(inputMatches[i]);
+                   tempMatches.push_back(inputMatches[i]);
             }
         }
+
+        outputMatches=tempMatches;
 }
 
 }
