@@ -27,19 +27,21 @@ SolARGeometricMatchesFilterOpencv::~SolARGeometricMatchesFilterOpencv(){
 
 void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch>&inputMatches,
                                                std::vector<DescriptorMatch>&outputMatches,
-                                               const std::vector<SRef<Keypoint>>&inputKeyPoints,
-                                               std::vector<SRef<Keypoint>>&outputKeyPoints){
-    std::vector<uchar> status(inputKeyPoints.size());
+                                               const std::vector<SRef<Keypoint>>&inputKeyPointsA,
+                                               const std::vector<SRef<Keypoint>>&inputKeyPointsB){
+
+    std::vector<DescriptorMatch>tempMatches;
+    std::vector<uchar> status(inputKeyPointsA.size());
         std::vector<cv::Point2f> pts1, pts2;
         // get Align matches
         for (unsigned int i = 0; i<inputMatches.size(); i++) {
-            assert(inputMatches[i].getIndexInDescriptorA() < inputKeyPoints.size());
-            pts1.push_back(cv::Point2f(inputKeyPoints[inputMatches[i].getIndexInDescriptorA()]->getX(),
-                                       inputKeyPoints[inputMatches[i].getIndexInDescriptorA()]->getY()));
+            assert(inputMatches[i].getIndexInDescriptorA() < inputKeyPointsA.size());
+            pts1.push_back(cv::Point2f(inputKeyPointsA[inputMatches[i].getIndexInDescriptorA()]->getX(),
+                                       inputKeyPointsA[inputMatches[i].getIndexInDescriptorA()]->getY()));
 
-            assert(inputMatches[i].getIndexInDescriptorB() < outputKeyPoints.size());
-            pts2.push_back(cv::Point2f(outputKeyPoints[inputMatches[i].getIndexInDescriptorB()]->getX(),
-                                       outputKeyPoints[inputMatches[i].getIndexInDescriptorB()]->getY()));
+            assert(inputMatches[i].getIndexInDescriptorB() < inputKeyPointsB.size());
+            pts2.push_back(cv::Point2f(inputKeyPointsB[inputMatches[i].getIndexInDescriptorB()]->getX(),
+                                       inputKeyPointsB[inputMatches[i].getIndexInDescriptorB()]->getY()));
 
         }
 

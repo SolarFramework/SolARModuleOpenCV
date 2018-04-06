@@ -25,8 +25,8 @@ public:
 
     void filter(const std::vector<DescriptorMatch>&inputMatches,
                 std::vector<DescriptorMatch>&outputMatches,
-                const std::vector<SRef<Keypoint>>&inputKeyPoints,
-                std::vector<SRef<Keypoint>>&outputKeyPoints);
+                const std::vector<SRef<Keypoint>>&inputKeyPointsA,
+                const std::vector<SRef<Keypoint>>&inputKeyPointsB);
 
     void unloadComponent () override final;
 
