@@ -41,56 +41,6 @@ SolARDescriptorMatcherKNNOpencv::~SolARDescriptorMatcherKNNOpencv()
     LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv destructor")
 }
 
-bool sortByDistance(const std::pair<int,float> &lhs, const std::pair<int,float> &rhs)
-{
-    return lhs.second < rhs.second;
-}
-
-// filter matches : keep the best match in case of multiple matches per keypoint
-void filterMatches(std::vector<cv::DMatch>& matches){
-
-    std::map<int,std::vector<std::pair<int,float>>> matchesMap;
-    for(std::vector<cv::DMatch>::iterator itr=matches.begin();itr!=matches.end();++itr){
-        matchesMap[itr->trainIdx].push_back(std::make_pair(itr->queryIdx,itr->distance));
-    }
-
-    matches.clear();
-    for (std::map<int,std::vector<std::pair<int,float>>>::iterator itr=matchesMap.begin();itr!=matchesMap.end();++itr){
-        std::vector<std::pair<int,float>> ptr=itr->second;
-        if(ptr.size()>1){
-
-            std::sort(ptr.begin(),ptr.end(),sortByDistance);
-        }
-
-        cv::DMatch dm;
-        dm.trainIdx=itr->first;
-        dm.queryIdx=ptr.begin()->first;
-        dm.distance=ptr.begin()->second;
-        matches.push_back(dm);
-    }
-
-
-    matchesMap.clear();
-    for(std::vector<cv::DMatch>::iterator itr=matches.begin();itr!=matches.end();++itr){
-        matchesMap[itr->queryIdx].push_back(std::make_pair(itr->trainIdx,itr->distance));
-    }
-
-    matches.clear();
-    for (std::map<int,std::vector<std::pair<int,float>>>::iterator itr=matchesMap.begin();itr!=matchesMap.end();++itr){
-        std::vector<std::pair<int,float>> ptr=itr->second;
-        if(ptr.size()>1){
-            std::sort(ptr.begin(),ptr.end(),sortByDistance);
-        }
-        cv::DMatch dm;
-        dm.queryIdx=itr->first;
-        dm.trainIdx=ptr.begin()->first;
-        dm.distance=ptr.begin()->second;
-        matches.push_back(dm);
-    }
-
-    LOG_INFO("number of matches : {}",matches.size());
-}
-
 
 void keepGoodMAtches(std::vector<std::vector<cv::DMatch>> &matches,std::vector<cv::DMatch>& good_matches ){
 
@@ -117,7 +67,7 @@ void keepGoodMAtches(std::vector<std::vector<cv::DMatch>> &matches,std::vector<c
             good_matches.push_back(dm);
         }
     }
-   filterMatches(good_matches);
+
 }
 
 
