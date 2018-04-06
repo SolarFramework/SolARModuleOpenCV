@@ -32,7 +32,10 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
 
     std::vector<DescriptorMatch>tempMatches;
     std::vector<uchar> status(inputKeyPointsA.size());
-        std::vector<cv::Point2f> pts1, pts2;
+    std::vector<cv::Point2f> pts1, pts2;
+
+    if(inputMatches.size()){
+
         // get Align matches
         for (unsigned int i = 0; i<inputMatches.size(); i++) {
             assert(inputMatches[i].getIndexInDescriptorA() < inputKeyPointsA.size());
@@ -58,8 +61,9 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
                    tempMatches.push_back(inputMatches[i]);
             }
         }
-
-        outputMatches=tempMatches;
+    }
+    outputMatches=tempMatches;
+    return;
 }
 
 }
