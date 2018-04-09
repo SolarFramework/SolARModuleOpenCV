@@ -24,9 +24,6 @@ SolARBasicMatchesFilterOpencv::~SolARBasicMatchesFilterOpencv(){
 }
 
 
-
-#if 1
-
 bool sortMatchByDistance(const std::pair<int,float> &lhs, const std::pair<int,float> &rhs)
 {
     return lhs.second < rhs.second;
@@ -101,24 +98,7 @@ void SolARBasicMatchesFilterOpencv::filter(const std::vector<DescriptorMatch>&in
 
 
 }
-#else
-void SolARBasicMatchesFilterOpencv::filter(const std::vector<DescriptorMatch>&inputMatches,
-                                           std::vector<DescriptorMatch>&outputMatches,
-                                           const std::vector<SRef<Keypoint>>&inputKeyPointsA,
-                                           const std::vector<SRef<Keypoint>>&inputKeyPointsB){
-           std::set<int> existing_trainIdx;
-           std::vector<DescriptorMatch>tempMatches;
-               for (unsigned int i = 0; i < inputMatches.size(); i++){
-                   //"normalize" matching: somtimes imgIdx is the one holding the trainIdx
-                   if (existing_trainIdx.find((inputMatches)[i].getIndexInDescriptorB()) == existing_trainIdx.end() &&
-                       (inputMatches)[i].getIndexInDescriptorB() >= 0 && (inputMatches)[i].getIndexInDescriptorB() < inputKeyPointsA.size()){
-                      tempMatches.push_back((inputMatches)[i]);
-                       existing_trainIdx.insert((inputMatches)[i].getIndexInDescriptorB());
-                   }
-               }
-               outputMatches=tempMatches;
-};
-#endif
+
 }
 }
 }
