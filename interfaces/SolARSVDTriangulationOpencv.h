@@ -53,7 +53,7 @@ public:
                                                   cv::Matx34d&P1);
 
 
-    bool triangulate(const std::vector<SRef<Point2Df>>& pt2d_1,
+    FrameworkReturnCode triangulate(const std::vector<SRef<Point2Df>>& pt2d_1,
                      const std::vector<SRef<Point2Df>>& pt2d_2,
                      const SRef<Pose>&p1,
                      const SRef<Pose>&p2,

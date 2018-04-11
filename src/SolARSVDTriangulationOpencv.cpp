@@ -123,7 +123,7 @@ cv::Mat_<double> SolARSVDTriangulationOpencv::linearTriangulation(cv::Point3d &u
 
 
 
-bool SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>>& pt2d_1,
+FrameworkReturnCode SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>>& pt2d_1,
                                               const std::vector<SRef<Point2Df>>& pt2d_2,
                                               const SRef<Pose>&pose_1,
                                               const SRef<Pose>&pose_2,
@@ -199,7 +199,7 @@ bool SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>>&
         t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
         std::cout << "Done. (" << pt3d.size() << "points, " << t << "s, mean reproj err = " << mse[0] << ")" << std::endl;
 
-		return true;
+        return FrameworkReturnCode::_SUCCESS;
 }
 
 
