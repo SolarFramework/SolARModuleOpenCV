@@ -18,7 +18,7 @@
 #define SolARFundamentalMatrixEstimationOpencv_H
 #include <vector>
 
-#include "api/solver/pose/IFundamentalMatrixEstimation.h"
+#include "api/solver/pose/I2DTransformFinder.h"
 #include "ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <vector>
@@ -30,12 +30,12 @@ namespace MODULES {
 namespace OPENCV {
 
 class SOLAROPENCV_EXPORT_API SolARFundamentalMatrixEstimationOpencv : public org::bcom::xpcf::ComponentBase,
-    public api::solver::pose::IFundamentalMatrixEstimation
+    public api::solver::pose::I2DTransformFinder
 {
 public:
     SolARFundamentalMatrixEstimationOpencv();
 
-    api::solver::pose::FundamentalMatrixEstimation::RetCode findFundamental(const std::vector< SRef<Point2Df> >& srcPoints,
+    api::solver::pose::Transform2DFinder::RetCode find(const std::vector< SRef<Point2Df> >& srcPoints,
                   const std::vector< SRef<Point2Df> >& dstPoints,
                   Transform2Df & fundamental) override;
 

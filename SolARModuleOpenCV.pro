@@ -61,6 +61,9 @@ interfaces/SolARPoseEstimationOpencv.h \
 interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
 interfaces/SolARDescriptorMatcherKNNOpencv.h \
 interfaces/SolARDescriptorMatcherRadiusOpencv.h \
+interfaces/SolARFundamentalMatrixDecompositionValidationOpencv.h \
+interfaces/SolARFundamentalMatrixEstimationOpencv.h \
+interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
 interfaces/SolARBasicMatchesFilterOpencv.h \
 interfaces/SolARGeometricMatchesFilterOpencv.h \
 interfaces/SolARSideBySideOverlayOpencv.h \

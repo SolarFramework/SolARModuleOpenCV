@@ -39,11 +39,11 @@ namespace OPENCV {
 SolARFundamentalMatrixEstimationOpencv::SolARFundamentalMatrixEstimationOpencv()
 {
     setUUID(SolARFundamentalMatrixEstimationOpencv::UUID);
-    addInterface<api::solver::pose::IFundamentalMatrixEstimation>(this,api::solver::pose::IFundamentalMatrixEstimation::UUID, "interface api::solver::pose::IFundamentalMatrixEstimation");
+    addInterface<api::solver::pose::I2DTransformFinder>(this,api::solver::pose::I2DTransformFinder::UUID, "interface api::solver::pose::IFundamentalMatrixEstimation");
     LOG_DEBUG("SolARFundamentalMatrixEstimationOpencv constructor")
 }
 
-api::solver::pose::FundamentalMatrixEstimation::RetCode SolARFundamentalMatrixEstimationOpencv::findFundamental(const std::vector< SRef<Point2Df> >& srcPoints,
+api::solver::pose::Transform2DFinder::RetCode SolARFundamentalMatrixEstimationOpencv::find(const std::vector< SRef<Point2Df> >& srcPoints,
                                           const std::vector< SRef<Point2Df> >& dstPoints,
                                           Transform2Df &fundamental)
 {
@@ -71,13 +71,13 @@ api::solver::pose::FundamentalMatrixEstimation::RetCode SolARFundamentalMatrixEs
     F = cv::findFundamentalMat(points_view1, points_view2, cv::FM_RANSAC, 0.006 * maxVal, 0.99, status);
     if(!F.data){
         LOG_DEBUG("Fundamental matrix is empty")
-        return api::solver::pose::FundamentalMatrixEstimation::FUNDAMENTALMATRIX_EMPTY;
+        return api::solver::pose::Transform2DFinder::TRANSFORM2D_EMPTY;
 	}
 
     F.convertTo(F,CV_32F);
 
     SolAROpenCVHelper::convertCVMatToSolar(F,fundamental);
-    return api::solver::pose::FundamentalMatrixEstimation::FUNDAMENTALMATRIX_ESTIMATION_OK;
+    return api::solver::pose::Transform2DFinder::TRANSFORM2D_ESTIMATION_OK;
 }
 
 }
