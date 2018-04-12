@@ -29,11 +29,11 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARFundamentalMatrixDecompisitionValidationOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARFundamentalMatrixDecompositionValidationOpencv : public org::bcom::xpcf::ComponentBase,
     public api::solver::pose::IFundamentalMatrixDecompositionValidation
 {
 public:
-    SolARFundamentalMatrixDecompisitionValidationOpencv();
+    SolARFundamentalMatrixDecompositionValidationOpencv();
     bool isValid(const std::vector<SRef<Point2Df>>&pt2d_v1,
                                              const std::vector<SRef<Point2Df>>&pt2d_v2,
                                              const CamCalibration&K,
