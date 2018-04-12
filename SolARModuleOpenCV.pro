@@ -65,8 +65,8 @@ interfaces/SolARHomographyMatrixDecompositionOpencv.h \
 interfaces/SolARFundamentalMatrixEstimationOpencv.h \
 interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
 interfaces/SolARBasicMatchesFilterOpencv.h \
-##interfaces/SolARPoseEstimationPnpEPFL.h \
-##interfaces/SolARPoseEstimationPnpOpencv.h \
+interfaces/SolARPoseEstimationPnpEPFL.h \
+interfaces/SolARPoseEstimationPnpOpencv.h \
 interfaces/SolARGeometricMatchesFilterOpencv.h \
 interfaces/SolARSideBySideOverlayOpencv.h \
 interfaces/SolAR3DOverlayOpencv.h \
@@ -107,8 +107,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolAR3DOverlayOpencv.cpp \
     src/SolARModuleManagerOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
-##    src/SolARPoseEstimationPnpEPFL.cpp \
-##    src/SolARPoseEstimationPnpOpencv.cpp \
+    src/SolARPoseEstimationPnpEPFL.cpp \
+    src/SolARPoseEstimationPnpOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZE2Opencv.cpp \
     src/AKAZE2/akaze.cpp \
     src/AKAZE2/AKAZEFeatures.cpp \

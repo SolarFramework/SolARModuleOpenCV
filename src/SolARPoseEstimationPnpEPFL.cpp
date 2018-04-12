@@ -52,7 +52,6 @@ SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL()
 FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<Point2Df>> & imagePoints,
                                                          const std::vector<SRef<Point3Df>> & worldPoints,
                                                          Pose & pose) {
-    std::cout<<"inside epnp.."<<std::endl;
     SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(20);
     Eigen::Matrix3f R;
     Eigen::Vector3f T;
