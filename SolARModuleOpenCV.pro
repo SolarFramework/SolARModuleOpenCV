@@ -72,6 +72,7 @@ interfaces/SolARSideBySideOverlayOpencv.h \
 interfaces/SolAR3DOverlayOpencv.h \
 interfaces/SolAR2DOverlayOpencv.h \
 interfaces/SolARModuleManagerOpencv.h \
+interfaces/SolARSVDTriangulationOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
     src/AKAZE2/AKAZEFeatures.h \
     src/AKAZE2/fed.h \

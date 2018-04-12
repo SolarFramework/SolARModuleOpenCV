@@ -29,19 +29,19 @@
 
 #include <map>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARFundamentalMatrixDecompisitionValidationOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARFundamentalMatrixDecompositionValidationOpencv);
 
 namespace SolAR {
 using namespace datastructure;
     namespace MODULES {
         namespace OPENCV {
-            SolARFundamentalMatrixDecompisitionValidationOpencv::SolARFundamentalMatrixDecompisitionValidationOpencv(){
-                setUUID(SolARFundamentalMatrixDecompisitionValidationOpencv::UUID);
+            SolARFundamentalMatrixDecompositionValidationOpencv::SolARFundamentalMatrixDecompositionValidationOpencv(){
+                setUUID(SolARFundamentalMatrixDecompositionValidationOpencv::UUID);
                 addInterface<api::solver::pose::IFundamentalMatrixDecompositionValidation>(this,api::solver::pose::IFundamentalMatrixDecompositionValidation::UUID, "interface api::solver::pose::IFundamentalMatrixDecompositionValidation");
                 LOG_DEBUG("SolARFundamentalMatrixValidationOpencv constructor")
             }
 
-            bool SolARFundamentalMatrixDecompisitionValidationOpencv::isValid(const std::vector<SRef<Point2Df>>&pt2d_v1,
+            bool SolARFundamentalMatrixDecompositionValidationOpencv::isValid(const std::vector<SRef<Point2Df>>&pt2d_v1,
                                                                                const std::vector<SRef<Point2Df>>&pt2d_v2,
                                                                                const CamCalibration&K,
                                                                                const Pose&P1,

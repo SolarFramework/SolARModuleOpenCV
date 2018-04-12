@@ -30,16 +30,8 @@
 #include "api/features/IDescriptorsExtractor.h"
 #include "api/features/IDescriptorsExtractorSBPattern.h"
 #include "api/features/IKeypointDetector.h"
-#include "api/features/ISBPatternReIndexer.h"
-#include "api/features/IKeypointsReIndexer.h"
 #include "api/features/IMatchesFilter.h"
 
-#include "api/geom/I2DTransform.h"
-#include "api/geom/I3DTransform.h"
-#include "api/geom/IImage2WorldMapper.h"
-
-#include "api/solver/pose/I3DTransformFinder.h"
-#include "api/solver/pose/I2DTransformFinder.h"
 
 #include "api/input/devices/ICamera.h"
 #include "api/input/devices/ICameraCalibration.h"
@@ -47,12 +39,19 @@
 #include "api/input/files/IMarker2DSquaredBinary.h"
 
 #include "api/solver/pose/IHomographyEstimation.h"
-#include "api/solver/pose/IHomographyValidation.h"
 
 #include "api/image/IImageConvertor.h"
 #include "api/image/IImageFilter.h"
 #include "api/image/IImageLoader.h"
 #include "api/image/IPerspectiveController.h"
+
+#include "api/solver/map/ITriangulator.h"
+#include "api/solver/pose/I2DTransformFinder.h"
+#include "api/solver/pose/I3DTransformFinder.h"
+#include "api/solver/pose/IFundamentalMatrixDecomposer.h"
+#include "api/solver/pose/IFundamentalMatrixDecompositionValidation.h"
+#include "api/solver/pose/IFundamentalMatrixEstimation.h"
+#include "api/solver/pose/IHomographyValidation.h"
 
 #include "SolAROpencvAPI.h"
 
@@ -65,11 +64,10 @@ namespace OPENCV {
 namespace UUID{
 
 // declaration of components UUIDs
-const string TRANSFORM2D="a95de484-6d84-4a02-a506-d1ce442e0062";
-const string OVERLAY3D="2db01f59-9793-4cd5-8e13-b25d0ed5735b";
+
 const string OVERLAY2D="cc51d685-9797-4ffd-a9dd-cec4f367fa6a";
-const string OVERLAYSBS="e95302be-3fe1-44e0-97bf-a98380464af9";
-const string TRANSFORM3D="01b51dd7-f651-4fab-bb95-a9eb38ddf15c";
+const string OVERLAY3D="2db01f59-9793-4cd5-8e13-b25d0ed5735b";
+const string BASIC_MATCHES_FILTER="cbb620c3-a7fc-42d7-bcbf-f59b475b23b0";
 const string CAMERA_CALIBRATION="702a7f53-e5ec-45d2-887d-daa99a34a33c";
 const string CAMERA="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4";
 const string CONTOURS_EXTRACTOR="6acf8de2-cc63-11e7-abc4-cec278b6b50a";
@@ -77,28 +75,26 @@ const string CONTOURS_FILTER_BINARY_MARKER="4309dcc6-cc73-11e7-abc4-cec278b6b50a
 const string DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9";
 const string DESCRIPTOR_MATCHER_KNN="7823dac8-1597-41cf-bdef-59aa22f3d40a";
 const string DESCRIPTOR_MATCHER_RADIUS="904e64f6-d502-11e7-9296-cec278b6b50a";
-const string BASIC_MATCHES_FILTER="cbb620c3-a7fc-42d7-bcbf-f59b475b23b0";
-const string GEOMETRIC_MATCHES_FILTER="3731691e-2c4c-4d37-a2ce-06d1918f8d41";
-const string DESCRIPTORS_EXTRACTOR_ORB="0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a";
-const string DESCRIPTORS_EXTRACTOR_AKAZE="c8cc68db-9abd-4dab-9204-2fe4e9d010cd";
 const string DESCRIPTORS_EXTRACTOR_AKAZE2="21238c00-26dd-11e8-b467-0ed5f89f718b";
+const string DESCRIPTORS_EXTRACTOR_AKAZE="c8cc68db-9abd-4dab-9204-2fe4e9d010cd";
+const string DESCRIPTORS_EXTRACTOR_ORB="0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a";
 const string DESCRIPTORS_EXTRACTOR_SBPATTERN="d25625ba-ce3a-11e7-abc4-cec278b6b50a";
+const string FUNDAMENTAL_MATRIX_DECOMPOSITION_VALIDATION="31188e79-6bd5-43df-9633-6d6c5d7afb5c";
+const string FUNDAMENTAL_MATRIX_ESTIMATION="79b29b50-cf4d-441e-b5de-1de829b91c41";
+const string GEOMETRIC_MATCHES_FILTER="3731691e-2c4c-4d37-a2ce-06d1918f8d41";
 const string HOMOGRAPHY_ESTIMATION="fb9dac20-2a44-44b2-aa42-2871eec31427";
-const string HOMOGRAPHY_VALIDATION="dcc94624-dd32-11e7-9296-cec278b6b50a";
-const string IMAGE2WORLD_MAPPER="d7fee286-5931-4954-b3d1-bb302259c7ef";
 const string IMAGE_CONVERTOR="fd7fb607-144f-418c-bcf2-f7cf71532c22";
 const string IMAGE_FILTER="fa356d0c-0a53-4722-a7f3-bb92b934d8db";
 const string IMAGE_LOADER="E42D6526-9EB1-4F8A-BB68-53E06F09609C";
 const string IMAGE_VIEWER="19EA4E13-7085-4E3F-92CA-93F200FFB01B";
 const string KEYPOINT_DETECTOR="e81c7e4e-7da6-476a-8eba-078b43071272";
-const string KEYPOINTS_REINDEXER="ea0991f8-df18-11e7-80c1-9a214cf093ae";
 const string MARKER2D_NATURAL_IMAGE="efcdb590-c570-11e7-abc4-cec278b6b50a";
 const string MARKER2D_SQUARED_BINARY="5d2b8da9-528e-4e5e-96c1-f883edcf3b1c";
 const string PERSPECTIVE_CONTROLLER="9c960f2a-cd6e-11e7-abc4-cec278b6b50a";
-const string POSE_ESTIMATION="0753ade1-7932-4e29-a71c-66155e309a53";
-const string SBPATTERN_REINDEXER="46b7dd26-d558-11e7-9296-cec278b6b50a";
-
-
+//const string POSE_ESTIMATION="0753ade1-7932-4e29-a71c-66155e309a53";
+const string OVERLAYSBS="e95302be-3fe1-44e0-97bf-a98380464af9";
+const string SVD_FUNDAMENTAL_MATRIX_DECOMPOSER="31188e79-6bd5-43df-9633-6d6c5d7afb5c";
+const string SVD_TRIANGULATION="85274ecd-2914-4f12-96de-37c6040633a4";
 }  // End namespace UUID
 
 using namespace SolAR;
@@ -142,27 +138,11 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
     boost::uuids::string_generator gen;
     int res;
 
-    if (uuid == UUID::TRANSFORM2D) // Transform 2D component
-    {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::geom::I2DTransform::UUID), compRef);
-        if (res == -1)
-             LOG_ERROR("Transform 2D component creation has failed");
-        return res;
-    }
-
-    else if (uuid == UUID::OVERLAY2D) // 2D overlay component
+    if (uuid == UUID::OVERLAY2D) // 2D overlay component
     {
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::display::I2DOverlay::UUID), compRef);
         if (res == -1)
              LOG_ERROR("Overlay 2D component creation has failed");
-        return res;
-    }
-
-    else if (uuid == UUID::OVERLAYSBS) // SideBySide overlay component
-    {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::display::ISideBySideOverlay::UUID), compRef);
-        if (res == -1)
-             LOG_ERROR("Overlay Side By Side component creation has failed");
         return res;
     }
 
@@ -174,11 +154,11 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         return res;
     }
 
-    else if (uuid == UUID::TRANSFORM3D) // 3D overlay component
+    else if (uuid == UUID::BASIC_MATCHES_FILTER) // Basic matches filter component
     {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::geom::I3DTransform::UUID), compRef);
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IMatchesFilter::UUID), compRef);
         if (res == -1)
-             LOG_ERROR("Transform 3D component creation has failed");
+             LOG_ERROR("Basic Matches Filter component creation has failed");
         return res;
     }
 
@@ -230,11 +210,11 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         return res;
     }
 
-    else if ( uuid == UUID::GEOMETRIC_MATCHES_FILTER || uuid == UUID::BASIC_MATCHES_FILTER) // matches filter components
+    else if (uuid == UUID::DESCRIPTORS_EXTRACTOR_AKAZE2) //AKAZE keypoint descriptors extractors component
     {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IMatchesFilter::UUID), compRef);
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorsExtractor::UUID), compRef);
         if (res == -1)
-             LOG_ERROR("Matches filter component creation has failed");
+             LOG_ERROR("AKAZE2 descriptors extractor component creation has failed");
         return res;
     }
 
@@ -243,14 +223,6 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorsExtractor::UUID), compRef);
         if (res == -1)
              LOG_ERROR("AKAZE descriptors extractor component creation has failed");
-        return res;
-    }
-
-    else if (uuid == UUID::DESCRIPTORS_EXTRACTOR_AKAZE2) //AKAZE keypoint descriptors extractors component
-    {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IDescriptorsExtractor::UUID), compRef);
-        if (res == -1)
-             LOG_ERROR("AKAZE2 descriptors extractor component creation has failed");
         return res;
     }
 
@@ -270,27 +242,35 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         return res;
     }
 
+    else if (uuid == UUID::FUNDAMENTAL_MATRIX_DECOMPOSITION_VALIDATION) // Fundamental matrix decomposition validation Component
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::pose::IFundamentalMatrixDecompositionValidation::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("Fundamental matrix decomposition validation component creation has failed");
+        return res;
+    }
+
+    else if (uuid == UUID::FUNDAMENTAL_MATRIX_ESTIMATION) // Fundamental matrix estimation Component
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::pose::I2DTransformFinder::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("Fundamental matrix estimation component creation has failed");
+        return res;
+    }
+
+    else if ( uuid == UUID::GEOMETRIC_MATCHES_FILTER ) // Geometric matches filter components
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IMatchesFilter::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("Geometric matches filter component creation has failed");
+        return res;
+    }
+
     else if (uuid == UUID::HOMOGRAPHY_ESTIMATION) // homography estimation
     {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::pose::IHomographyEstimation::UUID), compRef);
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::pose::I2DTransformFinder::UUID), compRef);
         if (res == -1)
              LOG_ERROR("Homography estimation component creation has failed");
-        return res;
-    }
-
-    else if (uuid == UUID::HOMOGRAPHY_VALIDATION) // homography validation
-    {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::pose::IHomographyValidation::UUID), compRef);
-        if (res == -1)
-             LOG_ERROR("Homography validation component creation has failed");
-        return res;
-    }
-
-    else if (uuid == UUID::IMAGE2WORLD_MAPPER) // Image to world mapper component
-    {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::geom::IImage2WorldMapper::UUID), compRef);
-        if (res == -1)
-             LOG_ERROR("Image to world mapper component creation has failed");
         return res;
     }
 
@@ -334,14 +314,6 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         return res;
     }
 
-    else if (uuid == UUID::KEYPOINTS_REINDEXER) // Keypoints reindexer component
-    {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IKeypointsReIndexer::UUID), compRef);
-        if (res == -1)
-             LOG_ERROR("Keypoints reindexer component creation has failed");
-        return res;
-    }
-
     else if (uuid == UUID::MARKER2D_NATURAL_IMAGE) // natural image marker component
     {
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::input::files::IMarker2DNaturalImage::UUID), compRef);
@@ -375,14 +347,30 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         return res;
     }
 */
-    else if (uuid == UUID::SBPATTERN_REINDEXER) // posefinder
+
+    else if (uuid == UUID::OVERLAYSBS) // SideBySide overlay component
     {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::ISBPatternReIndexer::UUID), compRef);
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::display::ISideBySideOverlay::UUID), compRef);
         if (res == -1)
-             LOG_ERROR("Squared binary pattern reindexer component creation has failed");
+             LOG_ERROR("Overlay Side By Side component creation has failed");
         return res;
     }
 
+    else if (uuid == UUID::SVD_FUNDAMENTAL_MATRIX_DECOMPOSER) // SVD Fundamental Matrix decomposer component
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::pose::IFundamentalMatrixDecomposer::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("SVD Fundamental Matrix decomposer component creation has failed");
+        return res;
+    }
+
+    else if (uuid == UUID::SVD_TRIANGULATION) // SVD triangulation component
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::map::ITriangulator::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("SVD triangulation component creation has failed");
+        return res;
+    }
     return -1;
 }
 }  // End namespace OPENCV
