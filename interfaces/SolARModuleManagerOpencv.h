@@ -37,8 +37,6 @@
 #include "api/input/files/IMarker2DNaturalImage.h"
 #include "api/input/files/IMarker2DSquaredBinary.h"
 
-#include "api/solver/pose/IHomographyEstimation.h"
-
 #include "api/image/IImageConvertor.h"
 #include "api/image/IImageFilter.h"
 #include "api/image/IImageLoader.h"
@@ -49,7 +47,6 @@
 #include "api/solver/pose/I3DTransformFinder.h"
 #include "api/solver/pose/IFundamentalMatrixDecomposer.h"
 #include "api/solver/pose/IFundamentalMatrixDecompositionValidation.h"
-#include "api/solver/pose/IFundamentalMatrixEstimation.h"
 #include "api/solver/pose/IHomographyValidation.h"
 
 #include "SolAROpencvAPI.h"
