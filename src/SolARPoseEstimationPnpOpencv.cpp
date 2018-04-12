@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "SolARPoseEstimationOpencv.h"
+#include "SolARPoseEstimationPnpOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/core.hpp"
 #include "opencv2/features2d.hpp"
@@ -29,17 +29,17 @@
 
 #include <map>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv);
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARPoseEstimationOpencv::SolARPoseEstimationOpencv()
+SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv()
 {
-    setUUID(SolARPoseEstimationOpencv::UUID);
-    addInterface<api::solver::pose::I3DTransformFinder>(this,api::solver::pose::I3DTransformFinder::UUID, "interface api::solver::pose::IPoseEstimation");
+    setUUID(SolARPoseEstimationPnpOpencv::UUID);
+    addInterface<api::solver::pose::I3DTransformFinder>(this,api::solver::pose::I3DTransformFinder::UUID, "interface api::solver::pose::I3DTransformFinder");
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
@@ -48,9 +48,9 @@ SolARPoseEstimationOpencv::SolARPoseEstimationOpencv()
 }
 
 
-FrameworkReturnCode SolARPoseEstimationOpencv::estimate( const std::vector<SRef<Point2Df>> & imagePoints,
-                                                                                   const std::vector<SRef<Point3Df>> & worldPoints,
-                                                                                       Pose & pose) {
+FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SRef<Point2Df>> & imagePoints,
+                                                            const std::vector<SRef<Point3Df>> & worldPoints,
+                                                            Pose & pose) {
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
@@ -93,7 +93,7 @@ FrameworkReturnCode SolARPoseEstimationOpencv::estimate( const std::vector<SRef<
 }
 
 
-void SolARPoseEstimationOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
+void SolARPoseEstimationPnpOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
     //TODO.. check to inverse
     this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
     this->m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);

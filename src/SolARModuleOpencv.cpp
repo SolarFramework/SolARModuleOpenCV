@@ -41,7 +41,8 @@
 #include "SolARMarker2DNaturalImageOpencv.h"
 #include "SolARMarker2DSquaredBinaryOpencv.h"
 #include "SolARPerspectiveControllerOpencv.h"
-#include "SolARPoseEstimationOpencv.h"
+#include "SolARPoseEstimationPnpEPFL.h""
+#include "SolARPoseEstimationPnpOpencv.h"
 #include "SolARSideBySideOverlayOpencv.h"
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
 #include "SolARSVDTriangulationOpencv.h"
@@ -79,7 +80,8 @@ extern "C" XPCF_EXPORT_API void XPCF_getComponent(const boost::uuids::uuid& comp
     boost::uuids::uuid uuidOf_XPCF_CID_SolARMarker2DNaturalImageOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARMarker2DSquaredBinaryOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARPerspectiveControllerOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv::UUID );   
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARPoseEstimationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARPoseEstimationOpencv::UUID );
+    boost::uuids::uuid uuidOf_XPCF_CID_SolARPoseEstimationPnpOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL::UUID );
+    boost::uuids::uuid uuidOf_XPCF_CID_SolARPoseEstimationPnpEPFL = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARSideBySideOverlayOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARSVDFundamentalMatrixDecomposerOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARSVDTriangulationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv::UUID );
@@ -189,10 +191,15 @@ extern "C" XPCF_EXPORT_API void XPCF_getComponent(const boost::uuids::uuid& comp
     {
         xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv>(interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARPoseEstimationOpencv)
+
+    else if (componentUUID==uuidOf_XPCF_CID_SolARPoseEstimationPnpOpencv)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationOpencv>(interfaceRef);
-    }  
+        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv>(interfaceRef);
+    }
+    else if (componentUUID==uuidOf_XPCF_CID_SolARPoseEstimationPnpEPFL)
+    {
+        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL>(interfaceRef);
+    }
     else if (componentUUID==uuidOf_XPCF_CID_SolARSideBySideOverlayOpencv)
     {
         xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv>(interfaceRef);
@@ -235,7 +242,7 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv::UUID,"Co
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv::UUID,"Component SolARMarker2DNaturalImageOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv::UUID,"Component SolARMarker2DSquaredBinaryOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv::UUID,"Component SolARPerspectiveControllerOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationOpencv::UUID,"Component SolARPoseEstimationOpencv")
+//XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationOpencv::UUID,"Component SolARPoseEstimationOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv::UUID,"Component SolARSideBySideOverlayOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv::UUID,"Component SolARSVDFundamentalMatrixDecomposerOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv::UUID,"Component SolARSVDTriangulationOpencv")
