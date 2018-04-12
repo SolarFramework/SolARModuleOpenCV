@@ -119,11 +119,17 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="4a7d5c34-cd6e-11e7-abc4-cec278b6b50a" description="IPerspectiveController"/>
         </component>
-        <component uuid="0753ade1-7932-4e29-a71c-66155e309a53" description="SolARPoseEstimationOpencv">
+        <component uuid="0753ade1-7932-4e29-a71c-66155e309a53" description="SolARPoseEstimationPnpOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="a1c982ff-dbc4-4b67-b1d5-6a8cb0531a5d" description="IPoseEstimation"/>
+                <interface uuid="77281cda-47c2-4bb7-bde6-5b0d02e75dae" description="I3DTransformFinder"/>
         </component>
-		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9" description="SolARSideBySideOverlayOpencv">
+
+        <component uuid="a38edf79-f0dc-45ca-92fc-2b336fceedf9" description="SolARPoseEstimationPnpEPFL">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="77281cda-47c2-4bb7-bde6-5b0d02e75dae" description="I3DTransformFinder"/>
+        </component>
+
+        <component uuid="e95302be-3fe1-44e0-97bf-a98380464af9" description="SolARSideBySideOverlayOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="a801354a-3e00-467c-b390-48c76fa8c53a" description="ISideBySideOverlay"/>
         </component>

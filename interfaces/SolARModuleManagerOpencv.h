@@ -38,6 +38,9 @@
 #include "api/geom/I3DTransform.h"
 #include "api/geom/IImage2WorldMapper.h"
 
+#include "api/solver/pose/I3DTransformFinder.h"
+#include "api/solver/pose/I2DTransformFinder.h"
+
 #include "api/input/devices/ICamera.h"
 #include "api/input/devices/ICameraCalibration.h"
 #include "api/input/files/IMarker2DNaturalImage.h"
@@ -50,9 +53,6 @@
 #include "api/image/IImageFilter.h"
 #include "api/image/IImageLoader.h"
 #include "api/image/IPerspectiveController.h"
-
-
-#include "api/solver/pose/IPoseEstimation.h"
 
 #include "SolAROpencvAPI.h"
 
@@ -366,14 +366,15 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         return res;
     }
 
+    /*
     else if (uuid == UUID::POSE_ESTIMATION) // posefinder
     {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::pose::IPoseEstimation::UUID), compRef);
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::pose::I3DTransformFinder::UUID), compRef);
         if (res == -1)
              LOG_ERROR("Pose estimation component creation has failed");
         return res;
     }
-
+*/
     else if (uuid == UUID::SBPATTERN_REINDEXER) // posefinder
     {
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::ISBPatternReIndexer::UUID), compRef);

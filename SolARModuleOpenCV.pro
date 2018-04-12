@@ -57,14 +57,16 @@ interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
 interfaces/SolARDescriptorsExtractorAKAZE2Opencv.h \
 interfaces/SolARDescriptorsExtractorORBOpencv.h \
 interfaces/SolARHomographyEstimationOpencv.h \
-interfaces/SolARPoseEstimationOpencv.h \
 interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
 interfaces/SolARDescriptorMatcherKNNOpencv.h \
 interfaces/SolARDescriptorMatcherRadiusOpencv.h \
 interfaces/SolARFundamentalMatrixDecompositionValidationOpencv.h \
+interfaces/SolARHomographyMatrixDecompositionOpencv.h \
 interfaces/SolARFundamentalMatrixEstimationOpencv.h \
 interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
 interfaces/SolARBasicMatchesFilterOpencv.h \
+##interfaces/SolARPoseEstimationPnpEPFL.h \
+##interfaces/SolARPoseEstimationPnpOpencv.h \
 interfaces/SolARGeometricMatchesFilterOpencv.h \
 interfaces/SolARSideBySideOverlayOpencv.h \
 interfaces/SolAR3DOverlayOpencv.h \
@@ -94,7 +96,6 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARDescriptorsExtractorSBPatternOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZEOpencv.cpp \
     src/SolARDescriptorsExtractorORBOpencv.cpp \
-    src/SolARPoseEstimationOpencv.cpp \
     src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \
@@ -105,6 +106,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolAR3DOverlayOpencv.cpp \
     src/SolARModuleManagerOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
+##    src/SolARPoseEstimationPnpEPFL.cpp \
+##    src/SolARPoseEstimationPnpOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZE2Opencv.cpp \
     src/AKAZE2/akaze.cpp \
     src/AKAZE2/AKAZEFeatures.cpp \
@@ -112,6 +115,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
     src/SolARFundamentalMatrixDecompositionValidationOpencv.cpp \
+    src/SolARHomographyMatrixDecompositionOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
 

@@ -37,7 +37,7 @@ using namespace datastructure;
         namespace OPENCV {
             SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOpencv(){
                 setUUID(SolARSVDFundamentalMatrixDecomposerOpencv::UUID);
-                addInterface<api::solver::pose::IFundamentalMatrixDecomposer>(this,api::solver::pose::IFundamentalMatrixDecomposer::UUID, "interface api::solver::pose::IFundamentalMatrixDecomposer");
+                addInterface<api::solver::pose::I2DTO3DTransformDecomposer>(this,api::solver::pose::I2DTO3DTransformDecomposer::UUID, "interface api::solver::pose::IFundamentalMatrixDecomposer");
                 LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
             }
 
@@ -127,12 +127,6 @@ using namespace datastructure;
                        pose_temp[p]->m_poseTransform(3,3) = 1.0;
                        decomposedPoses.push_back(pose_temp[p]);
                    }
-
-
-
-                //   decomposedPoses.push_back(p1);decomposedPoses.push_back(p2);
-                //   decomposedPoses.push_back(p3);decomposedPoses.push_back(p4);
-
 				   return true;
             }
         }

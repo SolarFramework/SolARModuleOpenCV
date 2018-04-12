@@ -71,7 +71,7 @@ extern "C" XPCF_EXPORT_API void XPCF_getComponent(const boost::uuids::uuid& comp
     boost::uuids::uuid uuidOf_XPCF_CID_SolARMarker2DNaturalImageOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARMarker2DSquaredBinaryOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARHomographyEstimationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARPoseEstimationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARPoseEstimationOpencv::UUID );
+ //   boost::uuids::uuid uuidOf_XPCF_CID_SolARPoseEstimationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARPoseEstimationOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolAR2DOverlayOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARSideBySideOverlayOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolAR3DOverlayOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv::UUID );
@@ -166,10 +166,12 @@ extern "C" XPCF_EXPORT_API void XPCF_getComponent(const boost::uuids::uuid& comp
     {
         xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv>(interfaceRef);
     }
+    /*
     else if (componentUUID==uuidOf_XPCF_CID_SolARPoseEstimationOpencv)
     {
         xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationOpencv>(interfaceRef);
     }
+    */
     else if (componentUUID==uuidOf_XPCF_CID_SolAR2DOverlayOpencv)
     {
         xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv>(interfaceRef);
