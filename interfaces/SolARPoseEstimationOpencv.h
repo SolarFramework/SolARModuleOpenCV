@@ -19,7 +19,7 @@
 #include <vector>
 #include "opencv2/core.hpp"
 
-#include "api/solver/pose/IPoseEstimation.h"
+#include "api/solver/pose/I3DTransformFinder.h"
 
 #include "SolAROpencvAPI.h"
 #include "ComponentBase.h"
@@ -30,16 +30,18 @@ namespace MODULES {
 namespace OPENCV {
 
 class SOLAROPENCV_EXPORT_API SolARPoseEstimationOpencv : public org::bcom::xpcf::ComponentBase,
-    public api::solver::pose::IPoseEstimation
+    public api::solver::pose::I3DTransformFinder
 {
 public:
     SolARPoseEstimationOpencv();
 
-    FrameworkReturnCode poseFromSolvePNP( Pose & pose, const std::vector<SRef<Point2Df>> & imagePoints, const std::vector<SRef<Point3Df>> & worldPoints) override;
-
-    void unloadComponent () override final;
+FrameworkReturnCode estimate(const std::vector<SRef<Point2Df>> & imagePoints,
+                             const std::vector<SRef<Point3Df>> & worldPoints,
+                             Pose & pose) override;
 
     void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams)  override;
+    void unloadComponent () override final;
+
 
     XPCF_DECLARE_UUID("0753ade1-7932-4e29-a71c-66155e309a53");
 

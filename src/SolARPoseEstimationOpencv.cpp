@@ -39,7 +39,7 @@ namespace OPENCV {
 SolARPoseEstimationOpencv::SolARPoseEstimationOpencv()
 {
     setUUID(SolARPoseEstimationOpencv::UUID);
-    addInterface<api::solver::pose::IPoseEstimation>(this,api::solver::pose::IPoseEstimation::UUID, "interface api::solver::pose::IPoseEstimation");
+    addInterface<api::solver::pose::I3DTransformFinder>(this,api::solver::pose::I3DTransformFinder::UUID, "interface api::solver::pose::IPoseEstimation");
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
@@ -48,13 +48,15 @@ SolARPoseEstimationOpencv::SolARPoseEstimationOpencv()
 }
 
 
-FrameworkReturnCode SolARPoseEstimationOpencv::poseFromSolvePNP( Pose & pose, const std::vector<SRef<Point2Df>> & imagePoints, const std::vector<SRef<Point3Df>> & worldPoints) {
+FrameworkReturnCode SolARPoseEstimationOpencv::estimate( const std::vector<SRef<Point2Df>> & imagePoints,
+                                                                                   const std::vector<SRef<Point3Df>> & worldPoints,
+                                                                                       Pose & pose) {
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
 
     if (worldPoints.size()!=imagePoints.size())
-        return FrameworkReturnCode::_ERROR_; // vector of 2D and 3D points must have same size
+        return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
 
     for (int i=0;i<imagePoints.size();++i) {
         Point2Df point2D = *(imagePoints.at(i));
@@ -92,8 +94,6 @@ FrameworkReturnCode SolARPoseEstimationOpencv::poseFromSolvePNP( Pose & pose, co
 
 
 void SolARPoseEstimationOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
-
-
     //TODO.. check to inverse
     this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
     this->m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
