@@ -1,0 +1,17 @@
+= SolARSVDTriangulation test
+
+This application demonstrates the test of SolARSVDtriangulation
+
+This program does not need parameters, but its working directory need to be precized to the directory "SolARSVDtriangulation" as it uses text files :
+dist.txt
+K.txt
+pose_1.txt
+pose_2.txt
+pt1_F.txt
+pt2_F.txt
+
+
+Generated :
+solar_cloud.txt is the result of the triangulation.
+
+
