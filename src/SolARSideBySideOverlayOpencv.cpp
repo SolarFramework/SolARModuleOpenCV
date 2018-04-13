@@ -74,7 +74,11 @@ void SolARSideBySideOverlayOpencv::drawMatchesLines(SRef<Image> & image1, SRef<I
     img1.copyTo(outImg(cv::Rect(0, 0, img1_width, image1->getHeight())));
     img2.copyTo(outImg(cv::Rect(img1_width, 0, image2->getWidth(), image2->getHeight())));
 
-    for (int i = 0;i<points_number;++i){
+    int nbPoints = std::min(points_image1.size(), points_image2.size());
+    if (points_number >= 0)
+        nbPoints = std::min(points_number, nbPoints);
+
+    for (int i = 0;i<nbPoints;++i){
         point1 = *(points_image1.at(i));
         point2 = *(points_image2.at(i));
         cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(0,255,0),1);
