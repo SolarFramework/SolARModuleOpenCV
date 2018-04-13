@@ -158,7 +158,6 @@ FrameworkReturnCode SolARSVDTriangulationOpencv::triangulate(const std::vector<S
         }
 
         cv::invert(K,Kinv);
-        std::cout << "Triangulating...";
         double t = cv::getTickCount();
         std::vector<double> reproj_error;
         unsigned int pts_size = pt2d_1.size();

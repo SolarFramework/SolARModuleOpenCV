@@ -40,6 +40,8 @@ using namespace datastructure;
                 addInterface<api::solver::pose::I2DTO3DTransformDecomposer>(this,api::solver::pose::I2DTO3DTransformDecomposer::UUID, "interface api::solver::pose::IFundamentalMatrixDecomposer");
                 LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
             }
+            SolARSVDFundamentalMatrixDecomposerOpencv::~SolARSVDFundamentalMatrixDecomposerOpencv(){
+            }
 
             void SolARSVDFundamentalMatrixDecomposerOpencv::takeSVDOfE(cv::Mat_<double>& E,cv::Mat& svd_u, cv::Mat& svd_vt,cv::Mat& svd_w) {
                 //Using OpenCV's SVD

@@ -48,6 +48,9 @@ SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL()
     LOG_DEBUG(" SolARPoseEstimationOpencv constructor");
 }
 
+SolARPoseEstimationPnpEPFL::~SolARPoseEstimationPnpEPFL(){
+
+}
 
 FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<Point2Df>> & imagePoints,
                                                          const std::vector<SRef<Point3Df>> & worldPoints,
