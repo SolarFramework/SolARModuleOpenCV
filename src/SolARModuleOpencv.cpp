@@ -17,7 +17,6 @@
 
 #include "SolAR2DOverlayOpencv.h"
 #include "SolAR3DOverlayOpencv.h"
-#include "SolARBasicMatchesFilterOpencv.h"
 #include "SolARCameraCalibrationOpencv.h"
 #include "SolARCameraOpencv.h"
 #include "SolARContoursExtractorOpencv.h"
@@ -56,7 +55,6 @@ extern "C" XPCF_EXPORT_API void XPCF_getComponent(const boost::uuids::uuid& comp
 
     boost::uuids::uuid uuidOf_XPCF_CID_SolAR2DOverlayOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolAR3DOverlayOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARBasicMatchesFilterOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARBasicMatchesFilterOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARCameraCalibrationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARCameraOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARCameraOpencv::UUID );
     boost::uuids::uuid uuidOf_XPCF_CID_SolARContoursExtractorOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv::UUID );
@@ -94,10 +92,6 @@ extern "C" XPCF_EXPORT_API void XPCF_getComponent(const boost::uuids::uuid& comp
     else if (componentUUID==uuidOf_XPCF_CID_SolAR3DOverlayOpencv)
     {
         xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv>(interfaceRef);
-    }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARBasicMatchesFilterOpencv)
-    {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARBasicMatchesFilterOpencv>(interfaceRef);
     }
     else if (componentUUID==uuidOf_XPCF_CID_SolARCameraCalibrationOpencv)
     {
@@ -217,8 +211,6 @@ extern "C" XPCF_EXPORT_API void XPCF_getComponent(const boost::uuids::uuid& comp
 XPCF_BEGIN_COMPONENTS_DECLARATION
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv::UUID,"Component SolAR2DOverlayOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv::UUID,"Component SolAR3DOverlayOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARBasicMatchesFilterOpencv::UUID,"Component SolARBasicMatchesFilterOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv::UUID,"Component SolARGeometricMatchesFilterOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv::UUID,"Component SolARCameraCalibrationOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCameraOpencv::UUID,"Component SolARCameraOpencv")
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv::UUID,"Component SolARContoursExtractorOpencv")

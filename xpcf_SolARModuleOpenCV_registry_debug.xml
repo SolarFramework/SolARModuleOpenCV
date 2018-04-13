@@ -9,10 +9,6 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="81a20f52-6bf9-4949-b914-df2f614bc945" description="I3DOverlay"/>
         </component>
-		<component uuid="cbb620c3-a7fc-42d7-bcbf-f59b475b23b0" description="SolARBasicMatchesFilterOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="e0d6cc82-6af2-493d-901a-2384fca0b16f" description="IMatchesFilter"/>
-        </component>
 		<component uuid="702a7f53-e5ec-45d2-887d-daa99a34a33c" description="SolARCameraCalibrationOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="0e83b228-b9ca-413d-9dc2-db45c427428b" description="ICameraCalibration"/>

@@ -64,7 +64,6 @@ interfaces/SolARFundamentalMatrixDecompositionValidationOpencv.h \
 interfaces/SolARHomographyMatrixDecompositionOpencv.h \
 interfaces/SolARFundamentalMatrixEstimationOpencv.h \
 interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
-interfaces/SolARBasicMatchesFilterOpencv.h \
 interfaces/SolARPoseEstimationPnpEPFL.h \
 interfaces/SolARPoseEstimationPnpOpencv.h \
 interfaces/SolARGeometricMatchesFilterOpencv.h \
@@ -100,7 +99,6 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \
-    src/SolARBasicMatchesFilterOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolARSideBySideOverlayOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \

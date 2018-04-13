@@ -64,7 +64,6 @@ namespace UUID{
 
 const string OVERLAY2D="cc51d685-9797-4ffd-a9dd-cec4f367fa6a";
 const string OVERLAY3D="2db01f59-9793-4cd5-8e13-b25d0ed5735b";
-const string BASIC_MATCHES_FILTER="cbb620c3-a7fc-42d7-bcbf-f59b475b23b0";
 const string CAMERA_CALIBRATION="702a7f53-e5ec-45d2-887d-daa99a34a33c";
 const string CAMERA="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4";
 const string CONTOURS_EXTRACTOR="6acf8de2-cc63-11e7-abc4-cec278b6b50a";
@@ -149,14 +148,6 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::display::I3DOverlay::UUID), compRef);
         if (res == -1)
              LOG_ERROR("Overlay 3D component creation has failed");
-        return res;
-    }
-
-    else if (uuid == UUID::BASIC_MATCHES_FILTER) // Basic matches filter component
-    {
-        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::features::IMatchesFilter::UUID), compRef);
-        if (res == -1)
-             LOG_ERROR("Basic Matches Filter component creation has failed");
         return res;
     }
 
