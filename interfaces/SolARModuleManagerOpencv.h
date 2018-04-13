@@ -88,7 +88,8 @@ const string KEYPOINT_DETECTOR="e81c7e4e-7da6-476a-8eba-078b43071272";
 const string MARKER2D_NATURAL_IMAGE="efcdb590-c570-11e7-abc4-cec278b6b50a";
 const string MARKER2D_SQUARED_BINARY="5d2b8da9-528e-4e5e-96c1-f883edcf3b1c";
 const string PERSPECTIVE_CONTROLLER="9c960f2a-cd6e-11e7-abc4-cec278b6b50a";
-//const string POSE_ESTIMATION="0753ade1-7932-4e29-a71c-66155e309a53";
+const string POSE_ESTIMATION_PNP="0753ade1-7932-4e29-a71c-66155e309a53";
+const string POSE_ESTIMATION_PNP_EPFL="a38edf79-f0dc-45ca-92fc-2b336fceedf9";
 const string OVERLAYSBS="e95302be-3fe1-44e0-97bf-a98380464af9";
 const string SVD_FUNDAMENTAL_MATRIX_DECOMPOSER="31188e79-6bd5-43df-9633-6d6c5d7afb5c";
 const string SVD_TRIANGULATION="85274ecd-2914-4f12-96de-37c6040633a4";
@@ -335,15 +336,21 @@ int SolARModuleManagerOpencv::createComponent(string uuid, SRef<T> &compRef)
         return res;
     }
 
-    /*
-    else if (uuid == UUID::POSE_ESTIMATION) // posefinder
+    else if (uuid == UUID::POSE_ESTIMATION_PNP) // Pose estimation component based on simple Opencv implementation
     {
         res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::pose::I3DTransformFinder::UUID), compRef);
         if (res == -1)
-             LOG_ERROR("Pose estimation component creation has failed");
+             LOG_ERROR("PnP Pose estimation component creation has failed");
         return res;
     }
-*/
+
+    else if (uuid == UUID::POSE_ESTIMATION_PNP_EPFL) // Pose estimation component based on EPFL implementation
+    {
+        res=m_xpcfComponentManager->createComponent(gen(uuid), gen(api::solver::pose::I3DTransformFinder::UUID), compRef);
+        if (res == -1)
+             LOG_ERROR("EPFL PnP Pose estimation component creation has failed");
+        return res;
+    }
 
     else if (uuid == UUID::OVERLAYSBS) // SideBySide overlay component
     {
