@@ -25,32 +25,35 @@
 #include "opencv2/core.hpp"
 
 namespace SolAR {
-using namespace datastructure;
-namespace MODULES {
-namespace OPENCV {
+    using namespace datastructure;
+    namespace MODULES {
+        namespace OPENCV {
+        /// @class SolARFundamentalMatrixEstimationOpencv
+            class SOLAROPENCV_EXPORT_API SolARFundamentalMatrixEstimationOpencv : public org::bcom::xpcf::ComponentBase,
+              public api::solver::pose::I2DTransformFinder
+                {
+                    public:
+                       /// @brief SolARFundamentalMatrixEstimationOpencv constructor.
+                        SolARFundamentalMatrixEstimationOpencv();
+                       /// @brief SolARFundamentalMatrixEstimationOpencv destructor.
+                        ~SolARFundamentalMatrixEstimationOpencv();
+                        /// @brief Find fundamental matrix from 2 sets of 2d_points. Th estimation is based on the opencv findFundamental algorithm.
+                        /// @param[in] Set of 2d_points seen in view_1.
+                        /// @param[in] Set of 2d_points seen in view_2.
+                        /// @param[out] Estimated Fundamental transform matrix.
+                        api::solver::pose::Transform2DFinder::RetCode find(const std::vector< SRef<Point2Df> >& srcPoints,
+                                                                       const std::vector< SRef<Point2Df> >& dstPoints,
+                                                                       Transform2Df & fundamental) override;
 
-class SOLAROPENCV_EXPORT_API SolARFundamentalMatrixEstimationOpencv : public org::bcom::xpcf::ComponentBase,
-    public api::solver::pose::I2DTransformFinder
-{
-public:
-    SolARFundamentalMatrixEstimationOpencv();
+                    void unloadComponent () override final;
 
-    api::solver::pose::Transform2DFinder::RetCode find(const std::vector< SRef<Point2Df> >& srcPoints,
-                  const std::vector< SRef<Point2Df> >& dstPoints,
-                  Transform2Df & fundamental) override;
+                    XPCF_DECLARE_UUID("79b29b50-cf4d-441e-b5de-1de829b91c41");
+                private:
+                    bool isFValid(const Transform2Df & F);
+                };
 
-    void unloadComponent () override final;
-
-
-    XPCF_DECLARE_UUID("79b29b50-cf4d-441e-b5de-1de829b91c41");
-
-private:
-    bool isFValid(const Transform2Df & F);
-
-};
-
-}
-}
+            }
+       }
 }
 
 #endif // SolARHomographyEstimationOpencv_H

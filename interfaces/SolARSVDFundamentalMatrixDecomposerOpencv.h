@@ -25,28 +25,49 @@
 #include "opencv2/core.hpp"
 
 namespace SolAR {
-using namespace datastructure;
-namespace MODULES {
-namespace OPENCV {
+    using namespace datastructure;
+    namespace MODULES {
+        namespace OPENCV {
+        /**
+         * @class SolARSVDFundamentalMatrixDecomposerOpencv
+         * @brief Decomposes Fundamental matrix on a set of camera poses based on opencv SVD solving.
+         */
+            class SOLAROPENCV_EXPORT_API SolARSVDFundamentalMatrixDecomposerOpencv : public org::bcom::xpcf::ComponentBase,
+                public api::solver::pose::I2DTO3DTransformDecomposer
+            {
+            public:
+                ///@brief SolARSVDFundamentalMatrixDecomposerOpencv constructor.
+                SolARSVDFundamentalMatrixDecomposerOpencv();
+                ///@brief SolARSVDFundamentalMatrixDecomposerOpencv destructor.
+                ~SolARSVDFundamentalMatrixDecomposerOpencv();
+                /// @brief Decomposes Esstential matrix on SVD representation.
+                /// @param[in] The Essential matrix.
+                /// @param[out] Matrix U of the essntial matrix.
+                /// @param[out] Matrix V of the essntial matrix.
+                /// @param[out] Matrix W of the essntial matrix.
+                void takeSVDOfE(cv::Mat_<double>& E,
+                                cv::Mat& svd_u,
+                                cv::Mat& svd_vt,
+                                cv::Mat& svd_w);
+                /// @brief Decomposes Fundamental matrix four possible camera poses based on opencv svd solving.
+                /// @param[in] The Fundamental matrix.
+                /// @param[in] Camera calibration matrix parameters.
+                /// @param[in] Camera distorsion parameters.
+                /// @param[out] Decomposed camera poses in the world coordinate system.
+                bool decompose(const Transform2Df&F,
+                               const CamCalibration&K,
+                               const CamDistortion& dist,
+                               std::vector<SRef<Pose>>& decomposedPoses) override;
 
-class SOLAROPENCV_EXPORT_API SolARSVDFundamentalMatrixDecomposerOpencv : public org::bcom::xpcf::ComponentBase,
-    public api::solver::pose::I2DTO3DTransformDecomposer
-{
-public:
-    SolARSVDFundamentalMatrixDecomposerOpencv();
-    void takeSVDOfE(cv::Mat_<double>& E,cv::Mat& svd_u, cv::Mat& svd_vt,cv::Mat& svd_w);
-    bool decompose(const Transform2Df&F,
-                   const CamCalibration&K,
-                   const CamDistortion& dist,
-                   std::vector<SRef<Pose>>& decomposedPoses) override;
-    void unloadComponent () override final;
-    XPCF_DECLARE_UUID("31188e79-6bd5-43df-9633-6d6c5d7afb5c");
+                void unloadComponent () override final;
 
-private:
-};
+                XPCF_DECLARE_UUID("31188e79-6bd5-43df-9633-6d6c5d7afb5c");
 
-}
-}
+            private:
+            };
+
+        }
+    }
 }
 
 #endif // SolARHomographyEstimationOpencv_H

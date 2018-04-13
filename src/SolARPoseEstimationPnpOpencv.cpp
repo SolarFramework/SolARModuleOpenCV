@@ -47,7 +47,9 @@ SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv()
     LOG_DEBUG(" SolARPoseEstimationOpencv constructor");
 }
 
+SolARPoseEstimationPnpOpencv::~SolARPoseEstimationPnpOpencv(){
 
+}
 FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SRef<Point2Df>> & imagePoints,
                                                             const std::vector<SRef<Point3Df>> & worldPoints,
                                                             Pose & pose) {

@@ -43,6 +43,9 @@ SolARFundamentalMatrixEstimationOpencv::SolARFundamentalMatrixEstimationOpencv()
     LOG_DEBUG("SolARFundamentalMatrixEstimationOpencv constructor")
 }
 
+SolARFundamentalMatrixEstimationOpencv::~SolARFundamentalMatrixEstimationOpencv(){
+}
+
 api::solver::pose::Transform2DFinder::RetCode SolARFundamentalMatrixEstimationOpencv::find(const std::vector< SRef<Point2Df> >& srcPoints,
                                           const std::vector< SRef<Point2Df> >& dstPoints,
                                           Transform2Df &fundamental){
