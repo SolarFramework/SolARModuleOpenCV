@@ -17,7 +17,7 @@ namespace SolAR {
         namespace OPENCV {
             /**
              * @class SolARGeometricMatchesFilterOpencv
-             * @brief Filters matches based on geometric assumptuions.
+             * @brief Filters matches based on geometric assumptions.
              */
             class SOLAROPENCV_EXPORT_API SolARGeometricMatchesFilterOpencv : public org::bcom::xpcf::ComponentBase,
                     public api::features::IMatchesFilter {
@@ -26,9 +26,9 @@ namespace SolAR {
                 SolARGeometricMatchesFilterOpencv();
             ///@brief SolARGeometricMatchesFilterOpencv destructor.
                ~SolARGeometricMatchesFilterOpencv();
-                /// @brief filter matches based fundamental matrix assumptions. This filter removes all outliers matches wich gives high reprojection error.
+                /// @brief filter matches based fundamental matrix assumptions. This filter removes all outliers matches which give high reprojection error.
                 /// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".
-                /// @param[out] Filtred matches based on redanduncy or geometric relations such as epipolar constraint.
+                /// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
                 /// @param[in] Original keypoints associated to desc_1.
                 /// @param[in] Original keypoints associated to desc_2.
                 void filter(const std::vector<DescriptorMatch>&inputMatches,
