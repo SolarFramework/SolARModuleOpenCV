@@ -5,7 +5,7 @@ It requires, as input, two sets of 2D-points for two images and the correspondin
 
 
 == Input files
-The program does not need input parameters but must be run in the project directory "SolARSVDtriangulation" as it uses the following input text files (hard coded) :
+The program does not need input parameters but must *be run in the project* directory "SolARSVDtriangulation" as it uses the following input text files (hard coded) :
 
 * *dist.txt* : contains the camera distortion parameters
 
