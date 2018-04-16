@@ -1,17 +1,26 @@
 = SolARSVDTriangulation test
 
-This application demonstrates the test of SolARSVDtriangulation
-
-This program does not need parameters, but its working directory need to be precized to the directory "SolARSVDtriangulation" as it uses text files :
-dist.txt
-K.txt
-pose_1.txt
-pose_2.txt
-pt1_F.txt
-pt2_F.txt
+This program demonstrates an OpenCV implementation of triangulation as specified by "ITriangulator.h" in SolARFramework.
+It requires, as input, two sets of 2D-points for two images and the corresponding camera poses, camera calibration matrix and camera distortion parameters. It produces a set of triangulated 3D-points in the world coordinates system
 
 
-Generated :
-solar_cloud.txt is the result of the triangulation.
+== Input files
+The program does not need input parameters but must *be run in the project* directory "SolARSVDtriangulation" as it uses the following input text files (hard coded) :
+
+* *dist.txt* : contains the camera distortion parameters
+
+* *K.txt* : contains the camera calibration matrix parameters
+
+* *pt1_F.txt* : contains a set of 2D-points in the camera coordinates system for the first image
+
+* *pt2_F.txt* : contains a set of 2D-points in the camera coordinates system for the second image
+
+* *pose_1.txt* : contains the pose of the camera in the world coordinate system for the first image
+
+* *pose_2.txt* : contains the pose of the camera in the world coordinate system for the second image
 
 
+
+== Output file
+
+The 3D-points resulting from the triangulation are stored in *solar_cloud.txt* in the working directory : first the number of 3-D points, then one set of World coordinates per line.

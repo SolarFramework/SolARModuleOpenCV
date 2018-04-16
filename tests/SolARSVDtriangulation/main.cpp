@@ -30,8 +30,11 @@ using namespace SolAR::MODULES::OPENCV;
 
 namespace xpcf  = org::bcom::xpcf;
 
-void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2Df>>&pt2d){
+bool load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2Df>>&pt2d){
     std::ifstream ox(path_file);
+    if (!ox)
+        return false;
+
     float pt[2];
   //  Point2Df point_temp;
     std::string dummy;
@@ -45,11 +48,14 @@ void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2
        pt2d[i]  = sptrnms::make_shared<Point2Df>(v[0], v[1]);
     }
   ox.close();
+  return true;
 }
 
 
-void load_pose(std::string &path_file, SRef<Pose>&P){
+bool load_pose(std::string &path_file, SRef<Pose>&P){
     std::ifstream ox(path_file);
+    if (!ox)
+        return false;
 
     Eigen::Matrix3f Rpose;
     Eigen::Vector3f Tpose;
@@ -86,10 +92,15 @@ void load_pose(std::string &path_file, SRef<Pose>&P){
         std::cout<<std::endl;
     }
    ox.close();
+
+   return true;
 }
 
-void load_camMatrix(std::string &path_file, CamCalibration&intrinsic){
+bool load_camMatrix(std::string &path_file, CamCalibration&intrinsic){
     std::ifstream ox(path_file);
+    if (!ox)
+        return false;
+
     std::string dummy;
     float v;
     for(int i = 0; i < 3; ++i){
@@ -102,10 +113,15 @@ void load_camMatrix(std::string &path_file, CamCalibration&intrinsic){
         std::cout<<std::endl;
     }
     ox.close();
+
+    return true;
 }
 
-void load_distorsion(std::string&path_file, CamDistortion&dist){
+bool load_distorsion(std::string&path_file, CamDistortion&dist){
      std::ifstream ox(path_file);
+     if (!ox)
+         return false;
+
     std::string dummy;
     float v;
     for(int i = 0; i < 4; ++i){
@@ -116,6 +132,16 @@ void load_distorsion(std::string&path_file, CamDistortion&dist){
     dist(4,0) = 0.0;
     std::cout<<dist<<std::endl;
 
+    return true;
+}
+
+void help(){
+    std::cout << "\n\n";
+    std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n";
+    std::cout << "Something went wrong with input files \n";
+    std::cout << "please refer to README.adoc in the project directory \n";
+    std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n";
+    exit(-1);
 }
 
 int run()
@@ -152,22 +178,34 @@ int run()
 
       const int points_no = 6954;
       std::cout<<"->load points 2d view 1: "<<std::endl;
-      load_2dpoints(path_pt1, points_no, pt2d_1);
+      if(load_2dpoints(path_pt1, points_no, pt2d_1)==false){
+          help();
+      };
 
       std::cout<<"->load points 2d view 2: "<<std::endl;
-      load_2dpoints(path_pt2, points_no, pt2d_2);
+      if(load_2dpoints(path_pt2, points_no, pt2d_2)==false){
+          help();
+      };;
 
 	  std::cout << "-> load Pose view 1: " << std::endl;
-	  load_pose(path_pose1, pose_1);
+      if(load_pose(path_pose1, pose_1)==false){
+          help();
+      };
 
 	  std::cout << "-> load Pose view 2: " << std::endl;
-	  load_pose(path_pose2, pose_2);
+      if(load_pose(path_pose2, pose_2)==false){
+          help();
+      };
 
      std::cout<<"->load K: "<<std::endl;
-      load_camMatrix(path_intrinsic,K);
+      if(load_camMatrix(path_intrinsic,K)==false){
+          help();
+      };
 
-      std::cout<<"->load K: "<<std::endl;
-      load_distorsion(path_distorsion,dist);
+      std::cout<<"->load dist: "<<std::endl;
+      if(load_distorsion(path_distorsion,dist)==false){
+          help();
+      };
 
       mapper->triangulate(pt2d_1, pt2d_2,pose_1,pose_2,K,dist,pt3d);
 
