@@ -18,7 +18,7 @@
 #define SolARHomographyEstimationOpencv_H
 #include <vector>
 
-#include "api/solver/pose/IHomographyEstimation.h"
+#include "api/solver/pose/I2DTransformFinder.h"
 #include "ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <vector>
@@ -30,12 +30,12 @@ namespace MODULES {
 namespace OPENCV {
 
 class SOLAROPENCV_EXPORT_API SolARHomographyEstimationOpencv : public org::bcom::xpcf::ComponentBase,
-    public api::solver::pose::IHomographyEstimation
+    public api::solver::pose::I2DTransformFinder
 {
 public:
     SolARHomographyEstimationOpencv();
 
-	api::solver::pose::HomographyEstimation::RetCode findHomography(const std::vector< SRef<Point2Df> >& srcPoints,
+    api::solver::pose::Transform2DFinder::RetCode find(const std::vector< SRef<Point2Df> >& srcPoints,
                   const std::vector< SRef<Point2Df> >& dstPoints,
                   Transform2Df & homography) override;
 

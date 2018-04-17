@@ -154,7 +154,6 @@ void SolAR2DOverlayOpencv::drawSBPattern (SRef<SquaredBinaryPattern> pattern, SR
         }
     }
 }
-
 }
 }
 }

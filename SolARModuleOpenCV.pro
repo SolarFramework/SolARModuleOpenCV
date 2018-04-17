@@ -57,14 +57,21 @@ interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
 interfaces/SolARDescriptorsExtractorAKAZE2Opencv.h \
 interfaces/SolARDescriptorsExtractorORBOpencv.h \
 interfaces/SolARHomographyEstimationOpencv.h \
-interfaces/SolARPoseEstimationOpencv.h \
 interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
 interfaces/SolARDescriptorMatcherKNNOpencv.h \
 interfaces/SolARDescriptorMatcherRadiusOpencv.h \
+interfaces/SolARFundamentalMatrixDecompositionValidationOpencv.h \
+interfaces/SolARHomographyMatrixDecompositionOpencv.h \
+interfaces/SolARFundamentalMatrixEstimationOpencv.h \
+interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
+interfaces/SolARPoseEstimationPnpEPFL.h \
+interfaces/SolARPoseEstimationPnpOpencv.h \
+interfaces/SolARGeometricMatchesFilterOpencv.h \
 interfaces/SolARSideBySideOverlayOpencv.h \
 interfaces/SolAR3DOverlayOpencv.h \
 interfaces/SolAR2DOverlayOpencv.h \
 interfaces/SolARModuleManagerOpencv.h \
+interfaces/SolARSVDTriangulationOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
     src/AKAZE2/AKAZEFeatures.h \
     src/AKAZE2/fed.h \
@@ -89,20 +96,27 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARDescriptorsExtractorSBPatternOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZEOpencv.cpp \
     src/SolARDescriptorsExtractorORBOpencv.cpp \
-    src/SolARPoseEstimationOpencv.cpp \
     src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \
+    src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolARSideBySideOverlayOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
     src/SolAR3DOverlayOpencv.cpp \
     src/SolARModuleManagerOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
+    src/SolARPoseEstimationPnpEPFL.cpp \
+    src/SolARPoseEstimationPnpOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZE2Opencv.cpp \
     src/AKAZE2/akaze.cpp \
     src/AKAZE2/AKAZEFeatures.cpp \
     src/AKAZE2/fed.cpp \
-    src/AKAZE2/nldiffusion_functions.cpp
+    src/AKAZE2/nldiffusion_functions.cpp \
+    src/SolARSVDTriangulationOpencv.cpp \
+    src/SolARFundamentalMatrixDecompositionValidationOpencv.cpp \
+    src/SolARHomographyMatrixDecompositionOpencv.cpp \
+    src/SolARFundamentalMatrixEstimationOpencv.cpp \
+    src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
 
 unix {
 }
@@ -131,3 +145,4 @@ xpcf_xml_files.files=$$files($${PWD}/xpcf*.xml)
 
 INSTALLS += header_files
 INSTALLS += xpcf_xml_files
+
