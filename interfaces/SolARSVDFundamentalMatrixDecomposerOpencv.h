@@ -61,8 +61,6 @@ namespace SolAR {
 
                 void unloadComponent () override final;
 
-                XPCF_DECLARE_UUID("31188e79-6bd5-43df-9633-6d6c5d7afb5c");
-
             private:
             };
 

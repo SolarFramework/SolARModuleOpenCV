@@ -56,9 +56,6 @@ public:
            std::vector<DescriptorMatch>& matches
         );
 
-    XPCF_DECLARE_UUID("d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9");
-
-
 private:
     int m_id;
     cv::BFMatcher m_matcher;

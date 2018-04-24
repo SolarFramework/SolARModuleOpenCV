@@ -23,17 +23,16 @@
 
 namespace xpcf = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARPerspectiveControllerOpencv::SolARPerspectiveControllerOpencv()
+    SolARPerspectiveControllerOpencv::SolARPerspectiveControllerOpencv():ComponentBase(xpcf::toUUID<SolARPerspectiveControllerOpencv>())
     {
-        setUUID(SolARPerspectiveControllerOpencv::UUID);
-        addInterface<api::image::IPerspectiveController>(this,api::image::IPerspectiveController::UUID, "interface api::image::IPerspectiveController");
+        addInterface<api::image::IPerspectiveController>(this);
     }
 
     void SolARPerspectiveControllerOpencv::setParameters (const Sizei outputImageSize)

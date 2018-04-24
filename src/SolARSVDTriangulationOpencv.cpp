@@ -37,18 +37,18 @@ namespace xpcf  = org::bcom::xpcf;
 #define intrpmnmx(val,min,max) (max==min ? 0.0 : ((val)-min)/(max-min))
 
 
+namespace xpcf  = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv()
+SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ComponentBase(xpcf::toUUID<SolARSVDTriangulationOpencv>())
 {
-    setUUID(SolARSVDTriangulationOpencv::UUID);
-    addInterface<api::solver::map::ITriangulator>(this,api::solver::map::ITriangulator::UUID, "interface api::solver::map::ITriangulator");
+    addInterface<api::solver::map::ITriangulator>(this);
 
    LOG_DEBUG(" SolARSVDTriangulationOpencv constructor");
 

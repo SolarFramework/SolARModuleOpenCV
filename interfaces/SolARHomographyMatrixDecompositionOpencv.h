@@ -38,7 +38,6 @@ namespace SolAR {
                                        const CamDistortion& dist,
                                        std::vector<SRef<Pose>>& decomposedPoses) override;
                         void unloadComponent () override final;
-                        XPCF_DECLARE_UUID("b5fab395-2184-4123-b0d5-4af74d0a2d79");
                     private:
                 };
         }

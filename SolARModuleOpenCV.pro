@@ -38,46 +38,45 @@ DEFINES += "_BCOM_SHARED=__declspec(dllexport)"
 INCLUDEPATH += interfaces/
 
 HEADERS += interfaces/SolARCameraOpencv.h \
-interfaces/SolARImageConvertorOpencv.h \
-interfaces/SolARImageLoaderOpencv.h \
-interfaces/SolARImageFilterOpencv.h \
-interfaces/SolARImageViewerOpencv.h \
-interfaces/SolARKeypointDetectorOpencv.h \
-interfaces/SolAROpenCVHelper.h \
-interfaces/SolARImageFilterOpencv.h \
-interfaces/SolAROpencvAPI.h \
-interfaces/SolARCameraCalibrationOpencv.h \
-interfaces/SolARMarker2DNaturalImageOpencv.h \
-interfaces/SolARContoursExtractorOpencv.h \
-interfaces/SolARPerspectiveControllerOpencv.h \
-interfaces/SolARMarker2DSquaredBinaryOpencv.h \
-interfaces/SolARContoursFilterBinaryMarkerOpencv.h \
-interfaces/SolARDescriptorsExtractorSBPatternOpencv.h \
-interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
-interfaces/SolARDescriptorsExtractorAKAZE2Opencv.h \
-interfaces/SolARDescriptorsExtractorORBOpencv.h \
-interfaces/SolARHomographyEstimationOpencv.h \
-interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
-interfaces/SolARDescriptorMatcherKNNOpencv.h \
-interfaces/SolARDescriptorMatcherRadiusOpencv.h \
-interfaces/SolARFundamentalMatrixDecompositionValidationOpencv.h \
-interfaces/SolARHomographyMatrixDecompositionOpencv.h \
-interfaces/SolARFundamentalMatrixEstimationOpencv.h \
-interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
-interfaces/SolARPoseEstimationPnpEPFL.h \
-interfaces/SolARPoseEstimationPnpOpencv.h \
-interfaces/SolARGeometricMatchesFilterOpencv.h \
-interfaces/SolARSideBySideOverlayOpencv.h \
-interfaces/SolAR3DOverlayOpencv.h \
-interfaces/SolAR2DOverlayOpencv.h \
-interfaces/SolARModuleManagerOpencv.h \
-interfaces/SolARSVDTriangulationOpencv.h \
+    interfaces/SolARImageConvertorOpencv.h \
+    interfaces/SolARImageLoaderOpencv.h \
+    interfaces/SolARImageFilterOpencv.h \
+    interfaces/SolARImageViewerOpencv.h \
+    interfaces/SolARKeypointDetectorOpencv.h \
+    interfaces/SolAROpenCVHelper.h \
+    interfaces/SolARImageFilterOpencv.h \
+    interfaces/SolAROpencvAPI.h \
+    interfaces/SolARCameraCalibrationOpencv.h \
+    interfaces/SolARMarker2DNaturalImageOpencv.h \
+    interfaces/SolARContoursExtractorOpencv.h \
+    interfaces/SolARPerspectiveControllerOpencv.h \
+    interfaces/SolARMarker2DSquaredBinaryOpencv.h \
+    interfaces/SolARContoursFilterBinaryMarkerOpencv.h \
+    interfaces/SolARDescriptorsExtractorSBPatternOpencv.h \
+    interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
+    interfaces/SolARDescriptorsExtractorAKAZE2Opencv.h \
+    interfaces/SolARDescriptorsExtractorORBOpencv.h \
+    interfaces/SolARHomographyEstimationOpencv.h \
+    interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
+    interfaces/SolARDescriptorMatcherKNNOpencv.h \
+    interfaces/SolARDescriptorMatcherRadiusOpencv.h \
+    interfaces/SolARHomographyMatrixDecompositionOpencv.h \
+    interfaces/SolARFundamentalMatrixEstimationOpencv.h \
+    interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
+    interfaces/SolARPoseEstimationPnpEPFL.h \
+    interfaces/SolARPoseEstimationPnpOpencv.h \
+    interfaces/SolARGeometricMatchesFilterOpencv.h \
+    interfaces/SolARSideBySideOverlayOpencv.h \
+    interfaces/SolAR3DOverlayOpencv.h \
+    interfaces/SolAR2DOverlayOpencv.h \
+    interfaces/SolARSVDTriangulationOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
     src/AKAZE2/AKAZEFeatures.h \
     src/AKAZE2/fed.h \
     src/AKAZE2/nldiffusion_functions.h \
     src/AKAZE2/TEvolution.h \
-    src/AKAZE2/utils.h
+    src/AKAZE2/utils.h \
+    interfaces/SolARModuleOpencv_traits.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
@@ -103,7 +102,6 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARSideBySideOverlayOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
     src/SolAR3DOverlayOpencv.cpp \
-    src/SolARModuleManagerOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
     src/SolARPoseEstimationPnpEPFL.cpp \
     src/SolARPoseEstimationPnpOpencv.cpp \
@@ -113,12 +111,12 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/AKAZE2/fed.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
-    src/SolARFundamentalMatrixDecompositionValidationOpencv.cpp \
     src/SolARHomographyMatrixDecompositionOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
 
 unix {
+    QMAKE_CXXFLAGS += -Wignored-qualifiers
 }
 
 macx {

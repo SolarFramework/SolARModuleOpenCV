@@ -60,8 +60,6 @@ public:
 
     void unloadComponent () override final;
 
-    XPCF_DECLARE_UUID("A8C27A2A-9E31-4B8D-8F24-46A4F47CB930");
-
 private:
 
     bool isHValid(const SolAR2DTransformf& H);

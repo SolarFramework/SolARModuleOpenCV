@@ -23,17 +23,18 @@
 
 namespace xpcf = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARContoursExtractorOpencv::SolARContoursExtractorOpencv()
+    SolARContoursExtractorOpencv::SolARContoursExtractorOpencv():ComponentBase(xpcf::toUUID<SolARContoursExtractorOpencv>())
     {
-        setUUID(SolARContoursExtractorOpencv::UUID);
-        addInterface<api::features::IContoursExtractor>(this,api::features::IContoursExtractor::UUID, "interface api::features::ContoursExtractor");
+        addInterface<api::features::IContoursExtractor>(this);
+        SRef<xpcf::IVariantMap> params = getParams();
+        params->wrapFloat("minContourSize",m_minContourSize);
     }
 
     void SolARContoursExtractorOpencv::setParameters (float minContourSize)

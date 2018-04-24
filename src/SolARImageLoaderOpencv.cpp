@@ -25,7 +25,7 @@
 #include <stdexcept>
 #include <vector>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv)
 
 using namespace org::bcom::xpcf;
 
@@ -34,10 +34,9 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARImageLoaderOpencv::SolARImageLoaderOpencv()
-{
-    setUUID(SolARImageLoaderOpencv::UUID);
-    addInterface<api::image::IImageLoader>(this,api::image::IImageLoader::UUID, "interface api::image::IImageLoader");
+SolARImageLoaderOpencv::SolARImageLoaderOpencv():ComponentBase(toUUID<SolARImageLoaderOpencv>())
+{ 
+    addInterface<api::image::IImageLoader>(this);
     LOG_DEBUG(" SolARImageLoaderOpencv constructor")
 }
 

@@ -24,18 +24,19 @@
 #include "ComponentFactory.h"
 
 namespace xpcf  = org::bcom::xpcf;
+using namespace org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv);
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARImageConvertorOpencv::SolARImageConvertorOpencv()
-{
-    setUUID(SolARImageConvertorOpencv::UUID);
-    addInterface<api::image::IImageConvertor>(this,api::image::IImageConvertor::UUID, "interface api::image::IImageConvertor");
+SolARImageConvertorOpencv::SolARImageConvertorOpencv():ComponentBase(toUUID<SolARImageConvertorOpencv>())
+{  
+    addInterface<api::image::IImageConvertor>(this);
 }
 
 

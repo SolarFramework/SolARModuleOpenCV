@@ -29,17 +29,18 @@
 
 #include <map>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL()
+SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL():ComponentBase(xpcf::toUUID<SolARPoseEstimationPnpEPFL>())
 {
-    setUUID(SolARPoseEstimationPnpEPFL::UUID);
-    addInterface<api::solver::pose::I3DTransformFinder>(this,api::solver::pose::I3DTransformFinder::UUID, "interface api::solver::pose::I3DTransformFinder");
+    addInterface<api::solver::pose::I3DTransformFinder>(this);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);

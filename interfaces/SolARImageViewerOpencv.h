@@ -38,8 +38,6 @@ public:
     FrameworkReturnCode display(const char * title, SRef<Image> img, const char* exitKey, int w_window=0, int h_window=0) override;
     FrameworkReturnCode display(const char * title, SRef<Image> img, uint32_t duration, int w_window=0, int h_window=0);
 
-    XPCF_DECLARE_UUID("19ea4e13-7085-4e3f-92ca-93f200ffb01b");
-
 };
 
 }

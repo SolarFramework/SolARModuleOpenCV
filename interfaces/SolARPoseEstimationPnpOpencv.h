@@ -53,8 +53,6 @@ namespace SolAR {
 
                 void unloadComponent () override final;
 
-
-                XPCF_DECLARE_UUID("0753ade1-7932-4e29-a71c-66155e309a53");
             private:
                 cv::Mat m_camMatrix;
                 cv::Mat m_camDistorsion;

@@ -42,8 +42,7 @@ public:
     FrameworkReturnCode loadMarker(const std::string & filename) override;
 
     void unloadComponent () override final;
- //   void testMethod();
-    XPCF_DECLARE_UUID("5d2b8da9-528e-4e5e-96c1-f883edcf3b1c");
+
 };
 
 }

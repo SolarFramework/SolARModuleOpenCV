@@ -53,9 +53,6 @@ public:
            std::vector<DescriptorMatch>& matches
         );
 
-    XPCF_DECLARE_UUID("904e64f6-d502-11e7-9296-cec278b6b50a");
-
-
 private:
     float m_maxDistance;
     cv::FlannBasedMatcher m_matcher;

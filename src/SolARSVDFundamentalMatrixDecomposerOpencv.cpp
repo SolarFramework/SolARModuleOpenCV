@@ -29,15 +29,17 @@
 
 #include <map>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv)
 
 namespace SolAR {
 using namespace datastructure;
     namespace MODULES {
         namespace OPENCV {
-            SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOpencv(){
-                setUUID(SolARSVDFundamentalMatrixDecomposerOpencv::UUID);
-                addInterface<api::solver::pose::I2DTO3DTransformDecomposer>(this,api::solver::pose::I2DTO3DTransformDecomposer::UUID, "interface api::solver::pose::IFundamentalMatrixDecomposer");
+            SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOpencv():ComponentBase(xpcf::toUUID<SolARSVDFundamentalMatrixDecomposerOpencv>())
+            {
+                addInterface<api::solver::pose::I2DTO3DTransformDecomposer>(this);
                 LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
             }
             SolARSVDFundamentalMatrixDecomposerOpencv::~SolARSVDFundamentalMatrixDecomposerOpencv(){

@@ -24,7 +24,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include "IComponentManager.h"
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv)
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -35,10 +35,9 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARKeypointDetectorOpencv::SolARKeypointDetectorOpencv()
+SolARKeypointDetectorOpencv::SolARKeypointDetectorOpencv():ComponentBase(xpcf::toUUID<SolARKeypointDetectorOpencv>())
 {
-    setUUID(SolARKeypointDetectorOpencv::UUID);
-    addInterface<api::features::IKeypointDetector>(this,api::features::IKeypointDetector::UUID, "interface api::features::IKeypointDetectorOpencv");
+    addInterface<api::features::IKeypointDetector>(this);
 
     LOG_DEBUG("SolARKeypointDetectorOpencv constructor");
     m_type=KeypointDetectorType::AKAZE;

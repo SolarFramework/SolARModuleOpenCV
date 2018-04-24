@@ -21,7 +21,9 @@
 
 #include "SolAROpenCVHelper.h"
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv)
 
 namespace SolAR {
 using namespace datastructure;
@@ -29,10 +31,10 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorMatcherHammingBruteForceOpencv::SolARDescriptorMatcherHammingBruteForceOpencv()
+SolARDescriptorMatcherHammingBruteForceOpencv::SolARDescriptorMatcherHammingBruteForceOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorMatcherHammingBruteForceOpencv>())
 {
-    setUUID(SolARDescriptorMatcherHammingBruteForceOpencv::UUID);
-    addInterface<IDescriptorMatcher>(this,IDescriptorMatcher::UUID, "interface SolARDescriptorMatcherHammingBruteForceOpencv");
+
+    addInterface<IDescriptorMatcher>(this);
     LOG_DEBUG(" SolARDescriptorMatcherHammingBruteForceOpencv constructor")
 }
 

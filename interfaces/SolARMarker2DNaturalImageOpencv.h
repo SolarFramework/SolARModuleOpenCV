@@ -39,7 +39,6 @@ public:
     FrameworkReturnCode loadMarker(const std::string & filename) override;
     FrameworkReturnCode getImage(SRef<Image> & img) override;
 
-    XPCF_DECLARE_UUID("efcdb590-c570-11e7-abc4-cec278b6b50a");
  private:
      cv::Mat m_ocvImage;
 };

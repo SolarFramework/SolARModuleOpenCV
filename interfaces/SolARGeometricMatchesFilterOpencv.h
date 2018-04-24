@@ -37,8 +37,6 @@ namespace SolAR {
                             const std::vector<SRef<Keypoint>>&inputKeyPointsB);
                 void unloadComponent () override final;
 
-                    XPCF_DECLARE_UUID("3731691e-2c4c-4d37-a2ce-06d1918f8d41");
-
              private:
 
             };

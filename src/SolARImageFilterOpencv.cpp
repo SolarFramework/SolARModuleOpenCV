@@ -21,17 +21,16 @@
 
 namespace xpcf  = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageFilterOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageFilterOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARImageFilterOpencv::SolARImageFilterOpencv()
+SolARImageFilterOpencv::SolARImageFilterOpencv():ComponentBase(xpcf::toUUID<SolARImageFilterOpencv>())
 {
-    setUUID(SolARImageFilterOpencv::UUID);
-    addInterface<api::image::IImageFilter>(this,api::image::IImageFilter::UUID, "interface ImageFilterOpencv");
+    addInterface<api::image::IImageFilter>(this);
 }
 
 

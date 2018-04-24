@@ -23,17 +23,16 @@
 
 namespace xpcf = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARDescriptorsExtractorSBPatternOpencv::SolARDescriptorsExtractorSBPatternOpencv()
+    SolARDescriptorsExtractorSBPatternOpencv::SolARDescriptorsExtractorSBPatternOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorsExtractorSBPatternOpencv>())
     {
-        setUUID(SolARDescriptorsExtractorSBPatternOpencv::UUID);
-        addInterface<api::features::IDescriptorsExtractorSBPattern>(this,api::features::IDescriptorsExtractorSBPattern::UUID, "interface api::features::IDescriptorsExtractorSBPattern");
+        addInterface<api::features::IDescriptorsExtractorSBPattern>(this);
         m_patternSize = 5;
     }
 

@@ -46,9 +46,6 @@ public:
  
     void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints);
 
-    XPCF_DECLARE_UUID("e81c7e4e-7da6-476a-8eba-078b43071272");
-
-
 private:
 	int m_id;
     KeypointDetectorType m_type;

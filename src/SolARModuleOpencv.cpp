@@ -13,7 +13,7 @@
 
 #include <iostream>
 
-#include "ContainerFactory.h"
+#include "ModuleFactory.h"
 
 #include "SolAR2DOverlayOpencv.h"
 #include "SolAR3DOverlayOpencv.h"
@@ -28,7 +28,6 @@
 #include "SolARDescriptorsExtractorAKAZE2Opencv.h"
 #include "SolARDescriptorsExtractorORBOpencv.h"
 #include "SolARDescriptorsExtractorSBPatternOpencv.h"
-#include "SolARFundamentalMatrixDecompositionValidationOpencv.h"
 #include "SolARFundamentalMatrixEstimationOpencv.h"
 #include "SolARGeometricMatchesFilterOpencv.h"
 #include "SolARHomographyEstimationOpencv.h"
@@ -40,7 +39,7 @@
 #include "SolARMarker2DNaturalImageOpencv.h"
 #include "SolARMarker2DSquaredBinaryOpencv.h"
 #include "SolARPerspectiveControllerOpencv.h"
-#include "SolARPoseEstimationPnpEPFL.h""
+#include "SolARPoseEstimationPnpEPFL.h"
 #include "SolARPoseEstimationPnpOpencv.h"
 #include "SolARSideBySideOverlayOpencv.h"
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
@@ -48,195 +47,157 @@
 
 namespace xpcf=org::bcom::xpcf;
 
-XPCF_DECLARE_CONTAINER("15e1990b-86b2-445c-8194-0cbe80ede970", "SolARModuleOpenCV")
+XPCF_DECLARE_MODULE("15e1990b-86b2-445c-8194-0cbe80ede970", "SolARModuleOpenCV")
 
-extern "C" XPCF_EXPORT_API void XPCF_getComponent(const boost::uuids::uuid& componentUUID,SRef<xpcf::IComponentIntrospect>& interfaceRef)
+extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boost::uuids::uuid& componentUUID,SRef<xpcf::IComponentIntrospect>& interfaceRef)
 {
-
-    boost::uuids::uuid uuidOf_XPCF_CID_SolAR2DOverlayOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolAR3DOverlayOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARCameraCalibrationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARCameraOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARCameraOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARContoursExtractorOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARContoursFilterBinaryMarkerOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARDescriptorMatcherHammingBruteForceMatcherOpencv  = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARDescriptorMatcherKNNOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARDescriptorMatcherRadiusOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARDescriptorExtractorAKAZE2Opencv  = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARDescriptorExtractorAKAZEOpencv  = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARDescriptorsExtractorORBOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARDescriptorsExtractorSBPatternOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARFundamentalMatrixDecompositionValidationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARFundamentalMatrixDecompositionValidationOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARFundamentalMatrixEstimationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARGeometricMatchesFilterOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARHomographyEstimationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARImageConvertorOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARImageFilterOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARImageFilterOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARImageLoaderOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARImageViewerOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARImageViewerOpencv::UUID );  
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARKeypointDetectorOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARMarker2DNaturalImageOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARMarker2DSquaredBinaryOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARPerspectiveControllerOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv::UUID );   
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARPoseEstimationPnpOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARPoseEstimationPnpEPFL = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARSideBySideOverlayOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARSVDFundamentalMatrixDecomposerOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv::UUID );
-    boost::uuids::uuid uuidOf_XPCF_CID_SolARSVDTriangulationOpencv = xpcf::toUUID(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv::UUID );
-
-
-    if (componentUUID==uuidOf_XPCF_CID_SolAR2DOverlayOpencv)
+    xpcf::XPCFErrorCode errCode = xpcf::XPCFErrorCode::_FAIL;
+    errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv>(componentUUID,interfaceRef);
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolAR3DOverlayOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARCameraCalibrationOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARCameraOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARCameraOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARCameraOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARContoursExtractorOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARContoursFilterBinaryMarkerOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARDescriptorMatcherHammingBruteForceMatcherOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARDescriptorMatcherKNNOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARDescriptorMatcherRadiusOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARDescriptorExtractorAKAZE2Opencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARDescriptorExtractorAKAZEOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARDescriptorsExtractorORBOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARDescriptorsExtractorSBPatternOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARFundamentalMatrixDecompositionValidationOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARFundamentalMatrixDecompositionValidationOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARFundamentalMatrixEstimationOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARGeometricMatchesFilterOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageConvertorOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARHomographyEstimationOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageFilterOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARImageConvertorOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARImageConvertorOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARImageFilterOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARImageFilterOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARImageLoaderOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARImageViewerOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARKeypointDetectorOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARMarker2DNaturalImageOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv>(interfaceRef);
-    }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARMarker2DSquaredBinaryOpencv)
-    {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv>(interfaceRef);
-    }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARPerspectiveControllerOpencv)
-    {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv>(componentUUID,interfaceRef);
     }
 
-    else if (componentUUID==uuidOf_XPCF_CID_SolARPoseEstimationPnpOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARPoseEstimationPnpEPFL)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARSideBySideOverlayOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARSVDFundamentalMatrixDecomposerOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv>(componentUUID,interfaceRef);
     }
-    else if (componentUUID==uuidOf_XPCF_CID_SolARSVDTriangulationOpencv)
+    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        xpcf::ComponentFactory::createComponent<SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv>(interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv>(componentUUID,interfaceRef);
     }
+
+    return errCode;
 }
 
 XPCF_BEGIN_COMPONENTS_DECLARATION
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv::UUID,"Component SolAR2DOverlayOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv::UUID,"Component SolAR3DOverlayOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv::UUID,"Component SolARCameraCalibrationOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCameraOpencv::UUID,"Component SolARCameraOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv::UUID,"Component SolARContoursExtractorOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv::UUID,"Component SolARContoursFilterBinaryMarkerOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv::UUID,"Component SolARDescriptorMatcherHammingBruteForceOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv::UUID,"Component SolARDescriptorMatcherKNNOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv::UUID,"Component SolARDescriptorMatcherRadiusOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv::UUID,"Component SolARDescriptorsExtractorAKAZE2Opencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv::UUID,"Component SolARDescriptorsExtractorAKAZEOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv::UUID,"Component SolARDescriptorsExtractorORBOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv::UUID,"Component SolARDescriptorsExtractorSBPatternOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARFundamentalMatrixDecompositionValidationOpencv::UUID,"Component SolARFundamentalMatrixDecompositionValidationOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv::UUID,"Component SolARFundamentalMatrixEstimationOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv::UUID,"Component SolARGeometricMatchesFilterOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv::UUID,"Component SolARHomographyEstimationOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv::UUID,"Component SolARImageConvertorOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterOpencv::UUID,"Component SolARImageFilterOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv::UUID,"Component SolARImageLoaderOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageViewerOpencv::UUID,"Component SolARImageViewerOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv::UUID,"Component SolARKeypointDetectorOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv::UUID,"Component SolARMarker2DNaturalImageOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv::UUID,"Component SolARMarker2DSquaredBinaryOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv::UUID,"Component SolARPerspectiveControllerOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL::UUID,"Component SolARPoseEstimationPnpEPFLv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv::UUID,"Component SolARPoseEstimationPnpOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv::UUID,"Component SolARSideBySideOverlayOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv::UUID,"Component SolARSVDFundamentalMatrixDecomposerOpencv")
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv::UUID,"Component SolARSVDTriangulationOpencv")
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCameraOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageViewerOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv)
 XPCF_END_COMPONENTS_DECLARATION

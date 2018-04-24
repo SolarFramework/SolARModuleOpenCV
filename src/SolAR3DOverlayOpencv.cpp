@@ -33,17 +33,16 @@
 namespace xpcf  = org::bcom::xpcf;
 
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolAR3DOverlayOpencv::SolAR3DOverlayOpencv()
+SolAR3DOverlayOpencv::SolAR3DOverlayOpencv():ComponentBase(xpcf::toUUID<SolAR3DOverlayOpencv>())
 {
-    setUUID(SolAR3DOverlayOpencv::UUID);
-    addInterface<api::display::I3DOverlay>(this,api::display::I3DOverlay::UUID, "interface 3DOverlayOpenCV");
+    addInterface<api::display::I3DOverlay>(this);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);

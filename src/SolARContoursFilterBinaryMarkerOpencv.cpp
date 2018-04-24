@@ -23,17 +23,18 @@
 
 namespace xpcf = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARContoursFilterBinaryMarkerOpencv::SolARContoursFilterBinaryMarkerOpencv()
+    SolARContoursFilterBinaryMarkerOpencv::SolARContoursFilterBinaryMarkerOpencv():ComponentBase(xpcf::toUUID<SolARContoursFilterBinaryMarkerOpencv>())
     {
-        setUUID(SolARContoursFilterBinaryMarkerOpencv::UUID);
-        addInterface<api::features::IContoursFilter>(this,api::features::IContoursFilter::UUID, "interface ContoursFilterOpencv");
+        addInterface<api::features::IContoursFilter>(this);
+        SRef<xpcf::IVariantMap> params = getParams();
+        params->wrapFloat("minContourLength",m_minContourLength);
     }
 
     void SolARContoursFilterBinaryMarkerOpencv::setParameters (float minContourLength)

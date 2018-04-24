@@ -23,16 +23,15 @@
 #include "core/Log.h"
 
 using namespace org::bcom::xpcf;
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARCameraOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARCameraOpencv)
 
 namespace SolAR {
 namespace MODULES {
 namespace OPENCV {
 
-    SolARCameraOpencv::SolARCameraOpencv()
+    SolARCameraOpencv::SolARCameraOpencv():ComponentBase(toUUID<SolARCameraOpencv>())
     {
-        setUUID(SolARCameraOpencv::UUID);
-        addInterface<api::input::devices::ICamera>(this,api::input::devices::ICamera::UUID, "interface CameraOpencv");
+        addInterface<api::input::devices::ICamera>(this);
     }
 
     void SolARCameraOpencv::setResolution(Sizei resolution)

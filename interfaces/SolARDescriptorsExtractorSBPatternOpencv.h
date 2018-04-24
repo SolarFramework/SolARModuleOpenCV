@@ -38,7 +38,6 @@ public:
     FrameworkReturnCode extract(const SRef<SquaredBinaryPattern> pattern, SRef<DescriptorBuffer> & descriptor) override;
 
     void unloadComponent () override final;
-    XPCF_DECLARE_UUID("d25625ba-ce3a-11e7-abc4-cec278b6b50a");
 
 private:
     FrameworkReturnCode getPatternDescriptorFromImage (SRef<Image> image, unsigned char* data);

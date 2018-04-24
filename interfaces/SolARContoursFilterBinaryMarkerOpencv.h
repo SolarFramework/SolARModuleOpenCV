@@ -36,8 +36,7 @@ public:
 
     FrameworkReturnCode filter(const std::vector<SRef<Contour2Df>> & input_contours, std::vector<SRef<Contour2Df>> & filtered_contours) override;
 
-    void unloadComponent () override final;
-    XPCF_DECLARE_UUID("4309dcc6-cc73-11e7-abc4-cec278b6b50a");
+    void unloadComponent () override final; 
 
 private:
     float m_minContourLength;

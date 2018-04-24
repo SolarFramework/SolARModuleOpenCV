@@ -32,18 +32,16 @@
 
 namespace xpcf  = org::bcom::xpcf;
 
-
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolAR2DOverlayOpencv::SolAR2DOverlayOpencv()
+SolAR2DOverlayOpencv::SolAR2DOverlayOpencv():ComponentBase(xpcf::toUUID<SolAR2DOverlayOpencv>())
 {
-    setUUID(SolAR2DOverlayOpencv::UUID);
-    addInterface<api::display::I2DOverlay>(this,api::display::I2DOverlay::UUID, "interface SolAR2DOverlayOpencv");
+   addInterface<api::display::I2DOverlay>(this);
 
    LOG_DEBUG(" SolAR2DOverlayOpencv constructor");
 

@@ -43,8 +43,6 @@ public:
 
     void unloadComponent () override final;
 
-    XPCF_DECLARE_UUID("2db01f59-9793-4cd5-8e13-b25d0ed5735b");
-
 private:
 
     void setParallelepipedPosition(const float X_world, const float Y_world, const float Z_world);

@@ -55,7 +55,6 @@ public:
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
     void unloadComponent () override final;
-    XPCF_DECLARE_UUID("5B7396F4-A804-4F3C-A0EB-FB1D56042BB4");
 
  private:
      int m_device_id;

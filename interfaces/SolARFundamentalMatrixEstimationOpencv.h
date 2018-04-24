@@ -47,7 +47,6 @@ namespace SolAR {
 
                     void unloadComponent () override final;
 
-                    XPCF_DECLARE_UUID("79b29b50-cf4d-441e-b5de-1de829b91c41");
                 private:
                     bool isFValid(const Transform2Df & F);
                 };

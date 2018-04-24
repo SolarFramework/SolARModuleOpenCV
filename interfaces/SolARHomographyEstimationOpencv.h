@@ -41,9 +41,6 @@ public:
 
     void unloadComponent () override final;
 
-
-    XPCF_DECLARE_UUID("fb9dac20-2a44-44b2-aa42-2871eec31427");
-
 private:
     bool isHValid(const Transform2Df & H);
     float computeSurface(std::vector<cv::Point2f> points);
