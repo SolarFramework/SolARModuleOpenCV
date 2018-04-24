@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry>
-    <container uuid="15e1990b-86b2-445c-8194-0cbe80ede970" filepath="D:/BCOMDEVROOT/windows/bcomBuild/SolARContainerOpenCV/0.3.0/lib/x86_64/shared/debug/SolARModuleOpenCV.dll">
+    <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" path="$BCOMDEVROOT/bcomBuild/SolARModuleOpenCV/0.4.0/lib/x86_64/shared">
         <component uuid="cc51d685-9797-4ffd-a9dd-cec4f367fa6a" description="SolAR2DOverlayOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="62b8b0b5-9344-40e6-a288-e609eb3ff0f1" description="I2DOverlay"/>
@@ -79,7 +79,7 @@
         </component>
                <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" description="SolARImageLoaderOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="6fcdaa8d-6ea9-4c3f-97b0-46cd11b67a9b" description="IImageLoader"/>
+                <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" description="IImageLoader"/>
         </component>
         <component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" description="SolARImageViewerOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
@@ -122,5 +122,5 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="3a01b0e9-9a76-43f5-97b3-85bb6979b953" description="ITriangulator"/>
         </component>
-    </container>
+    </module>
 </xpcf-registry>

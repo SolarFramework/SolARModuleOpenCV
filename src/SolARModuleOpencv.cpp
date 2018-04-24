@@ -57,112 +57,112 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARCameraOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageConvertorOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageFilterOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv>(componentUUID,interfaceRef);
     }
 
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv>(componentUUID,interfaceRef);
     }
-    else if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv>(componentUUID,interfaceRef);
     }
