@@ -80,13 +80,13 @@ int run(int argc,char** argv)
     char escape_key = 27;
 
  // component creation
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader1);
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader2);
-    xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(gen(features::IKeypointDetector::UUID ), keypointsDetector);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorAKAZEOpencv>(gen(features::IDescriptorsExtractor::UUID ), extractorAKAZE);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherHammingBruteForceOpencv>(gen(features::IDescriptorMatcher::UUID ), matcher);
-    xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(gen(display::ISideBySideOverlay::UUID ), overlay);
-    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), viewer);
+    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(xpcf::toUUID<image::IImageLoader>(), imageLoader1);
+    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(xpcf::toUUID<image::IImageLoader>(), imageLoader2);
+    xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(xpcf::toUUID<features::IKeypointDetector>(), keypointsDetector);
+    xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorAKAZEOpencv>(xpcf::toUUID<features::IDescriptorsExtractor>(), extractorAKAZE);
+    xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherHammingBruteForceOpencv>(xpcf::toUUID<features::IDescriptorMatcher>(), matcher);
+    xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(xpcf::toUUID<display::ISideBySideOverlay>(), overlay);
+    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(xpcf::toUUID<display::IImageViewer>(), viewer);
 
  // components initialisation
     // nothing to do

@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
-#include "api/image/IImageLoader.h"
+
 #include "IComponentManager.h"
+#include "SolARModuleOpencv_traits.h"
+#include "api/image/IImageLoader.h"
 
 #define BOOST_TEST_MODULE SolARModuleOpenCVUnitTests
 #include <boost/test/unit_test.hpp>
@@ -20,19 +22,17 @@ namespace xpcf  = org::bcom::xpcf;
 BOOST_AUTO_TEST_CASE(TestLoadImage)
 {
     FrameworkReturnCode result;
-    boost::uuids::string_generator gen;
 
-    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();;
+    // load library
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+    xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleOpenCV_registry.xml");
 
-
-    xpcfComponentManager->load() ;
     BOOST_TEST(xpcfComponentManager->isLoaded(),"SOLAR ERROR: SolARModuleOpencv xml registry file should be opened");
 
 	int res=0;
     
     // imageLoader introspection
-    sptrnms::shared_ptr<image::IImageLoader> imageLoader;
-    res=xpcfComponentManager->createComponent(gen("E42D6526-9EB1-4F8A-BB68-53E06F09609C"), gen(image::IImageLoader::UUID), imageLoader);
+    SRef<image::IImageLoader> imageLoader = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
 
     BOOST_CHECK( imageLoader != NULL);
     SRef<Image> inputImage;
@@ -48,19 +48,17 @@ BOOST_AUTO_TEST_CASE(TestLoadImage)
 BOOST_AUTO_TEST_CASE(TestLoadImageInexistante)
 {
     FrameworkReturnCode result;
-    boost::uuids::string_generator gen;
+    
+   // load library
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+    xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleOpenCV_registry.xml");
 
-    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();;
-
-
-    xpcfComponentManager->load() ;
     BOOST_TEST(xpcfComponentManager->isLoaded(),"SOLAR ERROR: SolARModuleOpencv xml registry file should be opened");
 
     int res=0;
     
     // imageLoader introspection
-    sptrnms::shared_ptr<image::IImageLoader> imageLoader;
-    res=xpcfComponentManager->createComponent(gen("E42D6526-9EB1-4F8A-BB68-53E06F09609C"), gen(image::IImageLoader::UUID), imageLoader);
+    SRef<image::IImageLoader> imageLoader = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
 
     BOOST_TEST(( imageLoader != NULL),"SOLAR ERROR: createComponent should not return null pointer for imageLoader");
 

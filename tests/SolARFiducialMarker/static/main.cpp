@@ -35,8 +35,8 @@ int run1(int argc,char* argv[])
     SRef<input::files::IMarker2DSquaredBinary> binaryMarker;
 
     // component creation
-     boost::uuids::string_generator gen;
-    xpcf::ComponentFactory::createComponent<SolARMarker2DSquaredBinaryOpencv>(gen(input::files::IMarker2DSquaredBinary::UUID ),binaryMarker);
+    xpcf::ComponentFactory::createComponent<SolARMarker2DSquaredBinaryOpencv>(xpcf::toUUID<input::files::IMarker2DSquaredBinary>(), binaryMarker);
+
 
     // components initialisation: here, load the marker informatiosn from a decsription file
     if (binaryMarker->loadMarker(std::string(argv[1]))!= SolAR::FrameworkReturnCode::_SUCCESS)

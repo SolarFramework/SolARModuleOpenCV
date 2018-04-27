@@ -85,8 +85,8 @@ int run(std::string& path_points1,std::string& path_points2, std::string& outPos
     char escape_key = 27;
 
  // component creation
-    xpcf::ComponentFactory::createComponent<SolARFundamentalMatrixEstimationOpencv>(gen(solver::pose::IFundamentalMatrixEstimation::UUID ), fundamentalFinder);
-    xpcf::ComponentFactory::createComponent<SolARSVDFundamentalMatrixDecomposerOpencv>(gen(solver::pose::IFundamentalMatrixDecomposer::UUID ), fundamentalDecomposer);
+    xpcf::ComponentFactory::createComponent<SolARFundamentalMatrixEstimationOpencv>(xpcf::toUUID<solver::pose::IFundamentalMatrixEstimation>(), fundamentalFinder);
+    xpcf::ComponentFactory::createComponent<SolARSVDFundamentalMatrixDecomposerOpencv>(xpcf::toUUID<solver::pose::IFundamentalMatrixDecomposer>(), fundamentalDecomposer);
 
 
    const int points_no = 6953;

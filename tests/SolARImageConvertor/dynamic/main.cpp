@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-#include "SolARModuleManagerOpencv.h"
+#include "IComponentManager.h"
+#include "SolARModuleOpencv_traits.h"
+#include "api/image/IImageLoader.h"
+#include "api/image/IImageConvertor.h"
+#include "api/display/IImageViewer.h"
 
 #include <iostream>
 #include <map>
@@ -28,18 +32,22 @@ namespace xpcf  = org::bcom::xpcf;
 
 int run(int argc, char **argv)
 {
-    // instantiate module manager
-    MODULES::OPENCV::SolARModuleManagerOpencv opencvModule(argv[2]);
-    if (!opencvModule.isLoaded()) // xpcf library load has failed
+
+    // load library
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+    xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleOpenCV_registry.xml");
+    // instantiate module managers
+    if (!xpcfComponentManager->isLoaded()) // xpcf library load has failed
     {
         LOG_ERROR("XPCF library load has failed")
         return -1;
     }
 
+
     // components declarations and creation
-    SRef<image::IImageLoader> imageLoader = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    SRef<image::IImageConvertor> convertor = opencvModule.createComponent<image::IImageConvertor>(MODULES::OPENCV::UUID::IMAGE_CONVERTOR);
-    SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
+    SRef<image::IImageLoader> imageLoader = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    SRef<image::IImageConvertor> convertor = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageConvertorOpencv>()->bindTo<image::IImageConvertor>();
+    SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
 
     if (!imageLoader || !convertor || !viewer)
     {
@@ -78,13 +86,13 @@ int run(int argc, char **argv)
 
 int printHelp(){
         printf(" usage :\n");
-        printf(" exe ImageFilePath configFilePath \n");
+        printf(" exe ImageFilePath \n");
         return 1;
 }
 
 
 int main(int argc, char *argv[]){
-    if(argc==3)
+    if(argc==2)
         return run(argc,argv);
     else
         return(printHelp());

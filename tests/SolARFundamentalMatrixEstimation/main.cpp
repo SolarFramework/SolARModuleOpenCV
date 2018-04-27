@@ -91,8 +91,9 @@ int run( std::string& path_points1, std::string& path_points2,std::string& path_
     char escape_key = 27;
 
  // component creation
-   xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), viewer);
-   xpcf::ComponentFactory::createComponent<SolARFundamentalMatrixEstimationOpencv>(gen(solver::pose::IFundamentalMatrixEstimation::UUID ), fundamentalFinder);
+    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(xpcf::toUUID<display::IImageViewer>(), viewer);
+    xpcf::ComponentFactory::createComponent<SolARFundamentalMatrixEstimationOpencv>(xpcf::toUUID<solver::pose::IFundamentalMatrixEstimation>(), fundamentalFinder);
+
 
    const int points_no = 6953;
 

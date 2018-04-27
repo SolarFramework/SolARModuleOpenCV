@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-#include "SolARModuleManagerOpencv.h"
+#include "IComponentManager.h"
+
+#include "SolARModuleOpencv_traits.h"
+#include "api/image/IImageLoader.h"
+#include "api/features/IKeypointDetector.h"
+#include "api/display/IImageViewer.h"
+#include "api/display/ISideBySideOverlay.h"
+#include "api/features/IDescriptorMatcher.h"
+#include "api/features/IDescriptorsExtractor.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -27,27 +36,27 @@ namespace xpcf  = org::bcom::xpcf;
 
 int run(int argc,char** argv)
 {
-    // instantiate module manager
-    MODULES::OPENCV::SolARModuleManagerOpencv opencvModule(argv[3]);
-    if (!opencvModule.isLoaded()) // xpcf library load has failed
+
+    // load library
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+    xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleOpenCV_registry.xml");
+    // instantiate module managers
+    if (!xpcfComponentManager->isLoaded()) // xpcf library load has failed
     {
         LOG_ERROR("XPCF library load has failed")
         return -1;
     }
 
 
-    std::cout<<MODULES::OPENCV::UUID::DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE<<std::endl;
-
  // declarations and creation of components
-    SRef<image::IImageLoader> imageLoader1 = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    SRef<image::IImageLoader> imageLoader2 = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    SRef<features::IKeypointDetector> keypointsDetector = opencvModule.createComponent<features::IKeypointDetector>(MODULES::OPENCV::UUID::KEYPOINT_DETECTOR);
-    SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
-    SRef<display::ISideBySideOverlay> overlay = opencvModule.createComponent<display::ISideBySideOverlay>(MODULES::OPENCV::UUID::OVERLAYSBS);
 
-    SRef<features::IDescriptorMatcher> matcher = opencvModule.createComponent<features::IDescriptorMatcher>(MODULES::OPENCV::UUID::DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE);
-    SRef<features::IDescriptorsExtractor> extractorAKAZE = opencvModule.createComponent<features::IDescriptorsExtractor>(MODULES::OPENCV::UUID::DESCRIPTORS_EXTRACTOR_AKAZE);
-  
+    SRef<image::IImageLoader> imageLoader1 = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    SRef<image::IImageLoader> imageLoader2 = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    SRef<features::IKeypointDetector> keypointsDetector = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
+    SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
+    SRef<display::ISideBySideOverlay> overlay = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv>()->bindTo<display::ISideBySideOverlay>();
+    SRef<features::IDescriptorMatcher> matcher = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv>()->bindTo<features::IDescriptorMatcher>();
+    SRef<features::IDescriptorsExtractor> extractorAKAZE = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv>()->bindTo<features::IDescriptorsExtractor>();
 
     if (!imageLoader1 || !imageLoader2 || !keypointsDetector || !extractorAKAZE || !matcher || !viewer || !overlay)
     {
@@ -133,13 +142,13 @@ int run(int argc,char** argv)
 
 int printHelp(){
         printf(" usage :\n");
-        printf(" exe firstImagePath secondImagePath configFilePath\n");
+        printf(" exe firstImagePath secondImagePath\n");
         return 1;
 }
 
 
 int main(int argc, char **argv){
-    if(argc == 4){
+    if(argc == 3){
         run(argc,argv);
          return 1;
     }

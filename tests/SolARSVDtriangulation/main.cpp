@@ -153,8 +153,9 @@ int run()
 
 
  // component creation
+  
+    xpcf::ComponentFactory::createComponent<SolARSVDTriangulationOpencv>(xpcf::toUUID<solver::map::ITriangulator>(), mapper);
 
-    xpcf::ComponentFactory::createComponent<SolARSVDTriangulationOpencv>(gen(solver::map::ITriangulator::UUID ), mapper);
 
 
 

@@ -39,9 +39,6 @@ int run(int argc, char *argv[])
     SRef<xpcf::IConfigurable> rIConfigurable;
 
     // components creation
-    //boost::uuids::string_generator gen;
-    //xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ),imageLoader);
-    //xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ),viewer);
     xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(xpcf::toUUID<image::IImageLoader>(), imageLoader);
     xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(xpcf::toUUID<display::IImageViewer>(), viewer);
 

@@ -51,7 +51,6 @@ int run(int argc, char **argv)
 {
 
  // declarations
-    xpcf::utils::uuids::string_generator    gen;
     SRef<image::IImageLoader>               imageLoader;
     SRef<features::IKeypointDetector>       keypointsDetector;
     SRef<features::IDescriptorsExtractor>   extractorSIFT;
@@ -94,16 +93,16 @@ int run(int argc, char **argv)
     char escape_key = 27;
 
  // component creation
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ), imageLoader);
-    xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(gen(features::IKeypointDetector::UUID ), keypointsDetector);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorSIFTOpencv>(gen(features::IDescriptorsExtractor::UUID ), extractorSIFT);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherRadiusOpencv>(gen(features::IDescriptorMatcher::UUID ), matcher);
-    xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(gen(display::ISideBySideOverlay::UUID ), overlay);
-    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ), viewer);
-    xpcf::ComponentFactory::createComponent<SolARBasicMatchesFilterOpencv>(gen(features::IMatchesFilter::UUID ),
-                                                                            matchesFilterBasic);
-     xpcf::ComponentFactory::createComponent<SolARGeometricMatchesFilterOpencv>(gen(features::IMatchesFilter::UUID ),
-                                                                            matchesFilterGeometric);
+    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(xpcf::toUUID<image::IImageLoader>(), imageLoader);  
+    xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(xpcf::toUUID<features::IKeypointDetector>(), keypointsDetector);
+    xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorSIFTOpencv>(xpcf::toUUID<features::IDescriptorsExtractor>(), extractorSIFT);
+    xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherRadiusOpencv>(xpcf::toUUID<features::IDescriptorMatcher>(), matcher);
+    xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(xpcf::toUUID<display::ISideBySideOverlay>(), overlay);
+    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(xpcf::toUUID<display::IImageViewer>(), viewer);
+    xpcf::ComponentFactory::createComponent<SolARBasicMatchesFilterOpencv>(xpcf::toUUID<features::IMatchesFilter>(), matchesFilterBasic);
+    xpcf::ComponentFactory::createComponent<SolARGeometricMatchesFilterOpencv>(xpcf::toUUID<features::IMatchesFilter>(), matchesFilterGeometric);
+
+
 
      keypointsDetector->setType(KeypointDetectorType::SIFT);
    // Load the first image
