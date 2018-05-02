@@ -89,7 +89,7 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOp
                              "SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv component")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv,
-                             "904e64f6-d502-11e7-9296-cec2fb9dac20-2a44-44b2-aa42-2871eec3142778b6b50a",
+                             "549f7873-96e4-4eae-b4a0-ae8d80664ce5",
                              "SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv component")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv,
