@@ -36,7 +36,7 @@ namespace SolAR {
                         bool decompose(const Transform2Df&F,
                                        const CamCalibration&K,
                                        const CamDistortion& dist,
-                                       std::vector<SRef<Pose>>& decomposedPoses) override;
+                                       std::vector<Transform3Df>& decomposedPoses) override;
                         void unloadComponent () override final;
                         XPCF_DECLARE_UUID("b5fab395-2184-4123-b0d5-4af74d0a2d79");
                     private:
