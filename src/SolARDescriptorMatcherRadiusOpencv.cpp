@@ -86,7 +86,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
           
             }
         }
- 
+
      if (matches.size()>0)
         return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
      else

@@ -39,11 +39,11 @@ namespace OPENCV {
 SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv()
 {
     setUUID(SolARHomographyEstimationOpencv::UUID);
-    addInterface<api::solver::pose::IHomographyEstimation>(this,api::solver::pose::IHomographyEstimation::UUID, "interface api::solver::pose::IHomographyEstimation");
+    addInterface<api::solver::pose::I2DTransformFinder>(this,api::solver::pose::I2DTransformFinder::UUID, "interface api::solver::pose::IHomographyEstimation");
     LOG_DEBUG("SolARHomographyEstimationOpencv constructor")
 }
 
-api::solver::pose::HomographyEstimation::RetCode SolARHomographyEstimationOpencv::findHomography(const std::vector< SRef<Point2Df> >& srcPoints,
+api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::find(const std::vector< SRef<Point2Df> >& srcPoints,
                                           const std::vector< SRef<Point2Df> >& dstPoints,
                                           Transform2Df & homography)
 {
@@ -67,14 +67,12 @@ api::solver::pose::HomographyEstimation::RetCode SolARHomographyEstimationOpencv
     H = cv::findHomography( obj, scene, CV_RANSAC, 8 );
 	if (!H.data) {
 		LOG_DEBUG("Homography matrix is empty")
-		return api::solver::pose::HomographyEstimation::HOMOGRAPHY_EMPTY;
+        return api::solver::pose::Transform2DFinder::TRANSFORM2D_EMPTY;
 	}
 
     H.convertTo(H,CV_32F);
-
     SolAROpenCVHelper::convertCVMatToSolar(H,homography);
-
-    return api::solver::pose::HomographyEstimation::HOMOGRAPHY_ESTIMATION_OK;
+    return api::solver::pose::Transform2DFinder::TRANSFORM2D_ESTIMATION_OK;
 }
 
 }

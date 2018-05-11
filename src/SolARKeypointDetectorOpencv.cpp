@@ -138,6 +138,7 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<S
         kpa->init((*itr).pt.x*ratioInv,(*itr).pt.y*ratioInv,(*itr).size,(*itr).angle,(*itr).response,(*itr).octave,(*itr).class_id) ;
         keypoints.push_back(kpa);
     }
+
 }
 
 }
