@@ -125,27 +125,31 @@ cv::Mat_<double> SolARSVDTriangulationOpencv::linearTriangulation(cv::Point3d &u
 
 FrameworkReturnCode SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>>& pt2d_1,
                                               const std::vector<SRef<Point2Df>>& pt2d_2,
-                                              const SRef<Pose>&pose_1,
-                                              const SRef<Pose>&pose_2,
+                                              const Transform3Df&pose_1,
+                                              const Transform3Df&pose_2,
                                               const CamCalibration&cam,
                                               const CamDistortion&distorsion,
                                               std::vector<SRef<Point3Df>>& pt3d){
 
-    cv::Matx44d P1_(pose_2->m_poseTransform(0, 0),pose_2->m_poseTransform(0, 1),pose_2->m_poseTransform(0, 2), pose_2->m_poseTransform(0, 3),
-                    pose_2->m_poseTransform(1, 0),pose_2->m_poseTransform(1, 1),pose_2->m_poseTransform(1, 2), pose_2->m_poseTransform(1, 3),
-                    pose_2->m_poseTransform(2, 0),pose_2->m_poseTransform(2, 1),pose_2->m_poseTransform(2, 2), pose_2->m_poseTransform(2, 3),
-                      0,                            0,                                  0,                          1);
+
+    cv::Matx44d P1_(pose_2(0, 0),pose_2(0, 1),pose_2(0, 2), pose_2(0, 3),
+                    pose_2(1, 0),pose_2(1, 1),pose_2(1, 2), pose_2(1, 3),
+                    pose_2(2, 0),pose_2(2, 1),pose_2(2, 2), pose_2(2, 3),
+                      0,              0,            0,              1  );
+
+
+
 
         cv::Matx44d P1inv(P1_.inv());
         cv::Mat_<double> Kinv;
         cv::Matx34d P,P1;
         for(int i = 0; i < 3; ++i){
             for(int j = 0; j < 4; ++j){
-                P(i,j)= pose_1->m_poseTransform(i,j);
-                P1(i,j)= pose_2->m_poseTransform(i,j);
+                P(i,j)= pose_1(i,j);
+                P1(i,j)= pose_2(i,j);
             }
         }
-        cv::Mat K(3,3,CV_64FC1);
+          cv::Mat K(3,3,CV_64FC1);
          cv::Mat dist(1,4,CV_64FC1);
         for(int i = 0; i < 3; ++i){
             for(int j = 0; j < 3; ++j){
