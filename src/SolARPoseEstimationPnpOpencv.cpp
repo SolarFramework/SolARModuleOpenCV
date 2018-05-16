@@ -53,7 +53,7 @@ SolARPoseEstimationPnpOpencv::~SolARPoseEstimationPnpOpencv(){
 }
 FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SRef<Point2Df>> & imagePoints,
                                                             const std::vector<SRef<Point3Df>> & worldPoints,
-                                                            Pose & pose) {
+                                                            Transform3Df & pose) {
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
@@ -71,7 +71,10 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     cv::Mat Rvec;
     cv::Mat_<float> Tvec;
     cv::Mat raux, taux;
+
+
     cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux );
+
 
     raux.convertTo(Rvec, CV_32F);
     taux.convertTo(Tvec, CV_32F);
@@ -84,12 +87,14 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
 
     for (int col = 0; col<3; col++){
           for (int row = 0; row<3; row++){
-                  Rpose(row,col) = rotMat(row, col);
+                  pose(row,col) = rotMat(row, col);
           }
-         Tpose[col] = Tvec(col);
+         pose(col,3) = Tvec(col);
     }
-
-    pose = Pose(Rpose, Tpose);
+    pose(3,0)  = 0.0;
+    pose(3,1)  = 0.0;
+    pose(3,2)  = 0.0;
+    pose(3,3)  = 1.0;
 
     return FrameworkReturnCode::_SUCCESS;
 

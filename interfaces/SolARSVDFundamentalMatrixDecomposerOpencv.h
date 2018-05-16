@@ -57,7 +57,7 @@ namespace SolAR {
                 bool decompose(const Transform2Df&F,
                                const CamCalibration&K,
                                const CamDistortion& dist,
-                               std::vector<SRef<Pose>>& decomposedPoses) override;
+                               std::vector<Transform3Df>& decomposedPoses) override;
 
                 void unloadComponent () override final;
 

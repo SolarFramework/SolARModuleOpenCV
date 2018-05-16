@@ -52,7 +52,7 @@ SolAR3DOverlayOpencv::SolAR3DOverlayOpencv():ComponentBase(xpcf::toUUID<SolAR3DO
 
 }
 
-void SolAR3DOverlayOpencv::drawBox (Pose & pose, const float X_world, const float Y_world, const float Z_world, const Transform3Df affineTransform, SRef<Image> displayImage)
+void SolAR3DOverlayOpencv::drawBox (Transform3Df & pose, const float X_world, const float Y_world, const float Z_world, const Transform3Df affineTransform, SRef<Image> displayImage)
 {
 
     // image where parallelepiped will be displayed
@@ -70,23 +70,22 @@ void SolAR3DOverlayOpencv::drawBox (Pose & pose, const float X_world, const floa
     cv::Mat Rvec;   Rvec.create(3, 3, CV_32FC1);
     cv::Mat Tvec;   Tvec.create(3, 1, CV_32FC1);
 
-    float pose_tmp[16];  pose.toMatrix(pose_tmp,0);
 
-    Rvec.at<float>(0,0) = pose_tmp[0];
-    Rvec.at<float>(0,1) = pose_tmp[1];
-    Rvec.at<float>(0,2) = pose_tmp[2];
+    Rvec.at<float>(0,0) = pose(0,0);
+    Rvec.at<float>(0,1) = pose(0,1);
+    Rvec.at<float>(0,2) = pose(0,2);
 
-    Rvec.at<float>(1,0) = pose_tmp[4];
-    Rvec.at<float>(1,1) = pose_tmp[5];
-    Rvec.at<float>(1,2) = pose_tmp[6];
+    Rvec.at<float>(1,0) = pose(1,0);
+    Rvec.at<float>(1,1) = pose(1,1);
+    Rvec.at<float>(1,2) = pose(1,2);
 
-    Rvec.at<float>(2,0) = pose_tmp[8];
-    Rvec.at<float>(2,1) = pose_tmp[9];
-    Rvec.at<float>(2,2) = pose_tmp[10];
+    Rvec.at<float>(2,0) = pose(2,0);
+    Rvec.at<float>(2,1) = pose(2,1);
+    Rvec.at<float>(2,2) = pose(2,2);
 
-    Tvec.at<float>(0,0) = pose.tx();
-    Tvec.at<float>(1,0) = pose.ty();
-    Tvec.at<float>(2,0) = pose.tz();
+    Tvec.at<float>(0,0) = pose(0,3);
+    Tvec.at<float>(1,0) = pose(1,3);
+    Tvec.at<float>(2,0) = pose(2,3);
 
     cv::Mat rodrig;
     cv::Rodrigues(Rvec,rodrig);

@@ -43,7 +43,7 @@ using namespace datastructure;
                 LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
             }
 
-            bool SolARHomographyMatrixDecomposerOpencv::decompose(const Transform2Df&H,const CamCalibration&K, const CamDistortion& dist, std::vector<SRef<Pose>>& decomposedPoses){
+            bool SolARHomographyMatrixDecomposerOpencv::decompose(const Transform2Df&H,const CamCalibration&K, const CamDistortion& dist, std::vector<Transform3Df>& decomposedPoses){
                //Using HZ E decomposition
                    cv::Mat svd_u, svd_vt, svd_w;
                    cv::Mat _K(3,3,CV_64FC1);
@@ -60,62 +60,60 @@ using namespace datastructure;
 
                    cv::decomposeHomographyMat(_H,_K,_R,_T,_N);
 
-                   sptrnms::shared_ptr<Pose> pose_temp[16];
-                   for(int p = 0; p < 16; ++p)
-                       pose_temp[p] = sptrnms::make_shared<Pose>();
+                   Transform3Df pose_temp[16];
 
-                   for(int i =0; i <3; ++i){
-                       for(int j = 0; j < 3; ++j){
-                           pose_temp[0]->m_poseTransform(i,j) = _R[0].at<double>(i,j);
-                           pose_temp[1]->m_poseTransform(i,j) = _R[0].at<double>(i,j);
-                           pose_temp[2]->m_poseTransform(i,j) = _R[0].at<double>(i,j);
-                           pose_temp[3]->m_poseTransform(i,j) = _R[0].at<double>(i,j);
+                                      for(int i =0; i <3; ++i){
+                                          for(int j = 0; j < 3; ++j){
+                                              pose_temp[0](i,j) = _R[0].at<double>(i,j);
+                                              pose_temp[1](i,j) = _R[0].at<double>(i,j);
+                                              pose_temp[2](i,j) = _R[0].at<double>(i,j);
+                                              pose_temp[3](i,j) = _R[0].at<double>(i,j);
 
-                           pose_temp[4]->m_poseTransform(i,j) = _R[1].at<double>(i,j);
-                           pose_temp[5]->m_poseTransform(i,j) = _R[1].at<double>(i,j);
-                           pose_temp[6]->m_poseTransform(i,j) = _R[1].at<double>(i,j);
-                           pose_temp[7]->m_poseTransform(i,j) = _R[1].at<double>(i,j);
+                                              pose_temp[4](i,j) = _R[1].at<double>(i,j);
+                                              pose_temp[5](i,j) = _R[1].at<double>(i,j);
+                                              pose_temp[6](i,j) = _R[1].at<double>(i,j);
+                                              pose_temp[7](i,j) = _R[1].at<double>(i,j);
 
-                           pose_temp[8]->m_poseTransform(i,j) = _R[2].at<double>(i,j);
-                           pose_temp[9]->m_poseTransform(i,j) = _R[2].at<double>(i,j);
-                           pose_temp[10]->m_poseTransform(i,j)= _R[2].at<double>(i,j);
-                           pose_temp[11]->m_poseTransform(i,j) =_R[2].at<double>(i,j);
+                                              pose_temp[8](i,j) = _R[2].at<double>(i,j);
+                                              pose_temp[9](i,j) = _R[2].at<double>(i,j);
+                                              pose_temp[10](i,j)= _R[2].at<double>(i,j);
+                                              pose_temp[11](i,j) =_R[2].at<double>(i,j);
 
-                           pose_temp[12]->m_poseTransform(i,j) = _R[3].at<double>(i,j);
-                           pose_temp[13]->m_poseTransform(i,j) = _R[3].at<double>(i,j);
-                           pose_temp[14]->m_poseTransform(i,j) = _R[3].at<double>(i,j);
-                           pose_temp[15]->m_poseTransform(i,j) = _R[3].at<double>(i,j);
-                       }
-                   }
-                   for(int i = 0; i < 3; ++i){
-                       pose_temp[0]->m_poseTransform(i,3) = _T[0].at<double>(i,0);
-                       pose_temp[1]->m_poseTransform(i,3) = _T[1].at<double>(i,0);
-                       pose_temp[2]->m_poseTransform(i,3) = _T[2].at<double>(i,0);
-                       pose_temp[3]->m_poseTransform(i,3) = _T[3].at<double>(i,0);
+                                              pose_temp[12](i,j) = _R[3].at<double>(i,j);
+                                              pose_temp[13](i,j) = _R[3].at<double>(i,j);
+                                              pose_temp[14](i,j) = _R[3].at<double>(i,j);
+                                              pose_temp[15](i,j) = _R[3].at<double>(i,j);
+                                          }
+                                      }
+                                      for(int i = 0; i < 3; ++i){
+                                          pose_temp[0](i,3) = _T[0].at<double>(i,0);
+                                          pose_temp[1](i,3) = _T[1].at<double>(i,0);
+                                          pose_temp[2](i,3) = _T[2].at<double>(i,0);
+                                          pose_temp[3](i,3) = _T[3].at<double>(i,0);
 
-                       pose_temp[4]->m_poseTransform(i,3) = _T[0].at<double>(i,0);
-                       pose_temp[5]->m_poseTransform(i,3) = _T[1].at<double>(i,0);
-                       pose_temp[6]->m_poseTransform(i,3) = _T[2].at<double>(i,0);
-                       pose_temp[7]->m_poseTransform(i,3) = _T[3].at<double>(i,0);
+                                          pose_temp[4](i,3) = _T[0].at<double>(i,0);
+                                          pose_temp[5](i,3) = _T[1].at<double>(i,0);
+                                          pose_temp[6](i,3) = _T[2].at<double>(i,0);
+                                          pose_temp[7](i,3) = _T[3].at<double>(i,0);
 
-                       pose_temp[8]->m_poseTransform(i,3) = _T[0].at<double>(i,0);
-                       pose_temp[9]->m_poseTransform(i,3) = _T[1].at<double>(i,0);
-                       pose_temp[10]->m_poseTransform(i,3) = _T[2].at<double>(i,0);
-                       pose_temp[11]->m_poseTransform(i,3) = _T[3].at<double>(i,0);
+                                          pose_temp[8](i,3) = _T[0].at<double>(i,0);
+                                          pose_temp[9](i,3) = _T[1].at<double>(i,0);
+                                          pose_temp[10](i,3) = _T[2].at<double>(i,0);
+                                          pose_temp[11](i,3) = _T[3].at<double>(i,0);
 
-                       pose_temp[12]->m_poseTransform(i,3) = _T[0].at<double>(i,0);
-                       pose_temp[13]->m_poseTransform(i,3) = _T[1].at<double>(i,0);
-                       pose_temp[14]->m_poseTransform(i,3) = _T[2].at<double>(i,0);
-                       pose_temp[15]->m_poseTransform(i,3) = _T[3].at<double>(i,0);
-                   }
+                                          pose_temp[12](i,3) = _T[0].at<double>(i,0);
+                                          pose_temp[13](i,3) = _T[1].at<double>(i,0);
+                                          pose_temp[14](i,3) = _T[2].at<double>(i,0);
+                                          pose_temp[15](i,3) = _T[3].at<double>(i,0);
+                                      }
 
-                   for(int p = 0; p < 16; ++p){
-                       pose_temp[p]->m_poseTransform(3,0) = 0.0;
-                       pose_temp[p]->m_poseTransform(3,1) = 0.0;
-                       pose_temp[p]->m_poseTransform(3,2) = 0.0;
-                       pose_temp[p]->m_poseTransform(3,3) = 1.0;
-                       decomposedPoses.push_back(pose_temp[p]);
-                   }
+                                      for(int p = 0; p < 16; ++p){
+                                          pose_temp[p](3,0) = 0.0;
+                                          pose_temp[p](3,1) = 0.0;
+                                          pose_temp[p](3,2) = 0.0;
+                                          pose_temp[p](3,3) = 1.0;
+                                          decomposedPoses.push_back(pose_temp[p]);
+                                      }
                    return true;
             }
         }

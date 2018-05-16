@@ -52,14 +52,10 @@ bool load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2
 }
 
 
-bool load_pose(std::string &path_file, SRef<Pose>&P){
+bool load_pose(std::string &path_file, Transform3Df &P){
     std::ifstream ox(path_file);
     if (!ox)
         return false;
-
-    Eigen::Matrix3f Rpose;
-    Eigen::Vector3f Tpose;
-    P = sptrnms::make_shared<Pose>();
 
     float v;
     std::string dummy;
@@ -67,27 +63,19 @@ bool load_pose(std::string &path_file, SRef<Pose>&P){
         for(int j = 0; j < 4; ++j){
 
             ox>>dummy;
-            /*
-            v = std::stof(dummy);
-            if(j < 3){
-                Rpose(i,j) = v;
-            }
-            if(j>=3){
-                Tpose[i] = v;
-            }
-            */
-            P->m_poseTransform(i,j) = std::stof(dummy);
+
+            P(i,j) = std::stof(dummy);
         }
     }
 
-    P->m_poseTransform(3,0) = 0.0;
-    P->m_poseTransform(3,1) = 0.0;
-    P->m_poseTransform(3,2) = 0.0;
-    P->m_poseTransform(3,3) = 1.0;
+    P(3,0) = 0.0;
+    P(3,1) = 0.0;
+    P(3,2) = 0.0;
+    P(3,3) = 1.0;
 
     for(int i = 0; i < 4; ++i){
         for(int j = 0; j < 4; ++j){
-            std::cout<<P->m_poseTransform(i,j)<<" ";
+            std::cout<<P(i,j)<<" ";
         }
         std::cout<<std::endl;
     }
@@ -172,8 +160,8 @@ int run()
    std::vector<SRef<Point2Df>>pt2d_2;
    std::vector<SRef<Point3Df>>pt3d;
 
-   SRef<Pose> pose_1;
-   SRef<Pose> pose_2 = xpcf::utils::make_shared<Pose>();
+   Transform3Df pose_1;
+   Transform3Df pose_2;
    CamCalibration K;
    CamDistortion dist;
 

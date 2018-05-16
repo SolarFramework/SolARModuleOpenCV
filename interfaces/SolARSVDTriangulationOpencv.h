@@ -69,8 +69,8 @@ namespace SolAR {
                         /// @param[out] Set of triangulated 3d_points.
                         FrameworkReturnCode triangulate(const std::vector<SRef<Point2Df>>& pt2d_1,
                                          const std::vector<SRef<Point2Df>>& pt2d_2,
-                                         const SRef<Pose>&p1,
-                                         const SRef<Pose>&p2,
+                                         const Transform3Df&p1,
+                                         const Transform3Df&p2,
                                          const CamCalibration&cam,
                                          const CamDistortion&dist,
                                          std::vector<SRef<Point3Df>>& pt3d);

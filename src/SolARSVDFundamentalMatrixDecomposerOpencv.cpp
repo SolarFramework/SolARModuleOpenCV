@@ -53,7 +53,7 @@ using namespace datastructure;
                 svd_w = svd.w;
             }
 
-            bool SolARSVDFundamentalMatrixDecomposerOpencv::decompose(const Transform2Df&F,const CamCalibration&K, const CamDistortion& dist, std::vector<SRef<Pose>>& decomposedPoses){
+            bool SolARSVDFundamentalMatrixDecomposerOpencv::decompose(const Transform2Df&F,const CamCalibration&K, const CamDistortion& dist, std::vector<Transform3Df>& decomposedPoses){
                //Using HZ E decomposition
                    cv::Mat svd_u, svd_vt, svd_w;
                    cv::Mat _K(3,3,CV_64FC1);
@@ -104,33 +104,34 @@ using namespace datastructure;
                    t2 = -svd_u.col(2); //u3
 
 
-                   sptrnms::shared_ptr<Pose> pose_temp[4];
-                   for(int p = 0; p < 4; ++p)
-                       pose_temp[p] = sptrnms::make_shared<Pose>();
+                   Transform3Df pose_temp[4];
 
-                   for(int i =0; i <3; ++i){
-                       for(int j = 0; j < 3; ++j){
-                           pose_temp[0]->m_poseTransform(i,j) = R1(i,j);
-                           pose_temp[1]->m_poseTransform(i,j) = R1(i,j);
-                           pose_temp[2]->m_poseTransform(i,j) = R2(i,j);
-                           pose_temp[3]->m_poseTransform(i,j) = R2(i,j);
+                                     for(int i =0; i <3; ++i){
+                                         for(int j = 0; j < 3; ++j){
+                                             pose_temp[0](i,j) = R1(i,j);
+                                             pose_temp[1](i,j) = R1(i,j);
+                                             pose_temp[2](i,j) = R2(i,j);
+                                             pose_temp[3](i,j) = R2(i,j);
 
-                       }
-                   }
-                   for(int i = 0; i < 3; ++i){
-                       pose_temp[0]->m_poseTransform(i,3) = t1(i);
-                       pose_temp[1]->m_poseTransform(i,3) = t2(i);
-                       pose_temp[2]->m_poseTransform(i,3) = t1(i);
-                       pose_temp[3]->m_poseTransform(i,3) = t2(i);
-                   }
+                                        }
+                                     }
+                                     for(int i = 0; i < 3; ++i){
+                                         pose_temp[0](i,3) = t1(i);
+                                         pose_temp[1](i,3) = t2(i);
+                                         pose_temp[2](i,3) = t1(i);
+                                         pose_temp[3](i,3) = t2(i);
 
-                   for(int p = 0; p < 4; ++p){
-                       pose_temp[p]->m_poseTransform(3,0) = 0.0;
-                       pose_temp[p]->m_poseTransform(3,1) = 0.0;
-                       pose_temp[p]->m_poseTransform(3,2) = 0.0;
-                       pose_temp[p]->m_poseTransform(3,3) = 1.0;
-                       decomposedPoses.push_back(pose_temp[p]);
-                   }
+
+                                     }
+
+                                     for(int p = 0; p < 4; ++p){
+                                         pose_temp[p](3,0) = 0.0;
+                                         pose_temp[p](3,1) = 0.0;
+                                         pose_temp[p](3,2) = 0.0;
+                                         pose_temp[p](3,3) = 1.0;
+
+                                         decomposedPoses.push_back(pose_temp[p]);
+                                     }
 				   return true;
             }
         }
