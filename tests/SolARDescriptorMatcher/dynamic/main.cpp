@@ -39,7 +39,7 @@ int run(int argc,char** argv)
 
     // load library
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
-    xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleOpenCV_registry.xml");
+    xpcfComponentManager->load("$BCOMDEVROOT/.xpcf",true);
     // instantiate module managers
     if (!xpcfComponentManager->isLoaded()) // xpcf library load has failed
     {
@@ -50,13 +50,13 @@ int run(int argc,char** argv)
 
  // declarations and creation of components
 
-    SRef<image::IImageLoader> imageLoader1 = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
-    SRef<image::IImageLoader> imageLoader2 = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
-    SRef<features::IKeypointDetector> keypointsDetector = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
-    SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
-    SRef<display::ISideBySideOverlay> overlay = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv>()->bindTo<display::ISideBySideOverlay>();
-    SRef<features::IDescriptorMatcher> matcher = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv>()->bindTo<features::IDescriptorMatcher>();
-    SRef<features::IDescriptorsExtractor> extractorAKAZE = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv>()->bindTo<features::IDescriptorsExtractor>();
+    auto imageLoader1 = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    auto imageLoader2 = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    auto keypointsDetector = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
+    auto viewer = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
+    auto overlay = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv>()->bindTo<display::ISideBySideOverlay>();
+    auto matcher = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv>()->bindTo<features::IDescriptorMatcher>();
+    auto extractorAKAZE = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv>()->bindTo<features::IDescriptorsExtractor>();
 
     if (!imageLoader1 || !imageLoader2 || !keypointsDetector || !extractorAKAZE || !matcher || !viewer || !overlay)
     {
