@@ -1,0 +1,7 @@
+SolARFramework|0.4.0|SolARFramework|bcomBuild|url_repo_artifactory
+SolARModuleOpenCV|0.4.0|SolARModuleOpenCV|bcomBuild|url_repo_artifactory
+xpcf|1.0.0|xpcf|thirdParties|http://repository.b-com.com/
+boost|1.64.0|boost|thirdParties|http://repository.b-com.com/
+opencv|3.2.0|opencv|thirdParties|http://repository.b-com.com/
+spdlog|0.14.0|spdlog|thirdParties|http://repository.b-com.com/
+eigen|3.3.4|eigen|thirdParties|http://repository.b-com.com/amc-generic
