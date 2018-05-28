@@ -33,8 +33,9 @@ namespace OPENCV {
     SolARContoursExtractorOpencv::SolARContoursExtractorOpencv():ComponentBase(xpcf::toUUID<SolARContoursExtractorOpencv>())
     {
         addInterface<api::features::IContoursExtractor>(this);
-        SRef<xpcf::IVariantMap> params = getParams();
-        params->wrapFloat("minContourSize",m_minContourSize);
+        SRef<xpcf::IPropertyMap> properties;
+        properties = getProperties();
+        properties->wrapFloat("minContourSize",m_minContourSize);
     }
 
     void SolARContoursExtractorOpencv::setParameters (float minContourSize)
