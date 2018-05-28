@@ -83,7 +83,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
 }
 
 DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
-        sptrnms::shared_ptr<DescriptorBuffer>& desc1, sptrnms::shared_ptr<DescriptorBuffer>& desc2, std::vector<DescriptorMatch>& matches){
+       SRef<DescriptorBuffer>& desc1,SRef<DescriptorBuffer>& desc2, std::vector<DescriptorMatch>& matches){
  
     // check if the descriptors type match
     if(desc1->getDescriptorType() != desc2->getDescriptorType()){

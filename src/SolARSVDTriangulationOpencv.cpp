@@ -193,8 +193,8 @@ FrameworkReturnCode SolARSVDTriangulationOpencv::triangulate(const std::vector<S
             reproj_error.push_back(reprj_err);
 
 
-            sptrnms::shared_ptr<Point3Df> cp = sptrnms::make_shared<Point3Df>();
-            cp = sptrnms::make_shared<Point3Df>(X(0), X(1), X(2));
+           SRef<Point3Df> cp = xpcf::utils::make_shared<Point3Df>();
+            cp = xpcf::utils::make_shared<Point3Df>(X(0), X(1), X(2));
 
              pt3d.push_back(cp);
          }
