@@ -3,7 +3,6 @@
 
 // ADD COMPONENTS HEADERS HERE, e.g #include "SolarComponent.h"
 
-#include "SolARImageOpencv.h"
 #include "SolARImageLoaderOpencv.h"
 #include "SolARImageViewerOpencv.h"
 #include <SolARImageConvertorOpencv.h>
