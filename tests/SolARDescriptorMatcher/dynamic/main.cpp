@@ -57,8 +57,8 @@ int run(int argc,char** argv)
 
     SRef<Image>                                        image1;
     SRef<Image>                                        image2;
-    std::vector< sptrnms::shared_ptr<Keypoint>>        keypoints1;
-    std::vector< sptrnms::shared_ptr<Keypoint>>        keypoints2;
+    std::vector< SRef<Keypoint>>        keypoints1;
+    std::vector< SRef<Keypoint>>        keypoints2;
     SRef<DescriptorBuffer>                             descriptors1;
     SRef<DescriptorBuffer>                             descriptors2;
     std::vector<DescriptorMatch>                       matches;
