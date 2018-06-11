@@ -47,6 +47,14 @@ void fillK(CamCalibration&cam){
     cam(2,1) = 0.0;
     cam(2,2) = 1.0;
 }
+
+void fillDist(CamDistortion&dist){
+    dist(0) = 0.0;
+    dist(1) = 0.0;
+    dist(2) = 0.0;
+    dist(3) = 0.0;
+}
+
 void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2Df>>&pt2d){
 
     cv::namedWindow("toto debug",0);
@@ -70,11 +78,12 @@ int run(std::string& path_points1,std::string& path_points2, std::string& outPos
 	cv::namedWindow("main window",0);
  // declarations
     xpcf::utils::uuids::string_generator              gen;
-    SRef<solver::pose::IFundamentalMatrixEstimation>  fundamentalFinder;
-    SRef<solver::pose::IFundamentalMatrixDecomposer>  fundamentalDecomposer;
+    SRef<solver::pose::I2DTransformFinder>            fundamentalFinder;
+    SRef<solver::pose::I2DTO3DTransformDecomposer>    fundamentalDecomposer;
     Transform2Df                                      F;
     CamCalibration                                    K;
-    std::vector<SRef<Pose>>                           poses;
+    CamDistortion                                     dist;
+    std::vector<Transform3Df>                           poses;
     std::vector<SRef<Point2Df>>                       points_view1;
     std::vector<SRef<Point2Df>>                       points_view2;
 
@@ -85,8 +94,8 @@ int run(std::string& path_points1,std::string& path_points2, std::string& outPos
     char escape_key = 27;
 
  // component creation
-    xpcf::ComponentFactory::createComponent<SolARFundamentalMatrixEstimationOpencv>(gen(solver::pose::IFundamentalMatrixEstimation::UUID ), fundamentalFinder);
-    xpcf::ComponentFactory::createComponent<SolARSVDFundamentalMatrixDecomposerOpencv>(gen(solver::pose::IFundamentalMatrixDecomposer::UUID ), fundamentalDecomposer);
+    xpcf::ComponentFactory::createComponent<SolARFundamentalMatrixEstimationOpencv>(gen(solver::pose::I2DTransformFinder::UUID ), fundamentalFinder);
+    xpcf::ComponentFactory::createComponent<SolARSVDFundamentalMatrixDecomposerOpencv>(gen(solver::pose::I2DTO3DTransformDecomposer::UUID ), fundamentalDecomposer);
 
 
    const int points_no = 6953;
@@ -94,21 +103,21 @@ int run(std::string& path_points1,std::string& path_points2, std::string& outPos
    load_2dpoints(path_points2,points_no, points_view2);
 
    fillK(K);
+   fillDist(dist);
 
-   fundamentalFinder->findFundamental(points_view1, points_view2, F);
-   fundamentalDecomposer->decompose(F,K,poses);
-   std::ofstream ox(outPosesFilePath.c_str());
+   fundamentalFinder->find(points_view1, points_view2, F);
+   fundamentalDecomposer->decompose(F,K,dist,poses);
+
    for(int k = 0; k <poses.size(); ++k){
-       ox<<"--pose: "<<k<<std::endl;
+       std::cout<<"--pose: "<<k<<std::endl;
        for(int ii = 0; ii < 4; ++ii){
            for(int jj = 0; jj < 4; ++jj){
-               ox<<poses[k]->m_poseTransform(ii,jj)<<" ";
+               std::cout<<poses[k](ii,jj)<<" ";
            }
-           ox<<std::endl;
+           std::cout<<std::endl;
        }
-       ox<<std::endl<<std::endl;
+       std::cout<<std::endl<<std::endl;
    }
-   ox.close();
    return 0;
 }
 
