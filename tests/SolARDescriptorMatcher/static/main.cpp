@@ -56,14 +56,6 @@ const double akaze_thresh = 3e-4; // AKAZE detection threshold set to locate abo
 int run(int argc,char** argv)
 {
  // declarations
-    xpcf::utils::uuids::string_generator    gen;
-    SRef<image::IImageLoader>               imageLoader1;
-    SRef<image::IImageLoader>               imageLoader2;
-    SRef<features::IKeypointDetector>       keypointsDetector;
-    SRef<features::IDescriptorsExtractor>   extractorAKAZE;
-    SRef<features::IDescriptorMatcher>      matcher;
-    SRef<display::IImageViewer>             viewer;
-    SRef<display::ISideBySideOverlay>       overlay;
 
     SRef<Image>                             image1;
     SRef<Image>                             image2;
@@ -80,27 +72,26 @@ int run(int argc,char** argv)
     char escape_key = 27;
 
  // component creation
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(xpcf::toUUID<image::IImageLoader>(), imageLoader1);
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(xpcf::toUUID<image::IImageLoader>(), imageLoader2);
-    xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(xpcf::toUUID<features::IKeypointDetector>(), keypointsDetector);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorAKAZEOpencv>(xpcf::toUUID<features::IDescriptorsExtractor>(), extractorAKAZE);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherHammingBruteForceOpencv>(xpcf::toUUID<features::IDescriptorMatcher>(), matcher);
-    xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(xpcf::toUUID<display::ISideBySideOverlay>(), overlay);
-    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(xpcf::toUUID<display::IImageViewer>(), viewer);
+    auto imageLoader=xpcf::ComponentFactory::createInstance<SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    auto keypointsDetector =xpcf::ComponentFactory::createInstance<SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
+    auto descriptorExtractor = xpcf::ComponentFactory::createInstance<SolARDescriptorsExtractorAKAZEOpencv>()->bindTo<features::IDescriptorsExtractor>();
+    auto  matcher =xpcf::ComponentFactory::createInstance<SolARDescriptorMatcherHammingBruteForceOpencv>()->bindTo<features::IDescriptorMatcher>();
+    auto  overlay =xpcf::ComponentFactory::createInstance<SolARSideBySideOverlayOpencv>()->bindTo<display::ISideBySideOverlay>();
+    auto  viewer =xpcf::ComponentFactory::createInstance<SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
 
  // components initialisation
     // nothing to do
 
 // Start
    // Load the first image
-   if (imageLoader1->loadImage(argv[1], image1) != FrameworkReturnCode::_SUCCESS)
+   if (imageLoader->loadImage(argv[1], image1) != FrameworkReturnCode::_SUCCESS)
    {
       LOG_ERROR("Cannot load image with path {}", argv[1]);
       return -1;
    }
 
    // Load the second image
-   if (imageLoader2->loadImage(argv[2], image2) != FrameworkReturnCode::_SUCCESS)
+   if (imageLoader->loadImage(argv[2], image2) != FrameworkReturnCode::_SUCCESS)
    {
       LOG_ERROR("Cannot load image with path {}", argv[2]);
       return -1;
@@ -108,7 +99,7 @@ int run(int argc,char** argv)
 
     keypointsDetector->setType(KeypointDetectorType::AKAZE);
    // Detect the keypoints of the first image
- 
+
    keypointsDetector->detect(image1, keypoints1);
 
    // Detect the keypoints of the second image
@@ -116,12 +107,12 @@ int run(int argc,char** argv)
 
     int size_k1 = keypoints1.size();
     int size_k2 = keypoints2.size();
-       
+
    // Compute the AKAZE descriptor for each keypoint extracted from the first image
-   extractorAKAZE->extract(image1, keypoints1, descriptors1);
+   descriptorExtractor->extract(image1, keypoints1, descriptors1);
 
    // Compute the AKAZE descriptor for each keypoint extracted from the second image
-   extractorAKAZE->extract(image2, keypoints2, descriptors2);
+   descriptorExtractor->extract(image2, keypoints2, descriptors2);
 
     int size_d1 =  descriptors1->getNbDescriptors();
     int size_d2 = descriptors2->getNbDescriptors();

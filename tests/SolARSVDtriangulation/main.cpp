@@ -45,7 +45,7 @@ bool load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2
        v[0]  = std::stof(dummy);
        ox>>dummy;
        v[1]= std::stof(dummy);
-       pt2d[i]  = sptrnms::make_shared<Point2Df>(v[0], v[1]);
+       pt2d[i]  = xpcf::utils::make_shared<Point2Df>(v[0], v[1]);
     }
   ox.close();
   return true;
@@ -137,12 +137,11 @@ int run()
 
  // declarations
     xpcf::utils::uuids::string_generator    gen;
-    SRef<solver::map::ITriangulator>        mapper;
 
 
  // component creation
   
-    xpcf::ComponentFactory::createComponent<SolARSVDTriangulationOpencv>(xpcf::toUUID<solver::map::ITriangulator>(), mapper);
+    auto mapper = xpcf::ComponentFactory::createInstance<SolARSVDTriangulationOpencv>()->bindTo<solver::map::ITriangulator>();
 
 
 

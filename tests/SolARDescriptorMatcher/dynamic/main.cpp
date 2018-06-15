@@ -38,27 +38,27 @@ int run(int argc,char** argv)
 {
 
     // load library
+    // load library
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
-    xpcfComponentManager->load("$BCOMDEVROOT/.xpcf",true);
+
     // instantiate module managers
-    if (!xpcfComponentManager->isLoaded()) // xpcf library load has failed
+
+    if(xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/", true)!=org::bcom::xpcf::_SUCCESS)
     {
         LOG_ERROR("XPCF library load has failed")
         return -1;
     }
 
-
  // declarations and creation of components
 
-    auto imageLoader1 = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
-    auto imageLoader2 = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    auto imageLoader = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
     auto keypointsDetector = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
     auto viewer = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
     auto overlay = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv>()->bindTo<display::ISideBySideOverlay>();
     auto matcher = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv>()->bindTo<features::IDescriptorMatcher>();
     auto extractorAKAZE = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv>()->bindTo<features::IDescriptorsExtractor>();
 
-    if (!imageLoader1 || !imageLoader2 || !keypointsDetector || !extractorAKAZE || !matcher || !viewer || !overlay)
+    if (!imageLoader  || !keypointsDetector || !extractorAKAZE || !matcher || !viewer || !overlay)
     {
         LOG_ERROR("One or more component creations have failed");
         return -1;
@@ -66,8 +66,8 @@ int run(int argc,char** argv)
 
     SRef<Image>                                        image1;
     SRef<Image>                                        image2;
-    std::vector< sptrnms::shared_ptr<Keypoint>>        keypoints1;
-    std::vector< sptrnms::shared_ptr<Keypoint>>        keypoints2;
+    std::vector< SRef<Keypoint>>        keypoints1;
+    std::vector< SRef<Keypoint>>        keypoints2;
     SRef<DescriptorBuffer>                             descriptors1;
     SRef<DescriptorBuffer>                             descriptors2;
     std::vector<DescriptorMatch>                       matches;
@@ -83,14 +83,14 @@ int run(int argc,char** argv)
 
  // Start
     // Load the first image
-    if (imageLoader1->loadImage(argv[1], image1) != FrameworkReturnCode::_SUCCESS)
+    if (imageLoader->loadImage(argv[1], image1) != FrameworkReturnCode::_SUCCESS)
     {
        LOG_ERROR("Cannot load image with path {}", argv[1]);
        return -1;
     }
 
     // Load the second image
-    if (imageLoader2->loadImage(argv[2], image2) != FrameworkReturnCode::_SUCCESS)
+    if (imageLoader->loadImage(argv[2], image2) != FrameworkReturnCode::_SUCCESS)
     {
        LOG_ERROR("Cannot load image with path {}", argv[2]);
        return -1;

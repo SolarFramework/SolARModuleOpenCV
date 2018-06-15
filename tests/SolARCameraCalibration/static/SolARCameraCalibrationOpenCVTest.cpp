@@ -55,11 +55,9 @@ void printHelp() {
 
 int calibratio_run(int cameraId) {
 
-	SRef<input::devices::ICameraCalibration> cameraCalibration;
 	SRef<Image> inputImage;
 
-	boost::uuids::string_generator gen;
-    xpcf::ComponentFactory::createComponent<SolARCameraCalibrationOpencv>(cameraCalibration);
+    auto cameraCalibration =xpcf::ComponentFactory::createInstance<SolARCameraCalibrationOpencv>()->bindTo<input::devices::ICameraCalibration>();
 
 	std::string calib_config = std::string("../calibration_config.yml");
 	std::ifstream ifs(calib_config.c_str());
@@ -86,11 +84,9 @@ int calibratio_run(int cameraId) {
 
 int calibratio_run(std::string& video) {
 
-	SRef<input::devices::ICameraCalibration> cameraCalibration;
 	SRef<Image> inputImage;
 
-	boost::uuids::string_generator gen;
-    xpcf::ComponentFactory::createComponent<SolARCameraCalibrationOpencv>(cameraCalibration);
+    auto cameraCalibration =xpcf::ComponentFactory::createInstance<SolARCameraCalibrationOpencv>()->bindTo<input::devices::ICameraCalibration>();
 
 	std::string calib_config = std::string("../calibration_config.yml");
 	std::ifstream ifs(calib_config.c_str());

@@ -32,15 +32,10 @@ namespace xpcf  = org::bcom::xpcf;
 
 int run(int argc, char *argv[])
 {
-    // components declarations
-    SRef<image::IImageLoader> imageLoader;
-    SRef<display::IImageViewer> viewer;
-
-    SRef<xpcf::IConfigurable> rIConfigurable;
 
     // components creation
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(xpcf::toUUID<image::IImageLoader>(), imageLoader);
-    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(xpcf::toUUID<display::IImageViewer>(), viewer);
+    auto imageLoader=xpcf::ComponentFactory::createInstance<SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    auto  viewer =xpcf::ComponentFactory::createInstance<SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
 
     SRef<Image> image;
 

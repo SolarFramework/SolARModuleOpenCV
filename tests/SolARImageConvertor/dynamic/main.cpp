@@ -35,13 +35,15 @@ int run(int argc, char **argv)
 
     // load library
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
-    xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleOpenCV_registry.xml");
+
     // instantiate module managers
-    if (!xpcfComponentManager->isLoaded()) // xpcf library load has failed
+
+    if(xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/", true)!=org::bcom::xpcf::_SUCCESS)
     {
         LOG_ERROR("XPCF library load has failed")
         return -1;
     }
+
 
 
     // components declarations and creation
