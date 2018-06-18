@@ -28,7 +28,6 @@ set (SOURCES
     src/SolARSideBySideOverlayOpencv.cpp
     src/SolAR2DOverlayOpencv.cpp
     src/SolAR3DOverlayOpencv.cpp
-    src/SolARModuleManagerOpencv.cpp
     src/SolARHomographyEstimationOpencv.cpp
     src/SolARPoseEstimationPnpEPFL.cpp
     src/SolARPoseEstimationPnpOpencv.cpp
@@ -38,7 +37,6 @@ set (SOURCES
     src/AKAZE2/fed.cpp
     src/AKAZE2/nldiffusion_functions.cpp
     src/SolARSVDTriangulationOpencv.cpp
-    src/SolARFundamentalMatrixDecompositionValidationOpencv.cpp
     src/SolARHomographyMatrixDecompositionOpencv.cpp
     src/SolARFundamentalMatrixEstimationOpencv.cpp
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
@@ -68,7 +66,6 @@ set (HEADERS
 		interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h
 		interfaces/SolARDescriptorMatcherKNNOpencv.h
 		interfaces/SolARDescriptorMatcherRadiusOpencv.h
-		interfaces/SolARFundamentalMatrixDecompositionValidationOpencv.h
 		interfaces/SolARHomographyMatrixDecompositionOpencv.h
 		interfaces/SolARFundamentalMatrixEstimationOpencv.h
 		interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h
@@ -78,7 +75,6 @@ set (HEADERS
 		interfaces/SolARSideBySideOverlayOpencv.h
 		interfaces/SolAR3DOverlayOpencv.h
 		interfaces/SolAR2DOverlayOpencv.h
-		interfaces/SolARModuleManagerOpencv.h
 		interfaces/SolARSVDTriangulationOpencv.h
 		src/AKAZE2/AKAZEConfig.h
 		src/AKAZE2/AKAZEFeatures.h
