@@ -34,7 +34,8 @@ namespace OPENCV {
     {
         addInterface<api::features::IContoursExtractor>(this);
         SRef<xpcf::IPropertyMap> properties;
-        properties = getPropertyRootNode();
+        properties = xpcf::getPropertyMapInstance();
+        // properties = getPropertyRootNode();
         properties->wrapFloat("minContourSize",m_minContourSize);
     }
 
