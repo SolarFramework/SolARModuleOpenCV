@@ -83,6 +83,9 @@ set (HEADERS
 		src/AKAZE2/TEvolution.h
 		src/AKAZE2/utils.h
 )
+
+install (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xpcf_SolARModuleOpenCV_registry.xml" DESTINATION $ENV{BCOMDEVROOT}/.xpcf/SolAR/	)
+
 ##################################################
 
 # various macros

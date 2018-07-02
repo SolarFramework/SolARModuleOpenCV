@@ -31,6 +31,7 @@
 #include "SolARFundamentalMatrixEstimationOpencv.h"
 #include "SolARGeometricMatchesFilterOpencv.h"
 #include "SolARHomographyEstimationOpencv.h"
+#include "SolARHomographyMatrixDecompositionOpencv.h"
 #include "SolARImageConvertorOpencv.h"
 #include "SolARImageFilterOpencv.h"
 #include "SolARImageLoaderOpencv.h"
@@ -115,6 +116,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARHomographyMatrixDecomposerOpencv>(componentUUID,interfaceRef);
+    }    
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageConvertorOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
@@ -187,6 +192,7 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpe
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARHomographyMatrixDecomposerOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv)
