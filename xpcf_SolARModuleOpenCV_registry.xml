@@ -69,6 +69,10 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="45dd370a-0eab-4a7f-93d0-43453b4c7517" description="Transform2DFinder"/>
         </component>
+        <component uuid="b5fab395-2184-4123-b0d5-4af74d0a2d79" description="SolARHomographyMatrixDecomposerOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="0404e8b9-b824-4852-a34d-6eafa7563918" description="I2DTO3DTransformDecomposer"/>
+        </component>        
         <component uuid="fd7fb607-144f-418c-bcf2-f7cf71532c22" description="SolARImageConvertorOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="9c982719-6cb4-4831-aa88-9e01afacbd16" description="IImageConvertor"/>
