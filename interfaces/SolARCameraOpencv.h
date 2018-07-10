@@ -59,6 +59,7 @@ public:
  private:
      int m_device_id;
      cv::VideoCapture m_capture;
+     bool m_is_resolution_set;
      Sizei m_resolution;
 
      CamCalibration m_intrinsic_parameters;

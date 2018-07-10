@@ -32,13 +32,14 @@ namespace OPENCV {
     SolARCameraOpencv::SolARCameraOpencv():ComponentBase(toUUID<SolARCameraOpencv>())
     {
         addInterface<api::input::devices::ICamera>(this);
+
+        m_is_resolution_set = false;
     }
 
     void SolARCameraOpencv::setResolution(Sizei resolution)
     {
         m_resolution = resolution;
-        m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_resolution.width );
-        m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_resolution.height );
+        m_is_resolution_set = true;
     }
 
     FrameworkReturnCode SolARCameraOpencv::loadCameraParameters (const std::string & filename)
@@ -57,9 +58,7 @@ namespace OPENCV {
 
             m_resolution.width = width;
             m_resolution.height = height;
-
-            m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_resolution.width );
-            m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_resolution.height );
+            m_is_resolution_set = true;
 
             if (intrinsic_parameters.empty())
             {               
@@ -117,10 +116,19 @@ namespace OPENCV {
 
         LOG_INFO(" SolARCameraOpencv::setParameters");
         if(m_capture.isOpened())
+        {
             m_capture.release();
+        }
         m_capture = cv::VideoCapture( device_id);
         if (m_capture.isOpened())
+        {
+            if (m_is_resolution_set)
+            {
+                m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_resolution.width );
+                m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_resolution.height );
+            }
             return FrameworkReturnCode::_SUCCESS;
+        }
         else
         {
             LOG_ERROR("Cannot open camera with id {]", device_id);
@@ -132,10 +140,19 @@ namespace OPENCV {
 
         LOG_INFO(" SolARCameraOpencv::setParameters");
         if(m_capture.isOpened())
+        {
             m_capture.release();
+        }
         m_capture = cv::VideoCapture(inputFileName);
         if (m_capture.isOpened())
+        {
+            if (m_is_resolution_set)
+            {
+                m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_resolution.width );
+                m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_resolution.height );
+            }
             return FrameworkReturnCode::_SUCCESS;
+        }
         else
         {
             LOG_ERROR("Cannot open video file {}", inputFileName);
