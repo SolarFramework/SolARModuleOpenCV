@@ -19,7 +19,7 @@
 
 // ADD COMPONENTS HEADERS HERE, e.g #include "SolarComponent.h"
 
-#include "IComponentManager.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolARModuleOpencv_traits.h"
 #include "api/image/IImageLoader.h"
 #include "api/display/IImageViewer.h"
@@ -36,7 +36,7 @@ int run(int argc, char *argv[])
     // load library
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-    if(xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/", true)!=org::bcom::xpcf::_SUCCESS)
+    if(xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleOpenCV_registry.xml")!=org::bcom::xpcf::_SUCCESS)
     {
         LOG_ERROR("XPCF library load has failed")
         return -1;
