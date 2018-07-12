@@ -77,11 +77,27 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="9c982719-6cb4-4831-aa88-9e01afacbd16" description="IImageConvertor"/>
         </component>
-        <component uuid="fa356d0c-0a53-4722-a7f3-bb92b934d8db" description="SolARImageFilterOpencv">
+        <component uuid="e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2" description="SolARImageFilterBinaryOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
         </component>
-               <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" description="SolARImageLoaderOpencv">
+        <component uuid="901e7a07-5013-4907-be41-0259fca3726c" description="SolARImageFilterAdaptiveBinaryOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        </component>
+        <component uuid="deb083aa-69fb-409a-af94-151d476de922" description="SolARImageFilterBlurOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        </component>
+        <component uuid="7ac9d1b8-afda-4c99-b8df-92e71015a3be" description="SolARImageFilterDilateOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        </component>
+        <component uuid="58b09819-64bc-4a80-b6a2-9fe7b179f3fc" description="SolARImageFilterErodeOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        </component>                
+        <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" description="SolARImageLoaderOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" description="IImageLoader"/>
         </component>
