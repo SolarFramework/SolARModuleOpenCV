@@ -18,10 +18,12 @@
 #define SOLARCAMERAOPENCV_H
 
 #include <vector>
+
+#include "api/input/devices/ICamera.h"
+
 #include "opencv2/opencv.hpp"
 
-#include "ComponentBase.h"
-#include "api/input/devices/ICamera.h"
+#include "xpcf/component/ComponentBase.h"
 
 #include "SolAROpencvAPI.h"
 

@@ -17,10 +17,11 @@
 #ifndef SOLARCAMERACALIBRATIONOPENCV_H
 #define SOLARCAMERACALIBRATIONOPENCV_H
 
+#include "api/input/devices/ICameraCalibration.h"
+
 #include <string>
 #include "opencv2/videoio.hpp"
-#include "ComponentBase.h"
-#include "api/input/devices/ICameraCalibration.h"
+#include "xpcf/component/ComponentBase.h"
 
 #include "SolAROpencvAPI.h"
 
@@ -49,7 +50,6 @@ public:
 	bool setParameters(std::string&config_file);
 	virtual void unloadComponent() override;
 
-	XPCF_DECLARE_UUID("702a7f53-e5ec-45d2-887d-daa99a34a33c");
 
 private:
 protected:

@@ -20,7 +20,7 @@
 #include "opencv2/core.hpp"
 #include "api/solver/pose/I3DTransformFinder.h"
 #include "SolAROpencvAPI.h"
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 
 namespace SolAR {
     using namespace datastructure;

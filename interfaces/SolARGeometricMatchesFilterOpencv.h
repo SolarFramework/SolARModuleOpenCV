@@ -2,7 +2,8 @@
 #define SOLARGEOMETRICMATCHESFILTEROPENCV_H
 
 #include "api/features/IMatchesFilter.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 #include "opencv2/opencv.hpp"

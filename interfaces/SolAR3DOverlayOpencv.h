@@ -18,13 +18,13 @@
 #define SOLAR3DOVERLAYOPENCV_H
 #include <vector>
 
-#include "opencv2/core.hpp"
-
 #include "api/display/I3DOverlay.h"
+
+#include "opencv2/core.hpp"
 
 #include "SolAROpencvAPI.h"
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 
 namespace SolAR {
 using namespace datastructure;

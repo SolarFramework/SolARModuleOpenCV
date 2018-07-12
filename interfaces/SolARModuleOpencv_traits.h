@@ -17,7 +17,7 @@
 #ifndef SOLARMODULEOPENCV_TRAITS_H
 #define SOLARMODULEOPENCV_TRAITS_H
 
-#include "XPCF_definitions.h"
+#include "xpcf/api/IcomponentManager.h"
 
 namespace SolAR {
 namespace MODULES {

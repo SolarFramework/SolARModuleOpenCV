@@ -15,7 +15,6 @@
  */
 
 #include "SolARImageFilterOpencv.h"
-#include "ComponentFactory.h"
 #include "SolAROpenCVHelper.h"
 
 

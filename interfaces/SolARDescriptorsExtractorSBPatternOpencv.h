@@ -18,7 +18,8 @@
 #define SOLARDESCRIPTORSEXTRACTORSBPATTERNOPENCV_H
 
 #include "api/features/IDescriptorsExtractorSBPattern.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {

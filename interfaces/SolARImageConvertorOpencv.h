@@ -18,10 +18,11 @@
 #define SolARImageConvertorOpencv_H
 
 #include "api/image/IImageConvertor.h"
+
 // Definition of SolARImageConvertorOpencv Class //
 // part of Solar namespace //
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 

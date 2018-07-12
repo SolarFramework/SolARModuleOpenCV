@@ -19,8 +19,6 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/core.hpp"
 
-#include "ComponentFactory.h"
-
 namespace xpcf = org::bcom::xpcf;
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv)

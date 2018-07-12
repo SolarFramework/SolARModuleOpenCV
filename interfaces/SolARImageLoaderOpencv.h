@@ -19,7 +19,7 @@
 
 #include "api/image/IImageLoader.h"
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 

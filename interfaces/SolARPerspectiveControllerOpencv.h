@@ -18,7 +18,7 @@
 #define SOLARPERSPECTIVECONTROLLEROPENCV_H
 
 #include "api/image/IPerspectiveController.h"
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {

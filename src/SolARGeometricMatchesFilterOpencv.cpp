@@ -1,5 +1,4 @@
 #include "SolARGeometricMatchesFilterOpencv.h"
-#include "ComponentFactory.h"
 #include "SolAROpenCVHelper.h"
 #include <set>
 

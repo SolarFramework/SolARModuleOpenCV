@@ -18,7 +18,8 @@
 #define SOLARIMAGEFILTEROPENCV_H
 
 #include "api/image/IImageFilter.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 #include "opencv2/opencv.hpp"

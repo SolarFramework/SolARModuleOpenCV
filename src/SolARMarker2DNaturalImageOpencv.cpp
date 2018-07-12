@@ -16,7 +16,6 @@
 
 #include <boost/filesystem.hpp>
 #include "SolARMarker2DNaturalImageOpencv.h"
-#include "ComponentFactory.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/highgui.hpp"
 

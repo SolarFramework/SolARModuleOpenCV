@@ -21,7 +21,6 @@
 
 #include <iostream>
 #include <utility>
-#include "ComponentFactory.h"
 
 namespace xpcf  = org::bcom::xpcf;
 using namespace org::bcom::xpcf;

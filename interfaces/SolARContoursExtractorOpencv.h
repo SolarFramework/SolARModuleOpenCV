@@ -18,7 +18,8 @@
 #define SOLARCONTOURSEXTRACTOROPENCV_H
 
 #include "api/features/IContoursExtractor.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {

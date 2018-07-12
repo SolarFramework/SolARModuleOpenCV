@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <iostream>
 #include "SolARPoseEstimationPnpEPFL.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/core.hpp"
@@ -23,9 +24,6 @@
 #include "opencv2/videoio/videoio.hpp"
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
-
-#include "ComponentFactory.h"
-
 
 #include <map>
 

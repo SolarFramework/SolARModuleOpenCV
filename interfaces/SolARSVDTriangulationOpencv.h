@@ -18,7 +18,7 @@
 #ifndef SOLARSVDTRIANGULATIONOPENCV_H
 #define SOLARSVDTRIANGULATIONOPENCV_H
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 #include "api/solver/map/ITriangulator.h"

@@ -24,8 +24,6 @@
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
 
-#include "ComponentFactory.h"
-
 
 #include <map>
 

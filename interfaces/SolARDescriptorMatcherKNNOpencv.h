@@ -18,10 +18,11 @@
 #define SOLARDESCRIPTORMATCHERKNNOPENCV_H
 
 #include "api/features/IDescriptorMatcher.h"
+
 // Definition of SolARDescriptorMatcherOpencv Class //
 // part of SolAR namespace //
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/core.hpp"

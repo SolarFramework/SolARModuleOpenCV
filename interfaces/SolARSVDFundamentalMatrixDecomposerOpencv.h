@@ -19,7 +19,7 @@
 #include <vector>
 
 #include "api/solver/pose/I2Dto3DTransformDecomposer.h"
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <vector>
 #include "opencv2/core.hpp"

@@ -18,7 +18,8 @@
 #define SOLARMARKER2DNATURALIMAGEOPENCV_H
 
 #include "api/input/files/IMarker2DNaturalImage.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include "opencv2/opencv.hpp"
 

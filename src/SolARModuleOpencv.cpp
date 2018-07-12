@@ -13,7 +13,7 @@
 
 #include <iostream>
 
-#include "ModuleFactory.h"
+#include "xpcf/module/ModuleFactory.h"
 
 #include "SolAR2DOverlayOpencv.h"
 #include "SolAR3DOverlayOpencv.h"

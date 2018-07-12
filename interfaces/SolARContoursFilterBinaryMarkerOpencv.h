@@ -18,7 +18,8 @@
 #define SOLARCONTOURSFILTERBINARYMARKEROPENCV_H
 
 #include "api/features/IContoursFilter.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
