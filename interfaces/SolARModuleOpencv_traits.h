@@ -40,7 +40,11 @@ class SolARGeometricMatchesFilterOpencv;
 class SolARHomographyEstimationOpencv;
 class SolARHomographyMatrixDecomposerOpencv;
 class SolARImageConvertorOpencv;
-class SolARImageFilterOpencv;
+class SolARImageFilterBinaryOpencv;
+class SolARImageFilterAdaptiveBinaryOpencv;
+class SolARImageFilterBlurOpencv;
+class SolARImageFilterDilateOpencv;
+class SolARImageFilterErodeOpencv;
 class SolARImageLoaderOpencv;
 class SolARImageViewerOpencv;
 class SolARKeypointDetectorOpencv;
@@ -128,9 +132,25 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv,
                              "fd7fb607-144f-418c-bcf2-f7cf71532c22",
                              "SolAR::MODULES::OPENCV::SolARImageConvertorOpencv component")
 
-XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterOpencv,
-                             "fa356d0c-0a53-4722-a7f3-bb92b934d8db",
-                             "SolAR::MODULES::OPENCV::SolARImageFilterOpencv component")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterBinaryOpencv,
+                             "e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2",
+                             "SolAR::MODULES::OPENCV::SolARImageFilterBinaryOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterAdaptiveBinaryOpencv,
+                             "901e7a07-5013-4907-be41-0259fca3726c",
+                             "SolAR::MODULES::OPENCV::SolARImageFilterAdaptiveBinaryOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterBlurOpencv,
+                             "deb083aa-69fb-409a-af94-151d476de922",
+                             "SolAR::MODULES::OPENCV::SolARImageFilterBlurOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterDilateOpencv,
+                             "7ac9d1b8-afda-4c99-b8df-92e71015a3be",
+                             "SolAR::MODULES::OPENCV::SolARImageFilterDilateOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterErodeOpencv,
+                             "58b09819-64bc-4a80-b6a2-9fe7b179f3fc",
+                             "SolAR::MODULES::OPENCV::SolARImageFilterErodeOpencv component")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv,
                              "e42d6526-9eb1-4f8a-bb68-53e06f09609c",

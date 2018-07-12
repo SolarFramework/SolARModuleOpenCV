@@ -40,11 +40,9 @@ INCLUDEPATH += interfaces/
 HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageConvertorOpencv.h \
     interfaces/SolARImageLoaderOpencv.h \
-    interfaces/SolARImageFilterOpencv.h \
     interfaces/SolARImageViewerOpencv.h \
     interfaces/SolARKeypointDetectorOpencv.h \
     interfaces/SolAROpenCVHelper.h \
-    interfaces/SolARImageFilterOpencv.h \
     interfaces/SolAROpencvAPI.h \
     interfaces/SolARCameraCalibrationOpencv.h \
     interfaces/SolARMarker2DNaturalImageOpencv.h \
@@ -76,13 +74,17 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     src/AKAZE2/nldiffusion_functions.h \
     src/AKAZE2/TEvolution.h \
     src/AKAZE2/utils.h \
-    interfaces/SolARModuleOpencv_traits.h
+    interfaces/SolARModuleOpencv_traits.h \
+    interfaces/SolARImageFilterAdaptiveBinaryOpencv.h \
+    interfaces/SolARImageFilterBinaryOpencv.h \
+    interfaces/SolARImageFilterBlurOpencv.h \
+    interfaces/SolARImageFilterDilateOpencv.h \
+    interfaces/SolARImageFilterErodeOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
     src/SolARImageLoaderOpencv.cpp \
     src/SolARImageConvertorOpencv.cpp \
-    src/SolARImageFilterOpencv.cpp \
     src/SolARImageViewerOpencv.cpp \
     src/SolARCameraOpencv.cpp \
     src/SolAROpenCVHelper.cpp \
@@ -113,7 +115,12 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
     src/SolARHomographyMatrixDecompositionOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
-    src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
+    src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
+    src/SolARImageFilterBinaryOpencv.cpp \
+    src/SolARImageFilterAdaptiveBinaryOpencv.cpp \
+    src/SolARImageFilterBlurOpencv.cpp \
+    src/SolARImageFilterDilateOpencv.cpp \
+    src/SolARImageFilterErodeOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
