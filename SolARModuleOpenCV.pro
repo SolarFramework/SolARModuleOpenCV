@@ -76,7 +76,8 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     src/AKAZE2/nldiffusion_functions.h \
     src/AKAZE2/TEvolution.h \
     src/AKAZE2/utils.h \
-    interfaces/SolARModuleOpencv_traits.h
+    interfaces/SolARModuleOpencv_traits.h \
+    interfaces/SolARImageBinaryFilterOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
@@ -113,7 +114,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
     src/SolARHomographyMatrixDecompositionOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
-    src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
+    src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
+    src/SolARImageBinaryFilterOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
