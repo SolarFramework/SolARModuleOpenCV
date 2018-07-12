@@ -8,7 +8,11 @@ set (SOURCES
     src/SolARKeypointDetectorOpencv.cpp
     src/SolARImageLoaderOpencv.cpp
     src/SolARImageConvertorOpencv.cpp
-    src/SolARImageFilterOpencv.cpp
+    src/SolARImageFilterBinaryOpencv.cpp
+	src/SolARImageFilterAdaptiveBinaryOpencv.cpp
+	src/SolARImageFilterBlurOpencv.cpp
+	src/SolARImageFilterDilateOpencv.cpp
+	src/SolARImageFilterErodeOpencv.cpp
     src/SolARImageViewerOpencv.cpp
     src/SolARCameraOpencv.cpp
     src/SolAROpenCVHelper.cpp
@@ -46,11 +50,14 @@ set (HEADERS
 		interfaces/SolARCameraOpencv.h
 		interfaces/SolARImageConvertorOpencv.h
 		interfaces/SolARImageLoaderOpencv.h
-		interfaces/SolARImageFilterOpencv.h
 		interfaces/SolARImageViewerOpencv.h
 		interfaces/SolARKeypointDetectorOpencv.h
 		interfaces/SolAROpenCVHelper.h
-		interfaces/SolARImageFilterOpencv.h
+		interfaces/SolARImageFilterBinaryOpencv.h
+		interfaces/SolARImageFilterAdaptiveBinaryOpencv.h
+		interfaces/SolARImageFilterBlurOpencv.h
+		interfaces/SolARImageFilterDilateOpencv.h
+		interfaces/SolARImageFilterErodeOpencv.h
 		interfaces/SolAROpencvAPI.h
 		interfaces/SolARCameraCalibrationOpencv.h
 		interfaces/SolARMarker2DNaturalImageOpencv.h
