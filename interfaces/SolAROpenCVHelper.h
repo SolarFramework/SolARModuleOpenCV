@@ -20,7 +20,7 @@
 #include "opencv2/core.hpp"
 
 #include "SolAROpencvAPI.h"
-#include "xpcf/api/IcomponentManager.h"
+#include "xpcf/api/IComponentManager.h"
 
 #include "core/Messages.h"
 #include "datastructure/Image.h"
