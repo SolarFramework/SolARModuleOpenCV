@@ -14,38 +14,37 @@
  * limitations under the License.
  */
 
-#include "SolARImageBinaryFilterOpencv.h"
-#include "ComponentFactory.h"
+#include "SolARImageFilterAdaptiveBinaryOpencv.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpenCVHelper.h"
 
 
 namespace xpcf  = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageBinaryFilterOpencv)
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageFilterAdaptiveBinaryOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARImageBinaryFilterOpencv::SolARImageBinaryFilterOpencv():ComponentBase(xpcf::toUUID<SolARImageBinaryFilterOpencv>())
+SolARImageFilterAdaptiveBinaryOpencv::SolARImageFilterAdaptiveBinaryOpencv():ConfigurableBase(xpcf::toUUID<SolARImageFilterAdaptiveBinaryOpencv>())
 {
     addInterface<api::image::IImageFilter>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("min", min);
     params->wrapInteger("max", max);
-}
-
-
-SolARImageBinaryFilterOpencv::~SolARImageBinaryFilterOpencv(){
+    params->wrapInteger("blockSize", blockSize);
+    params->wrapInteger("C", C);
 
 }
 
 
-FrameworkReturnCode SolARImageBinaryFilterOpencv::filter(SRef<Image>input,
-              SRef<Image>& output,
-              int min,
-              int max){
+SolARImageFilterAdaptiveBinaryOpencv::~SolARImageFilterAdaptiveBinaryOpencv(){
+
+}
+
+
+FrameworkReturnCode SolARImageFilterAdaptiveBinaryOpencv::filter(const SRef<Image>input, SRef<Image>& output){
     if (input->getImageLayout() != Image::ImageLayout::LAYOUT_GREY)
     {
         LOG_ERROR ("binarize method take as input only Grey images");
@@ -57,13 +56,11 @@ FrameworkReturnCode SolARImageBinaryFilterOpencv::filter(SRef<Image>input,
 
     output->setSize(input->getWidth(),input->getHeight());
 
-     cv::Mat imgSource, imgFiltred;
+    cv::Mat imgSource, imgFiltred;
     SolAROpenCVHelper::mapToOpenCV(input,imgSource);
     SolAROpenCVHelper::mapToOpenCV(output,imgFiltred);
-    if (min>=0)
-        cv::threshold(imgSource, imgFiltred, min, max, cv::THRESH_BINARY);
-    else
-        cv::threshold(imgSource, imgFiltred, 0, max, cv::THRESH_BINARY | cv::THRESH_OTSU);
+
+    cv::adaptiveThreshold(imgSource, imgFiltred, max, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, blockSize, C);
 
     return FrameworkReturnCode::_SUCCESS;
 }

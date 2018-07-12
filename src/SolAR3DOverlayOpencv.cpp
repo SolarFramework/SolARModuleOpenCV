@@ -36,17 +36,24 @@ namespace xpcf  = org::bcom::xpcf;
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv)
 
 namespace SolAR {
-using namespace datastructure;
-namespace MODULES {
-namespace OPENCV {
+    using namespace datastructure;
+    namespace MODULES {
+    namespace OPENCV {
 
-SolAR3DOverlayOpencv::SolAR3DOverlayOpencv():ComponentBase(xpcf::toUUID<SolAR3DOverlayOpencv>())
-{
-    addInterface<api::display::I3DOverlay>(this);
+    SolAR3DOverlayOpencv::SolAR3DOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolAR3DOverlayOpencv>())
+    {
+        addInterface<api::display::I3DOverlay>(this);
 
-    m_camMatrix.create(3, 3, CV_32FC1);
-    m_camDistorsion.create(5, 1, CV_32FC1);
+        m_camMatrix.create(3, 3, CV_32FC1);
+        m_camDistorsion.create(5, 1, CV_32FC1);
     m_parallelepiped.create(8, 3, CV_32FC1);
+
+    m_cameraDistorsion.resize(5);
+    m_cameraMatrix.resize(9);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapFloatVector("cameraDistorsion",m_cameraDistorsion);
+    params->wrapFloatVector("cameraMatrix",m_cameraMatrix);
+
 
    LOG_DEBUG(" SolAR3DOverlayOpencv constructor");
 
@@ -235,6 +242,29 @@ void SolAR3DOverlayOpencv::setCameraParameters(const CamCalibration & intrinsic_
 
 
 }
+
+
+
+void SolAR3DOverlayOpencv::initCameraParametersFromConfigFile()
+{
+
+    m_camDistorsion.at<float>(0, 0)  = m_cameraDistorsion.at(0);
+    m_camDistorsion.at<float>(1, 0)  = m_cameraDistorsion.at(1);
+    m_camDistorsion.at<float>(2, 0)  = m_cameraDistorsion.at(2);
+    m_camDistorsion.at<float>(3, 0)  = m_cameraDistorsion.at(3);
+    m_camDistorsion.at<float>(4, 0)  = m_cameraDistorsion.at(4);
+
+    m_camMatrix.at<float>(0, 0) = m_cameraMatrix.at(0);
+    m_camMatrix.at<float>(0, 1) = m_cameraMatrix.at(1);
+    m_camMatrix.at<float>(0, 2) = m_cameraMatrix.at(2);
+    m_camMatrix.at<float>(1, 0) = m_cameraMatrix.at(3);
+    m_camMatrix.at<float>(1, 1) = m_cameraMatrix.at(4);
+    m_camMatrix.at<float>(1, 2) = m_cameraMatrix.at(5);
+    m_camMatrix.at<float>(2, 0) = m_cameraMatrix.at(6);
+    m_camMatrix.at<float>(2, 1) = m_cameraMatrix.at(7);
+    m_camMatrix.at<float>(2, 2) = m_cameraMatrix.at(8);
+}
+
 
 }
 }

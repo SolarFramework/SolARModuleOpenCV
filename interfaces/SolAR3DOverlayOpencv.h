@@ -24,14 +24,14 @@
 
 #include "SolAROpencvAPI.h"
 
-#include "ComponentBase.h"
+#include "ConfigurableBase.h"
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolAR3DOverlayOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolAR3DOverlayOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::display::I3DOverlay
 {
 public:
@@ -44,7 +44,7 @@ public:
     void unloadComponent () override final;
 
 private:
-
+    void initCameraParametersFromConfigFile();
     void setParallelepipedPosition(const float X_world, const float Y_world, const float Z_world);
     void moveParalleliped(const Transform3Df transformation);
     FrameworkReturnCode transform3D(const std::vector<SRef<Point3Df>> & inputPoints, const Transform3Df transformation, std::vector<SRef<Point3Df>> & outputPoints);
@@ -56,6 +56,9 @@ private:
     cv::Mat m_camDistorsion;
 
     cv::Mat m_parallelepiped; // volume to display
+
+    std::vector<float> m_cameraDistorsion;
+    std::vector<float> m_cameraMatrix;
 
 };
 

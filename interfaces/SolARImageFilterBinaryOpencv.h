@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef SOLARIMAGEBINARYFILTEROPENCV_H
-#define SOLARIMAGEBINARYFILTEROPENCV_H
+#ifndef SOLARIMAGEFILTERBINARYOPENCV_H
+#define SOLARIMAGEFILTERBINARYOPENCV_H
 
 #include "api/image/IImageFilter.h"
-#include "ConfigurableBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 
 #include "opencv2/opencv.hpp"
@@ -32,14 +32,14 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARImageBinaryFilterOpencv : public org::bcom::xpcf::ConfigurableBase,
+class SOLAROPENCV_EXPORT_API SolARImageFilterBinaryOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::image::IImageFilter {
 public:
 
-    SolARImageBinaryFilterOpencv();
-   ~SolARImageBinaryFilterOpencv();
+    SolARImageFilterBinaryOpencv();
+   ~SolARImageFilterBinaryOpencv();
 
-    FrameworkReturnCode filter(SRef<Image>input,
+    FrameworkReturnCode filter(const SRef<Image>input,
                   SRef<Image>& output) override;
 
     void unloadComponent () override final;
