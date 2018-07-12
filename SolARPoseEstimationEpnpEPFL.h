@@ -51,8 +51,6 @@ public:
 
     void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams)  override;
 
-    XPCF_DECLARE_UUID("a38edf79-f0dc-45ca-92fc-2b336fceedf9");
-
 private:
     cv::Mat m_camMatrix;
     cv::Mat m_camDistorsion;

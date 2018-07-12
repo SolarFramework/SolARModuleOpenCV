@@ -24,8 +24,6 @@
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
 
-#include "ComponentFactory.h"
-
 
 #include <map>
 #include <random>
@@ -37,18 +35,18 @@ namespace xpcf  = org::bcom::xpcf;
 #define intrpmnmx(val,min,max) (max==min ? 0.0 : ((val)-min)/(max-min))
 
 
+namespace xpcf  = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv()
+SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ComponentBase(xpcf::toUUID<SolARSVDTriangulationOpencv>())
 {
-    setUUID(SolARSVDTriangulationOpencv::UUID);
-    addInterface<api::solver::map::ITriangulator>(this,api::solver::map::ITriangulator::UUID, "interface api::solver::map::ITriangulator");
+    addInterface<api::solver::map::ITriangulator>(this);
 
    LOG_DEBUG(" SolARSVDTriangulationOpencv constructor");
 
@@ -193,8 +191,8 @@ FrameworkReturnCode SolARSVDTriangulationOpencv::triangulate(const std::vector<S
             reproj_error.push_back(reprj_err);
 
 
-            sptrnms::shared_ptr<Point3Df> cp = sptrnms::make_shared<Point3Df>();
-            cp = sptrnms::make_shared<Point3Df>(X(0), X(1), X(2));
+           SRef<Point3Df> cp = xpcf::utils::make_shared<Point3Df>();
+            cp = xpcf::utils::make_shared<Point3Df>(X(0), X(1), X(2));
 
              pt3d.push_back(cp);
          }

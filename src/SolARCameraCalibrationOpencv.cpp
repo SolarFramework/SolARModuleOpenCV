@@ -33,8 +33,9 @@
 
 #include "SolARCameraCalibrationOpencv.h"
 
+namespace xpcf  = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv)
 
 
 namespace SolAR {
@@ -43,10 +44,9 @@ namespace OPENCV {
 
 
 
-SolARCameraCalibrationOpencv::SolARCameraCalibrationOpencv()
+SolARCameraCalibrationOpencv::SolARCameraCalibrationOpencv():ComponentBase(xpcf::toUUID<SolARCameraCalibrationOpencv>())
 {
-    setUUID(SolARCameraCalibrationOpencv::UUID);
-    addInterface<api::input::devices::ICameraCalibration>(this,api::input::devices::ICameraCalibration::UUID, "interface CameraCalibrationOpencv");
+    addInterface<api::input::devices::ICameraCalibration>(this);
 }
 
 

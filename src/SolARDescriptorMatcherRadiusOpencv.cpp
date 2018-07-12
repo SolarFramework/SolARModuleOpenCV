@@ -20,7 +20,9 @@
 
 #include "SolAROpenCVHelper.h"
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv)
 
 namespace SolAR {
 using namespace datastructure;
@@ -28,10 +30,9 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorMatcherRadiusOpencv::SolARDescriptorMatcherRadiusOpencv()
+SolARDescriptorMatcherRadiusOpencv::SolARDescriptorMatcherRadiusOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorMatcherRadiusOpencv>())
 {
-    setUUID(SolARDescriptorMatcherRadiusOpencv::UUID);
-    addInterface<IDescriptorMatcher>(this,IDescriptorMatcher::UUID, "interface IDescriptorMatcher");
+    addInterface<IDescriptorMatcher>(this);
     LOG_DEBUG(" SolARDescriptorMatcherRadiusOpencv constructor")
     m_maxDistance = 1.0f;
 }

@@ -15,19 +15,19 @@
  */
 
 #include "SolARMarker2DSquaredBinaryOpencv.h"
-#include "ComponentFactory.h"
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARMarker2DSquaredBinaryOpencv::SolARMarker2DSquaredBinaryOpencv()
+    SolARMarker2DSquaredBinaryOpencv::SolARMarker2DSquaredBinaryOpencv():ComponentBase(xpcf::toUUID<SolARMarker2DSquaredBinaryOpencv>())
     {
-        setUUID(SolARMarker2DSquaredBinaryOpencv::UUID);
-        addInterface<api::input::files::IMarker2DSquaredBinary>(this,api::input::files::IMarker2DSquaredBinary::UUID, "interface api::input::files::IMarker2DSquaredBinary");
+        addInterface<api::input::files::IMarker2DSquaredBinary>(this);
         LOG_DEBUG("SolARMarker2DSquaredBinaryOpencv constructor")
         m_size.width = 0;
         m_size.height = 0;

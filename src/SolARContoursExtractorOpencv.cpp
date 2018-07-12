@@ -19,21 +19,25 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/core.hpp"
 
-#include "ComponentFactory.h"
+#include "xpcf/component/ComponentBase.h"
+#include "xpcf/properties/IPropertyMap.h"
 
 namespace xpcf = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARContoursExtractorOpencv::SolARContoursExtractorOpencv()
+    SolARContoursExtractorOpencv::SolARContoursExtractorOpencv():ComponentBase(xpcf::toUUID<SolARContoursExtractorOpencv>())
     {
-        setUUID(SolARContoursExtractorOpencv::UUID);
-        addInterface<api::features::IContoursExtractor>(this,api::features::IContoursExtractor::UUID, "interface api::features::ContoursExtractor");
+        addInterface<api::features::IContoursExtractor>(this);
+        SRef<xpcf::IPropertyMap> properties;
+        properties = xpcf::getPropertyMapInstance();
+        // properties = getPropertyRootNode();
+        properties->wrapFloat("minContourSize",m_minContourSize);
     }
 
     void SolARContoursExtractorOpencv::setParameters (float minContourSize)

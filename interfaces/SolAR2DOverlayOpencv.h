@@ -18,10 +18,12 @@
 #define SOLAR2DOVERLAYOPENCV_H
 #include <vector>
 
-#include "ComponentBase.h"
+#include "api/display/I2DOverlay.h"
+
+#include "xpcf/component/ComponentBase.h"
+
 #include "SolAROpencvAPI.h"
 
-#include "api/display/I2DOverlay.h"
 #include "datastructure/Pose.h"
 
 namespace SolAR {
@@ -49,9 +51,11 @@ public:
 
     void unloadComponent () override final;
 
-    XPCF_DECLARE_UUID("cc51d685-9797-4ffd-a9dd-cec4f367fa6a");
-
 private:
+
+    CamCalibration m_intrinsic_parameters;
+    CamDistortion m_distorsion_parameters;
+
 
 };
 

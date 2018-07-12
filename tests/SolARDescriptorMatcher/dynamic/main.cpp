@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-#include "SolARModuleManagerOpencv.h"
+#include "xpcf/component/ComponentBase.h"
+
+#include "SolARModuleOpencv_traits.h"
+#include "api/image/IImageLoader.h"
+#include "api/features/IKeypointDetector.h"
+#include "api/display/IImageViewer.h"
+#include "api/display/ISideBySideOverlay.h"
+#include "api/features/IDescriptorMatcher.h"
+#include "api/features/IDescriptorsExtractor.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -27,29 +36,34 @@ namespace xpcf  = org::bcom::xpcf;
 
 int run(int argc,char** argv)
 {
-    // instantiate module manager
-    MODULES::OPENCV::SolARModuleManagerOpencv opencvModule(argv[3]);
-    if (!opencvModule.isLoaded()) // xpcf library load has failed
+
+    // load library
+    // load library
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+
+    // instantiate module managers
+
+    if(xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleOpenCV_registry.xml")!=org::bcom::xpcf::_SUCCESS)
+    {
+        LOG_ERROR("XPCF library load has failed")
+        return -1;
+    }
+    if(xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleTools_registry.xml")!=org::bcom::xpcf::_SUCCESS)
     {
         LOG_ERROR("XPCF library load has failed")
         return -1;
     }
 
-
-    std::cout<<MODULES::OPENCV::UUID::DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE<<std::endl;
-
  // declarations and creation of components
-    SRef<image::IImageLoader> imageLoader1 = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    SRef<image::IImageLoader> imageLoader2 = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    SRef<features::IKeypointDetector> keypointsDetector = opencvModule.createComponent<features::IKeypointDetector>(MODULES::OPENCV::UUID::KEYPOINT_DETECTOR);
-    SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
-    SRef<display::ISideBySideOverlay> overlay = opencvModule.createComponent<display::ISideBySideOverlay>(MODULES::OPENCV::UUID::OVERLAYSBS);
 
-    SRef<features::IDescriptorMatcher> matcher = opencvModule.createComponent<features::IDescriptorMatcher>(MODULES::OPENCV::UUID::DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE);
-    SRef<features::IDescriptorsExtractor> extractorAKAZE = opencvModule.createComponent<features::IDescriptorsExtractor>(MODULES::OPENCV::UUID::DESCRIPTORS_EXTRACTOR_AKAZE);
-  
+    auto imageLoader = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    auto keypointsDetector = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
+    auto viewer = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
+    auto overlay = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv>()->bindTo<display::ISideBySideOverlay>();
+    auto matcher = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv>()->bindTo<features::IDescriptorMatcher>();
+    auto extractorAKAZE = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv>()->bindTo<features::IDescriptorsExtractor>();
 
-    if (!imageLoader1 || !imageLoader2 || !keypointsDetector || !extractorAKAZE || !matcher || !viewer || !overlay)
+    if (!imageLoader  || !keypointsDetector || !extractorAKAZE || !matcher || !viewer || !overlay)
     {
         LOG_ERROR("One or more component creations have failed");
         return -1;
@@ -74,14 +88,14 @@ int run(int argc,char** argv)
 
  // Start
     // Load the first image
-    if (imageLoader1->loadImage(argv[1], image1) != FrameworkReturnCode::_SUCCESS)
+    if (imageLoader->loadImage(argv[1], image1) != FrameworkReturnCode::_SUCCESS)
     {
        LOG_ERROR("Cannot load image with path {}", argv[1]);
        return -1;
     }
 
     // Load the second image
-    if (imageLoader2->loadImage(argv[2], image2) != FrameworkReturnCode::_SUCCESS)
+    if (imageLoader->loadImage(argv[2], image2) != FrameworkReturnCode::_SUCCESS)
     {
        LOG_ERROR("Cannot load image with path {}", argv[2]);
        return -1;
@@ -133,13 +147,13 @@ int run(int argc,char** argv)
 
 int printHelp(){
         printf(" usage :\n");
-        printf(" exe firstImagePath secondImagePath configFilePath\n");
+        printf(" exe firstImagePath secondImagePath\n");
         return 1;
 }
 
 
 int main(int argc, char **argv){
-    if(argc == 4){
+    if(argc == 3){
         run(argc,argv);
          return 1;
     }

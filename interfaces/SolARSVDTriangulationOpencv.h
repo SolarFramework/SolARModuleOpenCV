@@ -18,7 +18,7 @@
 #ifndef SOLARSVDTRIANGULATIONOPENCV_H
 #define SOLARSVDTRIANGULATIONOPENCV_H
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 #include "api/solver/map/ITriangulator.h"
@@ -76,10 +76,6 @@ namespace SolAR {
                                          std::vector<SRef<Point3Df>>& pt3d);
 
                         void unloadComponent () override final;
-
-                            XPCF_DECLARE_UUID("85274ecd-2914-4f12-96de-37c6040633a4");
-
-                     private:
 
                     };
 

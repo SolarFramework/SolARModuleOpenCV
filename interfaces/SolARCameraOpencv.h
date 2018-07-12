@@ -18,10 +18,12 @@
 #define SOLARCAMERAOPENCV_H
 
 #include <vector>
+
+#include "api/input/devices/ICamera.h"
+
 #include "opencv2/opencv.hpp"
 
-#include "ComponentBase.h"
-#include "api/input/devices/ICamera.h"
+#include "xpcf/component/ComponentBase.h"
 
 #include "SolAROpencvAPI.h"
 
@@ -55,11 +57,11 @@ public:
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
     void unloadComponent () override final;
-    XPCF_DECLARE_UUID("5B7396F4-A804-4F3C-A0EB-FB1D56042BB4");
 
  private:
      int m_device_id;
      cv::VideoCapture m_capture;
+     bool m_is_resolution_set;
      Sizei m_resolution;
 
      CamCalibration m_intrinsic_parameters;

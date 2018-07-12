@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry>
-    <container uuid="15e1990b-86b2-445c-8194-0cbe80ede970" filepath="D:/BCOMDEVROOT/windows/bcomBuild/SolARContainerOpenCV/0.3.0/lib/x86_64/shared/debug/SolARModuleOpenCV.dll">
+    <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" path="$BCOMDEVROOT/bcomBuild/SolARModuleOpenCV/0.4.0/lib/x86_64/shared">
         <component uuid="cc51d685-9797-4ffd-a9dd-cec4f367fa6a" description="SolAR2DOverlayOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="62b8b0b5-9344-40e6-a288-e609eb3ff0f1" description="I2DOverlay"/>
@@ -33,7 +33,7 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" description="IDescriptorMatcher"/>
         </component>
-		<component uuid="904e64f6-d502-11e7-9296-cec278b6b50a" description="SolARDescriptorMatcherRadiusOpencv">
+		<component uuid="549f7873-96e4-4eae-b4a0-ae8d80664ce5" description="SolARDescriptorMatcherRadiusOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" description="IDescriptorMatcher"/>
         </component>
@@ -69,17 +69,37 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="45dd370a-0eab-4a7f-93d0-43453b4c7517" description="Transform2DFinder"/>
         </component>
+        <component uuid="b5fab395-2184-4123-b0d5-4af74d0a2d79" description="SolARHomographyMatrixDecomposerOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="0404e8b9-b824-4852-a34d-6eafa7563918" description="I2DTO3DTransformDecomposer"/>
+        </component>        
         <component uuid="fd7fb607-144f-418c-bcf2-f7cf71532c22" description="SolARImageConvertorOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="9c982719-6cb4-4831-aa88-9e01afacbd16" description="IImageConvertor"/>
         </component>
-        <component uuid="fa356d0c-0a53-4722-a7f3-bb92b934d8db" description="SolARImageFilterOpencv">
+        <component uuid="e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2" description="SolARImageFilterBinaryOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
         </component>
-               <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" description="SolARImageLoaderOpencv">
+        <component uuid="901e7a07-5013-4907-be41-0259fca3726c" description="SolARImageFilterAdaptiveBinaryOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="6fcdaa8d-6ea9-4c3f-97b0-46cd11b67a9b" description="IImageLoader"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        </component>
+        <component uuid="deb083aa-69fb-409a-af94-151d476de922" description="SolARImageFilterBlurOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        </component>
+        <component uuid="7ac9d1b8-afda-4c99-b8df-92e71015a3be" description="SolARImageFilterDilateOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        </component>
+        <component uuid="58b09819-64bc-4a80-b6a2-9fe7b179f3fc" description="SolARImageFilterErodeOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        </component>                
+        <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" description="SolARImageLoaderOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" description="IImageLoader"/>
         </component>
         <component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" description="SolARImageViewerOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
@@ -105,11 +125,14 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="4a7d5c34-cd6e-11e7-abc4-cec278b6b50a" description="IPerspectiveController"/>
         </component>
-
+        <component uuid="a38edf79-f0dc-45ca-92fc-2b336fceedf9" description="SolARPoseEstimationPnpEPFL">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
+                <interface uuid="77281cda-47c2-4bb7-bde6-5b0d02e75dae" description="I3DTransformFinder"/>
+        </component>		
         <component uuid="0753ade1-7932-4e29-a71c-66155e309a53" description="SolARPoseEstimationPnpOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="77281cda-47c2-4bb7-bde6-5b0d02e75dae" description="I3DTransformFinder"/>
-        </component>
+        </component>		
 		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9" description="SolARSideBySideOverlayOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="a801354a-3e00-467c-b390-48c76fa8c53a" description="ISideBySideOverlay"/>
@@ -122,5 +145,5 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="3a01b0e9-9a76-43f5-97b3-85bb6979b953" description="ITriangulator"/>
         </component>
-    </container>
+    </module>
 </xpcf-registry>

@@ -4,11 +4,15 @@ cmake_minimum_required(VERSION 3.7.2)
 set (VERSION_NUMBER "0.4.0")
 project("SolARModuleOpenCV")
 set (SOURCES 
-src/SolARModuleOpencv.cpp
+    src/SolARModuleOpencv.cpp
     src/SolARKeypointDetectorOpencv.cpp
     src/SolARImageLoaderOpencv.cpp
     src/SolARImageConvertorOpencv.cpp
-    src/SolARImageFilterOpencv.cpp
+    src/SolARImageFilterBinaryOpencv.cpp
+	src/SolARImageFilterAdaptiveBinaryOpencv.cpp
+	src/SolARImageFilterBlurOpencv.cpp
+	src/SolARImageFilterDilateOpencv.cpp
+	src/SolARImageFilterErodeOpencv.cpp
     src/SolARImageViewerOpencv.cpp
     src/SolARCameraOpencv.cpp
     src/SolAROpenCVHelper.cpp
@@ -28,7 +32,6 @@ src/SolARModuleOpencv.cpp
     src/SolARSideBySideOverlayOpencv.cpp
     src/SolAR2DOverlayOpencv.cpp
     src/SolAR3DOverlayOpencv.cpp
-    src/SolARModuleManagerOpencv.cpp
     src/SolARHomographyEstimationOpencv.cpp
     src/SolARPoseEstimationPnpEPFL.cpp
     src/SolARPoseEstimationPnpOpencv.cpp
@@ -38,7 +41,6 @@ src/SolARModuleOpencv.cpp
     src/AKAZE2/fed.cpp
     src/AKAZE2/nldiffusion_functions.cpp
     src/SolARSVDTriangulationOpencv.cpp
-    src/SolARFundamentalMatrixDecompositionValidationOpencv.cpp
     src/SolARHomographyMatrixDecompositionOpencv.cpp
     src/SolARFundamentalMatrixEstimationOpencv.cpp
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
@@ -48,11 +50,14 @@ set (HEADERS
 		interfaces/SolARCameraOpencv.h
 		interfaces/SolARImageConvertorOpencv.h
 		interfaces/SolARImageLoaderOpencv.h
-		interfaces/SolARImageFilterOpencv.h
 		interfaces/SolARImageViewerOpencv.h
 		interfaces/SolARKeypointDetectorOpencv.h
 		interfaces/SolAROpenCVHelper.h
-		interfaces/SolARImageFilterOpencv.h
+		interfaces/SolARImageFilterBinaryOpencv.h
+		interfaces/SolARImageFilterAdaptiveBinaryOpencv.h
+		interfaces/SolARImageFilterBlurOpencv.h
+		interfaces/SolARImageFilterDilateOpencv.h
+		interfaces/SolARImageFilterErodeOpencv.h
 		interfaces/SolAROpencvAPI.h
 		interfaces/SolARCameraCalibrationOpencv.h
 		interfaces/SolARMarker2DNaturalImageOpencv.h
@@ -68,7 +73,6 @@ set (HEADERS
 		interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h
 		interfaces/SolARDescriptorMatcherKNNOpencv.h
 		interfaces/SolARDescriptorMatcherRadiusOpencv.h
-		interfaces/SolARFundamentalMatrixDecompositionValidationOpencv.h
 		interfaces/SolARHomographyMatrixDecompositionOpencv.h
 		interfaces/SolARFundamentalMatrixEstimationOpencv.h
 		interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h
@@ -78,7 +82,6 @@ set (HEADERS
 		interfaces/SolARSideBySideOverlayOpencv.h
 		interfaces/SolAR3DOverlayOpencv.h
 		interfaces/SolAR2DOverlayOpencv.h
-		interfaces/SolARModuleManagerOpencv.h
 		interfaces/SolARSVDTriangulationOpencv.h
 		src/AKAZE2/AKAZEConfig.h
 		src/AKAZE2/AKAZEFeatures.h
@@ -87,6 +90,9 @@ set (HEADERS
 		src/AKAZE2/TEvolution.h
 		src/AKAZE2/utils.h
 )
+
+install (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xpcf_SolARModuleOpenCV_registry.xml" DESTINATION $ENV{BCOMDEVROOT}/.xpcf/SolAR/	)
+
 ##################################################
 
 # various macros

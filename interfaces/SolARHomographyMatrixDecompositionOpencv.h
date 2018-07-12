@@ -19,7 +19,8 @@
 #include <vector>
 
 #include "api/solver/pose/I2Dto3DTransformDecomposer.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <vector>
 #include "opencv2/core.hpp"
@@ -38,7 +39,6 @@ namespace SolAR {
                                        const CamDistortion& dist,
                                        std::vector<Transform3Df>& decomposedPoses) override;
                         void unloadComponent () override final;
-                        XPCF_DECLARE_UUID("b5fab395-2184-4123-b0d5-4af74d0a2d79");
                     private:
                 };
         }

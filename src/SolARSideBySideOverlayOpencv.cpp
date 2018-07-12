@@ -24,26 +24,22 @@
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
 
-#include "ComponentFactory.h"
-
 
 #include <map>
 #include <random>
 
 namespace xpcf  = org::bcom::xpcf;
 
-
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARSideBySideOverlayOpencv::SolARSideBySideOverlayOpencv()
+SolARSideBySideOverlayOpencv::SolARSideBySideOverlayOpencv():ComponentBase(xpcf::toUUID<SolARSideBySideOverlayOpencv>())
 {
-    setUUID(SolARSideBySideOverlayOpencv::UUID);
-    addInterface<api::display::ISideBySideOverlay>(this,api::display::ISideBySideOverlay::UUID, "interface api::display::ISideBySideOverlay");
+    addInterface<api::display::ISideBySideOverlay>(this);
 
    LOG_DEBUG(" SolARSideBySideOverlayOpencv constructor");
 

@@ -2,7 +2,8 @@
 #define SOLARGEOMETRICMATCHESFILTEROPENCV_H
 
 #include "api/features/IMatchesFilter.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 #include "opencv2/opencv.hpp"
@@ -36,8 +37,6 @@ namespace SolAR {
                             const std::vector<SRef<Keypoint>>&inputKeyPointsA,
                             const std::vector<SRef<Keypoint>>&inputKeyPointsB);
                 void unloadComponent () override final;
-
-                    XPCF_DECLARE_UUID("3731691e-2c4c-4d37-a2ce-06d1918f8d41");
 
              private:
 

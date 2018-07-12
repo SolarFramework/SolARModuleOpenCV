@@ -19,7 +19,8 @@
 #include <vector>
 
 #include "api/solver/pose/I2DTransformFinder.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <vector>
 #include "opencv2/core.hpp"
@@ -40,9 +41,6 @@ public:
                   Transform2Df & homography) override;
 
     void unloadComponent () override final;
-
-
-    XPCF_DECLARE_UUID("fb9dac20-2a44-44b2-aa42-2871eec31427");
 
 private:
     bool isHValid(const Transform2Df & H);

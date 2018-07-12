@@ -18,13 +18,13 @@
 #define SOLAR3DOVERLAYOPENCV_H
 #include <vector>
 
-#include "opencv2/core.hpp"
-
 #include "api/display/I3DOverlay.h"
+
+#include "opencv2/core.hpp"
 
 #include "SolAROpencvAPI.h"
 
-#include "ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 
 namespace SolAR {
 using namespace datastructure;
@@ -42,8 +42,6 @@ public:
      void setCameraParameters(const CamCalibration & intrinsic_parameters, const CamDistortion & distorsion_parameters);
 
     void unloadComponent () override final;
-
-    XPCF_DECLARE_UUID("2db01f59-9793-4cd5-8e13-b25d0ed5735b");
 
 private:
 

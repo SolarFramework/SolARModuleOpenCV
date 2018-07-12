@@ -21,7 +21,9 @@
 
 #include "SolAROpenCVHelper.h"
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv)
 
 namespace SolAR {
 using namespace datastructure;
@@ -29,10 +31,9 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorMatcherKNNOpencv::SolARDescriptorMatcherKNNOpencv()
+SolARDescriptorMatcherKNNOpencv::SolARDescriptorMatcherKNNOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorMatcherKNNOpencv>())
 {
-    setUUID(SolARDescriptorMatcherKNNOpencv::UUID);
-    addInterface<IDescriptorMatcher>(this,IDescriptorMatcher::UUID, "interface SolARDescriptorMatcherKNNOpencv");
+    addInterface<IDescriptorMatcher>(this);
     LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv constructor")
 }
 
@@ -110,7 +111,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(SRef<Descripto
 }
 
 DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(
-        sptrnms::shared_ptr<DescriptorBuffer>& desc1, sptrnms::shared_ptr<DescriptorBuffer>& desc2, std::vector<DescriptorMatch>& matches){
+       SRef<DescriptorBuffer>& desc1,SRef<DescriptorBuffer>& desc2, std::vector<DescriptorMatch>& matches){
  
     // check if the descriptors type match
     if(desc1->getDescriptorType() != desc2->getDescriptorType()){

@@ -18,10 +18,11 @@
 #define SOLARKEYPOINTDETECTOROPENCV_H
 
 #include "api/features/IKeypointDetector.h"
+
 // Definition of SolARKeypointDetectorOpencv Class //
 // part of SolAR namespace //
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
@@ -45,9 +46,6 @@ public:
     KeypointDetectorType  getType();
  
     void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints);
-
-    XPCF_DECLARE_UUID("e81c7e4e-7da6-476a-8eba-078b43071272");
-
 
 private:
 	int m_id;

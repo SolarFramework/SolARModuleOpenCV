@@ -24,22 +24,20 @@
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
 
-
-#include "ComponentFactory.h"
-
 #include <map>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv()
+SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv():ComponentBase(xpcf::toUUID<SolARHomographyEstimationOpencv>())
 {
-    setUUID(SolARHomographyEstimationOpencv::UUID);
-    addInterface<api::solver::pose::I2DTransformFinder>(this,api::solver::pose::I2DTransformFinder::UUID, "interface api::solver::pose::IHomographyEstimation");
+    addInterface<api::solver::pose::I2DTransformFinder>(this);
     LOG_DEBUG("SolARHomographyEstimationOpencv constructor")
 }
 

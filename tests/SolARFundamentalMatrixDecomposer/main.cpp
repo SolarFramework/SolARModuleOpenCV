@@ -23,8 +23,8 @@
 #include "opencv2/features2d.hpp"
 #include "opencv2/highgui.hpp"
 
+#include "SolARHomographyEstimationOpencv.h"
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
-#include "SolARFundamentalMatrixEstimationOpencv.h"
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
@@ -57,7 +57,6 @@ void fillDist(CamDistortion&dist){
 
 void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2Df>>&pt2d){
 
-    cv::namedWindow("toto debug",0);
     std::ifstream ox(path_file);
     float pt[2];
   //  Point2Df point_temp;
@@ -69,21 +68,17 @@ void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2
        v[0]  = std::stof(dummy);
        ox>>dummy;
        v[1]= std::stof(dummy);
-       pt2d[i]  = sptrnms::make_shared<Point2Df>(v[0], v[1]);
+       pt2d[i]  = xpcf::utils::make_shared<Point2Df>(v[0], v[1]);
     }
   ox.close();
 }
 int run(std::string& path_points1,std::string& path_points2, std::string& outPosesFilePath) {
 	
-	cv::namedWindow("main window",0);
  // declarations
-    xpcf::utils::uuids::string_generator              gen;
-    SRef<solver::pose::I2DTransformFinder>            fundamentalFinder;
-    SRef<solver::pose::I2DTO3DTransformDecomposer>    fundamentalDecomposer;
     Transform2Df                                      F;
     CamCalibration                                    K;
     CamDistortion                                     dist;
-    std::vector<Transform3Df>                           poses;
+    std::vector<Transform3Df>                         poses;
     std::vector<SRef<Point2Df>>                       points_view1;
     std::vector<SRef<Point2Df>>                       points_view2;
 
@@ -94,8 +89,8 @@ int run(std::string& path_points1,std::string& path_points2, std::string& outPos
     char escape_key = 27;
 
  // component creation
-    xpcf::ComponentFactory::createComponent<SolARFundamentalMatrixEstimationOpencv>(gen(solver::pose::I2DTransformFinder::UUID ), fundamentalFinder);
-    xpcf::ComponentFactory::createComponent<SolARSVDFundamentalMatrixDecomposerOpencv>(gen(solver::pose::I2DTO3DTransformDecomposer::UUID ), fundamentalDecomposer);
+    auto fundamentalFinder =xpcf::ComponentFactory::createInstance<SolARHomographyEstimationOpencv>()->bindTo<solver::pose::I2DTransformFinder>();
+    auto fundamentalDecomposer =xpcf::ComponentFactory::createInstance<SolARSVDFundamentalMatrixDecomposerOpencv>()->bindTo<api::solver::pose::I2DTO3DTransformDecomposer>();
 
 
    const int points_no = 6953;
@@ -123,7 +118,7 @@ int run(std::string& path_points1,std::string& path_points2, std::string& outPos
 
 int printHelp(){
         printf(" usage :\n");
-        printf(" exe firstImagePath secondImagePath outPosesFilePath\n");
+        printf(" exe firstImagePointsPath secondImagePointsPath outPosesFilePath\n");
         return 1;
 }
 
@@ -133,11 +128,11 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	std::string firstImagePath = std::string(argv[1]);
-	std::string secondImagePath = std::string(argv[2]);
+    std::string firstImagePointsPath = std::string(argv[1]);
+    std::string secondImagePointsPath = std::string(argv[2]);
 	std::string outPosesFilePath = std::string(argv[3]);
 
-	run(firstImagePath,secondImagePath,outPosesFilePath);
+    run(firstImagePointsPath,secondImagePointsPath,outPosesFilePath);
     return 0;
 }
 

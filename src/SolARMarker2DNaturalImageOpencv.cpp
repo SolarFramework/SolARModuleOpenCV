@@ -16,22 +16,22 @@
 
 #include <boost/filesystem.hpp>
 #include "SolARMarker2DNaturalImageOpencv.h"
-#include "ComponentFactory.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/highgui.hpp"
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARMarker2DNaturalImageOpencv::SolARMarker2DNaturalImageOpencv()
+    SolARMarker2DNaturalImageOpencv::SolARMarker2DNaturalImageOpencv():ComponentBase(xpcf::toUUID<SolARMarker2DNaturalImageOpencv>())
     {        
-        setUUID(SolARMarker2DNaturalImageOpencv::UUID);
-        addInterface<api::input::files::IMarker2DNaturalImage>(this,api::input::files::IMarker2DNaturalImage::UUID, "interface api::input::files::IMarker2DNaturalImage");
-    LOG_DEBUG("SolARMarker2DNaturalImageOpencv constructor")
+        addInterface<api::input::files::IMarker2DNaturalImage>(this);
+        LOG_DEBUG("SolARMarker2DNaturalImageOpencv constructor")
         m_size.width = 0;
         m_size.height = 0;
     }

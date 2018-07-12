@@ -24,22 +24,21 @@
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
 
-#include "ComponentFactory.h"
-
 
 #include <map>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv()
+SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ComponentBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
-    setUUID(SolARPoseEstimationPnpOpencv::UUID);
-    addInterface<api::solver::pose::I3DTransformFinder>(this,api::solver::pose::I3DTransformFinder::UUID, "interface api::solver::pose::I3DTransformFinder");
+    addInterface<api::solver::pose::I3DTransformFinder>(this);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);

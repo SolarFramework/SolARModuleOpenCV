@@ -23,7 +23,7 @@
 #include "api/solver/pose/I3DTransformFinder.h"
 
 #include "SolAROpencvAPI.h"
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 
 namespace SolAR {
     using namespace datastructure;
@@ -97,8 +97,6 @@ namespace SolAR {
 
             void unloadComponent () override final;
 
-
-            XPCF_DECLARE_UUID("a38edf79-f0dc-45ca-92fc-2b336fceedf9");
 
         private:
             cv::Mat m_camMatrix;

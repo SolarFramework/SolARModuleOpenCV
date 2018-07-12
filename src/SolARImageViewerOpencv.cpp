@@ -24,7 +24,7 @@
 #include <stdexcept>
 #include <vector>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageViewerOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageViewerOpencv)
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -47,10 +47,9 @@ inline int deduceOpenCVType(SRef<Image> img)
     return solar2cvTypeConvertMap.at(std::forward_as_tuple(img->getNbBitsPerComponent(),1,img->getNbChannels()));
 }
 
-SolARImageViewerOpencv::SolARImageViewerOpencv()
+SolARImageViewerOpencv::SolARImageViewerOpencv():ComponentBase(xpcf::toUUID<SolARImageViewerOpencv>())
 {
-    setUUID(SolARImageViewerOpencv::UUID);
-    addInterface<api::display::IImageViewer>(this,api::display::IImageViewer::UUID, "interface api::display::IImageViewer");
+    addInterface<api::display::IImageViewer>(this);
     LOG_DEBUG(" SolARImageViewerOpencv constructor")
 }
 

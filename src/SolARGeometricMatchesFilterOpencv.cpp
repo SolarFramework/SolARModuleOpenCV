@@ -1,21 +1,22 @@
 #include "SolARGeometricMatchesFilterOpencv.h"
-#include "ComponentFactory.h"
 #include "SolAROpenCVHelper.h"
 #include <set>
 
 
 using namespace org::bcom::xpcf;
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv()
-{
-    setUUID(SolARGeometricMatchesFilterOpencv::UUID);
-    addInterface<api::features::IMatchesFilter>(this,api::features::IMatchesFilter::UUID, "interface GeometricMatchesFilterOpencv");
+SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv():ComponentBase(xpcf::toUUID<SolARGeometricMatchesFilterOpencv>())
+{ 
+    addInterface<api::features::IMatchesFilter>(this);
+    LOG_DEBUG("SolARGeometricMatchesFilterOpencv constructor")
 }
 
 
