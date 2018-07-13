@@ -79,6 +79,9 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageFilterBinaryOpencv.h \
     interfaces/SolARImageFilterBlurOpencv.h \
     interfaces/SolARImageFilterDilateOpencv.h \
+    interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
+    interfaces/SolARMapFilterOpencv.h \
+    interfaces/SolARMapperOpencv.h \
     interfaces/SolARImageFilterErodeOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
@@ -120,6 +123,9 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARImageFilterAdaptiveBinaryOpencv.cpp \
     src/SolARImageFilterBlurOpencv.cpp \
     src/SolARImageFilterDilateOpencv.cpp \
+    src/SolAR2D3DcorrespondencesFinderOpencv.cpp \
+    src/SolARMapFilterOpencv.cpp \
+    src/SolARMapperOpencv.cpp \
     src/SolARImageFilterErodeOpencv.cpp
 
 unix {

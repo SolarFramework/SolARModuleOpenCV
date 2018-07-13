@@ -49,6 +49,9 @@
 #include "SolARSideBySideOverlayOpencv.h"
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
 #include "SolARSVDTriangulationOpencv.h"
+#include "SolAR2D3DcorrespondencesFinderOpencv.h"
+#include "SolARMapFilterOpencv.h"
+#include "SolARMapperOpencv.h"
 
 namespace xpcf=org::bcom::xpcf;
 
@@ -191,6 +194,18 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv>(componentUUID,interfaceRef);
     }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv>(componentUUID,interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMapperOpencv>(componentUUID,interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMapFilterOpencv>(componentUUID,interfaceRef);
+    }
 
     return errCode;
 }
@@ -230,4 +245,6 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapperOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapFilterOpencv)
 XPCF_END_COMPONENTS_DECLARATION
