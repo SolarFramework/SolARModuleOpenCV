@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include <iostream>
+
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/core.hpp"
@@ -26,25 +26,28 @@
 #include "opencv2/calib3d/calib3d.hpp"
 
 
+#include "xpcf/component/ComponentFactory.h"
+
 #include <map>
 
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv);
+
 namespace xpcf  = org::bcom::xpcf;
-
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv)
-
 namespace SolAR {
 using namespace datastructure;
     namespace MODULES {
         namespace OPENCV {
-            SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOpencv():ComponentBase(xpcf::toUUID<SolARSVDFundamentalMatrixDecomposerOpencv>())
-            {
+            SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOpencv():ComponentBase(xpcf::toUUID<SolARSVDFundamentalMatrixDecomposerOpencv>()){
                 addInterface<api::solver::pose::I2DTO3DTransformDecomposer>(this);
                 LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
             }
             SolARSVDFundamentalMatrixDecomposerOpencv::~SolARSVDFundamentalMatrixDecomposerOpencv(){
             }
 
-            void SolARSVDFundamentalMatrixDecomposerOpencv::takeSVDOfE(cv::Mat_<double>& E,cv::Mat& svd_u, cv::Mat& svd_vt,cv::Mat& svd_w) {
+            void SolARSVDFundamentalMatrixDecomposerOpencv::takeSVDOfE(cv::Mat_<double>& E,
+                                                                       cv::Mat& svd_u,
+                                                                       cv::Mat& svd_vt,
+                                                                       cv::Mat& svd_w) {
                 //Using OpenCV's SVD
                 cv::SVD svd(E, cv::SVD::MODIFY_A);
                 svd_u = svd.u;
@@ -52,8 +55,71 @@ using namespace datastructure;
                 svd_w = svd.w;
             }
 
+            void SolARSVDFundamentalMatrixDecomposerOpencv::fillposes(const cv::Mat_<double>& R1,
+                                                                      const cv::Mat_<double>& R2,
+                                                                      const cv::Mat_<double>& t1,
+                                                                      const cv::Mat_<double>& t2,
+                                                                      std::vector<Transform3Df>&decomposedPoses){
+                    decomposedPoses.resize(4);
+
+                    decomposedPoses[0](0,0) = R1(0,0);decomposedPoses[0](0,1) = R1(0,1);decomposedPoses[0](0,2) = R1(0,2);decomposedPoses[0](0,3) = t1(0);
+                    decomposedPoses[0](1,0) = R1(1,0);decomposedPoses[0](1,1) = R1(1,1);decomposedPoses[0](1,2) = R1(1,2);decomposedPoses[0](1,3) = t1(1);
+                    decomposedPoses[0](2,0) = R1(2,0);decomposedPoses[0](2,1) = R1(2,1);decomposedPoses[0](2,2) = R1(2,2);decomposedPoses[0](2,3) = t1(2);
+                    decomposedPoses[0](3,0) = 0.0    ;decomposedPoses[0](3,1) = 0.0    ;decomposedPoses[0](3,2) = 0.0    ;decomposedPoses[0](3,3) = 1.0;
+
+                    decomposedPoses[1](0,0) = R1(0,0);decomposedPoses[1](0,1) = R1(0,1);decomposedPoses[1](0,2) = R1(0,2);decomposedPoses[1](0,3) = t2(0);
+                    decomposedPoses[1](1,0) = R1(1,0);decomposedPoses[1](1,1) = R1(1,1);decomposedPoses[1](1,2) = R1(1,2);decomposedPoses[1](1,3) = t2(1);
+                    decomposedPoses[1](2,0) = R1(2,0);decomposedPoses[1](2,1) = R1(2,1);decomposedPoses[1](2,2) = R1(2,2);decomposedPoses[1](2,3) = t2(2);
+                    decomposedPoses[1](3,0) = 0.0    ;decomposedPoses[1](3,1) = 0.0    ;decomposedPoses[0](3,2) = 0.0    ;decomposedPoses[1](3,3) = 1.0;
+
+                    decomposedPoses[2](0,0) = R2(0,0);decomposedPoses[2](0,1) = R2(0,1);decomposedPoses[2](0,2) = R2(0,2);decomposedPoses[2](0,3) = t1(0);
+                    decomposedPoses[2](1,0) = R2(1,0);decomposedPoses[2](1,1) = R2(1,1);decomposedPoses[2](1,2) = R2(1,2);decomposedPoses[2](1,3) = t1(1);
+                    decomposedPoses[2](2,0) = R2(2,0);decomposedPoses[2](2,1) = R2(2,1);decomposedPoses[2](2,2) = R2(2,2);decomposedPoses[2](2,3) = t1(2);
+                    decomposedPoses[2](3,0) = 0.0    ;decomposedPoses[2](3,1) = 0.0    ;decomposedPoses[2](3,2) = 0.0    ;decomposedPoses[2](3,3) = 1.0;
+
+                    decomposedPoses[3](0,0) = R2(0,0);decomposedPoses[3](0,1) = R2(0,1);decomposedPoses[3](0,2) = R2(0,2);decomposedPoses[3](0,3) = t2(0);
+                    decomposedPoses[3](1,0) = R2(1,0);decomposedPoses[3](1,1) = R2(1,1);decomposedPoses[3](1,2) = R2(1,2);decomposedPoses[3](1,3) = t2(1);
+                    decomposedPoses[3](2,0) = R2(2,0);decomposedPoses[3](2,1) = R2(2,1);decomposedPoses[3](2,2) = R2(2,2);decomposedPoses[3](2,3) = t2(2);
+                    decomposedPoses[3](3,0) = 0.0    ;decomposedPoses[3](3,1) = 0.0    ;decomposedPoses[3](3,2) = 0.0    ;decomposedPoses[3](3,3) = 1.0;
+
+            }
+
+            bool SolARSVDFundamentalMatrixDecomposerOpencv::decomposeInternal(cv::Mat_<double>& E,
+                                                                              cv::Mat_<double>& R1,
+                                                                              cv::Mat_<double>& R2,
+                                                                              cv::Mat_<double>& t1,
+                                                                              cv::Mat_<double>& t2){
+
+
+                    cv::Mat svd_u, svd_vt, svd_w;
+                   takeSVDOfE(E, svd_u, svd_vt, svd_w);
+
+                    //check if first and second singular values are the same (as they should be)
+                    double singular_values_ratio = fabsf(svd_w.at<double>(0) / svd_w.at<double>(1));
+                    if (singular_values_ratio>1.0) singular_values_ratio = 1.0 / singular_values_ratio; // flip ratio to keep it [0,1]
+                    if (singular_values_ratio < 0.7) {
+                        std::cout << "singular values are too far apart\n";
+                        return false;
+                    }
+
+                    cv::Matx33d W(0, -1, 0,
+                        1, 0, 0,
+                        0, 0, 1);
+                    cv::Matx33d Wt(0, 1, 0,
+                        -1, 0, 0,
+                        0, 0, 1);
+
+                     std::cout<<" svd_U size: "<<svd_u.size()<<std::endl;
+                     std::cout<<"   sv cols 2: "<<svd_u.col(2)<<std::endl;
+
+                    R1 = svd_u * cv::Mat(W) * svd_vt; //H
+                    R2 = svd_u * cv::Mat(Wt) * svd_vt; //
+                    t1 = svd_u.col(2); //u3
+                    t2 = -svd_u.col(2); //u3
+                    return true;
+            }
             bool SolARSVDFundamentalMatrixDecomposerOpencv::decompose(const Transform2Df&F,const CamCalibration&K, const CamDistortion& dist, std::vector<Transform3Df>& decomposedPoses){
-               //Using HZ E decomposition
+                //Using HZ E decomposition
                    cv::Mat svd_u, svd_vt, svd_w;
                    cv::Mat _K(3,3,CV_64FC1);
                    cv::Mat _F(3,3,CV_64FC1);
@@ -61,77 +127,28 @@ using namespace datastructure;
                        for(int j = 0; j < 3; ++j){
                            double e0 = K(i,j);
                            double e1 = F(i,j);
-                            _K.at<double>(i,j) =e0;//double(K(i,j));
-                            _F.at<double>(i,j) =e1;// double(F(i,j));
-                       }
+                           _K.at<double>(i,j) =e0;//double(K(i,j));
+                           _F.at<double>(i,j) =e1;// double(F(i,j));                       }
+                        }
                    }
-                  std::cout<<"inside decompose: "<<std::endl;
-                  std::cout<<"Kcv: "<<std::endl;
-                  std::cout<<_K<<std::endl;
-                  std::cout<<"Fcv: "<<std::endl;
-                  std::cout<<_F<<std::endl;
+
                   cv::Mat_<double> E = _K.t() * _F * _K; //
-                  std::cout<<"Ecv: "<<std::endl;
-                  std::cout<<E<<std::endl;
+                  cv::Mat_<double> R1(3, 3);
+                  cv::Mat_<double> R2(3, 3);
+                  cv::Mat_<double> t1(1, 3);
+                  cv::Mat_<double> t2(1, 3);
 
-                  takeSVDOfE(E, svd_u, svd_vt, svd_w);
-                  std::cout<<"take svd done.."<<std::endl;
-                   //check if first and second singular values are the same (as they should be)
-                   double singular_values_ratio = fabsf(svd_w.at<double>(0) / svd_w.at<double>(1));
-                   if (singular_values_ratio>1.0) singular_values_ratio = 1.0 / singular_values_ratio; // flip ratio to keep it [0,1]
-                   if (singular_values_ratio < 0.7) {
-                       std::cout << "singular values are too far apart\n";
-                       return false;
-                   }
-
-                   cv::Matx33d W(0, -1, 0,
-                                 1, 0, 0,
-                                 0, 0, 1);
-                   cv::Matx33d Wt(0, 1, 0,
-                                 -1, 0, 0,
-                                  0, 0, 1);
-
-                   cv::Mat_<double> R1(3, 3);
-                   cv::Mat_<double> R2(3, 3);
-
-                   cv::Mat_<double> t1(1, 3);
-                   cv::Mat_<double> t2(1, 3);
-
-                   R1 = svd_u * cv::Mat(W) * svd_vt; //HZ 9.19
-                   R2 = svd_u * cv::Mat(Wt) * svd_vt; //HZ 9.19
-                   t1 = svd_u.col(2); //u3
-                   t2 = -svd_u.col(2); //u3
-
-
-                   Transform3Df pose_temp[4];
-
-                                     for(int i =0; i <3; ++i){
-                                         for(int j = 0; j < 3; ++j){
-                                             pose_temp[0](i,j) = R1(i,j);
-                                             pose_temp[1](i,j) = R1(i,j);
-                                             pose_temp[2](i,j) = R2(i,j);
-                                             pose_temp[3](i,j) = R2(i,j);
-
-                                        }
-                                     }
-                                     for(int i = 0; i < 3; ++i){
-                                         pose_temp[0](i,3) = t1(i);
-                                         pose_temp[1](i,3) = t2(i);
-                                         pose_temp[2](i,3) = t1(i);
-                                         pose_temp[3](i,3) = t2(i);
-
-
-                                     }
-
-                                     for(int p = 0; p < 4; ++p){
-                                         pose_temp[p](3,0) = 0.0;
-                                         pose_temp[p](3,1) = 0.0;
-                                         pose_temp[p](3,2) = 0.0;
-                                         pose_temp[p](3,3) = 1.0;
-
-                                         decomposedPoses.push_back(pose_temp[p]);
-                                     }
-				   return true;
+                  if(!decomposeInternal(E,R1,R2,t1,t2)){
+                      return false;
+                  }
+                  if(cv::determinant(R1)+ 1.0 < 1e-09){
+                      E = -E;
+                      decomposeInternal(E,R1,R2,t1,t2);
+                      fillposes(R1,R2, t1,t2, decomposedPoses);
+                      return true;
+                  }
+                  fillposes(R1,R2,t1,t2,decomposedPoses);
+                  return true;
             }
         }
     }
