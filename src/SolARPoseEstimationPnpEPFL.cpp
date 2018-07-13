@@ -15,6 +15,7 @@
  */
 
 #include <iostream>
+
 #include "SolARPoseEstimationPnpEPFL.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/core.hpp"
@@ -25,11 +26,14 @@
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
 
+#include "xpcf/component/ComponentFactory.h"
+
+
 #include <map>
 
-namespace xpcf  = org::bcom::xpcf;
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL);
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL)
+namespace xpcf  = org::bcom::xpcf;
 
 namespace SolAR {
 using namespace datastructure;
@@ -49,15 +53,16 @@ SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL():ComponentBase(xpcf::toU
 SolARPoseEstimationPnpEPFL::~SolARPoseEstimationPnpEPFL(){
 
 }
-
 FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<Point2Df>> & imagePoints,
                                                          const std::vector<SRef<Point3Df>> & worldPoints,
-                                                         Transform3Df & pose) {
-    SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(20);
+                                                         std::vector<SRef<Point2Df>>&imagePoints_inlier,
+                                                         std::vector<SRef<Point3Df>>&worldPoints_inlier,
+                                                        Transform3Df & pose) {
+
+    SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(worldPoints.size());
     Eigen::Matrix3f R;
     Eigen::Vector3f T;
     SolARPoseEstimationPnpEPFL::reset_correspondences();
-
     for (int i = 0; i < worldPoints.size(); i++) {
          double Xw, Yw, Zw, u, v;
          Xw = worldPoints[i]->getX();
@@ -74,18 +79,20 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<
 
      for (int i = 0; i < 3; ++i) {
          for (int j = 0; j < 3; ++j) {
-            R(i, j) = R_est[i][j];
             pose(i,j) = R_est[i][j];
           }
+         std::cout<<std::endl;
       }
+     std::cout<<std::endl;
       for (int i = 0; i < 3; ++i) {
-          T(i) = t_est[i];
           pose(i,3) = t_est[i];
       }
-    pose(3,0) = 0.0;
-       pose(3,1) = 0.0;
-          pose(3,2) = 0.0;
-             pose(3,3) = 1.0;
+
+      pose(3,0)  = 0.0;
+      pose(3,1)  = 0.0;
+      pose(3,2)  = 0.0;
+      pose(3,3)  = 1.0;
+
     return FrameworkReturnCode::_SUCCESS;
 }
 

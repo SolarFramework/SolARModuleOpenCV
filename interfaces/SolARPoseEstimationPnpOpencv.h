@@ -19,6 +19,7 @@
 #include <vector>
 #include "opencv2/core.hpp"
 #include "api/solver/pose/I3DTransformFinder.h"
+#include "datastructure/Image.h"
 #include "SolAROpencvAPI.h"
 #include "xpcf/component/ComponentBase.h"
 
@@ -44,7 +45,11 @@ namespace SolAR {
                 /// @param[out] Camera pose in the world coordinates system of the view_1.
                 FrameworkReturnCode estimate(const std::vector<SRef<Point2Df>> & imagePoints,
                                          const std::vector<SRef<Point3Df>> & worldPoints,
+                                         std::vector<SRef<Point2Df>>&imagePoints_inlier,
+                                         std::vector<SRef<Point3Df>>&worldPoints_inlier,
                                          Transform3Df & pose) override;
+
+
                 /// @brief this method is used to set intrinsic parameters and distorsion of the camera
                 /// @param[in] Camera calibration matrix parameters.
                 /// @param[in] Camera distorsion parameters.
@@ -52,6 +57,7 @@ namespace SolAR {
                                          const CamDistortion & distorsionParams)  override;
 
                 void unloadComponent () override final;
+
 
             private:
                 cv::Mat m_camMatrix;
