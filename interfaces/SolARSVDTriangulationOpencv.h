@@ -43,7 +43,12 @@ namespace SolAR {
                         SolARSVDTriangulationOpencv();
                         ///@brief SolARSVDTriangulationOpencv destructor.
                        ~SolARSVDTriangulationOpencv();
-                        /// @brief Triangulates two homogeneous 2d_points {u,v,1.0} in an iterative way based on SVD linear system solving.
+
+                        /// @brief Convert  the point cloud to opencv structure for CV processing.
+                        /// @param[in] Set of triangulated 3d_points.
+                        /// @return Set of triangulated 3d_points expressed with opencv data structure.
+                        double getReprojectionErrorCloud(const std::vector<SRef<CloudPoint>>& original);
+                       /// @brief Triangulates two homogeneous 2d_points {u,v,1.0} in an iterative way based on SVD linear system solving.
                         /// @param[in] First homogeneous 2d_point.
                         /// @param[in] Second homogeneous 2d_point.
                         /// @return Triangulated homogeneous 3d_point.
@@ -59,6 +64,7 @@ namespace SolAR {
                                                                       cv::Matx34d&P,
                                                                       cv::Point3d&u1,
                                                                       cv::Matx34d&P1);
+
                         /// @brief Triangulates two sets of 2d_points seen in two different views based on SVD linear system solving.
                         /// @param[in] First set of 2d_point seen in view_1.
                         /// @param[in] Second set of 2d_point seen in view_2.
@@ -67,15 +73,19 @@ namespace SolAR {
                         /// @param[in] Camera calibration matrix parameters.
                         /// @param[in] Camera distorsion parameters.
                         /// @param[out] Set of triangulated 3d_points.
-                        FrameworkReturnCode triangulate(const std::vector<SRef<Point2Df>>& pt2d_1,
-                                         const std::vector<SRef<Point2Df>>& pt2d_2,
-                                         const Transform3Df&p1,
-                                         const Transform3Df&p2,
-                                         const CamCalibration&cam,
-                                         const CamDistortion&dist,
-                                         std::vector<SRef<Point3Df>>& pt3d);
+                        double triangulate(const std::vector<SRef<Point2Df>>& pt2d_1,
+                                           const std::vector<SRef<Point2Df>>& pt2d_2,
+                                           const std::vector<DescriptorMatch>&matches,
+                                           const std::pair<int,int>&working_views,
+                                           const Transform3Df&p1,
+                                           const Transform3Df&p2,
+                                           const CamCalibration&cam,
+                                           const CamDistortion&dist,
+                                           std::vector<SRef<CloudPoint>>& pcloud);
 
                         void unloadComponent () override final;
+
+                     private:
 
                     };
 

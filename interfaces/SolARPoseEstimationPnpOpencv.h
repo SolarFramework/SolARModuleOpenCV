@@ -19,6 +19,7 @@
 #include <vector>
 #include "opencv2/core.hpp"
 #include "api/solver/pose/I3DTransformFinder.h"
+#include "datastructure/Image.h"
 #include "SolAROpencvAPI.h"
 #include "xpcf/component/ComponentBase.h"
 
@@ -38,6 +39,7 @@ namespace SolAR {
                 SolARPoseEstimationPnpOpencv();
                 ///@brief SolARPoseEstimationPnpOpencv destructor;
                 ~SolARPoseEstimationPnpOpencv();
+
                 /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on opencv Perspective from N Points algorithm
                 /// @param[in] Set of 2d_points seen in view_1.
                 /// @param[in] Set of 3d_points corresponding to view_1.
@@ -45,6 +47,20 @@ namespace SolAR {
                 FrameworkReturnCode estimate(const std::vector<SRef<Point2Df>> & imagePoints,
                                          const std::vector<SRef<Point3Df>> & worldPoints,
                                          Transform3Df & pose) override;
+
+                /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on opencv Perspective from N Points algorithm
+                /// @param[in] Set of 2d_points seen in view_1.
+                /// @param[in] Set of 3d_points corresponding to view_1.
+                /// @param[out] image 2d points that are inliers
+                /// @param[out] world 3d points that are inliers.
+                /// @param[out] Camera pose in the world coordinates system of the view_1.
+                FrameworkReturnCode estimate(const std::vector<SRef<Point2Df>> & imagePoints,
+                                         const std::vector<SRef<Point3Df>> & worldPoints,
+                                         std::vector<SRef<Point2Df>>&imagePoints_inlier,
+                                         std::vector<SRef<Point3Df>>&worldPoints_inlier,
+                                         Transform3Df & pose) override;
+
+
                 /// @brief this method is used to set intrinsic parameters and distorsion of the camera
                 /// @param[in] Camera calibration matrix parameters.
                 /// @param[in] Camera distorsion parameters.
@@ -52,6 +68,7 @@ namespace SolAR {
                                          const CamDistortion & distorsionParams)  override;
 
                 void unloadComponent () override final;
+
 
             private:
                 cv::Mat m_camMatrix;

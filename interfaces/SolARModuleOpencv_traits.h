@@ -56,6 +56,9 @@ class SolARPoseEstimationPnpOpencv;
 class SolARSideBySideOverlayOpencv;
 class SolARSVDFundamentalMatrixDecomposerOpencv;
 class SolARSVDTriangulationOpencv;
+class SolAR2D3DCorrespondencesFinderOpencv;
+class SolARMapFilterOpencv;
+class SolARMapperOpencv;
 }
 }
 }
@@ -196,6 +199,19 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDe
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv,
                              "85274ecd-2914-4f12-96de-37c6040633a4",
                              "SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv,
+                             "cedd8c47-e7b0-47bf-abb1-7fb54d198117",
+                             "SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMapperOpencv,
+                             "8e3c926a-0861-46f7-80b2-8abb5576692c",
+                             "SolAR::MODULES::OPENCV::SolARMapperOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMapFilterOpencv,
+                             "09205b96-7cba-4415-bc61-64744bc26222",
+                             "SolAR::MODULES::OPENCV::SolARMapFilterOpencv component")
+
 
 
 
