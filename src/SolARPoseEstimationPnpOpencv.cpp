@@ -61,6 +61,54 @@ SolARPoseEstimationPnpOpencv::~SolARPoseEstimationPnpOpencv(){
 
 }
 
+FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SRef<Point2Df>> & imagePoints,
+                                                            const std::vector<SRef<Point3Df>> & worldPoints,
+                                                            Transform3Df & pose) {
+
+    std::vector<cv::Point2f> imageCVPoints;
+    std::vector<cv::Point3f> worldCVPoints;
+
+    if (worldPoints.size()!=imagePoints.size())
+        return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
+
+    for (int i=0;i<imagePoints.size();++i) {
+        Point2Df point2D = *(imagePoints.at(i));
+        Point3Df point3D = *(worldPoints.at(i));
+        imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
+        worldCVPoints.push_back(cv::Point3f(point3D.getX(), point3D.getY(),point3D.getZ()));
+    }
+
+    cv::Mat Rvec;
+    cv::Mat_<float> Tvec;
+    cv::Mat raux, taux;
+
+
+    cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux );
+
+
+    raux.convertTo(Rvec, CV_32F);
+    taux.convertTo(Tvec, CV_32F);
+
+    cv::Mat_<float> rotMat(3, 3);
+    cv::Rodrigues(Rvec, rotMat);
+
+    Eigen::Matrix3f Rpose;
+    Eigen::Vector3f Tpose;
+
+    for (int col = 0; col<3; col++){
+          for (int row = 0; row<3; row++){
+                  pose(row,col) = rotMat(row, col);
+          }
+         pose(col,3) = Tvec(col);
+    }
+    pose(3,0)  = 0.0;
+    pose(3,1)  = 0.0;
+    pose(3,2)  = 0.0;
+    pose(3,3)  = 1.0;
+
+    return FrameworkReturnCode::_SUCCESS;
+
+}
 
 FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SRef<Point2Df>> & imagePoints,
                                                             const std::vector<SRef<Point3Df>> & worldPoints,

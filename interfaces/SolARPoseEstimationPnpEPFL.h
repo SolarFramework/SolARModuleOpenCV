@@ -41,15 +41,21 @@ namespace SolAR {
             SolARPoseEstimationPnpEPFL();
             ///@brief SolARPoseEstimationPnpEPFL destructor.
             ~SolARPoseEstimationPnpEPFL();
-            /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on EPFL Perspective from N Points algorithm
-            /// @param[in] Set of 2d_points seen in view_1.
-            /// @param[in] Set of 3d_points corresponding to view_1.
-            /// @param[out] Camera pose in the world coordinates system of the view_1.
-            /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on EPFL Perspective from N Points algorithm
-            /// @param[in] Set of 2d_points seen in view_1.
-            /// @param[in] Set of 3d_points corresponding to view_1.
-            /// @param[out] Camera pose in the world coordinates system of the view_1.
 
+            /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on EPFL Perspective from N Points algorithm
+            /// @param[in] Set of 2d_points seen in view_1.
+            /// @param[in] Set of 3d_points corresponding to view_1.
+            /// @param[out] Camera pose in the world coordinates system of the view_1.
+            FrameworkReturnCode estimate( const std::vector<SRef<Point2Df>> & imagePoints,
+                                          const std::vector<SRef<Point3Df>> & worldPoints,
+                                          Transform3Df & pose) override;
+
+            /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on EPFL Perspective from N Points algorithm
+            /// @param[in] Set of 2d_points seen in view_1.
+            /// @param[in] Set of 3d_points corresponding to view_1.
+            /// @param[out] image 2d points that are inliers
+            /// @param[out] world 3d points that are inliers.
+            /// @param[out] Camera pose in the world coordinates system of the view_1.
             FrameworkReturnCode estimate( const std::vector<SRef<Point2Df>> & imagePoints,
                                           const std::vector<SRef<Point3Df>> & worldPoints,
                                           std::vector<SRef<Point2Df>>&imagePoints_inlier,
