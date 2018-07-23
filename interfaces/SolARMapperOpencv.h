@@ -23,7 +23,7 @@ namespace SolAR {
             public:
                 SolARMapperOpencv();
 
-                ~SolARMapperOpencv();
+                ~SolARMapperOpencv() = default;
 
 				void addNewKeyFrame(const SRef<Keyframe> & kFrame) ;
 

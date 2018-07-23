@@ -14,6 +14,7 @@
 #include <iostream>
 
 #include "xpcf/module/ModuleFactory.h"
+#include "SolARModuleOpencv_traits.h"
 
 #include "SolAR2DOverlayOpencv.h"
 #include "SolAR3DOverlayOpencv.h"
@@ -247,4 +248,5 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOp
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapperOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapFilterOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv)
 XPCF_END_COMPONENTS_DECLARATION

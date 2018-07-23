@@ -20,14 +20,6 @@ namespace SolAR {
                 #endif
                 }
 
-
-                SolARMapFilterOpencv::~SolARMapFilterOpencv()
-                {
-                #ifdef DEBUG
-                   std::cout << " SolARMapFilterOpencv destructor" << std::endl;
-                #endif
-                }
-
 				std::vector<cv::Point3d> SolARMapFilterOpencv::CloudPointsToPoints(const std::vector<SRef<CloudPoint>> cpts) {
 					std::vector<cv::Point3d> out;
 					for (unsigned int i = 0; i<cpts.size(); i++) {
