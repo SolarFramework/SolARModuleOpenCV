@@ -23,13 +23,6 @@ namespace SolAR {
                 }
 
 
-                SolARMapperOpencv::~SolARMapperOpencv()
-                {
-                #ifdef DEBUG
-                   std::cout << " SolARMapperOpencv destructor" << std::endl;
-                #endif
-                }
-
                 void  SolARMapperOpencv::addNewKeyFrame(const SRef<Keyframe>&new_kframe){
                     m_kframes.push_back(new_kframe);
                 }

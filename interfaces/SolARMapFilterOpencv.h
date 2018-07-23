@@ -23,7 +23,7 @@ namespace SolAR {
             public:
                 SolARMapFilterOpencv();
 
-                ~SolARMapFilterOpencv();
+                ~SolARMapFilterOpencv() = default;
 
 
 				/// @brief Check triangulation status.Warn negative-Z triangulated points.

@@ -44,8 +44,8 @@ namespace SolAR {
                 LOG_DEBUG("SolAR2D3DCorrespondencesFinder constructor");
             }
 
-            SolAR2D3DCorrespondencesFinderOpencv::~SolAR2D3DCorrespondencesFinderOpencv(){
-            }
+            //SolAR2D3DCorrespondencesFinderOpencv::~SolAR2D3DCorrespondencesFinderOpencv(){
+            //}
 
             FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(const std::vector<SRef<CloudPoint>>&cloud,
                                                                            const int keyframe_idx,
