@@ -76,7 +76,7 @@ static FrameworkReturnCode safeErrorCodeConvert(int errCode)
 }
 
 
-FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img,int w_window, int h_window)
+FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img,const int w_window, const int h_window)
 {
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
     cv::namedWindow( title,0); // Create a window for display.
@@ -88,7 +88,7 @@ FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Ima
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img, const char* exitKey, int w_window, int h_window)
+FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img, const char* exitKey, const int w_window, const int h_window)
 {
     char key=' ';
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
@@ -104,7 +104,7 @@ FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Ima
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img, uint32_t duration,int w_window, int h_window)
+FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img, const uint32_t duration,const int w_window, const int h_window)
 {
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
 

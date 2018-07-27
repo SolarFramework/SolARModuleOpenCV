@@ -37,17 +37,17 @@ class SOLAROPENCV_EXPORT_API SolAR2DOverlayOpencv : public org::bcom::xpcf::Comp
 public:
     SolAR2DOverlayOpencv();
 
-    void drawCircle(SRef<Point2Df> point, unsigned int radius, int thickness, std::vector<unsigned int> & bgrValues, SRef<Image> displayImage) override;
+    void drawCircle(const SRef<Point2Df> point, const unsigned int radius, const int thickness, const std::vector<unsigned int> & bgrValues, SRef<Image> displayImage) override;
 
-    void drawCircles(std::vector<SRef<Point2Df>>& points, unsigned int radius, int thickness, SRef<Image> displayImage) override;
+    void drawCircles(const std::vector<SRef<Point2Df>>& points, const unsigned int radius, const int thickness, SRef<Image> displayImage) override;
 
     /// @brief Draw Circles.
     /// Draw all the circles stored in the vector std::vector <SRef<Keypoint>> & keypoints on image displayImage with specified radius and thickness.
-    void drawCircles(std::vector<SRef<Keypoint>>& keypoints, unsigned int radius, int thickness, SRef<Image> displayImage) override;
+    void drawCircles(const std::vector<SRef<Keypoint>>& keypoints, const unsigned int radius, const int thickness, SRef<Image> displayImage) override;
 
-    void drawContours (const std::vector <SRef<Contour2Df>> & contours, int thickness, std::vector<unsigned int> & bgrValues, SRef<Image> displayImage) override;
+    void drawContours (const std::vector <SRef<Contour2Df>> & contours, const int thickness, const std::vector<unsigned int> & bgrValues, SRef<Image> displayImage) override;
 
-    void drawSBPattern (SRef<SquaredBinaryPattern> pattern, SRef<Image> displayImage) override;
+    void drawSBPattern (const SRef<SquaredBinaryPattern> pattern, SRef<Image> displayImage) override;
 
     void unloadComponent () override final;
 

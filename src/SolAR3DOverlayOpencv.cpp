@@ -51,7 +51,7 @@ SolAR3DOverlayOpencv::SolAR3DOverlayOpencv():ComponentBase(xpcf::toUUID<SolAR3DO
 
 }
 
-void SolAR3DOverlayOpencv::drawBox (Transform3Df & pose, const float X_world, const float Y_world, const float Z_world, const Transform3Df affineTransform, SRef<Image> displayImage)
+void SolAR3DOverlayOpencv::drawBox (const Transform3Df & pose, const float X_world, const float Y_world, const float Z_world, const Transform3Df affineTransform, SRef<Image> displayImage)
 {
 
     // image where parallelepiped will be displayed
