@@ -37,7 +37,7 @@ class SOLAROPENCV_EXPORT_API SolAR3DOverlayOpencv : public org::bcom::xpcf::Comp
 public:
     SolAR3DOverlayOpencv();
 
-    void drawBox (Transform3Df & pose, const float X_world, const float Y_world, const float Z_world, const Transform3Df affineTransform, SRef<Image> displayImage) override;
+    void drawBox (const Transform3Df & pose, const float X_world, const float Y_world, const float Z_world, const Transform3Df affineTransform, SRef<Image> displayImage) override;
 
      void setCameraParameters(const CamCalibration & intrinsic_parameters, const CamDistortion & distorsion_parameters);
 

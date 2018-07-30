@@ -46,7 +46,7 @@ SolARSideBySideOverlayOpencv::SolARSideBySideOverlayOpencv():ComponentBase(xpcf:
 }
 
 
-void SolARSideBySideOverlayOpencv::drawMatchesLines(SRef<Image> & image1, SRef<Image> & image2, SRef<Image> & outImage, std::vector <SRef<Point2Df>> &points_image1, std::vector <SRef<Point2Df>> &points_image2,int points_number)
+void SolARSideBySideOverlayOpencv::drawMatchesLines(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <SRef<Point2Df>> & points_image1, const std::vector <SRef<Point2Df>> & points_image2, const int points_number)
 {
     if (outImage == nullptr)
     {

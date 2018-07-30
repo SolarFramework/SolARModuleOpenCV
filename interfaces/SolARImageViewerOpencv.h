@@ -34,9 +34,9 @@ public:
     SolARImageViewerOpencv();
     ~SolARImageViewerOpencv();
     void unloadComponent () override final;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, int w_window=0, int h_window=0) override;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, const char* exitKey, int w_window=0, int h_window=0) override;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, uint32_t duration, int w_window=0, int h_window=0);
+    FrameworkReturnCode display(const char * title, SRef<Image> img, const int w_window=0, const int h_window=0) override;
+    FrameworkReturnCode display(const char * title, SRef<Image> img, const char* exitKey, const int w_window=0, const int h_window=0) override;
+    FrameworkReturnCode display(const char * title, SRef<Image> img, const uint32_t duration, const int w_window=0, const int h_window=0);
 
 };
 

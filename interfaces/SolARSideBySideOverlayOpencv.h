@@ -36,7 +36,7 @@ class SOLAROPENCV_EXPORT_API SolARSideBySideOverlayOpencv : public org::bcom::xp
 public:
     SolARSideBySideOverlayOpencv();
 
-    void drawMatchesLines(SRef<Image> & image1, SRef<Image> & image2, SRef<Image> & outImage, std::vector <SRef<Point2Df>> & points_image1, std::vector <SRef<Point2Df>> & points_image2, int matches_number = -1) override;
+    void drawMatchesLines(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <SRef<Point2Df>> & points_image1, const std::vector <SRef<Point2Df>> & points_image2, const int points_number = -1) override;
 
     void unloadComponent () override final;
 
