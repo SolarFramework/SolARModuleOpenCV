@@ -19,7 +19,7 @@
 
 #include "api/image/IImageLoader.h"
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 
@@ -36,8 +36,6 @@ public:
     ~SolARImageLoaderOpencv();
     void unloadComponent () override final;
     FrameworkReturnCode loadImage(const std::string & filename, SRef<Image> & img);
-
-    XPCF_DECLARE_UUID("e42d6526-9eb1-4f8a-bb68-53e06f09609c");
 
 };
 

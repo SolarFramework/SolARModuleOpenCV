@@ -22,7 +22,7 @@
 
 #include "api/display/ISideBySideOverlay.h"
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
@@ -36,11 +36,10 @@ class SOLAROPENCV_EXPORT_API SolARSideBySideOverlayOpencv : public org::bcom::xp
 public:
     SolARSideBySideOverlayOpencv();
 
-    void drawMatchesLines(SRef<Image> & image1, SRef<Image> & image2, SRef<Image> & outImage, std::vector <SRef<Point2Df>> & points_image1, std::vector <SRef<Point2Df>> & points_image2) override;
+    void drawMatchesLines(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <SRef<Point2Df>> & points_image1, const std::vector <SRef<Point2Df>> & points_image2, const int points_number = -1) override;
 
     void unloadComponent () override final;
 
-    XPCF_DECLARE_UUID("e95302be-3fe1-44e0-97bf-a98380464af9");
 };
 
 }

@@ -18,10 +18,11 @@
 #define SOLARDESCRIPTORMATCHERHAMMINGBRUTEFORCEMOPENCV_H
 
 #include "api/features/IDescriptorMatcher.h"
+
 // Definition of SolARDescriptorMatcherOpencv Class //
 // part of SolAR namespace //
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/core.hpp"
@@ -55,9 +56,6 @@ public:
            std::vector<SRef<DescriptorBuffer>>& descriptors2,
            std::vector<DescriptorMatch>& matches
         );
-
-    XPCF_DECLARE_UUID("d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9");
-
 
 private:
     int m_id;

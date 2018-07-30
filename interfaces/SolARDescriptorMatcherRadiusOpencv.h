@@ -18,10 +18,11 @@
 #define SOLARDESCRIPTORMATCHERRADIUSOPENCV_H
 
 #include "api/features/IDescriptorMatcher.h"
+
 // Definition of SolARDescriptorMatcherRadiusOpencv Class //
 // part of SolAR namespace //
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/core.hpp"
@@ -52,9 +53,6 @@ public:
            std::vector<SRef<DescriptorBuffer>>& descriptors2,
            std::vector<DescriptorMatch>& matches
         );
-
-    XPCF_DECLARE_UUID("904e64f6-d502-11e7-9296-cec278b6b50a");
-
 
 private:
     float m_maxDistance;

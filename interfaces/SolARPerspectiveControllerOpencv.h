@@ -18,7 +18,7 @@
 #define SOLARPERSPECTIVECONTROLLEROPENCV_H
 
 #include "api/image/IPerspectiveController.h"
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
@@ -38,7 +38,6 @@ public:
     FrameworkReturnCode correct(const SRef<Image> inputImg, SRef<Contour2Df> & contour, SRef<Image> & patch) override;
 
     void unloadComponent () override final;
-    XPCF_DECLARE_UUID("9c960f2a-cd6e-11e7-abc4-cec278b6b50a");
 
 private:
     Sizei m_outputImageSize;

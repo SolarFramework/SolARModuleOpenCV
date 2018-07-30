@@ -18,10 +18,11 @@
 #define SOLARDESCRIPTORSEXTRACTORAKAZEOPENCV_H
 
 #include "api/features/IDescriptorsExtractor.h"
+
 // Definition of SolARDescriptorExtractorOpencv Class //
 // part of SolAR namespace //
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
@@ -43,8 +44,6 @@ public:
     inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE") ;};
 
     void extract (const SRef<Image> image, const std::vector<SRef<Keypoint>> &keypoints, SRef<DescriptorBuffer>& descriptors) override;
-
-    XPCF_DECLARE_UUID("c8cc68db-9abd-4dab-9204-2fe4e9d010cd");
 
 private:
     cv::Ptr<cv::AKAZE> m_extractor;

@@ -19,7 +19,7 @@
 
 #include "api/display/IImageViewer.h"
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 
@@ -34,11 +34,9 @@ public:
     SolARImageViewerOpencv();
     ~SolARImageViewerOpencv();
     void unloadComponent () override final;
-    FrameworkReturnCode display(const char * title, SRef<Image> img) override;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, const char* exitKey) override;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, uint32_t duration);
-
-    XPCF_DECLARE_UUID("19ea4e13-7085-4e3f-92ca-93f200ffb01b");
+    FrameworkReturnCode display(const char * title, SRef<Image> img, const int w_window=0, const int h_window=0) override;
+    FrameworkReturnCode display(const char * title, SRef<Image> img, const char* exitKey, const int w_window=0, const int h_window=0) override;
+    FrameworkReturnCode display(const char * title, SRef<Image> img, const uint32_t duration, const int w_window=0, const int h_window=0);
 
 };
 

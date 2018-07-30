@@ -18,10 +18,11 @@
 #define SOLARDESCRIPTORSEXTRACTOORBROPENCV_H
 
 #include "api/features/IDescriptorsExtractor.h"
+
 // Definition of SolARDescriptorExtractorOpencv Class //
 // part of SolAR namespace //
 
-#include "ComponentBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
@@ -43,8 +44,6 @@ public:
     inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::ORB") ;};
 
     void extract (const SRef<Image> image, const std::vector<SRef<Keypoint>> &keypoints, SRef<DescriptorBuffer>& descriptors) override;
-
-    XPCF_DECLARE_UUID("0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a");
 
 private:
     cv::Ptr<cv::Feature2D> m_extractor;

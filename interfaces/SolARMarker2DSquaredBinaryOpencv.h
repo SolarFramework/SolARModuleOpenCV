@@ -18,7 +18,8 @@
 #define SOLARMARKER2DSQUAREDBINARYOPENCV_H
 
 #include "api/input/files/IMarker2DSquaredBinary.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 #include "opencv2/opencv.hpp"
@@ -42,8 +43,7 @@ public:
     FrameworkReturnCode loadMarker(const std::string & filename) override;
 
     void unloadComponent () override final;
- //   void testMethod();
-    XPCF_DECLARE_UUID("5d2b8da9-528e-4e5e-96c1-f883edcf3b1c");
+
 };
 
 }

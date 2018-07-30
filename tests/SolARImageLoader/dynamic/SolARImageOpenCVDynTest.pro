@@ -29,6 +29,8 @@ SOURCES += \
     main.cpp
 
 unix {
+    LIBS += -ldl
+    QMAKE_CXXFLAGS += -DBOOST_LOG_DYN_LINK
 }
 
 macx {

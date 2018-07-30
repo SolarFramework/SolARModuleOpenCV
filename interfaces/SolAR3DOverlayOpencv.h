@@ -18,13 +18,13 @@
 #define SOLAR3DOVERLAYOPENCV_H
 #include <vector>
 
-#include "opencv2/core.hpp"
-
 #include "api/display/I3DOverlay.h"
+
+#include "opencv2/core.hpp"
 
 #include "SolAROpencvAPI.h"
 
-#include "ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 
 namespace SolAR {
 using namespace datastructure;
@@ -37,13 +37,11 @@ class SOLAROPENCV_EXPORT_API SolAR3DOverlayOpencv : public org::bcom::xpcf::Comp
 public:
     SolAR3DOverlayOpencv();
 
-    void drawBox (Pose & pose, const float X_world, const float Y_world, const float Z_world, const Transform3Df affineTransform, SRef<Image> displayImage) override;
+    void drawBox (const Transform3Df & pose, const float X_world, const float Y_world, const float Z_world, const Transform3Df affineTransform, SRef<Image> displayImage) override;
 
      void setCameraParameters(const CamCalibration & intrinsic_parameters, const CamDistortion & distorsion_parameters);
 
     void unloadComponent () override final;
-
-    XPCF_DECLARE_UUID("2db01f59-9793-4cd5-8e13-b25d0ed5735b");
 
 private:
 

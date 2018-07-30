@@ -24,26 +24,24 @@
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
 
-
-#include "ComponentFactory.h"
-
 #include <map>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv()
+SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv():ComponentBase(xpcf::toUUID<SolARHomographyEstimationOpencv>())
 {
-    setUUID(SolARHomographyEstimationOpencv::UUID);
-    addInterface<api::solver::pose::IHomographyEstimation>(this,api::solver::pose::IHomographyEstimation::UUID, "interface api::solver::pose::IHomographyEstimation");
+    addInterface<api::solver::pose::I2DTransformFinder>(this);
     LOG_DEBUG("SolARHomographyEstimationOpencv constructor")
 }
 
-api::solver::pose::HomographyEstimation::RetCode SolARHomographyEstimationOpencv::findHomography(const std::vector< SRef<Point2Df> >& srcPoints,
+api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::find(const std::vector< SRef<Point2Df> >& srcPoints,
                                           const std::vector< SRef<Point2Df> >& dstPoints,
                                           Transform2Df & homography)
 {
@@ -67,14 +65,12 @@ api::solver::pose::HomographyEstimation::RetCode SolARHomographyEstimationOpencv
     H = cv::findHomography( obj, scene, CV_RANSAC, 8 );
 	if (!H.data) {
 		LOG_DEBUG("Homography matrix is empty")
-		return api::solver::pose::HomographyEstimation::HOMOGRAPHY_EMPTY;
+        return api::solver::pose::Transform2DFinder::TRANSFORM2D_EMPTY;
 	}
 
     H.convertTo(H,CV_32F);
-
     SolAROpenCVHelper::convertCVMatToSolar(H,homography);
-
-    return api::solver::pose::HomographyEstimation::HOMOGRAPHY_ESTIMATION_OK;
+    return api::solver::pose::Transform2DFinder::TRANSFORM2D_ESTIMATION_OK;
 }
 
 }

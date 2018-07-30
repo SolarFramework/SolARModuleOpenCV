@@ -23,7 +23,7 @@
 #include <array>
 
 //#include <boost/thread/thread.hpp>
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv)
 
 namespace xpcf = org::bcom::xpcf;
 using namespace cv;
@@ -34,10 +34,9 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorsExtractorAKAZEOpencv::SolARDescriptorsExtractorAKAZEOpencv()
+SolARDescriptorsExtractorAKAZEOpencv::SolARDescriptorsExtractorAKAZEOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorsExtractorAKAZEOpencv>())
 {
-    setUUID(SolARDescriptorsExtractorAKAZEOpencv::UUID);
-    addInterface<api::features::IDescriptorsExtractor>(this,api::features::IDescriptorsExtractor::UUID, "interface SolARDescriptorsExtractorOpencv");
+    addInterface<api::features::IDescriptorsExtractor>(this);
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZEOpencv constructor")
     // m_extractor must have a default implementation : initialize default extractor type
     m_extractor=AKAZE::create();

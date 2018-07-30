@@ -18,22 +18,24 @@
 #include "SolAROpenCVHelper.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/core.hpp"
-
-#include "ComponentFactory.h"
+#include "xpcf/properties/IPropertyMap.h"
 
 namespace xpcf = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARContoursFilterBinaryMarkerOpencv::SolARContoursFilterBinaryMarkerOpencv()
+    SolARContoursFilterBinaryMarkerOpencv::SolARContoursFilterBinaryMarkerOpencv():ComponentBase(xpcf::toUUID<SolARContoursFilterBinaryMarkerOpencv>())
     {
-        setUUID(SolARContoursFilterBinaryMarkerOpencv::UUID);
-        addInterface<api::features::IContoursFilter>(this,api::features::IContoursFilter::UUID, "interface ContoursFilterOpencv");
+        addInterface<api::features::IContoursFilter>(this);
+        SRef<xpcf::IPropertyMap> properties;
+        // properties = getPropertyRootNode();
+        properties = xpcf::getPropertyMapInstance();
+        properties->wrapFloat("minContourLength",m_minContourLength);
     }
 
     void SolARContoursFilterBinaryMarkerOpencv::setParameters (float minContourLength)

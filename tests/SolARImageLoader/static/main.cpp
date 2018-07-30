@@ -22,6 +22,7 @@
 #include "SolARImageLoaderOpencv.h"
 #include "SolARImageViewerOpencv.h"
 
+
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
@@ -31,14 +32,10 @@ namespace xpcf  = org::bcom::xpcf;
 
 int run(int argc, char *argv[])
 {
-    // components declarations
-    SRef<image::IImageLoader> imageLoader;
-    SRef<display::IImageViewer> viewer;
 
     // components creation
-    boost::uuids::string_generator gen;
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(gen(image::IImageLoader::UUID ),imageLoader);
-    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(gen(display::IImageViewer::UUID ),viewer);
+    auto imageLoader=xpcf::ComponentFactory::createInstance<SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    auto  viewer =xpcf::ComponentFactory::createInstance<SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
 
     SRef<Image> image;
 

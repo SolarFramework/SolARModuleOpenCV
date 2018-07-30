@@ -32,11 +32,10 @@ using namespace SolAR::MODULES::OPENCV;
 int run1(int argc,char* argv[])
 {
     // declarations
-    SRef<input::files::IMarker2DSquaredBinary> binaryMarker;
-
     // component creation
-     boost::uuids::string_generator gen;
-    xpcf::ComponentFactory::createComponent<SolARMarker2DSquaredBinaryOpencv>(gen(input::files::IMarker2DSquaredBinary::UUID ),binaryMarker);
+    auto binaryMarker = xpcf::ComponentFactory::createInstance<SolARMarker2DSquaredBinaryOpencv>()->bindTo<input::files::IMarker2DSquaredBinary>();
+
+
 
     // components initialisation: here, load the marker informatiosn from a decsription file
     if (binaryMarker->loadMarker(std::string(argv[1]))!= SolAR::FrameworkReturnCode::_SUCCESS)

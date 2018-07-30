@@ -24,7 +24,7 @@
 #include <stdexcept>
 #include <vector>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageViewerOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageViewerOpencv)
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -47,10 +47,9 @@ inline int deduceOpenCVType(SRef<Image> img)
     return solar2cvTypeConvertMap.at(std::forward_as_tuple(img->getNbBitsPerComponent(),1,img->getNbChannels()));
 }
 
-SolARImageViewerOpencv::SolARImageViewerOpencv()
+SolARImageViewerOpencv::SolARImageViewerOpencv():ComponentBase(xpcf::toUUID<SolARImageViewerOpencv>())
 {
-    setUUID(SolARImageViewerOpencv::UUID);
-    addInterface<api::display::IImageViewer>(this,api::display::IImageViewer::UUID, "interface api::display::IImageViewer");
+    addInterface<api::display::IImageViewer>(this);
     LOG_DEBUG(" SolARImageViewerOpencv constructor")
 }
 
@@ -76,21 +75,27 @@ static FrameworkReturnCode safeErrorCodeConvert(int errCode)
     return OpenCVImageCodeMap[errCode];
 }
 
-FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img)
+
+FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img,const int w_window, const int h_window)
 {
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
-    cv::namedWindow( title, cv::WINDOW_AUTOSIZE ); // Create a window for display.
+    cv::namedWindow( title,0); // Create a window for display.
+    if(w_window>0 && h_window>0)
+        cv::resizeWindow(title, w_window,h_window);
 
     cv::imshow(title, imgSource);
     cv::waitKey(1); // wait for a keystroke to display window
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img, const char* exitKey)
+FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img, const char* exitKey, const int w_window, const int h_window)
 {
     char key=' ';
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
-    cv::namedWindow( title, cv::WINDOW_AUTOSIZE ); // Create a window for display.
+
+    cv::namedWindow( title,0); // Create a window for display.
+    if(w_window>0 && h_window>0)
+        cv::resizeWindow(title, w_window,h_window);
 
     cv::imshow(title, imgSource);
     key=cv::waitKey(10); // wait for a keystroke to display window
@@ -99,10 +104,13 @@ FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Ima
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img, uint32_t duration)
+FrameworkReturnCode SolARImageViewerOpencv::display(const char * title, SRef<Image> img, const uint32_t duration,const int w_window, const int h_window)
 {
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
-    cv::namedWindow( title, cv::WINDOW_AUTOSIZE ); // Create a window for display.
+
+    cv::namedWindow( title,0); // Create a window for display.
+    if(w_window>0 && h_window>0)
+        cv::resizeWindow(title, w_window,h_window);
 
     cv::imshow(title, imgSource);
     cv::waitKey(duration); // wait for a keystroke to display window

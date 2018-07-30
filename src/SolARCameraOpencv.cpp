@@ -18,28 +18,27 @@
 #define SOLARCAMERA_H
 
 #include "SolARCameraOpencv.h"
-#include "ComponentFactory.h"
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
 
 using namespace org::bcom::xpcf;
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARCameraOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARCameraOpencv)
 
 namespace SolAR {
 namespace MODULES {
 namespace OPENCV {
 
-    SolARCameraOpencv::SolARCameraOpencv()
+    SolARCameraOpencv::SolARCameraOpencv():ComponentBase(toUUID<SolARCameraOpencv>())
     {
-        setUUID(SolARCameraOpencv::UUID);
-        addInterface<api::input::devices::ICamera>(this,api::input::devices::ICamera::UUID, "interface CameraOpencv");
+        addInterface<api::input::devices::ICamera>(this);
+
+        m_is_resolution_set = false;
     }
 
     void SolARCameraOpencv::setResolution(Sizei resolution)
     {
         m_resolution = resolution;
-        m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_resolution.width );
-        m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_resolution.height );
+        m_is_resolution_set = true;
     }
 
     FrameworkReturnCode SolARCameraOpencv::loadCameraParameters (const std::string & filename)
@@ -58,9 +57,7 @@ namespace OPENCV {
 
             m_resolution.width = width;
             m_resolution.height = height;
-
-            m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_resolution.width );
-            m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_resolution.height );
+            m_is_resolution_set = true;
 
             if (intrinsic_parameters.empty())
             {               
@@ -98,7 +95,7 @@ namespace OPENCV {
         else
         {
             LOG_ERROR("SolARCameraOpencv::loadCameraParameters: Cannot open camera calibration file ")
-			return FrameworkReturnCode::_ERROR_;
+            return FrameworkReturnCode::_ERROR_;
         }
 
     }
@@ -118,10 +115,19 @@ namespace OPENCV {
 
         LOG_INFO(" SolARCameraOpencv::setParameters");
         if(m_capture.isOpened())
+        {
             m_capture.release();
+        }
         m_capture = cv::VideoCapture( device_id);
         if (m_capture.isOpened())
+        {
+            if (m_is_resolution_set)
+            {
+                m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_resolution.width );
+                m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_resolution.height );
+            }
             return FrameworkReturnCode::_SUCCESS;
+        }
         else
         {
             LOG_ERROR("Cannot open camera with id {]", device_id);
@@ -133,10 +139,19 @@ namespace OPENCV {
 
         LOG_INFO(" SolARCameraOpencv::setParameters");
         if(m_capture.isOpened())
+        {
             m_capture.release();
+        }
         m_capture = cv::VideoCapture(inputFileName);
         if (m_capture.isOpened())
+        {
+            if (m_is_resolution_set)
+            {
+                m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_resolution.width );
+                m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_resolution.height );
+            }
             return FrameworkReturnCode::_SUCCESS;
+        }
         else
         {
             LOG_ERROR("Cannot open video file {}", inputFileName);
@@ -146,11 +161,11 @@ namespace OPENCV {
 
 
     void SolARCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){
-        m_intrinsic_parameters = intrinsic_parameters;
+//        m_intrinsic_parameters = intrinsic_parameters;
     }
 
      void SolARCameraOpencv::setDistorsionParameters(const CamDistortion & distorsion_parameters){
-           m_distorsion_parameters = distorsion_parameters;
+//           m_distorsion_parameters = distorsion_parameters;
      }
 
      Sizei SolARCameraOpencv::getResolution()

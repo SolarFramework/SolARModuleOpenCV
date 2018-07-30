@@ -18,7 +18,8 @@
 #define SOLARCONTOURSEXTRACTOROPENCV_H
 
 #include "api/features/IContoursExtractor.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
@@ -37,7 +38,6 @@ public:
     FrameworkReturnCode extract(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours) override;
 
     void unloadComponent () override final;
-    XPCF_DECLARE_UUID("6acf8de2-cc63-11e7-abc4-cec278b6b50a");
 
 private:
     float m_minContourSize;

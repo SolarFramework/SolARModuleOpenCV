@@ -19,7 +19,10 @@
 
 // ADD COMPONENTS HEADERS HERE, e.g #include "SolarComponent.h"
 
-#include "SolARModuleManagerOpencv.h"
+#include "xpcf/component/ComponentBase.h"
+#include "SolARModuleOpencv_traits.h"
+#include "api/image/IImageLoader.h"
+#include "api/display/IImageViewer.h"
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
@@ -29,17 +32,24 @@ namespace xpcf  = org::bcom::xpcf;
 
 int run(int argc, char *argv[])
 {
-    // instantiate module manager
-    MODULES::OPENCV::SolARModuleManagerOpencv opencvModule(argv[2]);
-    if (!opencvModule.isLoaded()) // xpcf library load has failed
+
+    // load library
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+
+    if(xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleOpenCV_registry.xml")!=org::bcom::xpcf::_SUCCESS)
     {
         LOG_ERROR("XPCF library load has failed")
         return -1;
     }
 
+
     // components declarations and creation
-    SRef<image::IImageLoader> imageLoader = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
+    //SRef<image::IImageLoader> imageLoader = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
+    //SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
+    // components declarations   
+
+    SRef<image::IImageLoader> imageLoader = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
 
     if (!imageLoader || !viewer)
     {
@@ -76,13 +86,13 @@ int run(int argc, char *argv[])
 
 int printHelp(){
         printf(" usage :\n");
-        printf(" exe ImageFilePath configFilePath\n");
+        printf(" exe ImageFilePath\n");
         return 1;
 }
 
 
 int main(int argc, char *argv[]){
-    if(argc==3)
+    if(argc==2)
         return run(argc,argv);
     else
         return(printHelp());

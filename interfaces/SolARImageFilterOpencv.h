@@ -18,7 +18,8 @@
 #define SOLARIMAGEFILTEROPENCV_H
 
 #include "api/image/IImageFilter.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 #include "opencv2/opencv.hpp"
@@ -86,8 +87,6 @@ public:
                    int method) override;
 
     void unloadComponent () override final;
-
-        XPCF_DECLARE_UUID("fa356d0c-0a53-4722-a7f3-bb92b934d8db");
 
  private:
 
