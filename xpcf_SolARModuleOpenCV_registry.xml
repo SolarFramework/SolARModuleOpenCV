@@ -146,4 +146,10 @@
                 <interface uuid="3a01b0e9-9a76-43f5-97b3-85bb6979b953" description="ITriangulator"/>
         </component>
     </module>
+    <configuration>
+        <component uuid="e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2" description="SolARImageFilterBinaryOpencv">
+                <variant name="min" type="integer" value="-1"/>           
+                <variant name="max" type="integer" value="255"/>
+        </component>
+    </configuration>    
 </xpcf-registry>
