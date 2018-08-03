@@ -39,9 +39,9 @@ public:
 
 private:
     /// @brief The width in pixels of the output image
-    int m_outputImageWidth;
+    int m_outputImageWidth = 640;
     /// @brief The Height in pixels of the output image
-    int m_outputImageHeight;
+    int m_outputImageHeight = 480;
 };
 
 }

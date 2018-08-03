@@ -38,8 +38,8 @@ public:
     void unloadComponent () override final;
 
 private:
-    /// @brief The minimum number of edges of a contour to extract
-    int m_minContourEdges;
+    /// @brief The minimum number of edges of a contour to extract. If negative value, extract all contours.
+    int m_minContourEdges = -1;
 };
 
 }

@@ -32,8 +32,9 @@ SolARImageFilterBinaryOpencv::SolARImageFilterBinaryOpencv():ConfigurableBase(xp
 {
     addInterface<api::image::IImageFilter>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("min", min);
-    params->wrapInteger("max", max);
+    //SRef<xpcf::IPropertyMap> params = xpcf::getPropertyMapInstance();
+    params->wrapInteger("min", m_min);
+    params->wrapInteger("max", m_max);
 }
 
 
@@ -58,10 +59,10 @@ FrameworkReturnCode SolARImageFilterBinaryOpencv::filter(const SRef<Image>input,
     cv::Mat imgSource, imgFiltred;
     SolAROpenCVHelper::mapToOpenCV(input,imgSource);
     SolAROpenCVHelper::mapToOpenCV(output,imgFiltred);
-    if (min>=0)
-        cv::threshold(imgSource, imgFiltred, min, max, cv::THRESH_BINARY);
+    if (m_min>=0)
+        cv::threshold(imgSource, imgFiltred, m_min, m_max, cv::THRESH_BINARY);
     else
-        cv::threshold(imgSource, imgFiltred, 0, max, cv::THRESH_BINARY | cv::THRESH_OTSU);
+        cv::threshold(imgSource, imgFiltred, 0, m_max, cv::THRESH_BINARY | cv::THRESH_OTSU);
 
     return FrameworkReturnCode::_SUCCESS;
 }

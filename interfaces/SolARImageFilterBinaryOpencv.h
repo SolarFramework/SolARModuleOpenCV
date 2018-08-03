@@ -45,7 +45,8 @@ public:
     void unloadComponent () override final;
 
  private:
-    int min, max;
+    int m_min = 0;
+    int m_max = 255;
 };
 
 }
