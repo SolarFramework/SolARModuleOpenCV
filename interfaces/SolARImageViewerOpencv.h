@@ -50,8 +50,11 @@ private:
     /// @brief the height of the window on which the image will be displayed (if <=0, the height of the input image)
     int m_height = 0;
 
+    /// @brief The key code to press to close the window. If negative, no key is defined to close the window
+    int m_exitKey = 27;
 
-
+    /// @brief The duration in milliseconds before closing the window. If negative or null, the window remains open.
+    unsigned int m_duration = 0;
 };
 
 }

@@ -41,8 +41,6 @@
 #include "SolARImageFilterErodeOpencv.h"
 #include "SolARImageLoaderOpencv.h"
 #include "SolARImageViewerOpencv.h"
-#include "SolARImageViewerExitKeyOpencv.h"
-#include "SolARImageViewerDurationOpencv.h"
 #include "SolARKeypointDetectorOpencv.h"
 #include "SolARMarker2DNaturalImageOpencv.h"
 #include "SolARMarker2DSquaredBinaryOpencv.h"
@@ -158,14 +156,6 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageViewerDurationOpencv>(componentUUID,interfaceRef);
-    }
-    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
-    {
-        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageViewerExitKeyOpencv>(componentUUID,interfaceRef);
-    }
-    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
-    {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
@@ -246,8 +236,6 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterBlurOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterDilateOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterErodeOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv)
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageViewerDurationOpencv)
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageViewerExitKeyOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageViewerOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv)

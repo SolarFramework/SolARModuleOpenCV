@@ -54,6 +54,8 @@ SolARImageViewerOpencv::SolARImageViewerOpencv():ConfigurableBase(xpcf::toUUID<S
     params->wrapString("title", m_title);
     params->wrapInteger("width", m_width);
     params->wrapInteger("height", m_height);
+    params->wrapInteger("exitKey", m_exitKey);
+    params->wrapUnsignedInteger("duration", m_duration);
     LOG_DEBUG(" SolARImageViewerOpencv constructor")
 }
 
@@ -82,13 +84,23 @@ static FrameworkReturnCode safeErrorCodeConvert(int errCode)
 
 FrameworkReturnCode SolARImageViewerOpencv::display(SRef<Image> img)
 {
+    char key=' ';
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
     cv::namedWindow( m_title,0); // Create a window for display.
     if(m_width>0 && m_height>0)
         cv::resizeWindow(m_title, m_width,m_height);
 
     cv::imshow(m_title, imgSource);
-    cv::waitKey(1); // wait for a keystroke to display window
+    if (m_duration >0)
+        key = cv::waitKey(m_duration);  // wait for a keystroke to display window
+    else if (m_exitKey >= 0)
+        key = cv::waitKey(10);  // wait for a keystroke to display window
+    else
+        key = cv::waitKey(1);  // wait for a keystroke to display window
+
+    if(key == (char)(m_exitKey))
+        return FrameworkReturnCode::_STOP;
+
     return FrameworkReturnCode::_SUCCESS;
 }
 

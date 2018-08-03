@@ -41,8 +41,6 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageConvertorOpencv.h \
     interfaces/SolARImageLoaderOpencv.h \
     interfaces/SolARImageViewerOpencv.h \
-    interfaces/SolARImageViewerExitKeyOpencv.h \
-    interfaces/SolARImageViewerDurationOpencv.h \
     interfaces/SolARKeypointDetectorOpencv.h \
     interfaces/SolAROpenCVHelper.h \
     interfaces/SolAROpencvAPI.h \
@@ -91,8 +89,6 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARImageLoaderOpencv.cpp \
     src/SolARImageConvertorOpencv.cpp \
     src/SolARImageViewerOpencv.cpp \
-    src/SolARImageViewerDurationOpencv.cpp \
-    src/SolARImageViewerExitKeyOpencv.cpp \
     src/SolARCameraOpencv.cpp \
     src/SolAROpenCVHelper.cpp \
     src/SolARCameraCalibrationOpencv.cpp \
