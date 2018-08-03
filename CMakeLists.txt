@@ -47,6 +47,7 @@ set (SOURCES
     src/SolARMapFilterOpencv.cpp 
     src/SolARMapperOpencv.cpp 
     src/SolARImageFilterErodeOpencv.cpp
+	src/SolARVideoAsCameraOpencv.cpp 
 )
 
 set (HEADERS
@@ -96,6 +97,7 @@ set (HEADERS
     interfaces/SolARMapFilterOpencv.h
     interfaces/SolARMapperOpencv.h
     interfaces/SolARImageFilterErodeOpencv.h
+	interfaces/SolARVideoAsCameraOpencv.h
 )
 
 install (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xpcf_SolARModuleOpenCV_registry.xml" DESTINATION $ENV{BCOMDEVROOT}/.xpcf/SolAR/	)
