@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SOLARCAMERAOPENCV_H
-#define SOLARCAMERAOPENCV_H
+#ifndef SOLARVIDEOASCAMERAOPENCV_H
+#define SOLARVIDEOASCAMERAOPENCV_H
 
 #include <vector>
 #include <string>
@@ -32,12 +32,12 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARCameraOpencv : public org::bcom::xpcf::ConfigurableBase,
+class SOLAROPENCV_EXPORT_API SolARVideoAsCameraOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::devices::ICamera {
 public:
-    SolARCameraOpencv(); // to replace with ISolARDeviceInfo ! should be set later with init method ? default behavior on devices with facefront/rear embedded cams ?
+    SolARVideoAsCameraOpencv(); // to replace with ISolARDeviceInfo ! should be set later with init method ? default behavior on devices with facefront/rear embedded cams ?
 
-    ~SolARCameraOpencv() = default;
+    ~SolARVideoAsCameraOpencv() = default;
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
@@ -61,8 +61,8 @@ public:
      /// @brief Path to the calibration file of the camera
      std::string m_calibrationFile = "";
 
-     /// @brief The ID of the camera to capture with
-     unsigned int m_deviceID;
+     /// @brief Path to the video file which will be streamed as a camera capture
+     std::string m_videoPath = "";
 
      cv::VideoCapture m_capture;
      bool m_is_resolution_set;
@@ -77,4 +77,4 @@ public:
 }
 }
 
-#endif
+#endif // SOLARVIDEOASCAMERAOPENCV_H
