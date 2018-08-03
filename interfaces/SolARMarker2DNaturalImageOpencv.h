@@ -42,8 +42,8 @@ public:
  private:
      cv::Mat m_ocvImage;
 
-     /// The path of the yml file describing the natural image marker
-     std::string m_filePath;
+     /// @brief the path to the file describing the 2D Squared binary marker
+     std::string m_filePath ="";
 };
 
 }
