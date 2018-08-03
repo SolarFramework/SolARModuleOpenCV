@@ -32,7 +32,7 @@ namespace OPENCV {
     {
         addInterface<api::image::IPerspectiveController>(this);
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-        params->wrapInteger("outputImageWidt", m_outputImageWidth);
+        params->wrapInteger("outputImageWidth", m_outputImageWidth);
         params->wrapInteger("outputImageHeight", m_outputImageHeight);
     }
 
@@ -74,7 +74,15 @@ namespace OPENCV {
     FrameworkReturnCode SolARPerspectiveControllerOpencv::correct(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours, std::vector<SRef<Image>> & patches)
     {
         if (inputImg == nullptr)
+        {
+            LOG_ERROR("The input image for PerspectiveControllerOpenCV is null");
             return FrameworkReturnCode::_ERROR_;
+        }
+        if (m_outputImageWidth <=0 || m_outputImageHeight <=0)
+        {
+            LOG_ERROR("The width or height of the output image for PerspectiveControllerOpenCV is null or negative");
+            return FrameworkReturnCode::_ERROR_;
+        }
         std::vector<cv::Point2f> points;
         cv::Size patches_size(m_outputImageWidth, m_outputImageHeight);
         std::vector<cv::Point2f> markerCorners2D;
