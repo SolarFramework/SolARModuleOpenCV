@@ -20,7 +20,7 @@
 
 #include "api/display/I2DOverlay.h"
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 
 #include "SolAROpencvAPI.h"
 
@@ -31,32 +31,38 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolAR2DOverlayOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolAR2DOverlayOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::display::I2DOverlay
 {
 public:
     SolAR2DOverlayOpencv();
 
-    void drawCircle(const SRef<Point2Df> point, const unsigned int radius, const int thickness, const std::vector<unsigned int> & bgrValues, SRef<Image> displayImage) override;
+    void drawCircle(const SRef<Point2Df> point, SRef<Image> displayImage) override;
 
-    void drawCircles(const std::vector<SRef<Point2Df>>& points, const unsigned int radius, const int thickness, SRef<Image> displayImage) override;
+    void drawCircles(const std::vector<SRef<Point2Df>>& points, SRef<Image> displayImage) override;
 
     /// @brief Draw Circles.
     /// Draw all the circles stored in the vector std::vector <SRef<Keypoint>> & keypoints on image displayImage with specified radius and thickness.
-    void drawCircles(const std::vector<SRef<Keypoint>>& keypoints, const unsigned int radius, const int thickness, SRef<Image> displayImage) override;
+    void drawCircles(const std::vector<SRef<Keypoint>>& keypoints, SRef<Image> displayImage) override;
 
-    void drawContours (const std::vector <SRef<Contour2Df>> & contours, const int thickness, const std::vector<unsigned int> & bgrValues, SRef<Image> displayImage) override;
+    void drawContours (const std::vector <SRef<Contour2Df>> & contours, SRef<Image> displayImage) override;
 
     void drawSBPattern (const SRef<SquaredBinaryPattern> pattern, SRef<Image> displayImage) override;
 
     void unloadComponent () override final;
 
 private:
+    /// @brief The thickness of the displayed features (not used for SBPattern)
+    unsigned int m_thickness = 1;
 
-    CamCalibration m_intrinsic_parameters;
-    CamDistortion m_distorsion_parameters;
+    /// @brief The radius of a circle (not used for contours and SBPattern)
+    unsigned int m_radius = 5;
 
+    /// @brief The color in BGR format of the displayed features.
+    std::vector<unsigned int> m_color;
 
+    /// @brief if not null, the color will b erandomized for each elements
+    unsigned int m_randomColor = 0;
 };
 
 }
