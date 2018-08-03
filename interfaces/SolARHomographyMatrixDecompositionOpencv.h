@@ -26,24 +26,26 @@
 #include "opencv2/core.hpp"
 
 namespace SolAR {
-    using namespace datastructure;
-    namespace MODULES {
-        namespace OPENCV {
-            class SOLAROPENCV_EXPORT_API SolARHomographyMatrixDecomposerOpencv : public org::bcom::xpcf::ComponentBase,
-             public api::solver::pose::I2DTO3DTransformDecomposer
-                 {
-                    public:
-                        SolARHomographyMatrixDecomposerOpencv();
-                        bool decompose(const Transform2Df&F,
-                                       const CamCalibration&K,
-                                       const CamDistortion& dist,
-                                       std::vector<Transform3Df>& decomposedPoses) override;
-                        void unloadComponent () override final;
-                    private:
-                };
-        }
-    }
- }
+using namespace datastructure;
+namespace MODULES {
+namespace OPENCV {
+
+class SOLAROPENCV_EXPORT_API SolARHomographyMatrixDecomposerOpencv : public org::bcom::xpcf::ComponentBase,
+   public api::solver::pose::I2DTO3DTransformDecomposer {
+
+public:
+    SolARHomographyMatrixDecomposerOpencv();
+    bool decompose(const Transform2Df&F,
+                   const CamCalibration&K,
+                   const CamDistortion& dist,
+                   std::vector<Transform3Df>& decomposedPoses) override;
+    void unloadComponent () override final;
+private:
+
+};
+}
+}
+}
 #endif // SOLARHOMOGRAPHYMATRIXDECOMPOSITIONOPENCV_H
 
 

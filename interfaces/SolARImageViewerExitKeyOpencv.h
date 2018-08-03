@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SOLARIMAGEVIEWEROPENCV_H
-#define SOLARIMAGEVIEWEROPENCV_H
+#ifndef SOLARIMAGEVIEWEREXITKEYOPENCV_H
+#define SOLARIMAGEVIEWEREXITKEYOPENCV_H
 
 #include "api/display/IImageViewer.h"
 
@@ -28,34 +28,35 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARImageViewerOpencv : public org::bcom::xpcf::ConfigurableBase,
+class SOLAROPENCV_EXPORT_API SolARImageViewerExitKeyOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::display::IImageViewer {
 public:
-    SolARImageViewerOpencv();
-    ~SolARImageViewerOpencv();
+    SolARImageViewerExitKeyOpencv();
+    ~SolARImageViewerExitKeyOpencv();
     void unloadComponent () override final;
 
     /// \brief this method displays an image contained in a Image object in a window
     /// @param[in] img The image to display in the window
-    /// @return FrameworkReturnCode::_SUCCESS if the window is created, else FrameworkReturnCode::_ERROR_
+    /// @return FrameworkReturnCode::_SUCCESS if the window is created, else FrameworkReturnCode::_ERROR_ or if key with ExitKey code is pressed
     FrameworkReturnCode display(SRef<Image> img) override;
 
 private:
-    /// @brief the title of the window on which the image will be displayed
+    /// @brief The title of the window on which the image will be displayed
     std::string m_title = "";
 
-    /// @brief the width of the window on which the image will be displayed (if <=0, the width of the input image)
+    /// @brief The width of the window on which the image will be displayed (if <=0, the width of the input image)
     int m_width = 0;
 
-    /// @brief the height of the window on which the image will be displayed (if <=0, the height of the input image)
+    /// @brief The height of the window on which the image will be displayed (if <=0, the height of the input image)
     int m_height = 0;
+
+    /// @brief The key code to press to close the window
+    int m_exitKey = 27;
 
 };
 
 }
 }
 }  // end of namespace SolAR
-
-
 
 #endif

@@ -31,18 +31,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARContoursExtractorOpencv::SolARContoursExtractorOpencv():ComponentBase(xpcf::toUUID<SolARContoursExtractorOpencv>())
+    SolARContoursExtractorOpencv::SolARContoursExtractorOpencv():ConfigurableBase(xpcf::toUUID<SolARContoursExtractorOpencv>())
     {
         addInterface<api::features::IContoursExtractor>(this);
         SRef<xpcf::IPropertyMap> properties;
         properties = xpcf::getPropertyMapInstance();
         // properties = getPropertyRootNode();
-        properties->wrapFloat("minContourSize",m_minContourSize);
-    }
-
-    void SolARContoursExtractorOpencv::setParameters (float minContourSize)
-    {
-        m_minContourSize = minContourSize;
+        properties->wrapInteger("minContourEdges",m_minContourEdges);
     }
 
     FrameworkReturnCode SolARContoursExtractorOpencv::extract(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours)
@@ -63,7 +58,7 @@ namespace OPENCV {
             for (size_t i = 0; i<ocv_contours.size(); i++)
             {
                 size_t contourSize = ocv_contours[i].size();
-                if (contourSize > m_minContourSize)
+                if (contourSize > m_minContourEdges)
                 {
                     SRef<Contour2Df> contour = xpcf::utils::make_shared<Contour2Df>();
                     for (size_t j = 0; j < contourSize; j++)

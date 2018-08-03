@@ -47,6 +47,8 @@ class SolARImageFilterDilateOpencv;
 class SolARImageFilterErodeOpencv;
 class SolARImageLoaderOpencv;
 class SolARImageViewerOpencv;
+class SolARImageViewerExitKeyOpencv;
+class SolARImageViewerDurationOpencv;
 class SolARKeypointDetectorOpencv;
 class SolARMarker2DNaturalImageOpencv;
 class SolARMarker2DSquaredBinaryOpencv;
@@ -158,6 +160,14 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterErodeOpencv
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv,
                              "e42d6526-9eb1-4f8a-bb68-53e06f09609c",
                              "SolAR::MODULES::OPENCV::SolARImageLoaderOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageViewerDurationOpencv,
+                             "f113bc40-963c-11e8-9eb6-529269fb1459",
+                             "SolAR::MODULES::OPENCV::SolARImageViewerDurationOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageViewerExitKeyOpencv,
+                             "e1bec8f2-963c-11e8-9eb6-529269fb1459",
+                             "SolAR::MODULES::OPENCV::SolARImageViewerExitKeyOpencv component")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageViewerOpencv,
                              "19ea4e13-7085-4e3f-92ca-93f200ffb01b",

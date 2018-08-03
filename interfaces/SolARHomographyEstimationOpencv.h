@@ -20,7 +20,7 @@
 
 #include "api/solver/pose/I2DTransformFinder.h"
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <vector>
 #include "opencv2/core.hpp"
@@ -30,9 +30,9 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARHomographyEstimationOpencv : public org::bcom::xpcf::ComponentBase,
-    public api::solver::pose::I2DTransformFinder
-{
+class SOLAROPENCV_EXPORT_API SolARHomographyEstimationOpencv : public org::bcom::xpcf::ConfigurableBase,
+    public api::solver::pose::I2DTransformFinder {
+
 public:
     SolARHomographyEstimationOpencv();
 
@@ -49,8 +49,15 @@ private:
 
     std::vector<cv::Point2f> obj_corners;
     std::vector<cv::Point2f> scene_corners;
+
     int refWidth;
     int refHeight;
+
+    /// @brief The maximum allowed reprojection error to treat a point pair as an inlier
+    /// Here we are using the RANSAC to remove outlier. That is if:
+    /// \f[ \left|| dstPoints_i - convertPointHomogenous \left( H * srcPoints_i \right) \right|| > ransacReprojThreshold \f]
+    /// then the point i is considered an outlier. If srcPoints and dstPoints are measured in pixels, it usually makes sense to set this parameter somewhere in the range of 1 to 10.
+    double m_ransacReprojThreshold = 8;
 };
 
 }

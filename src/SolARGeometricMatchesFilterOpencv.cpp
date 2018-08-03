@@ -13,10 +13,14 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv():ComponentBase(xpcf::toUUID<SolARGeometricMatchesFilterOpencv>())
+SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv():ConfigurableBase(xpcf::toUUID<SolARGeometricMatchesFilterOpencv>())
 { 
-    addInterface<api::features::IMatchesFilter>(this);
     LOG_DEBUG("SolARGeometricMatchesFilterOpencv constructor")
+    addInterface<api::features::IMatchesFilter>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapDouble("confidenceLevel", m_confidenceLevel);
+    params->wrapDouble("outlierDistanceRatio", m_outlierDistanceRatio);
+
 }
 
 
@@ -54,7 +58,7 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
         {
             double minVal, maxVal;
             cv::minMaxIdx(pts1, &minVal, &maxVal);
-            F = cv::findFundamentalMat(pts1, pts2, cv::FM_RANSAC, 0.006 * maxVal, 0.99, status); //threshold from [Snavely07 4.1]
+            F = cv::findFundamentalMat(pts1, pts2, cv::FM_RANSAC, m_outlierDistanceRatio * maxVal, m_confidenceLevel, status);
         }
 
         for (unsigned int i = 0; i<status.size(); i++) {

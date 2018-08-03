@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "SolARImageViewerOpencv.h"
+#include "SolARImageViewerDurationOpencv.h"
 #include <iostream>
 #include <utility>
 #include <opencv2/core.hpp>
@@ -24,7 +24,7 @@
 #include <stdexcept>
 #include <vector>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageViewerOpencv)
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageViewerDurationOpencv)
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -47,20 +47,21 @@ inline int deduceOpenCVType(SRef<Image> img)
     return solar2cvTypeConvertMap.at(std::forward_as_tuple(img->getNbBitsPerComponent(),1,img->getNbChannels()));
 }
 
-SolARImageViewerOpencv::SolARImageViewerOpencv():ConfigurableBase(xpcf::toUUID<SolARImageViewerOpencv>())
+SolARImageViewerDurationOpencv::SolARImageViewerDurationOpencv():ConfigurableBase(xpcf::toUUID<SolARImageViewerDurationOpencv>())
 {
     addInterface<api::display::IImageViewer>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapString("title", m_title);
     params->wrapInteger("width", m_width);
     params->wrapInteger("height", m_height);
-    LOG_DEBUG(" SolARImageViewerOpencv constructor")
+    params->wrapUnsignedInteger("duration", m_duration);
+    LOG_DEBUG(" SolARImageViewerDurationOpencv constructor")
 }
 
 
-SolARImageViewerOpencv::~SolARImageViewerOpencv()
+SolARImageViewerDurationOpencv::~SolARImageViewerDurationOpencv()
 {
-    LOG_DEBUG(" SolARImageViewerOpencv destructor")
+    LOG_DEBUG(" SolARImageViewerDurationOpencv destructor")
 }
 
 static std::map<long,FrameworkReturnCode> OpenCVImageCodeMap = {
@@ -79,16 +80,16 @@ static FrameworkReturnCode safeErrorCodeConvert(int errCode)
     return OpenCVImageCodeMap[errCode];
 }
 
-
-FrameworkReturnCode SolARImageViewerOpencv::display(SRef<Image> img)
+FrameworkReturnCode SolARImageViewerDurationOpencv::display(SRef<Image> img)
 {
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
+
     cv::namedWindow( m_title,0); // Create a window for display.
     if(m_width>0 && m_height>0)
         cv::resizeWindow(m_title, m_width,m_height);
 
     cv::imshow(m_title, imgSource);
-    cv::waitKey(1); // wait for a keystroke to display window
+    cv::waitKey(m_duration); // wait for a keystroke to display window
     return FrameworkReturnCode::_SUCCESS;
 }
 

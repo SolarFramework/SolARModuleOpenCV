@@ -35,20 +35,28 @@ namespace MODULES {
 namespace OPENCV {
 
 
-SolARDescriptorsExtractorAKAZE2Opencv::SolARDescriptorsExtractorAKAZE2Opencv():ComponentBase(xpcf::toUUID<SolARDescriptorsExtractorAKAZE2Opencv>())
+SolARDescriptorsExtractorAKAZE2Opencv::SolARDescriptorsExtractorAKAZE2Opencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorsExtractorAKAZE2Opencv>())
 {
     addInterface<api::features::IDescriptorsExtractor>(this);
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZE2Opencv constructor")
     // m_extractor must have a default implementation : initialize default extractor type
     m_extractor=AKAZE2::create();
-    const double akaze_thresh = 3e-4;
-    m_extractor->setThreshold(akaze_thresh);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapDouble("threshold", m_threshold);
 }
-
 
 SolARDescriptorsExtractorAKAZE2Opencv::~SolARDescriptorsExtractorAKAZE2Opencv()
 {
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZE2Opencv destructor")
+}
+
+xpcf::XPCFErrorCode SolARDescriptorsExtractorAKAZE2Opencv::onConfigured()
+{
+    LOG_DEBUG(" SolARDescriptorsExtractorAKAZE2Opencv onConfigured");
+    if (m_extractor->empty())
+        return xpcf::_FAIL;
+    m_extractor->setThreshold(m_threshold);
+    return xpcf::_SUCCESS;
 }
 
 void SolARDescriptorsExtractorAKAZE2Opencv::extract(const SRef<Image> image, const std::vector<SRef<Keypoint> > &keypoints, SRef<DescriptorBuffer>& descriptors){

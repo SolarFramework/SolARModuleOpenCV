@@ -20,40 +20,53 @@
 
 #include "api/solver/pose/I2DTransformFinder.h"
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <vector>
 #include "opencv2/core.hpp"
 
 namespace SolAR {
-    using namespace datastructure;
-    namespace MODULES {
-        namespace OPENCV {
-        /// @class SolARFundamentalMatrixEstimationOpencv
-            class SOLAROPENCV_EXPORT_API SolARFundamentalMatrixEstimationOpencv : public org::bcom::xpcf::ComponentBase,
-              public api::solver::pose::I2DTransformFinder
-                {
-                    public:
-                       /// @brief SolARFundamentalMatrixEstimationOpencv constructor.
-                        SolARFundamentalMatrixEstimationOpencv();
-                       /// @brief SolARFundamentalMatrixEstimationOpencv destructor.
-                        ~SolARFundamentalMatrixEstimationOpencv();
-                        /// @brief Find fundamental matrix from 2 sets of 2d_points. Th estimation is based on the opencv findFundamental algorithm.
-                        /// @param[in] Set of 2d_points seen in view_1.
-                        /// @param[in] Set of 2d_points seen in view_2.
-                        /// @param[out] Estimated Fundamental transform matrix.
-                        api::solver::pose::Transform2DFinder::RetCode find(const std::vector< SRef<Point2Df> >& srcPoints,
-                                                                       const std::vector< SRef<Point2Df> >& dstPoints,
-                                                                       Transform2Df & fundamental) override;
+using namespace datastructure;
+namespace MODULES {
+namespace OPENCV {
 
-                    void unloadComponent () override final;
+/// @class SolARFundamentalMatrixEstimationOpencv
+class SOLAROPENCV_EXPORT_API SolARFundamentalMatrixEstimationOpencv : public org::bcom::xpcf::ConfigurableBase,
+  public api::solver::pose::I2DTransformFinder {
 
-                private:
-                    bool isFValid(const Transform2Df & F);
-                };
+public:
+   /// @brief SolARFundamentalMatrixEstimationOpencv constructor.
+    SolARFundamentalMatrixEstimationOpencv();
 
-            }
-       }
+    /// @brief SolARFundamentalMatrixEstimationOpencv destructor.
+    ~SolARFundamentalMatrixEstimationOpencv();
+
+    /// @brief Find fundamental matrix from 2 sets of 2d_points. Th estimation is based on the opencv findFundamental algorithm.
+    /// @param[in] Set of 2d_points seen in view_1.
+    /// @param[in] Set of 2d_points seen in view_2.
+    /// @param[out] Estimated Fundamental transform matrix.
+    api::solver::pose::Transform2DFinder::RetCode find(const std::vector< SRef<Point2Df> >& srcPoints,
+                                                   const std::vector< SRef<Point2Df> >& dstPoints,
+                                                   Transform2Df & fundamental) override;
+
+    void unloadComponent () override final;
+
+private:
+    bool isFValid(const Transform2Df & F);
+
+    /// @brief The desirable level of confidence (propability) that the estimated matrix is correct.
+    double m_confidenceLevel = 0.99;
+
+    ///  @brief threshold to define which point are ouliers
+    ///  Here we are using a RANSAC method to remove outlier.
+    ///  This attribute is the ratio between the maximum distance in pixels between source points and the maximum distance in pixels to the epipolar line for which point is considered as a outlier.
+    ///  The higher is this ratio, the more you will keep inliers to estimate your 2D transform, but the less this estimation will be correct.
+    ///  By default, this value is set to the one proposed by [Snavely07 4.1]
+    double m_outlierDistanceRatio = 0.006;
+};
+
 }
+}
+} // end of namespace Solar
 
 #endif // SolARHomographyEstimationOpencv_H

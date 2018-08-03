@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SOLARIMAGEVIEWEROPENCV_H
-#define SOLARIMAGEVIEWEROPENCV_H
+#ifndef SOLARIMAGEVIEWERDURATIONOPENCV_H
+#define SOLARIMAGEVIEWERDURATIONOPENCV_H
 
 #include "api/display/IImageViewer.h"
 
@@ -28,16 +28,16 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARImageViewerOpencv : public org::bcom::xpcf::ConfigurableBase,
+class SOLAROPENCV_EXPORT_API SolARImageViewerDurationOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::display::IImageViewer {
 public:
-    SolARImageViewerOpencv();
-    ~SolARImageViewerOpencv();
+    SolARImageViewerDurationOpencv();
+    ~SolARImageViewerDurationOpencv();
     void unloadComponent () override final;
 
     /// \brief this method displays an image contained in a Image object in a window
     /// @param[in] img The image to display in the window
-    /// @return FrameworkReturnCode::_SUCCESS if the window is created, else FrameworkReturnCode::_ERROR_
+    /// @return FrameworkReturnCode::_SUCCESS if the window is created, else FrameworkReturnCode::_ERROR_ or if the duration has passed.
     FrameworkReturnCode display(SRef<Image> img) override;
 
 private:
@@ -50,12 +50,13 @@ private:
     /// @brief the height of the window on which the image will be displayed (if <=0, the height of the input image)
     int m_height = 0;
 
+    /// @brief The duration in milliseconds before closing the window.
+    unsigned int m_duration;
+
 };
 
 }
 }
 }  // end of namespace SolAR
-
-
 
 #endif
