@@ -59,7 +59,7 @@ public:
     void unloadComponent () override final;
 
  private:
-    /// @brief Path to the calibration file of the camera
+     /// @brief Path to the calibration file of the camera
      std::string m_calibrationFile = "";
 
      int m_device_id;

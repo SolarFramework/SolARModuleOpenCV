@@ -50,6 +50,8 @@ private:
     /// @brief the height of the window on which the image will be displayed (if <=0, the height of the input image)
     int m_height = 0;
 
+
+
 };
 
 }

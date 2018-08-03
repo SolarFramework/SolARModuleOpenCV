@@ -42,7 +42,7 @@ namespace OPENCV {
         LOG_DEBUG(" SolARCameraOpencv onConfigured");
         if (m_calibrationFile.empty())
         {
-            LOG_ERROR("Camera Calibration file path is empty")
+            LOG_ERROR("Camera Calibration file path is empty");
             return xpcf::_FAIL;
         }
         cv::FileStorage fs(m_calibrationFile, cv::FileStorage::READ);
