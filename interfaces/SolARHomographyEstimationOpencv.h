@@ -57,7 +57,7 @@ private:
     /// Here we are using the RANSAC to remove outlier. That is if:
     /// \f[ \left|| dstPoints_i - convertPointHomogenous \left( H * srcPoints_i \right) \right|| > ransacReprojThreshold \f]
     /// then the point i is considered an outlier. If srcPoints and dstPoints are measured in pixels, it usually makes sense to set this parameter somewhere in the range of 1 to 10.
-    double m_ransacReprojThreshold = 8;
+    double m_ransacReprojThreshold = 8.0;
 };
 
 }

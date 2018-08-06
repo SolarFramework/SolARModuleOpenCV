@@ -21,7 +21,7 @@
 #include "api/solver/pose/I3DTransformFinder.h"
 #include "datastructure/Image.h"
 #include "SolAROpencvAPI.h"
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 
 namespace SolAR {
     using namespace datastructure;
@@ -29,9 +29,9 @@ namespace SolAR {
         namespace OPENCV {
         /**
          * @class SolARPoseEstimationPnpOpencv
-         * @brief Finds the camera pose of 2D-3D points correspondaces based on opencv pnp algorithm.
+         * @brief Finds the camera pose of 2D-3D points correspondaces based on opencv pnp algorithm using Ransac method.
          */
-            class SOLAROPENCV_EXPORT_API SolARPoseEstimationPnpOpencv : public org::bcom::xpcf::ComponentBase,
+            class SOLAROPENCV_EXPORT_API SolARPoseEstimationPnpOpencv : public org::bcom::xpcf::ConfigurableBase,
                 public api::solver::pose::I3DTransformFinder
             {
             public:
@@ -71,6 +71,16 @@ namespace SolAR {
 
 
             private:
+                /// @brief Number of iterations
+                int m_iterationsCount = 1000;
+
+                /// @brief Inlier threshold value used by the RANSAC procedure. The parameter value is the maximum allowed distance between the observed and computed point projections to consider it an inlier.
+                float m_reprojError = 4.0;
+
+                /// @brief The probability that the algorithm produces a useful result.
+                float m_confidence = 0.99f;
+
+
                 cv::Mat m_camMatrix;
                 cv::Mat m_camDistorsion;
             };

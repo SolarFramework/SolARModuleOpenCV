@@ -47,9 +47,13 @@ struct solarInlier{
             return reproj_error < val.reproj_error;
         }
 };
-SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ComponentBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
+SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
     addInterface<api::solver::pose::I3DTransformFinder>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapInteger("iterationsCount", m_iterationsCount);
+    params->wrapFloat("reprojError", m_reprojError);
+    params->wrapFloat("confidence", m_confidence);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
@@ -144,17 +148,17 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
 
      cv::Mat inliers_cv;
      cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, false,
-                           1000, 4.0, 0.99, inliers_cv, 1);
+                           m_iterationsCount, m_reprojError, m_confidence, inliers_cv, 1);
 
 
      std::vector<cv::Point3f>in3d;
      std::vector<cv::Point2f>in2d;
      std::vector<cv::Point2f> projected3D;
      cv::projectPoints(worldCVPoints, raux, taux, m_camMatrix, m_camDistorsion, projected3D);
-     double reproj_error = 4.0;
+
      for (int i = 0; i<projected3D.size(); i++) {
          double err_reprj = norm(projected3D[i]-imageCVPoints[i]);
-         if (err_reprj <reproj_error) {
+         if (err_reprj <m_reprojError) {
              solarInlier inn;
              inn.idx = i; inn.reproj_error = err_reprj;
 

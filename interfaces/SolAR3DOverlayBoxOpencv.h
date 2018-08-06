@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SOLAR3DOVERLAYOPENCV_H
-#define SOLAR3DOVERLAYOPENCV_H
+#ifndef SolAR3DOverlayBoxOpencv_H
+#define SolAR3DOverlayBoxOpencv_H
 #include <vector>
 
 #include "api/display/I3DOverlay.h"
@@ -31,26 +31,30 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolAR3DOverlayOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolAR3DOverlayBoxOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::display::I3DOverlay
 {
 public:
-    SolAR3DOverlayOpencv();
+    SolAR3DOverlayBoxOpencv();
 
-    void drawBox (const Transform3Df & pose, const float X_world, const float Y_world, const float Z_world, const Transform3Df affineTransform, SRef<Image> displayImage) override;
+    void draw(const Transform3Df & pose, SRef<Image> displayImage) override;
 
-     void setCameraParameters(const CamCalibration & intrinsic_parameters, const CamDistortion & distorsion_parameters);
+    void setCameraParameters(const CamCalibration & intrinsic_parameters, const CamDistortion & distorsion_parameters);
+
+    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
     void unloadComponent () override final;
 
 private:
+    /// @brief position of the center of the bottom face of the Box defined in world unit
+    std::vector<float> m_position = {0.0,0.0,0.0};
 
-    void setParallelepipedPosition(const float X_world, const float Y_world, const float Z_world);
-    void moveParalleliped(const Transform3Df transformation);
-    FrameworkReturnCode transform3D(const std::vector<SRef<Point3Df>> & inputPoints, const Transform3Df transformation, std::vector<SRef<Point3Df>> & outputPoints);
+    /// @brief orientation of the box in euler angles in degrees
+    std::vector<float> m_orientation = {0.0, 0.0, 0.0};
 
-    CamCalibration m_intrinsic_parameters;
-    CamDistortion m_distorsion_parameters;
+    /// @brief size of the box define in world unit
+    std::vector<float> m_size = {1.0,1.0,1.0};
+
 
     cv::Mat m_camMatrix;
     cv::Mat m_camDistorsion;
@@ -63,4 +67,4 @@ private:
 }
 }
 
-#endif // SOLAR3DOVERLAYOPENCV_H
+#endif // SolAR3DOverlayBoxOpencv_H

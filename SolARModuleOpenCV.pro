@@ -65,7 +65,6 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARPoseEstimationPnpOpencv.h \
     interfaces/SolARGeometricMatchesFilterOpencv.h \
     interfaces/SolARSideBySideOverlayOpencv.h \
-    interfaces/SolAR3DOverlayOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolARSVDTriangulationOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
@@ -83,7 +82,8 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARMapFilterOpencv.h \
     interfaces/SolARMapperOpencv.h \
     interfaces/SolARImageFilterErodeOpencv.h \
-    interfaces/SolARVideoAsCameraOpencv.h
+    interfaces/SolARVideoAsCameraOpencv.h \
+    interfaces/SolAR3DOverlayBoxOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
@@ -107,7 +107,6 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolARSideBySideOverlayOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
-    src/SolAR3DOverlayOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
     src/SolARPoseEstimationPnpEPFL.cpp \
     src/SolARPoseEstimationPnpOpencv.cpp \
@@ -128,7 +127,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARMapFilterOpencv.cpp \
     src/SolARMapperOpencv.cpp \
     src/SolARImageFilterErodeOpencv.cpp \
-    src/SolARVideoAsCameraOpencv.cpp
+    src/SolARVideoAsCameraOpencv.cpp \
+    src/SolAR3DOverlayBoxOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers

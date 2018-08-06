@@ -17,7 +17,7 @@
 #include "SolARModuleOpencv_traits.h"
 
 #include "SolAR2DOverlayOpencv.h"
-#include "SolAR3DOverlayOpencv.h"
+#include "SolAR3DOverlayBoxOpencv.h"
 #include "SolARCameraCalibrationOpencv.h"
 #include "SolARCameraOpencv.h"
 #include "SolARContoursExtractorOpencv.h"
@@ -65,7 +65,7 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv>(componentUUID,interfaceRef);
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv>(componentUUID,interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolAR3DOverlayBoxOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
@@ -217,7 +217,7 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
 
 XPCF_BEGIN_COMPONENTS_DECLARATION
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv)
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR3DOverlayBoxOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCameraOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv)

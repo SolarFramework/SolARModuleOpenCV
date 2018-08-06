@@ -5,7 +5,7 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="62b8b0b5-9344-40e6-a288-e609eb3ff0f1" description="I2DOverlay"/>
         </component>
-		<component uuid="2db01f59-9793-4cd5-8e13-b25d0ed5735b" description="SolAR3DOverlayOpencv">
+		<component uuid="2db01f59-9793-4cd5-8e13-b25d0ed5735b" description="SolAR3DOverlayBoxOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="81a20f52-6bf9-4949-b914-df2f614bc945" description="I3DOverlay"/>
         </component>

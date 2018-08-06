@@ -23,7 +23,7 @@ namespace SolAR {
 namespace MODULES {
 namespace OPENCV {
 class SolAR2DOverlayOpencv;
-class SolAR3DOverlayOpencv;
+class SolAR3DOverlayBoxOpencv;
 class SolARCameraCalibrationOpencv;
 class SolARCameraOpencv;
 class SolARContoursExtractorOpencv;
@@ -68,9 +68,9 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv,
                              "cc51d685-9797-4ffd-a9dd-cec4f367fa6a",
                              "SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv component")
 
-XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv,
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAR3DOverlayBoxOpencv,
                              "2db01f59-9793-4cd5-8e13-b25d0ed5735b",
-                             "SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv component")
+                             "SolAR::MODULES::OPENCV::SolAR3DOverlayBoxOpencv component")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv,
                              "702a7f53-e5ec-45d2-887d-daa99a34a33c",
