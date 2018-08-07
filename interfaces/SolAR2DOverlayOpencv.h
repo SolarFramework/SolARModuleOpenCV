@@ -59,9 +59,9 @@ private:
     unsigned int m_radius = 5;
 
     /// @brief The color in BGR format of the displayed features.
-    std::vector<unsigned int> m_color;
+    std::vector<unsigned int> m_color = {0,255,0};
 
-    /// @brief if not null, the color will b erandomized for each elements
+    /// @brief if not null, the color will be randomized for each elements
     unsigned int m_randomColor = 0;
 };
 

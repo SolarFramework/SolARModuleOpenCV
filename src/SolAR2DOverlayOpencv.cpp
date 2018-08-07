@@ -42,7 +42,6 @@ SolAR2DOverlayOpencv::SolAR2DOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolAR
 {
    addInterface<api::display::I2DOverlay>(this);
    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-   m_color.resize(3);
 
    params->wrapUnsignedInteger("thickness", m_thickness);
    params->wrapUnsignedInteger("radius", m_radius);

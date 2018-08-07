@@ -22,7 +22,7 @@
 
 #include "api/display/ISideBySideOverlay.h"
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
@@ -30,16 +30,28 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARSideBySideOverlayOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARSideBySideOverlayOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::display::ISideBySideOverlay
 {
 public:
     SolARSideBySideOverlayOpencv();
 
-    void drawMatchesLines(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <SRef<Point2Df>> & points_image1, const std::vector <SRef<Point2Df>> & points_image2, const int points_number = -1) override;
+    void drawMatchesLines(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <SRef<Point2Df>> & points_image1, const std::vector <SRef<Point2Df>> & points_image2) override;
 
     void unloadComponent () override final;
 
+private:
+    /// @brief The color of the linse displaying the matches between the two images
+    std::vector<unsigned int> m_color = {0,255,0};
+
+    /// @brief if not null, the color will be randomized for each line.
+    unsigned int m_randomColor = 0;
+
+    /// @brief the thickness of the lines displaying the matches between the two images
+    unsigned int m_thickness = 1;
+
+    /// @brief the maximum number of matches to display. If negative, all matches are displayed
+    int m_maxMatches = -1;
 };
 
 }

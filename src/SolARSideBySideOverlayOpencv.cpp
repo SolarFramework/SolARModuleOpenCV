@@ -37,16 +37,22 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARSideBySideOverlayOpencv::SolARSideBySideOverlayOpencv():ComponentBase(xpcf::toUUID<SolARSideBySideOverlayOpencv>())
+SolARSideBySideOverlayOpencv::SolARSideBySideOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolARSideBySideOverlayOpencv>())
 {
     addInterface<api::display::ISideBySideOverlay>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    m_color.resize(3);
 
-   LOG_DEBUG(" SolARSideBySideOverlayOpencv constructor");
+    params->wrapUnsignedInteger("thickness", m_thickness);
+    params->wrapUnsignedIntegerVector("color", m_color);
+    params->wrapUnsignedInteger("randomColor", m_randomColor);
+    params->wrapInteger("maxMatches", m_maxMatches);
+    LOG_DEBUG(" SolARSideBySideOverlayOpencv constructor");
 
 }
 
 
-void SolARSideBySideOverlayOpencv::drawMatchesLines(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <SRef<Point2Df>> & points_image1, const std::vector <SRef<Point2Df>> & points_image2, const int points_number)
+void SolARSideBySideOverlayOpencv::drawMatchesLines(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <SRef<Point2Df>> & points_image1, const std::vector <SRef<Point2Df>> & points_image2)
 {
     if (outImage == nullptr)
     {
@@ -71,13 +77,27 @@ void SolARSideBySideOverlayOpencv::drawMatchesLines(const SRef<Image> image1, co
     img2.copyTo(outImg(cv::Rect(img1_width, 0, image2->getWidth(), image2->getHeight())));
 
     int nbPoints = std::min(points_image1.size(), points_image2.size());
-    if (points_number >= 0)
-        nbPoints = std::min(points_number, nbPoints);
+    if (m_maxMatches >= 0)
+        nbPoints = std::min((int)m_maxMatches, nbPoints);
 
-    for (int i = 0;i<nbPoints;++i){
-        point1 = *(points_image1.at(i));
-        point2 = *(points_image2.at(i));
-        cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(0,255,0),1);
+    if (!m_randomColor)
+    {
+        for (int i = 0;i<nbPoints;++i){
+            point1 = *(points_image1.at(i));
+            point2 = *(points_image2.at(i));
+            cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[0],m_color[1],m_color[2]),m_thickness);
+        }
+    }
+    else
+    {
+        std::random_device rd;     // only used once to initialise (seed) engine
+        std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+        std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
+        for (int i = 0;i<nbPoints;++i){
+            point1 = *(points_image1.at(i));
+            point2 = *(points_image2.at(i));
+            cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
+        }
     }
 }
 
