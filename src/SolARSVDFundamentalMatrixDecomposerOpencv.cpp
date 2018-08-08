@@ -98,7 +98,7 @@ using namespace datastructure;
                     double singular_values_ratio = fabsf(svd_w.at<double>(0) / svd_w.at<double>(1));
                     if (singular_values_ratio>1.0) singular_values_ratio = 1.0 / singular_values_ratio; // flip ratio to keep it [0,1]
                     if (singular_values_ratio < 0.7) {
-                        std::cout << "singular values are too far apart\n";
+                        LOG_WARNING("singular values are too far apart");
                         return false;
                     }
 
@@ -108,9 +108,6 @@ using namespace datastructure;
                     cv::Matx33d Wt(0, 1, 0,
                         -1, 0, 0,
                         0, 0, 1);
-
-                     std::cout<<" svd_U size: "<<svd_u.size()<<std::endl;
-                     std::cout<<"   sv cols 2: "<<svd_u.col(2)<<std::endl;
 
                     R1 = svd_u * cv::Mat(W) * svd_vt; //H
                     R2 = svd_u * cv::Mat(Wt) * svd_vt; //
