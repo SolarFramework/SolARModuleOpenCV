@@ -15,7 +15,6 @@
  */
 
 #include "SolARDescriptorMatcherKNNOpencv.h"
-//#include "SolARDescriptorOpencv.h"
 #include <iostream>
 #include <utility>
 
