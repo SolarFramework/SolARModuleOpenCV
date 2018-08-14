@@ -43,7 +43,7 @@ public:
      private:
 
         /// @brief The desirable level of confidence (propability) that the estimated matrix is correct.
-        double m_confidenceLevel = 0.99;
+        double m_confidence = 0.99;
 
         ///  @brief threshold to define which point are ouliers
         ///  Here we are using a RANSAC method to keep only inliers matches.

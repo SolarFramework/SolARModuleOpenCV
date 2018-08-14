@@ -18,7 +18,7 @@ SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv():Configura
     LOG_DEBUG("SolARGeometricMatchesFilterOpencv constructor")
     addInterface<api::features::IMatchesFilter>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapDouble("confidenceLevel", m_confidenceLevel);
+    params->wrapDouble("confidence", m_confidence);
     params->wrapDouble("outlierDistanceRatio", m_outlierDistanceRatio);
 
 }
@@ -58,7 +58,7 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
         {
             double minVal, maxVal;
             cv::minMaxIdx(pts1, &minVal, &maxVal);
-            F = cv::findFundamentalMat(pts1, pts2, cv::FM_RANSAC, m_outlierDistanceRatio * maxVal, m_confidenceLevel, status);
+            F = cv::findFundamentalMat(pts1, pts2, cv::FM_RANSAC, m_outlierDistanceRatio * maxVal, m_confidence, status);
         }
 
         for (unsigned int i = 0; i<status.size(); i++) {
