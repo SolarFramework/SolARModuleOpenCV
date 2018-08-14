@@ -58,7 +58,6 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
     interfaces/SolARDescriptorMatcherKNNOpencv.h \
     interfaces/SolARDescriptorMatcherRadiusOpencv.h \
-    interfaces/SolARHomographyMatrixDecompositionOpencv.h \
     interfaces/SolARFundamentalMatrixEstimationOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
     interfaces/SolARPoseEstimationPnpEPFL.h \
@@ -83,7 +82,9 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARMapperOpencv.h \
     interfaces/SolARImageFilterErodeOpencv.h \
     interfaces/SolARVideoAsCameraOpencv.h \
-    interfaces/SolAR3DOverlayBoxOpencv.h
+    interfaces/SolAR3DOverlayBoxOpencv.h \
+    interfaces/SolARHomographyMatrixDecomposerOpencv.h \
+    interfaces/SolARPoseFinderFrom2D2DOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
@@ -116,7 +117,6 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/AKAZE2/fed.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
-    src/SolARHomographyMatrixDecompositionOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
     src/SolARImageFilterBinaryOpencv.cpp \
@@ -128,7 +128,9 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARMapperOpencv.cpp \
     src/SolARImageFilterErodeOpencv.cpp \
     src/SolARVideoAsCameraOpencv.cpp \
-    src/SolAR3DOverlayBoxOpencv.cpp
+    src/SolAR3DOverlayBoxOpencv.cpp \
+    src/SolARHomographyMatrixDecomposerOpencv.cpp \
+    src/SolARPoseFinderFrom2D2DOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
