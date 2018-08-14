@@ -42,7 +42,7 @@ namespace OPENCV {
 
 SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL():ComponentBase(xpcf::toUUID<SolARPoseEstimationPnpEPFL>())
 {
-    addInterface<api::solver::pose::I3DTransformFinder>(this);
+    addInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);

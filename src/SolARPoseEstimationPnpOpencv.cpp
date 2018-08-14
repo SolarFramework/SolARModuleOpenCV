@@ -49,7 +49,7 @@ struct solarInlier{
 };
 SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
-    addInterface<api::solver::pose::I3DTransformFinder>(this);
+    addInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapInteger("iterationsCount", m_iterationsCount);
     params->wrapFloat("reprojError", m_reprojError);
@@ -217,7 +217,6 @@ void SolARPoseEstimationPnpOpencv::setCameraParameters(const CamCalibration & in
     this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
     this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
     this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
-
 }
 
 }
