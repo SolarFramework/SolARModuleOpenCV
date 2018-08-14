@@ -111,10 +111,11 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
     
     matches.clear();
     for(unsigned i = 0; i < nn_matches.size(); i++) {
-             if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
-                  
+        if (nn_matches[i].size()==1)
+            matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
+        else if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
                  matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
-             }
+        }
     }
   
      return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
