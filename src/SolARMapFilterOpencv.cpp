@@ -85,6 +85,10 @@ namespace SolAR {
 				void  SolARMapFilterOpencv::filterPointCloud(const std::vector<SRef<CloudPoint>>& input, const std::vector<bool> & isFrontCamera, std::vector<SRef<CloudPoint>>& output)
 				{
 					//filter out outlier points with high reprojection
+                                        if (input.size() == 0)
+                                        {
+                                            LOG_INFO("FilterPointCLoud has an empty vector as input");
+                                        }
 					std::vector<double> reprj_errors;
 					for (int i = 0; i<input.size(); i++) {
 						reprj_errors.push_back(input[i]->getReprojError());
