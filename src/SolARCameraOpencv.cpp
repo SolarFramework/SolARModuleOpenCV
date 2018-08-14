@@ -135,7 +135,7 @@ namespace OPENCV {
         }
         else
         {
-            LOG_ERROR("Cannot open camera with id {]", m_deviceID);
+            LOG_ERROR("Cannot open camera with id {}", m_deviceID);
             return FrameworkReturnCode::_ERROR_;
         }
     }
