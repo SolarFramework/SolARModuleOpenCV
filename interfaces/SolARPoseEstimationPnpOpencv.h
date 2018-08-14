@@ -18,7 +18,7 @@
 #define SOLARPOSEESTIMATIONPNPOPENCV_H
 #include <vector>
 #include "opencv2/core.hpp"
-#include "api/solver/pose/I3DTransformFinder.h"
+#include "api/solver/pose/I3DTransformFinderFrom2D3D.h"
 #include "datastructure/Image.h"
 #include "SolAROpencvAPI.h"
 #include "xpcf/component/ConfigurableBase.h"
@@ -32,7 +32,7 @@ namespace SolAR {
          * @brief Finds the camera pose of 2D-3D points correspondaces based on opencv pnp algorithm using Ransac method.
          */
             class SOLAROPENCV_EXPORT_API SolARPoseEstimationPnpOpencv : public org::bcom::xpcf::ConfigurableBase,
-                public api::solver::pose::I3DTransformFinder
+                public api::solver::pose::I3DTransformFinderFrom2D3D
             {
             public:
                 ///@brief SolARPoseEstimationPnpOpencv constructor;

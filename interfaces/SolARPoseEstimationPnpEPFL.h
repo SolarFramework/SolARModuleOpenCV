@@ -20,7 +20,7 @@
 #include <vector>
 #include "opencv2/core.hpp"
 
-#include "api/solver/pose/I3DTransformFinder.h"
+#include "api/solver/pose/I3DTransformFinderFrom2D3D.h"
 
 #include "SolAROpencvAPI.h"
 #include "xpcf/component/ComponentBase.h"
@@ -34,7 +34,7 @@ namespace SolAR {
          * @brief Finds the camera pose of 2D-3D points correspondaces based on EPFL pnp algorithm.
          */
         class SOLAROPENCV_EXPORT_API SolARPoseEstimationPnpEPFL : public org::bcom::xpcf::ComponentBase,
-            public api::solver::pose::I3DTransformFinder
+            public api::solver::pose::I3DTransformFinderFrom2D3D
         {
         public:
             ///@brief SolARPoseEstimationPnpEPFL constructor.
