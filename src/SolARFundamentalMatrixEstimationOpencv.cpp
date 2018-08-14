@@ -40,8 +40,8 @@ SolARFundamentalMatrixEstimationOpencv::SolARFundamentalMatrixEstimationOpencv()
     addInterface<api::solver::pose::I2DTransformFinder>(this);
     LOG_DEBUG("SolARFundamentalMatrixEstimationOpencv constructor");
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapDouble("confidenceLevel", m_confidenceLevel);
-    params->wrapDouble("outlierDistanceRatio", m_outlierDistanceRatio);
+    params->wrapFloat("confidenceLevel", m_confidenceLevel);
+    params->wrapFloat("outlierDistanceRatio", m_outlierDistanceRatio);
 
 }
 
