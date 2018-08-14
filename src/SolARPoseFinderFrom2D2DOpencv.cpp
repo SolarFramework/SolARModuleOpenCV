@@ -51,60 +51,40 @@ SolARPoseFinderFrom2D2DOpencv::~SolARPoseFinderFrom2D2DOpencv(){
 FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SRef<Point2Df>> & matchedPointsView1,
                                                             const std::vector<SRef<Point2Df>> & matchedPointsView2,
                                                             const Transform3Df& poseView1,
-                                                            Transform3Df & poseView2){
-    double minVal, maxVal;
-
-    std::vector<cv::Point2f> points_view1;
-    std::vector<cv::Point2f> points_view2;
-
-    points_view1.resize(matchedPointsView1.size());
-    points_view2.resize(matchedPointsView2.size());
-    for( int i = 0; i < matchedPointsView1.size(); i++ ){
-        points_view1[i].x=matchedPointsView1.at(i)->getX();
-        points_view1[i].y=matchedPointsView1.at(i)->getY();
-
-        points_view2[i].x=matchedPointsView2.at(i)->getX();
-        points_view2[i].y=matchedPointsView2.at(i)->getY();
-    }
-    cv::minMaxIdx(points_view1, &minVal, &maxVal);
-    cv::Point2f pp; pp.x=m_camCalibration(0,2); pp.y=m_camCalibration(1,2);
-    cv::Mat Ecv = cv::findEssentialMat(points_view1, points_view2, m_camCalibration(0,0), pp, cv::RANSAC, m_confidence, m_outlierDistanceRatio * maxVal);
-    cv::Mat cvRot;
-    cv::Mat cvPos;
-
-    cv::recoverPose(Ecv, points_view1, points_view2, cvRot, cvPos, m_camCalibration(0,0), pp);
-
-    cv::Mat cvTransform;
-    cvTransform = cv::Mat::eye(4, 4, CV_32F);
-    cvRot.copyTo(cvTransform(cv::Rect_<float>(0,0,3,3)));
-    cvPos.copyTo(cvTransform(cv::Rect_<float>(3,0,1,3)));
-    Transform3Df view2Transform;
-    SolAROpenCVHelper::convertCVMatToSolar(cvTransform, view2Transform);
-    poseView2 = poseView1 * view2Transform;
-    return FrameworkReturnCode::_SUCCESS;
-}
-
-FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SRef<Point2Df>> & matchedPointsView1,
-                                                            const std::vector<SRef<Point2Df>> & matchedPointsView2,
-                                                            const Transform3Df& poseView1,
                                                             Transform3Df & poseView2,
-                                                            std::vector<SRef<Point2Df>>& pointsView1_inlier,
-                                                            std::vector<SRef<Point2Df>>& pointsView2_inlier){
+                                                            std::vector<DescriptorMatch>& inlierMatches){
     double minVal, maxVal;
 
     std::vector<cv::Point2f> points_view1;
     std::vector<cv::Point2f> points_view2;
 
-    //std::vector<uchar> status(matchedPointsView1.size());
     cv::Mat inliers;
-    points_view1.resize(matchedPointsView1.size());
-    points_view2.resize(matchedPointsView2.size());
-    for( int i = 0; i < matchedPointsView1.size(); i++ ){
-        points_view1[i].x=matchedPointsView1.at(i)->getX();
-        points_view1[i].y=matchedPointsView1.at(i)->getY();
 
-        points_view2[i].x=matchedPointsView2.at(i)->getX();
-        points_view2[i].y=matchedPointsView2.at(i)->getY();
+    if (inlierMatches.empty()) // Inliers are not defined, take all input 2D points
+    {
+        points_view1.resize(matchedPointsView1.size());
+        points_view2.resize(matchedPointsView1.size());
+
+        for( int i = 0; i < matchedPointsView1.size(); i++ ){
+            points_view1[i].x=matchedPointsView1.at(i)->getX();
+            points_view1[i].y=matchedPointsView1.at(i)->getY();
+
+            points_view2[i].x=matchedPointsView2.at(i)->getX();
+            points_view2[i].y=matchedPointsView2.at(i)->getY();
+        }
+    }
+    else // Inliers are defined, take only them
+    {
+        points_view1.resize(inlierMatches.size());
+        points_view2.resize(inlierMatches.size());
+
+        for( int i = 0; i < inlierMatches.size(); i++ ){
+            points_view1[i].x=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA())->getX();
+            points_view1[i].y=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA())->getY();
+
+            points_view2[i].x=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB())->getX();
+            points_view2[i].y=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB())->getY();
+        }
     }
     cv::minMaxIdx(points_view1, &minVal, &maxVal);
     cv::Point2f pp; pp.x=m_camCalibration(0,2); pp.y=m_camCalibration(1,2);
@@ -123,16 +103,102 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
     poseView2 = view2Transform.inverse() * poseView1 ;
 
     int nbInliers = 0;
-    for (int i = 0; i < inliers.rows; i++)
+    std::vector<DescriptorMatch> inlierMatches_output;
+    if (inlierMatches.empty()) // set the inliers matches among all input 2D points return by recoverPose
     {
-        if (inliers.at<bool>(i))
-        {
-            pointsView1_inlier.push_back(matchedPointsView1[i]);
-            pointsView2_inlier.push_back(matchedPointsView2[i]);
-            nbInliers++;
+        for (int i = 0; i < inliers.rows; i++)
+            if (inliers.at<bool>(i))
+                inlierMatches_output.push_back(DescriptorMatch(i, i, 1.0f));
+
+        LOG_DEBUG("Nbinliers : {} (// {})", inlierMatches.size(), matchedPointsView1.size());
+    }
+    else
+    {
+        for (int i = 0; i < inliers.rows; i++)
+            if (inliers.at<bool>(i))
+                inlierMatches_output.push_back(inlierMatches[i]);
+
+        LOG_DEBUG("Nbinliers : {} (// {})", inlierMatches.size(), inlierMatches.size());
+    }
+
+    inlierMatches = inlierMatches_output;
+    return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SRef<Keypoint>> & matchedPointsView1,
+                                                            const std::vector<SRef<Keypoint>> & matchedPointsView2,
+                                                            const Transform3Df& poseView1,
+                                                            Transform3Df & poseView2,
+                                                            std::vector<DescriptorMatch>& inlierMatches){
+    double minVal, maxVal;
+
+    std::vector<cv::Point2f> points_view1;
+    std::vector<cv::Point2f> points_view2;
+
+    cv::Mat inliers;
+
+    if (inlierMatches.empty()) // Inliers are not defined, take all input 2D points
+    {
+        points_view1.resize(matchedPointsView1.size());
+        points_view2.resize(matchedPointsView1.size());
+
+        for( int i = 0; i < matchedPointsView1.size(); i++ ){
+            points_view1[i].x=matchedPointsView1.at(i)->getX();
+            points_view1[i].y=matchedPointsView1.at(i)->getY();
+
+            points_view2[i].x=matchedPointsView2.at(i)->getX();
+            points_view2[i].y=matchedPointsView2.at(i)->getY();
         }
     }
-    LOG_DEBUG("Nbinliers : {} (// {})", nbInliers, inliers.rows);
+    else // Inliers are defined, take only them
+    {
+        points_view1.resize(inlierMatches.size());
+        points_view2.resize(inlierMatches.size());
+
+        for( int i = 0; i < inlierMatches.size(); i++ ){
+            points_view1[i].x=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA())->getX();
+            points_view1[i].y=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA())->getY();
+
+            points_view2[i].x=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB())->getX();
+            points_view2[i].y=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB())->getY();
+        }
+    }
+    cv::minMaxIdx(points_view1, &minVal, &maxVal);
+    cv::Point2f pp; pp.x=m_camCalibration(0,2); pp.y=m_camCalibration(1,2);
+    cv::Mat Ecv = cv::findEssentialMat(points_view1, points_view2, m_camCalibration(0,0), pp, cv::RANSAC, m_confidence, m_outlierDistanceRatio * maxVal, inliers);
+    cv::Mat cvRot;
+    cv::Mat cvPos;
+
+    cv::recoverPose(Ecv, points_view1, points_view2, cvRot, cvPos, m_camCalibration(0,0), pp, inliers);
+
+    cv::Mat cvTransform;
+    cvTransform = cv::Mat::eye(4, 4, CV_32F);
+    cvRot.copyTo(cvTransform(cv::Rect_<float>(0,0,3,3)));
+    cvPos.copyTo(cvTransform(cv::Rect_<float>(3,0,1,3)));
+    Transform3Df view2Transform;
+    SolAROpenCVHelper::convertCVMatToSolar(cvTransform, view2Transform);
+    poseView2 = view2Transform.inverse() * poseView1 ;
+
+    int nbInliers = 0;
+    std::vector<DescriptorMatch> inlierMatches_output;
+    if (inlierMatches.empty()) // set the inliers matches among all input 2D points return by recoverPose
+    {
+        for (int i = 0; i < inliers.rows; i++)
+            if (inliers.at<bool>(i))
+                inlierMatches_output.push_back(DescriptorMatch(i, i, 1.0f));
+
+        LOG_DEBUG("Nbinliers : {} (// {})", inlierMatches.size(), matchedPointsView1.size());
+    }
+    else
+    {
+        for (int i = 0; i < inliers.rows; i++)
+            if (inliers.at<bool>(i))
+                inlierMatches_output.push_back(inlierMatches[i]);
+
+        LOG_DEBUG("Nbinliers : {} (// {})", inlierMatches.size(), inlierMatches.size());
+    }
+
+    inlierMatches = inlierMatches_output;
     return FrameworkReturnCode::_SUCCESS;
 }
 

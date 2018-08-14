@@ -21,7 +21,6 @@
 #include <vector>
 #include "opencv2/core.hpp"
 #include "api/solver/pose/I3DTransformFinderFrom2D2D.h"
-#include "datastructure/Image.h"
 #include "SolAROpencvAPI.h"
 #include "xpcf/component/ConfigurableBase.h"
 
@@ -51,30 +50,29 @@ namespace SolAR {
                 /// @param[in] Camera distorsion parameters.
                 void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) override;
 
-                /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
-                /// @param[in] imagePoints, Set of 2D points seen in view 1.
-                /// @param[in] worldPoints, Set of 2D points seen in view 2 and matching with the 2D points of the view 1.
+                /// @brief Estimates camera pose from a set of 2D points of the first image which match with a set of 2D points of the second image.
+                /// @param[in] pointsView1, Set of 2D points seen in view 1.
+                /// @param[in] pointsView2, Set of 2D points seen in view 2 and matching with the 2D points of the view 1.
                 /// @param[in] poseView1, Camera pose in the world coordinate system of the view 1 expressed as Transform3D.
                 /// @param[out] poseView2, Camera pose in the world coordinates system of the view 2 expressed as Transform3D.
-                FrameworkReturnCode estimate(const std::vector<SRef<Point2Df>> & matchedPointsView1,
-                                             const std::vector<SRef<Point2Df>> & matchedPointsView2,
-                                             const Transform3Df& poseView1,
-                                             Transform3Df & poseView2) override;
-
-
-                /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
-                /// @param[in] imagePoints, Set of 2D points seen in view 1.
-                /// @param[in] worldPoints, Set of 2D points seen in view 2 and matching with the 2D points of the view 1.
-                /// @param[in] poseView1, Camera pose in the world coordinate system of the view 1 expressed as Transform3D.
-                /// @param[out] poseView2, Camera pose in the world coordinates system of the view 2 expressed as Transform3D.
-                /// @param[out] imagePoints_inlier, image 2d points that are inliers
-                /// @param[out] worldPoints_inlier, world 3d points that are inliers.
+                /// @param[in|out] inlierMatches, a vector of matches that will be used for the pose estimation. This vector wll be updates as some input matches will be considered as outliers. If this vector is empty, we consider that the ith point of pointsView1 matches with the ith point of pointsView2.
                 FrameworkReturnCode estimate(const std::vector<SRef<Point2Df>> & matchedPointsView1,
                                              const std::vector<SRef<Point2Df>> & matchedPointsView2,
                                              const Transform3Df& poseView1,
                                              Transform3Df & poseView2,
-                                             std::vector<SRef<Point2Df>>& pointsView1_inlier,
-                                             std::vector<SRef<Point2Df>>& pointsView2_inlier) override;
+                                             std::vector<DescriptorMatch>& inlierMatches) override;
+
+                /// @brief Estimates camera pose from a set of keypoints of the first image which match with a set of keypoints of the second image.
+                /// @param[in] pointsView1, Set of keypoints seen in view 1.
+                /// @param[in] pointsView2, Set of keypoints seen in view 2 and matching with the 2D points of the view 1.
+                /// @param[in] poseView1, Camera pose in the world coordinate system of the view 1 expressed as Transform3D.
+                /// @param[out] poseView2, Camera pose in the world coordinates system of the view 2 expressed as Transform3D.
+                /// @param[in|out] inlierMatches, a vector of matches that will be used for the pose estimation. This vector wll be updates as some input matches will be considered as outliers. If this vector is empty, we consider that the ith point of pointsView1 matches with the ith point of pointsView2.
+                FrameworkReturnCode estimate(const std::vector<SRef<Keypoint>> & matchedPointsView1,
+                                             const std::vector<SRef<Keypoint>> & matchedPointsView2,
+                                             const Transform3Df& poseView1,
+                                             Transform3Df & poseView2,
+                                             std::vector<DescriptorMatch>& inlierMatches) override;
 
                 void unloadComponent () override final;
 
