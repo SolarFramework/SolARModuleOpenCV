@@ -23,7 +23,7 @@
 #include "api/solver/pose/I3DTransformFinderFrom2D3D.h"
 
 #include "SolAROpencvAPI.h"
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 
 namespace SolAR {
     using namespace datastructure;
@@ -33,7 +33,7 @@ namespace SolAR {
          * @class SolARPoseEstimationPnpEPFL
          * @brief Finds the camera pose of 2D-3D points correspondaces based on EPFL pnp algorithm.
          */
-        class SOLAROPENCV_EXPORT_API SolARPoseEstimationPnpEPFL : public org::bcom::xpcf::ComponentBase,
+        class SOLAROPENCV_EXPORT_API SolARPoseEstimationPnpEPFL : public org::bcom::xpcf::ConfigurableBase,
             public api::solver::pose::I3DTransformFinderFrom2D3D
         {
         public:
@@ -73,6 +73,9 @@ namespace SolAR {
 
 
 private:
+            int m_maxNumberCorrespondences = 20;
+
+
             /// @brief Sets the camera calibration matrix and distorsion parameters.
             /// @param[in] Camera projection center coordinate u.
             /// @param[in] Camera projection center coordinate v.

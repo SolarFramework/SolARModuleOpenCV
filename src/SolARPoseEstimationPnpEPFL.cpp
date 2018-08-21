@@ -40,9 +40,12 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL():ComponentBase(xpcf::toUUID<SolARPoseEstimationPnpEPFL>())
+SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpEPFL>())
 {
     addInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapInteger("maxNumberCorrespondences", m_maxNumberCorrespondences);
+
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
@@ -57,7 +60,7 @@ SolARPoseEstimationPnpEPFL::~SolARPoseEstimationPnpEPFL(){
 FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<Point2Df>> & imagePoints,
                                                          const std::vector<SRef<Point3Df>> & worldPoints,
                                                          Transform3Df & pose) {
-    SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(20);
+    SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(m_maxNumberCorrespondences);
     Eigen::Matrix3f R;
     Eigen::Vector3f T;
     SolARPoseEstimationPnpEPFL::reset_correspondences();
