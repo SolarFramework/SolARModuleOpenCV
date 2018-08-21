@@ -39,6 +39,9 @@ namespace SolAR {
                                                 SRef<Keyframe>&kframe_t1,
                                                 std::vector<SRef<CloudPoint>>&initCloud,
                                                 std::vector<DescriptorMatch>&matches){
+
+                    kframe_t0->addVisibleMapPoints(initCloud);
+                    kframe_t1->addVisibleMapPoints(initCloud);
                     m_kframes.push_back(kframe_t0);
                     m_kframes.push_back(kframe_t1);
                     m_gmatches[std::make_pair(kframe_t0->m_idx, kframe_t1->m_idx)] = matches;
