@@ -100,7 +100,7 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
     cvPos.copyTo(cvTransform(cv::Rect_<float>(3,0,1,3)));
     Transform3Df view2Transform;
     SolAROpenCVHelper::convertCVMatToSolar(cvTransform, view2Transform);
-    poseView2 = view2Transform.inverse() * poseView1 ;
+    poseView2 = view2Transform * poseView1 ;
 
     int nbInliers = 0;
     std::vector<DescriptorMatch> inlierMatches_output;
@@ -177,7 +177,7 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
     cvPos.copyTo(cvTransform(cv::Rect_<float>(3,0,1,3)));
     Transform3Df view2Transform;
     SolAROpenCVHelper::convertCVMatToSolar(cvTransform, view2Transform);
-    poseView2 = view2Transform.inverse() * poseView1 ;
+    poseView2 = view2Transform * poseView1 ;
 
     int nbInliers = 0;
     std::vector<DescriptorMatch> inlierMatches_output;
