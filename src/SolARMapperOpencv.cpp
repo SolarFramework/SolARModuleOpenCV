@@ -22,16 +22,31 @@ namespace SolAR {
                     m_map = org::bcom::xpcf::utils::make_shared<Map>() ;
                 }
 
-
-                void  SolARMapperOpencv::addNewKeyFrame(const SRef<Keyframe>&new_kframe){
-                    m_kframes.push_back(new_kframe);
+                void SolARMapperOpencv::addNewKeyFrame(const SRef<Frame> & frame, SRef<Keyframe>& newKeyframe) {
+                    newKeyframe = xpcf::utils::make_shared<Keyframe>(frame->getView(), frame->getDescriptors(), m_kframes.size(), frame->m_pose, frame->getKeyPoints());
+                    m_kframes.push_back(newKeyframe);
                 }
+
                 void  SolARMapperOpencv::removeKeyframe(const SRef<Keyframe>&old_kframe){
                 }
                 void SolARMapperOpencv::addMatches(const std::pair<int,int>&working_views,
-                                                   const std::vector<DescriptorMatch>&new_matches){
+                                                   const std::vector<DescriptorMatch>& found_matches,
+                                                   const std::vector<DescriptorMatch>& new_matches){
                     m_gmatches[std::make_pair(working_views.first, working_views.second)] = new_matches;
-                    // I have to add working view pair to extend matches matrix
+
+                    // Update the visibility map for cloud points that are visible by both keyframes (match and have a 3D correspondent)
+                    SRef<std::vector<SRef<CloudPoint>>> pointCloud = m_map->getPointCloud();
+                    for (int i = 0; i < found_matches.size(); i++)
+                    {
+                        for (int j = 0; j < pointCloud->size(); j++)
+                        {
+                            if ((*pointCloud)[j]->m_visibility[working_views.first] == found_matches[i].getIndexInDescriptorA())
+                            {
+                                (*pointCloud)[j]->m_visibility[working_views.second] == found_matches[i].getIndexInDescriptorB();
+                                break;
+                            }
+                        }
+                    }
                 }
 
 
@@ -51,13 +66,30 @@ namespace SolAR {
                 }
 
 
-                bool SolARMapperOpencv::updateMap(/*new_triangulated_cloud*/const SRef<Keyframe>&new_kframe,
-                                                  const std::vector<DescriptorMatch>&new_matches){
-					addNewKeyFrame(new_kframe);
-                    std::pair<int,int>working_views = std::make_pair(new_kframe->m_idx-1,new_kframe->m_idx);
-                    addMatches(working_views,new_matches);
-                    // addPointCloud(m_cloud, new_cloud);
+                bool SolARMapperOpencv::updateMap(const SRef<Keyframe>& new_kframe,
+                                                  const std::vector<DescriptorMatch>& found_matches,
+                                                  const std::vector<DescriptorMatch>& new_matches,
+                                                  const std::vector<SRef<CloudPoint>>& newCloud){
+                    // Add the 3D points already visible from the previous keyframe
+                    std::vector<SRef<CloudPoint>> previous_cloud;
+                    SRef<std::vector<SRef<CloudPoint>>> pointCloud = m_map->getPointCloud();
+                    for (int i = 0; i < found_matches.size(); i++)
+                    {
+                        for (int j = 0; j < pointCloud->size(); j++)
+                        {
+                            if ((*pointCloud)[j]->m_visibility[new_kframe->m_idx -1] == found_matches[i].getIndexInDescriptorA())
+                            {
+                                previous_cloud.push_back((*pointCloud)[j]);
+                            }
+                        }
+                    }
+                    new_kframe->addVisibleMapPoints(previous_cloud);
 
+                    // Add the 3D points that have just been triangulated
+                    new_kframe->addVisibleMapPoints(newCloud);
+                    std::pair<int,int>working_views = std::make_pair(new_kframe->m_idx-1,new_kframe->m_idx);
+                    addMatches(working_views,found_matches, new_matches);
+                    m_map->addCloudPoints(newCloud);
                     return true;
                 }
 

@@ -25,12 +25,9 @@ namespace SolAR {
 
                 ~SolARMapperOpencv() = default;
 
-				void addNewKeyFrame(const SRef<Keyframe> & kFrame) ;
+                void addNewKeyFrame(const SRef<Frame> & frame, SRef<Keyframe>& newKeyframe) override;
 
                 void removeKeyframe(const SRef<Keyframe>&new_frame);
-
-                void addMatches(const std::pair<int,int>&working_views,
-                                const std::vector<DescriptorMatch>&new_matches);
 
                 // this method should be called with timestamp
                 SRef<Keyframe> getCurrentKeyframe(int idx);
@@ -46,23 +43,24 @@ namespace SolAR {
                              std::vector<SRef<CloudPoint>>&new_cloud,
                              std::vector<DescriptorMatch>&initMatches);
 
-
+                bool updateMap(const SRef<Keyframe>&new_kframe,
+                               const std::vector<DescriptorMatch>& found_matches,
+                               const std::vector<DescriptorMatch>&new_matches,
+                               const std::vector<SRef<CloudPoint>>& newCloud) override;
 
                 void unloadComponent () override final;
 
+            private:
 
                // for the moment put this in public
                 std::vector<SRef<Keyframe>>m_kframes;
                 std::map<std::pair<int, int>, std::vector<DescriptorMatch> > m_gmatches;
                 SRef<Map> m_map;
 
-            protected :
 
-            bool updateMap(const SRef<Keyframe>&new_kframe,
-                           const std::vector<DescriptorMatch>&new_matches);
-
-
-            private:
+                void addMatches(const std::pair<int,int>&working_views,
+                                const std::vector<DescriptorMatch>& found_matches,
+                                const std::vector<DescriptorMatch>&new_matches);
             };
         }
     }
