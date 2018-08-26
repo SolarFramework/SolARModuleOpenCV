@@ -59,10 +59,11 @@ SolARPoseEstimationPnpEPFL::~SolARPoseEstimationPnpEPFL(){
 
 FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<Point2Df>> & imagePoints,
                                                          const std::vector<SRef<Point3Df>> & worldPoints,
-                                                         Transform3Df & pose) {
+                                                         Transform3Df & pose,
+                                                         const Transform3Df initialPose) {
     SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(m_maxNumberCorrespondences);
-    Eigen::Matrix3f R;
-    Eigen::Vector3f T;
+    Eigen::Matrix3f R = initialPose.rotation();
+    Eigen::Vector3f T = initialPose.translation();
     SolARPoseEstimationPnpEPFL::reset_correspondences();
 
     for (int i = 0; i < worldPoints.size(); i++) {
@@ -100,11 +101,12 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<
                                                          const std::vector<SRef<Point3Df>> & worldPoints,
                                                          std::vector<SRef<Point2Df>>&imagePoints_inlier,
                                                          std::vector<SRef<Point3Df>>&worldPoints_inlier,
-                                                        Transform3Df & pose) {
+                                                         Transform3Df & pose,
+                                                         const Transform3Df initialPose) {
 
     SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(worldPoints.size());
-    Eigen::Matrix3f R;
-    Eigen::Vector3f T;
+    Eigen::Matrix3f R = initialPose.rotation();
+    Eigen::Vector3f T = initialPose.translation();
     SolARPoseEstimationPnpEPFL::reset_correspondences();
     for (int i = 0; i < worldPoints.size(); i++) {
          double Xw, Yw, Zw, u, v;

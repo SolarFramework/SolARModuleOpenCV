@@ -67,13 +67,16 @@ SolARPoseEstimationPnpOpencv::~SolARPoseEstimationPnpOpencv(){
 
 FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SRef<Point2Df>> & imagePoints,
                                                             const std::vector<SRef<Point3Df>> & worldPoints,
-                                                            Transform3Df & pose) {
+                                                            Transform3Df & pose,
+                                                            const Transform3Df initialPose) {
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
 
-    if (worldPoints.size()!=imagePoints.size())
+    if (worldPoints.size()!=imagePoints.size() || worldPoints.size()< 4 ){
+        LOG_WARNING("world/image points must be valid ( equal and > to 4)");
         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
+    }
 
     for (int i=0;i<imagePoints.size();++i) {
         Point2Df point2D = *(imagePoints.at(i));
@@ -86,9 +89,16 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     cv::Mat_<float> Tvec;
     cv::Mat raux, taux;
 
+    RotationMatrixf initialRot = initialPose.rotation();
 
-    cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux );
+    cv::Mat cvInitialPose = SolAROpenCVHelper::mapToOpenCV(initialRot);
+    cv::Rodrigues(cvInitialPose, raux);
 
+    Vector3f initialTranslation = initialPose.translation();
+
+    taux = SolAROpenCVHelper::mapToOpenCV(initialTranslation);
+
+    cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, true );
 
     raux.convertTo(Rvec, CV_32F);
     taux.convertTo(Tvec, CV_32F);
@@ -118,21 +128,15 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
                                                             const std::vector<SRef<Point3Df>> & worldPoints,
                                                             std::vector<SRef<Point2Df>>&imagePoints_inlier,
                                                             std::vector<SRef<Point3Df>>&worldPoints_inlier,
-                                                            Transform3Df & pose) {
-    if (worldPoints.size() < 4)
-    {
-        //  minimum number of inliers needed
-        return FrameworkReturnCode::_ERROR_;
-    }
-
-
+                                                            Transform3Df & pose,
+                                                            const Transform3Df initialPose) {
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
     std::vector<int> inliers;
 
-    if (worldPoints.size()!=imagePoints.size() || worldPoints.size()<= 0 || imagePoints.size()<= 0 ){
-        std::cerr<<"wolrd/image points must be valid ( equal and > to 0)"<<std::endl;
+    if (worldPoints.size()!=imagePoints.size() || worldPoints.size()< 4 ){
+        LOG_WARNING("world/image points must be valid ( equal and > to 4)");
         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
     }
 
@@ -146,9 +150,18 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
      cv::Mat_<float> Tvec;
      cv::Mat raux, taux;
 
+     RotationMatrixf initialRot = initialPose.rotation();
+
+     cv::Mat cvInitialPose = SolAROpenCVHelper::mapToOpenCV(initialRot);
+     cv::Rodrigues(cvInitialPose, raux);
+
+     Vector3f initialTranslation = initialPose.translation();
+
+     taux = SolAROpenCVHelper::mapToOpenCV(initialTranslation);
+
      cv::Mat inliers_cv;
-     cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, false,
-                           m_iterationsCount, m_reprojError, m_confidence, inliers_cv, 1);
+     cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, true,
+                           m_iterationsCount, m_reprojError, m_confidence, inliers_cv);
 
 
      std::vector<cv::Point3f>in3d;
@@ -169,12 +182,12 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
              in3d.push_back(cv::Point3f(worldPoints[i]->getX(),worldPoints[i]->getY(),worldPoints[i]->getZ()));
          }
      }
-     if (in3d.size()!=in2d.size() || in3d.size()<= 0 || in2d.size()<= 0 ){
-         std::cerr<<"wolrd/image inliers points must be valid ( equal and > to 0)"<<std::endl;
+     if (in3d.size()!=in2d.size() || in3d.size()<3 ){
+         std::cerr<<"wolrd/image inliers points must be valid ( equal and > to 2)"<<std::endl;
          return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
      }
 
-     cv::solvePnP(in3d, in2d, m_camMatrix, m_camDistorsion, raux,taux);
+     cv::solvePnP(in3d, in2d, m_camMatrix, m_camDistorsion, raux,taux, true);
 
     raux.convertTo(Rvec, CV_32F);
     taux.convertTo(Tvec, CV_32F);
