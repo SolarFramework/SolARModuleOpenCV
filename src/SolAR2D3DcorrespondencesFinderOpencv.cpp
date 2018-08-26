@@ -65,10 +65,9 @@ namespace SolAR {
                             shared_3dpoint.push_back(xpcf::utils::make_shared<Point3Df>(cloud[i]->getX(), cloud[i]->getY(),cloud[i]->getZ()));
                             shared_2dpoint.push_back(xpcf::utils::make_shared<Point2Df>(current_kpoints[current_matches[j].getIndexInDescriptorB()]->getX(),
                                                                               current_kpoints[current_matches[j].getIndexInDescriptorB()]->getY()));
-							found_matches.push_back(current_matches[j]);
+                            found_matches.push_back(current_matches[j]);
 							matchFound = true ;
-                           // break for if found?
-							
+                            break;
                         }
                     }
                     if (!matchFound)
