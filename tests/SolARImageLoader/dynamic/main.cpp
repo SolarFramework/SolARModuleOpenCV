@@ -19,7 +19,7 @@
 
 // ADD COMPONENTS HEADERS HERE, e.g #include "SolarComponent.h"
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/xpcf.h"
 #include "SolARModuleOpencv_traits.h"
 #include "api/image/IImageLoader.h"
 #include "api/display/IImageViewer.h"
@@ -63,16 +63,24 @@ int run(int argc, char *argv[])
     char escape_key = 27;
 
     // USE your components here, e.g SolarComponentInstance->testMethod();
-    if (imageLoader->loadImage(argv[1], image) != FrameworkReturnCode::_SUCCESS)
+    /*if (imageLoader->loadImage(argv[1], image) != FrameworkReturnCode::_SUCCESS)
+    {
+       LOG_ERROR("Cannot load image with path {}", argv[1]);
+       return -1;
+    }*/
+    imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->setStringValue(argv[1],0);
+    if (imageLoader->getImage(image) != FrameworkReturnCode::_SUCCESS)
     {
        LOG_ERROR("Cannot load image with path {}", argv[1]);
        return -1;
     }
 
     bool proceed = true;
+    viewer->bindTo<xpcf::IConfigurable>()->getProperty("title")->setStringValue("show image");
+    viewer->bindTo<xpcf::IConfigurable>()->getProperty("exitKey")->setIntegerValue(27);    
     while (proceed)
     {
-        if (viewer->display("show image", image, &escape_key) == FrameworkReturnCode::_STOP)
+        if (viewer->display(image) == FrameworkReturnCode::_STOP)
         {
             proceed = false;
             std::cout << "end of SolARImageopenCV test" << std::endl;

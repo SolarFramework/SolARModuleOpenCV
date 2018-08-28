@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/xpcf.h"
 
 #include "SolARModuleOpencv_traits.h"
 #include "api/image/IImageLoader.h"
@@ -88,16 +88,23 @@ int run(int argc,char** argv)
 
  // Start
     // Load the first image
-    if (imageLoader->loadImage(argv[1], image1) != FrameworkReturnCode::_SUCCESS)
+    /*if (imageLoader->loadImage(argv[1], image1) != FrameworkReturnCode::_SUCCESS)
+    {
+       LOG_ERROR("Cannot load image with path {}", argv[1]);
+       return -1;
+    }*/
+    imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->setStringValue(argv[1],0);
+    if (imageLoader->getImage(image1) != FrameworkReturnCode::_SUCCESS)
     {
        LOG_ERROR("Cannot load image with path {}", argv[1]);
        return -1;
     }
 
     // Load the second image
-    if (imageLoader->loadImage(argv[2], image2) != FrameworkReturnCode::_SUCCESS)
+    imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->setStringValue(argv[2],0);
+    if (imageLoader->getImage(image2) != FrameworkReturnCode::_SUCCESS)
     {
-       LOG_ERROR("Cannot load image with path {}", argv[2]);
+       LOG_ERROR("Cannot load image with path {}", argv[1]);
        return -1;
     }
 
@@ -131,10 +138,12 @@ int run(int argc,char** argv)
     overlay->drawMatchesLines(image1, image2, viewerImage, matchedKeypoints1, matchedKeypoints2);
 
     bool proceed = true;
+    viewer->bindTo<xpcf::IConfigurable>()->getProperty("title")->setStringValue("show matches");
+    viewer->bindTo<xpcf::IConfigurable>()->getProperty("exitKey")->setIntegerValue(27);
     while (proceed)
     {
         // Display the image with matches in a viewer. If escape key is pressed, exit the loop.
-        if (viewer->display("show matches", viewerImage, &escape_key) == FrameworkReturnCode::_STOP)
+        if (viewer->display(viewerImage) == FrameworkReturnCode::_STOP)
         {
             proceed = false;
             LOG_INFO("End of DescriptorMatcherOpenCVStaticTest");
