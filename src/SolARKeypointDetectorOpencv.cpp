@@ -39,6 +39,7 @@ static std::map<std::string,KeypointDetectorType> stringToType = {{"AKAZE",Keypo
                                                                   {"AKAZE2",KeypointDetectorType::AKAZE2},
                                                                   {"ORB",KeypointDetectorType::ORB},
                                                                   {"BRISK",KeypointDetectorType::BRISK}};
+
 static std::map<KeypointDetectorType,std::string> typeToString = {{KeypointDetectorType::AKAZE, "AKAZE"},
                                                                   {KeypointDetectorType::AKAZE2,"AKAZE2"},
                                                                   {KeypointDetectorType::ORB,"ORB"},
