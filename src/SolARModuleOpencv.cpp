@@ -55,6 +55,7 @@
 #include "SolARMapFilterOpencv.h"
 #include "SolARMapperOpencv.h"
 #include "SolARVideoAsCameraOpencv.h"
+#include "SolARImagesAsCameraOpencv.h"
 
 namespace xpcf=org::bcom::xpcf;
 
@@ -216,6 +217,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv>(componentUUID,interfaceRef);
     }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImagesAsCameraOpencv>(componentUUID,interfaceRef);
+    }
 
     return errCode;
 }
@@ -260,4 +265,5 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapperOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapFilterOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImagesAsCameraOpencv)
 XPCF_END_COMPONENTS_DECLARATION

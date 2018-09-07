@@ -61,6 +61,7 @@ class SolAR2D3DCorrespondencesFinderOpencv;
 class SolARMapFilterOpencv;
 class SolARMapperOpencv;
 class SolARVideoAsCameraOpencv;
+class SolARImagesAsCameraOpencv;
 }
 }
 }
@@ -220,6 +221,10 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMapFilterOpencv,
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv,
                              "fa4a780a-9720-11e8-9eb6-529269fb1459",
+                             "SolAR::MODULES::OPENCV::SolARCameraOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImagesAsCameraOpencv,
+                             "b8a8b963-ba55-4ea4-b045-d9e7e8f6db02",
                              "SolAR::MODULES::OPENCV::SolARCameraOpencv component")
 
 
