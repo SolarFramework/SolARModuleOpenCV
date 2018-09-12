@@ -69,6 +69,7 @@ int run(int argc, char *argv[])
        return -1;
     }*/
     imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->setStringValue(argv[1],0);
+    imageLoader->reloadImage();
     if (imageLoader->getImage(image) != FrameworkReturnCode::_SUCCESS)
     {
        LOG_ERROR("Cannot load image with path {}", argv[1]);
