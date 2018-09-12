@@ -15,6 +15,7 @@
  */
 
 #include <iostream>
+#include <boost/log/core.hpp>
 #include <string>
 
 // ADD COMPONENTS HEADERS HERE, e.g #include "SolarComponent.h"
