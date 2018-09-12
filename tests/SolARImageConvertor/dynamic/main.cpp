@@ -21,6 +21,7 @@
 #include "api/display/IImageViewer.h"
 
 #include <iostream>
+#include <boost/log/core.hpp>
 #include <map>
 
 using namespace std;
