@@ -1,4 +1,4 @@
-TARGET = SolARSVDTriangulationOpenCVStaticTest
+TARGET = SolARSVDTriangulationOpenCVTest
 VERSION=1.0.0
 
 CONFIG += c++11

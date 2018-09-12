@@ -212,8 +212,9 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
     // unsigned int pts_size = pt2d_1.size();
     unsigned int pts_size = matches.size();
 
-    // KPose2 represents the transforration from 3D space to 2D image (K*[R|T]).
-    cv::Mat_<double> KPose2 = m_camMatrix * cv::Mat(Pose2);
+    // KPose2 represents the transformation from 3D space to 2D image (K*[R|T]).
+    cv::Mat_<double> KPose2;
+    KPose2 = m_camMatrix * cv::Mat(Pose2);
 
     for (int i = 0; i<pts_size; i++) {
         cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()]->getX(),pointsView1[matches[i].getIndexInDescriptorA()]->getY());
