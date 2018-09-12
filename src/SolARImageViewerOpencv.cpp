@@ -89,6 +89,8 @@ FrameworkReturnCode SolARImageViewerOpencv::display(SRef<Image> img)
     cv::namedWindow( m_title,0); // Create a window for display.
     if(m_width>0 && m_height>0)
         cv::resizeWindow(m_title, m_width,m_height);
+    else
+        cv::resizeWindow(m_title, img->getWidth(), img->getHeight());
 
     cv::imshow(m_title, imgSource);
     if (m_duration >0)
