@@ -31,79 +31,82 @@ using namespace SolAR::api;
 
 namespace xpcf  = org::bcom::xpcf;
 
-int run(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 
-    // load library
+#if NDEBUG
+    boost::log::core::get()->set_logging_enabled(false);
+#endif
+
+    LOG_ADD_LOG_TO_CONSOLE();
+
+    /* instantiate component manager*/
+    /* this is needed in dynamic mode */
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-    if(xpcfComponentManager->load("$BCOMDEVROOT/.xpcf/SolAR/xpcf_SolARModuleOpenCV_registry.xml")!=org::bcom::xpcf::_SUCCESS)
+    if(xpcfComponentManager->load("conf_ImageLoader.xml")!=org::bcom::xpcf::_SUCCESS)
     {
-        LOG_ERROR("XPCF library load has failed")
+        LOG_ERROR("Failed to load the configuration file conf_ImageLoader.xml")
         return -1;
     }
 
-
-    // components declarations and creation
-    //SRef<image::IImageLoader> imageLoader = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    //SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
-    // components declarations   
+    // declare and create components
+    LOG_INFO("Start creating components");
 
     SRef<image::IImageLoader> imageLoader = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
-    SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
+    SRef<display::IImageViewer> viewerConfImage = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>("confImage")->bindTo<display::IImageViewer>();
+    SRef<display::IImageViewer> viewerParamImage = xpcfComponentManager->create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>("paramImage")->bindTo<display::IImageViewer>();
 
-    if (!imageLoader || !viewer)
+    if (!imageLoader || !viewerConfImage || !viewerParamImage)
     {
         LOG_ERROR("One or more component creations have failed");
         return -1;
     }
 
-    SRef<Image> image;
+    // Data structure declaration
+    SRef<Image> imageConf;
+    SRef<Image> imageParam;
 
-    // The escape key to exit the sample
-    char escape_key = 27;
-
-    // USE your components here, e.g SolarComponentInstance->testMethod();
-    /*if (imageLoader->loadImage(argv[1], image) != FrameworkReturnCode::_SUCCESS)
+    // Get image according to the path defined in the configuration file conf_ImageLoader.xml
+    if (imageLoader->getImage(imageConf) != FrameworkReturnCode::_SUCCESS)
     {
-       LOG_ERROR("Cannot load image with path {}", argv[1]);
-       return -1;
-    }*/
-    imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->setStringValue(argv[1],0);
-    imageLoader->reloadImage();
-    if (imageLoader->getImage(image) != FrameworkReturnCode::_SUCCESS)
-    {
-       LOG_ERROR("Cannot load image with path {}", argv[1]);
-       return -1;
+        LOG_ERROR("Cannot load image from configuration file with path {}", imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->getStringValue());
+        return -1;
     }
 
-    bool proceed = true;
-    viewer->bindTo<xpcf::IConfigurable>()->getProperty("title")->setStringValue("show image");
-    viewer->bindTo<xpcf::IConfigurable>()->getProperty("exitKey")->setIntegerValue(27);    
-    while (proceed)
+    // load and get image according the path given in argument of this executable
+    if (argc == 2)
     {
-        if (viewer->display(image) == FrameworkReturnCode::_STOP)
+        // Change the path of the image according to the argument given in parameter
+        imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->setStringValue(argv[1],0);
+        imageLoader->reloadImage();
+        if (imageLoader->getImage(imageParam) != FrameworkReturnCode::_SUCCESS)
         {
-            proceed = false;
-            std::cout << "end of SolARImageopenCV test" << std::endl;
+           LOG_ERROR("Cannot load image from parameters with path {}", imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->getStringValue());
+           return -1;
         }
     }
 
+    // Display images in dedicated windows
+    while (true)
+    {
+        if (argc > 1)
+        {
+            if (viewerConfImage->display(imageConf) == FrameworkReturnCode::_STOP || viewerParamImage->display(imageParam) == FrameworkReturnCode::_STOP )
+            {
+                LOG_INFO("end of SolARImageopenCV test");
+                break;
+            }
+        }
+        else
+        {
+            if (viewerConfImage->display(imageConf) == FrameworkReturnCode::_STOP)
+            {
+                LOG_INFO("end of SolARImageopenCV test");
+                break;
+            }
+        }
+    }
 
-    //leave
     return 0;
-}
-
-int printHelp(){
-        printf(" usage :\n");
-        printf(" exe ImageFilePath\n");
-        return 1;
-}
-
-
-int main(int argc, char *argv[]){
-    if(argc==2)
-        return run(argc,argv);
-    else
-        return(printHelp());
 }
