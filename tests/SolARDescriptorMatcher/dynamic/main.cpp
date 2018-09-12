@@ -25,6 +25,7 @@
 #include "api/features/IDescriptorsExtractor.h"
 
 #include <iostream>
+#include <boost/log/core.hpp>
 #include <string>
 #include <vector>
 
