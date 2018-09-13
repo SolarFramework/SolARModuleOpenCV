@@ -46,6 +46,7 @@ set (SOURCES
     src/SolARMapperOpencv.cpp
     src/SolARImageFilterErodeOpencv.cpp
     src/SolARVideoAsCameraOpencv.cpp
+    src/SolARImagesAsCameraOpencv.cpp
     src/SolAR3DOverlayBoxOpencv.cpp
     src/SolARHomographyMatrixDecomposerOpencv.cpp
     src/SolARPoseFinderFrom2D2DOpencv.cpp
@@ -97,6 +98,7 @@ set (HEADERS
     interfaces/SolARMapperOpencv.h
     interfaces/SolARImageFilterErodeOpencv.h
     interfaces/SolARVideoAsCameraOpencv.h
+    interfaces/SolARImagesAsCameraOpencv.h    
     interfaces/SolAR3DOverlayBoxOpencv.h
     interfaces/SolARHomographyMatrixDecomposerOpencv.h
     interfaces/SolARPoseFinderFrom2D2DOpencv.h
