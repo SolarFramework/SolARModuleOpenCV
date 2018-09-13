@@ -87,10 +87,14 @@ FrameworkReturnCode SolARImageViewerOpencv::display(SRef<Image> img)
     char key=' ';
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
     cv::namedWindow( m_title,0); // Create a window for display.
-    if(m_width>0 && m_height>0)
-        cv::resizeWindow(m_title, m_width,m_height);
-    else
-        cv::resizeWindow(m_title, img->getWidth(), img->getHeight());
+    if (m_isFirstDisplay)
+    {
+        if(m_width>0 && m_height>0)
+            cv::resizeWindow(m_title, m_width,m_height);
+        else
+            cv::resizeWindow(m_title, img->getWidth(), img->getHeight());
+        m_isFirstDisplay = false;
+    }
 
     cv::imshow(m_title, imgSource);
     if (m_duration >0)
