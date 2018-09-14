@@ -118,10 +118,10 @@ int main(int argc, char **argv)
    // Detect the keypoints of the second image
    keypointsDetector->detect(image2, keypoints2);
 
-   // Compute the SIFT descriptor for each keypoint extracted from the first image
+   // Compute the AKAZE2 descriptor for each keypoint extracted from the first image
    extractorAKAZE2->extract(image1, keypoints1, descriptors1);
 
-   // Compute the SIFT descriptor for each keypoint extracted from the second image
+   // Compute the AKAZE2 descriptor for each keypoint extracted from the second image
    extractorAKAZE2->extract(image2, keypoints2, descriptors2);
 
    // Compute the matches between the keypoints of the first image and the keypoints of the second image
