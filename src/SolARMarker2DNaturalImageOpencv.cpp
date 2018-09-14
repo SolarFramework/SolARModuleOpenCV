@@ -17,7 +17,6 @@
 #include <boost/filesystem.hpp>
 #include "SolARMarker2DNaturalImageOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/highgui.hpp"
 
 namespace xpcf  = org::bcom::xpcf;
 

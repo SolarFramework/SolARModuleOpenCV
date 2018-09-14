@@ -16,11 +16,8 @@
 
 #include "SolARContoursExtractorOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/opencv.hpp"
-#include "opencv2/core.hpp"
 
-#include "xpcf/component/ComponentBase.h"
-#include "xpcf/properties/IPropertyMap.h"
+#include "opencv2/opencv.hpp"
 
 namespace xpcf = org::bcom::xpcf;
 

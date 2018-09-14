@@ -15,16 +15,8 @@
  */
 
 #include "SolARHomographyMatrixDecomposerOpencv.h"
-#include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio/videoio.hpp"
-#include "opencv2/video/video.hpp"
+#include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
-
-#include <map>
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -36,7 +28,7 @@ namespace MODULES {
 namespace OPENCV {
 SolARHomographyMatrixDecomposerOpencv::SolARHomographyMatrixDecomposerOpencv():ComponentBase(xpcf::toUUID<SolARHomographyMatrixDecomposerOpencv>())
 {
-    addInterface<api::solver::pose::I2DTO3DTransformDecomposer>(this);
+    addInterface<api::solver::pose::I2Dto3DTransformDecomposer>(this);
     LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
 
     m_camMatrix.create(3, 3);

@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-#include <iostream>
-#include <utility>
+#include "SolARCameraCalibrationOpencv.h"
 #include "core/Log.h"
-// Opencv dependencies
 
-#include "opencv2/core.hpp"
-#include <opencv2/core/utility.hpp>
+// Opencv dependencies
 #include "opencv2/imgproc.hpp"
 #include "opencv2/calib3d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/videoio.hpp"
 #include "opencv2/highgui.hpp"
-
-
-#include <fstream>
-#include <string>
-
-#include "SolARCameraCalibrationOpencv.h"
 
 namespace xpcf  = org::bcom::xpcf;
 

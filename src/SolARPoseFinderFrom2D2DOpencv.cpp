@@ -13,17 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <iostream>
 
 #include "SolARPoseFinderFrom2D2DOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
-
-#include "xpcf/component/ComponentFactory.h"
-
-
-#include <map>
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv);
 

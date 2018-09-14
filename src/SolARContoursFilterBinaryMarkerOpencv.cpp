@@ -16,8 +16,8 @@
 
 #include "SolARContoursFilterBinaryMarkerOpencv.h"
 #include "SolAROpenCVHelper.h"
+
 #include "opencv2/opencv.hpp"
-#include "opencv2/core.hpp"
 
 namespace xpcf = org::bcom::xpcf;
 

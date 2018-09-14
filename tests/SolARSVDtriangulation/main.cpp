@@ -117,7 +117,6 @@ int main()
     std::string path_pose2 = "../data/pose_2.txt";
 
     /* instantiate component manager*/
-    /* this is needed in dynamic mode */
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
     if(xpcfComponentManager->load("conf_Triangulation.xml")!=org::bcom::xpcf::_SUCCESS)

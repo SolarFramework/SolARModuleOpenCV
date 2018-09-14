@@ -55,6 +55,8 @@ private:
 
     /// @brief The duration in milliseconds before closing the window. If negative or null, the window remains open.
     unsigned int m_duration = 0;
+
+    bool m_isFirstDisplay = true;
 };
 
 }

@@ -18,27 +18,12 @@
 
 #include "SolARSVDTriangulationOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio/videoio.hpp"
-#include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
-
-#include "xpcf/component/ComponentFactory.h"
-
-
-#include <map>
-#include <random>
 
 namespace xpcf  = org::bcom::xpcf;
 
-
 #define EPSILON 0.0001
 #define intrpmnmx(val,min,max) (max==min ? 0.0 : ((val)-min)/(max-min))
-
-
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv);
 

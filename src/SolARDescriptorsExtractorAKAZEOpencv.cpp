@@ -16,13 +16,8 @@
 
 #include "SolARDescriptorsExtractorAKAZEOpencv.h"
 #include "SolARImageConvertorOpencv.h"
-#include <iostream>
 #include "SolAROpenCVHelper.h"
-#include <utility>
 
-#include <array>
-
-//#include <boost/thread/thread.hpp>
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv)
 
 namespace xpcf = org::bcom::xpcf;

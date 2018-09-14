@@ -31,7 +31,7 @@ namespace MODULES {
 namespace OPENCV {
 
 class SOLAROPENCV_EXPORT_API SolARHomographyMatrixDecomposerOpencv : public org::bcom::xpcf::ComponentBase,
-   public api::solver::pose::I2DTO3DTransformDecomposer {
+   public api::solver::pose::I2Dto3DTransformDecomposer {
 
 public:
     SolARHomographyMatrixDecomposerOpencv();

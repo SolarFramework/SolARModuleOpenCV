@@ -16,9 +16,6 @@
 
 #include "SolARDescriptorsExtractorSBPatternOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/opencv.hpp"
-#include "opencv2/core.hpp"
-
 
 namespace xpcf = org::bcom::xpcf;
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv)

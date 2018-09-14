@@ -16,7 +16,6 @@
 
 #include "SolARVideoAsCameraOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "core/Log.h"
 
 namespace xpcf = org::bcom::xpcf;
 
