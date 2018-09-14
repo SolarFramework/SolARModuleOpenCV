@@ -27,7 +27,7 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARImageConvertorOpencv::SolARImageConvertorOpencv():ComponentBase(toUUID<SolARImageConvertorOpencv>())
+SolARImageConvertorOpencv::SolARImageConvertorOpencv():ComponentBase(xpcf::toUUID<SolARImageConvertorOpencv>())
 {  
     addInterface<api::image::IImageConvertor>(this);
 }
