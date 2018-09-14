@@ -176,16 +176,17 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
                                                 const Transform3Df& poseView1,
                                                 const Transform3Df& poseView2,
                                                 std::vector<SRef<CloudPoint>>& pcloud){
+    Transform3Df poseView1Inverse = poseView1.inverse();
+    Transform3Df poseView2Inverse = poseView2.inverse();
+    cv::Matx34d Pose1( poseView1Inverse(0, 0),poseView1Inverse(0, 1),poseView1Inverse(0, 2), poseView1Inverse(0, 3),
+                       poseView1Inverse(1, 0),poseView1Inverse(1, 1),poseView1Inverse(1, 2), poseView1Inverse(1, 3),
+                       poseView1Inverse(2, 0),poseView1Inverse(2, 1),poseView1Inverse(2, 2), poseView1Inverse(2, 3));
 
-    cv::Matx34d Pose1( poseView1(0, 0),poseView1(0, 1),poseView1(0, 2), poseView1(0, 3),
-                       poseView1(1, 0),poseView1(1, 1),poseView1(1, 2), poseView1(1, 3),
-                       poseView1(2, 0),poseView1(2, 1),poseView1(2, 2), poseView1(2, 3));
 
 
-
-    cv::Matx34d Pose2(poseView2(0, 0),poseView2(0, 1),poseView2(0, 2), poseView2(0, 3),
-                      poseView2(1, 0),poseView2(1, 1),poseView2(1, 2), poseView2(1, 3),
-                      poseView2(2, 0),poseView2(2, 1),poseView2(2, 2), poseView2(2, 3));
+    cv::Matx34d Pose2(poseView2Inverse(0, 0),poseView2Inverse(0, 1),poseView2Inverse(0, 2), poseView2Inverse(0, 3),
+                      poseView2Inverse(1, 0),poseView2Inverse(1, 1),poseView2Inverse(1, 2), poseView2Inverse(1, 3),
+                      poseView2Inverse(2, 0),poseView2Inverse(2, 1),poseView2Inverse(2, 2), poseView2Inverse(2, 3));
 
     cv::Mat_<double> Kinv;
 
@@ -259,16 +260,17 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>
                                                 const Transform3Df& poseView2,
                                                 std::vector<SRef<CloudPoint>>& pcloud){
 
+    Transform3Df poseView1Inverse = poseView1.inverse();
+    Transform3Df poseView2Inverse = poseView2.inverse();
+    cv::Matx34d Pose1( poseView1Inverse(0, 0),poseView1Inverse(0, 1),poseView1Inverse(0, 2), poseView1Inverse(0, 3),
+                       poseView1Inverse(1, 0),poseView1Inverse(1, 1),poseView1Inverse(1, 2), poseView1Inverse(1, 3),
+                       poseView1Inverse(2, 0),poseView1Inverse(2, 1),poseView1Inverse(2, 2), poseView1Inverse(2, 3));
 
-    cv::Matx34d Pose1( poseView1(0, 0),poseView1(0, 1),poseView1(0, 2), poseView1(0, 3),
-                       poseView1(1, 0),poseView1(1, 1),poseView1(1, 2), poseView1(1, 3),
-                       poseView1(2, 0),poseView1(2, 1),poseView1(2, 2), poseView1(2, 3));
 
 
-
-    cv::Matx34d Pose2(poseView2(0, 0),poseView2(0, 1),poseView2(0, 2), poseView2(0, 3),
-                      poseView2(1, 0),poseView2(1, 1),poseView2(1, 2), poseView2(1, 3),
-                      poseView2(2, 0),poseView2(2, 1),poseView2(2, 2), poseView2(2, 3));
+    cv::Matx34d Pose2(poseView2Inverse(0, 0),poseView2Inverse(0, 1),poseView2Inverse(0, 2), poseView2Inverse(0, 3),
+                      poseView2Inverse(1, 0),poseView2Inverse(1, 1),poseView2Inverse(1, 2), poseView2Inverse(1, 3),
+                      poseView2Inverse(2, 0),poseView2Inverse(2, 1),poseView2Inverse(2, 2), poseView2Inverse(2, 3));
 
     cv::Mat_<double> Kinv;
 

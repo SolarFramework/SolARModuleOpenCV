@@ -76,6 +76,10 @@ void SolARSVDFundamentalMatrixDecomposerOpencv::fillposes(const cv::Mat_<double>
         decomposedPoses[3](2,0) = R2(2,0);decomposedPoses[3](2,1) = R2(2,1);decomposedPoses[3](2,2) = R2(2,2);decomposedPoses[3](2,3) = t2(2);
         decomposedPoses[3](3,0) = 0.0    ;decomposedPoses[3](3,1) = 0.0    ;decomposedPoses[3](3,2) = 0.0    ;decomposedPoses[3](3,3) = 1.0;
 
+        decomposedPoses[0] = decomposedPoses[0].inverse();
+        decomposedPoses[1] = decomposedPoses[1].inverse();
+        decomposedPoses[2] = decomposedPoses[2].inverse();
+        decomposedPoses[3] = decomposedPoses[3].inverse();
 }
 
 bool SolARSVDFundamentalMatrixDecomposerOpencv::decomposeInternal(cv::Mat_<double>& E,

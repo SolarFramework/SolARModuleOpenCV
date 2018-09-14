@@ -60,6 +60,8 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
 
+    Transform3Df initialPoseInverse = initialPose.inverse();
+
     if (worldPoints.size()!=imagePoints.size() || worldPoints.size()< 4 ){
         LOG_WARNING("world/image points must be valid ( equal and > to 4)");
         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
@@ -77,12 +79,12 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     cv::Mat raux, taux;
 
     // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
-    if (!initialPose.isApprox(Transform3Df::Identity()))
+    if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
     {
-        RotationMatrixf initialRot = initialPose.rotation();
+        RotationMatrixf initialRot = initialPoseInverse.rotation();
         cv::Mat cvInitialPose = SolAROpenCVHelper::mapToOpenCV(initialRot);
         cv::Rodrigues(cvInitialPose, raux);
-        Vector3f initialTranslation = initialPose.translation();
+        Vector3f initialTranslation = initialPoseInverse.translation();
         taux = SolAROpenCVHelper::mapToOpenCV(initialTranslation);
 
         cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1, cv::SOLVEPNP_ITERATIVE);
@@ -110,6 +112,8 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     pose(3,2)  = 0.0;
     pose(3,3)  = 1.0;
 
+    pose = pose.inverse();
+
     return FrameworkReturnCode::_SUCCESS;
 
 }
@@ -124,6 +128,8 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
     std::vector<int> inliers;
+
+    Transform3Df initialPoseInverse = initialPose.inverse();
 
     if (worldPoints.size()!=imagePoints.size() || worldPoints.size()< 4 ){
         LOG_WARNING("world/image points must be valid ( equal and > to 4)");
@@ -142,12 +148,12 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
      cv::Mat inliers_cv;
 
      // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
-     if (!initialPose.isApprox(Transform3Df::Identity()))
+     if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
      {
-         RotationMatrixf initialRot = initialPose.rotation();
+         RotationMatrixf initialRot = initialPoseInverse.rotation();
          cv::Mat cvInitialPose = SolAROpenCVHelper::mapToOpenCV(initialRot);
          cv::Rodrigues(cvInitialPose, raux);
-         Vector3f initialTranslation = initialPose.translation();
+         Vector3f initialTranslation = initialPoseInverse.translation();
          taux = SolAROpenCVHelper::mapToOpenCV(initialTranslation);
 
          cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, true,
@@ -201,6 +207,8 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     pose(3,1)  = 0.0;
     pose(3,2)  = 0.0;
     pose(3,3)  = 1.0;
+
+    pose = pose.inverse();
 
     return FrameworkReturnCode::_SUCCESS;
 }

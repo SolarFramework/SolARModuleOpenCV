@@ -101,13 +101,12 @@ bool SolARHomographyMatrixDecomposerOpencv::decompose(const Transform2Df& H, std
       pose_temp[p](3,1) = 0.0;
       pose_temp[p](3,2) = 0.0;
       pose_temp[p](3,3) = 1.0;
-      decomposedPoses.push_back(pose_temp[p]);
+      decomposedPoses.push_back(pose_temp[p].inverse());
     }
     return true;
 }
 
 void SolARHomographyMatrixDecomposerOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
-    //TODO.. check to inverse
     this->m_camDistorsion.at<double>(0, 0)  = (double)distorsionParams(0);
     this->m_camDistorsion.at<double>(1, 0)  = (double)distorsionParams(1);
     this->m_camDistorsion.at<double>(2, 0)  =(double) distorsionParams(2);
