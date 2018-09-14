@@ -16,14 +16,7 @@
 
 #include "SolARImageLoaderOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include <iostream>
-#include <utility>
-#include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <stdexcept>
-#include <vector>
 
 namespace xpcf = org::bcom::xpcf;
 

@@ -15,19 +15,6 @@
  */
 
 #include "SolAR2D3DcorrespondencesFinderOpencv.h"
-#include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio/videoio.hpp"
-#include "opencv2/video/video.hpp"
-#include "opencv2/calib3d/calib3d.hpp"
-
-#include "xpcf/component/ComponentBase.h"
-
-
-#include <map>
 
 namespace xpcf  = org::bcom::xpcf;
 

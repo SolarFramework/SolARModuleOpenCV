@@ -15,9 +15,6 @@
  */
 
 #include "SolARDescriptorMatcherHammingBruteForceOpencv.h"
-
-#include <iostream>
-#include <utility>
 #include "SolAROpenCVHelper.h"
 
 namespace xpcf  = org::bcom::xpcf;
