@@ -1,7 +1,20 @@
-#include "SolARMapFilterOpencv.h"
-#include <iostream>
-#include <utility>
+/**
+ * @copyright Copyright (c) 2017 B-com http://www.b-com.com/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
+#include "SolARMapFilterOpencv.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -15,9 +28,6 @@ namespace SolAR {
                 SolARMapFilterOpencv::SolARMapFilterOpencv():ComponentBase(xpcf::toUUID<SolARMapFilterOpencv>())
                 {
                     addInterface<IMapFilter>(this);
-                #ifdef DEBUG
-                    std::cout << " SolARMapFilterOpencv constructor" << std::endl;
-                #endif
                 }
 
 				std::vector<cv::Point3d> SolARMapFilterOpencv::CloudPointsToPoints(const std::vector<SRef<CloudPoint>> cpts) {
@@ -75,7 +85,7 @@ namespace SolAR {
 							if (D < p_to_plane_thresh) num_inliers++;
 						}
 
-						std::cout << num_inliers << "/" << pcloud.size() << " are coplanar" << std::endl;
+                        LOG_WARNING("{}/{} are coplanar",num_inliers, pcloud.size());
 						if ((double)num_inliers / (double)(pcloud.size()) > 0.85)
 							return false;
 					}

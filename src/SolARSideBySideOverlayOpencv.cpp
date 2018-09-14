@@ -16,7 +16,6 @@
 
 #include "SolARSideBySideOverlayOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
 #include "opencv2/video/video.hpp"
 #include <random>
 

@@ -1,7 +1,20 @@
-#include "SolARMapperOpencv.h"
-#include <iostream>
-#include <utility>
+/**
+ * @copyright Copyright (c) 2017 B-com http://www.b-com.com/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
+#include "SolARMapperOpencv.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -15,10 +28,7 @@ namespace SolAR {
 
                 SolARMapperOpencv::SolARMapperOpencv():ComponentBase(xpcf::toUUID<SolARMapperOpencv>())
                 {
-                     addInterface<IMapper>(this);
-                #ifdef DEBUG
-                    std::cout << " SolARMapperOpencv constructor" << std::endl;
-                #endif
+                    addInterface<IMapper>(this);
                     m_map = org::bcom::xpcf::utils::make_shared<Map>() ;
                 }
 
@@ -60,7 +70,7 @@ namespace SolAR {
                     m_kframes.push_back(kframe_t0);
                     m_kframes.push_back(kframe_t1);
                     m_gmatches[std::make_pair(kframe_t0->m_idx, kframe_t1->m_idx)] = matches;
-                    std::cout << " init map with "<<initCloud.size()<<" pointst"<<std::endl;
+                    LOG_DEBUG("init map with {} points", initCloud.size());
                     m_map->addCloudPoints(initCloud) ;
                     return true;
                 }
@@ -98,7 +108,7 @@ namespace SolAR {
                          return m_kframes[idx];
                     }
                     else{
-                        std::cerr<<"error, can't retrieve last keyframe, id must be lower than keyframes size"<<std::endl;
+                        LOG_ERROR("error, can't retrieve last keyframe, id must be lower than keyframes size");
                     }
                 }
                 void SolARMapperOpencv::associateReferenceKeyFrameToFrame(SRef<Frame> frame)
@@ -131,7 +141,7 @@ namespace SolAR {
                     Quaternionf rkeyFrame(poseKeyFrame.rotation()) ;
                     float rotationDistance = rFrame.angularDistance(rkeyFrame) ;
 
-					std::cout << " Translation Distance " << translationDistance << "  Angular Distance " << rotationDistance << std::endl;
+                    LOG_DEBUG(" Translation Distance {}, Angular Distance {}", translationDistance, rotationDistance);
 
 
                     // to do : add  these threshold as parameters somewhere
@@ -140,12 +150,7 @@ namespace SolAR {
                     // For now : 20 frames and enough track points only!!
 					if (conditionAddKeyFrame)
                     {
-                        std::cout << " Add new Key Frame" << std::endl ;
-                        std::cout << " Nb Frames " << frame->getNumberOfFramesSinceLastKeyFrame() << std::endl ;
-                        std::cout << " Track points " <<  frame->getCommonMapPointsWithReferenceKeyFrame().size() << std::endl ;
-                        std::cout << " Redudancy " << redudancyValue << std::endl ;
-                        std::cout << " Translation Distance " << translationDistance  << "  Angular Distance " << rotationDistance << std::endl ;
-						
+                        LOG_DEBUG(" Add new Key Frame \nNb Frames {} \nTrack Points {} \nRedundancy {} \nTranslation Distance {} \nRotation Distance {}", frame->getNumberOfFramesSinceLastKeyFrame(), frame->getCommonMapPointsWithReferenceKeyFrame().size(), redudancyValue, translationDistance, rotationDistance);
                         return m_kframes.size(); // index of key frame matches with array length
 
                     }

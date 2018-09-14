@@ -13,22 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <iostream>
-
 #include "SolARPoseEstimationPnpOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio/videoio.hpp"
-#include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
-
-#include "xpcf/component/ComponentFactory.h"
-
-
-#include <map>
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv);
 
@@ -189,7 +176,7 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
          }
      }
      if (in3d.size()!=in2d.size() || in3d.size()<3 ){
-         std::cerr<<"wolrd/image inliers points must be valid ( equal and > to 2)"<<std::endl;
+         LOG_ERROR("wolrd/image inliers points must be valid ( equal and > to 2)");
          return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
      }
 

@@ -16,13 +16,6 @@
 
 #include "SolARKeypointDetectorOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include <iostream>
-#include <utility>
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include "xpcf/api/IComponentManager.h"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv)
 
