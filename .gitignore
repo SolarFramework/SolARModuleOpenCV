@@ -61,5 +61,4 @@ x64*
 *.TMP
 *.tmp
 
-tests/SolARHomographyEstimation/xpcf_custom\.xml
 
