@@ -31,7 +31,7 @@ namespace SolAR {
 
                 // this method should be called with timestamp
                 SRef<Keyframe> getCurrentKeyframe(int idx);
-
+                std::map<std::pair<int, int>, std::vector<DescriptorMatch> > getMatchesMatrix() override;
                 void associateReferenceKeyFrameToFrame(SRef<Frame> frame)  ;
 
                 SRef<Map> getMap() ;
@@ -50,13 +50,13 @@ namespace SolAR {
 
                 void unloadComponent () override final;
 
+
             private:
 
                // for the moment put this in public
                 std::vector<SRef<Keyframe>>m_kframes;
                 std::map<std::pair<int, int>, std::vector<DescriptorMatch> > m_gmatches;
-                SRef<Map> m_map;
-
+                SRef<Map> m_map; // should be private (but here just for test!)
 
                 void addMatches(const std::pair<int,int>&working_views,
                                 const std::vector<DescriptorMatch>& found_matches,

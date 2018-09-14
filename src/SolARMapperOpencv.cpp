@@ -65,6 +65,9 @@ namespace SolAR {
                     return true;
                 }
 
+                std::map<std::pair<int, int>, std::vector<DescriptorMatch> > SolARMapperOpencv::getMatchesMatrix(){
+                    return m_gmatches;
+                }
 
                 bool SolARMapperOpencv::updateMap(const SRef<Keyframe>& new_kframe,
                                                   const std::vector<DescriptorMatch>& found_matches,

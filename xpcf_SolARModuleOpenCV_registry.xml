@@ -161,9 +161,11 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="3a01b0e9-9a76-43f5-97b3-85bb6979b953" description="ITriangulator"/>
         </component>
+
 		 <component uuid="fa4a780a-9720-11e8-9eb6-529269fb1459" description="SolARVideoAsCameraOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" description="ICamera"/>
         </component>
+
     </module>    
 </xpcf-registry>

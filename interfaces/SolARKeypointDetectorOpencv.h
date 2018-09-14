@@ -60,7 +60,7 @@ private:
     float m_imageRatio=1.0f;
 
     /// @brief the number of descriptors that are selected. If negative, all extracted descriptors are selected
-    int m_nbDescriptors = 1000;
+    int m_nbDescriptors = 3000;
 
 
     int m_id;

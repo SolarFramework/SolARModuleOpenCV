@@ -37,6 +37,11 @@ DEFINES += "_BCOM_SHARED=__declspec(dllexport)"
 
 INCLUDEPATH += interfaces/
 
+# my ssba path files:
+
+#INCLUDEPATH += "D:/AmineLib/SSBA/"
+#LIBS += "D:/AmineLib/SSBA/build/Release"
+
 HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageConvertorOpencv.h \
     interfaces/SolARImageLoaderOpencv.h \
@@ -85,6 +90,7 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolAR3DOverlayBoxOpencv.h \
     interfaces/SolARHomographyMatrixDecomposerOpencv.h \
     interfaces/SolARPoseFinderFrom2D2DOpencv.h
+#    interfaces/SolARBundlerOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
@@ -131,6 +137,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolAR3DOverlayBoxOpencv.cpp \
     src/SolARHomographyMatrixDecomposerOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp
+#    src/SolARBundlerOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers

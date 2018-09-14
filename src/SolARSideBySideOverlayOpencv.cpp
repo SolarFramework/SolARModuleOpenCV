@@ -20,6 +20,9 @@
 #include "opencv2/video/video.hpp"
 #include <random>
 
+#include <stdio.h>
+#include <iostream>
+
 namespace xpcf  = org::bcom::xpcf;
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv)
@@ -150,6 +153,7 @@ void SolARSideBySideOverlayOpencv::drawMatchesLines(const SRef<Image> image1, co
 
     int nbPoints;
 
+
     if (matches.empty())
     {
         nbPoints = std::min(points_image1.size(), points_image2.size());
@@ -166,6 +170,7 @@ void SolARSideBySideOverlayOpencv::drawMatchesLines(const SRef<Image> image1, co
         }
         else
         {
+
             std::random_device rd;     // only used once to initialise (seed) engine
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
             std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
@@ -184,6 +189,7 @@ void SolARSideBySideOverlayOpencv::drawMatchesLines(const SRef<Image> image1, co
 
         if (!m_randomColor)
         {
+
             for (int i = 0;i<nbPoints;++i){
                 point1 = *(points_image1.at(matches[i].getIndexInDescriptorA()));
                 point2 = *(points_image2.at(matches[i].getIndexInDescriptorB()));
@@ -192,6 +198,7 @@ void SolARSideBySideOverlayOpencv::drawMatchesLines(const SRef<Image> image1, co
         }
         else
         {
+
             std::random_device rd;     // only used once to initialise (seed) engine
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
             std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased

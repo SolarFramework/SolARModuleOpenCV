@@ -61,7 +61,8 @@ namespace SolAR {
                     bool matchFound = false ;
                     for (int i = 0; i < cloud.size(); ++i) {
                         if (cloud[i]->m_visibility [keyframe_idx] == current_matches[j].getIndexInDescriptorA()) {
-                            shared_mapPoint.push_back(cloud[i]) ;
+                            shared_mapPoint.push_back(cloud[i]);
+
                             shared_3dpoint.push_back(xpcf::utils::make_shared<Point3Df>(cloud[i]->getX(), cloud[i]->getY(),cloud[i]->getZ()));
                             shared_2dpoint.push_back(xpcf::utils::make_shared<Point2Df>(current_kpoints[current_matches[j].getIndexInDescriptorB()]->getX(),
                                                                               current_kpoints[current_matches[j].getIndexInDescriptorB()]->getY()));
