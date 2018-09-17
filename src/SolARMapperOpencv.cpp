@@ -26,10 +26,13 @@ namespace SolAR {
         namespace MODULES {
             namespace OPENCV {
 
-                SolARMapperOpencv::SolARMapperOpencv():ComponentBase(xpcf::toUUID<SolARMapperOpencv>())
+                SolARMapperOpencv::SolARMapperOpencv():ConfigurableBase(xpcf::toUUID<SolARMapperOpencv>())
                 {
                     addInterface<IMapper>(this);
-                    m_map = org::bcom::xpcf::utils::make_shared<Map>() ;
+                    m_map = xpcf::utils::make_shared<Map>() ;
+                    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+                    params->wrapInteger("minNbMatchesIsKeyframe", m_minNbMatchesIsKeyframe);
+                    params->wrapFloat("minMeanDistanceIsKeyframe", m_minMeanDistanceIsKeyframe);
                 }
 
                 void SolARMapperOpencv::addNewKeyFrame(const SRef<Frame> & frame, SRef<Keyframe>& newKeyframe) {
@@ -59,7 +62,6 @@ namespace SolAR {
                     }
                 }
 
-
                 bool SolARMapperOpencv::initMap(SRef<Keyframe>&kframe_t0,
                                                 SRef<Keyframe>&kframe_t1,
                                                 std::vector<SRef<CloudPoint>>&initCloud,
@@ -67,8 +69,6 @@ namespace SolAR {
 
                     kframe_t0->addVisibleMapPoints(initCloud);
                     kframe_t1->addVisibleMapPoints(initCloud);
-                    m_kframes.push_back(kframe_t0);
-                    m_kframes.push_back(kframe_t1);
                     m_gmatches[std::make_pair(kframe_t0->m_idx, kframe_t1->m_idx)] = matches;
                     LOG_DEBUG("init map with {} points", initCloud.size());
                     m_map->addCloudPoints(initCloud) ;
@@ -122,8 +122,22 @@ namespace SolAR {
                     return m_map ;
                 }
 
-                int SolARMapperOpencv::isKeyFrameCandidate(SRef<Frame> frame)
+                bool SolARMapperOpencv::isKeyFrameCandidate(const std::vector<SRef<Keypoint>>& keypointsRef, const std::vector<SRef<Keypoint>>& keypointsCurrent, const std::vector<DescriptorMatch>& matches)
                 {
+                    if (matches.size() < m_minNbMatchesIsKeyframe)
+                        return false;
+
+                    double totalMatchesDist = 0.0;
+                    for (int i = 0; i < matches.size(); i++)
+                    {
+                        SRef<Keypoint> keypointRef = keypointsRef[matches[i].getIndexInDescriptorA()];
+                        SRef<Keypoint> keypointCurrent = keypointsCurrent[matches[i].getIndexInDescriptorB()];
+
+                        totalMatchesDist+=((*keypointRef)-(*keypointCurrent)).norm();
+                    }
+                    return (totalMatchesDist/matches.size()>m_minMeanDistanceIsKeyframe);
+
+                    /*
                     bool enoughFrameSinceKf = ( frame->getNumberOfFramesSinceLastKeyFrame() >20) ; // more than 20 frames since last key frame
                     bool enoughTrackPoints = (frame->getCommonMapPointsWithReferenceKeyFrame().size() > 20) ; // enough map points seen in frame
                     float redudancyValue = ( (float) frame->getCommonMapPointsWithReferenceKeyFrame().size() / (float) frame->getReferenceKeyFrame()->getVisibleMapPoints().size()) ;  // percent of track kref map points seen in frame
@@ -154,6 +168,7 @@ namespace SolAR {
                         return m_kframes.size(); // index of key frame matches with array length
 
                     }
+                    */
                     return -1 ;
 
                 }

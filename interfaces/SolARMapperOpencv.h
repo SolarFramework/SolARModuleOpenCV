@@ -3,7 +3,7 @@
 
 
 #include "api/solver/map/IMapper.h"
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include <vector>
 #include "SolAROpencvAPI.h"
 #include "SolAROpenCVHelper.h"
@@ -18,7 +18,7 @@ namespace SolAR {
          * @class SolARSVDTriangulationOpencv
          * @brief Triangulates set of corresponding 2D-2D points correspondances with known respective camera poses based on opencv SVD.
          */
-            class SOLAROPENCV_EXPORT_API SolARMapperOpencv : public org::bcom::xpcf::ComponentBase,
+            class SOLAROPENCV_EXPORT_API SolARMapperOpencv : public org::bcom::xpcf::ConfigurableBase,
                 public api::solver::map::IMapper {
             public:
                 SolARMapperOpencv();
@@ -36,7 +36,7 @@ namespace SolAR {
 
                 SRef<Map> getMap() ;
 
-                int isKeyFrameCandidate(SRef<Frame> frame) ;
+                bool isKeyFrameCandidate(const std::vector<SRef<Keypoint>>& KeypointsRef, const std::vector<SRef<Keypoint>>& keypointsCurrent, const std::vector<DescriptorMatch>& matches) ;
 
                 bool initMap(SRef<Keyframe>&kframe_t0,
                              SRef<Keyframe>&kframe_t1,
@@ -57,6 +57,11 @@ namespace SolAR {
                 std::map<std::pair<int, int>, std::vector<DescriptorMatch> > m_gmatches;
                 SRef<Map> m_map;
 
+                // Minimum number of matches for a frame to be a keyframe
+                int m_minNbMatchesIsKeyframe = 50;
+
+                // Minimum mean distance for a frame to be a keyframe
+                float m_minMeanDistanceIsKeyframe = 20.0;
 
                 void addMatches(const std::pair<int,int>&working_views,
                                 const std::vector<DescriptorMatch>& found_matches,
