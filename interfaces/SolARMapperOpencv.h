@@ -36,7 +36,7 @@ namespace SolAR {
 
                 SRef<Map> getMap() ;
 
-                bool isKeyFrameCandidate(const std::vector<SRef<Keypoint>>& KeypointsRef, const std::vector<SRef<Keypoint>>& keypointsCurrent, const std::vector<DescriptorMatch>& matches) ;
+                bool isKeyFrameCandidate(const std::vector<SRef<Keypoint>>& KeypointsRef, const std::vector<SRef<Keypoint>>& keypointsCurrent, const std::vector<DescriptorMatch>& matches, const unsigned int imageWidth) ;
 
                 bool initMap(SRef<Keyframe>&kframe_t0,
                              SRef<Keyframe>&kframe_t1,

@@ -122,7 +122,7 @@ namespace SolAR {
                     return m_map ;
                 }
 
-                bool SolARMapperOpencv::isKeyFrameCandidate(const std::vector<SRef<Keypoint>>& keypointsRef, const std::vector<SRef<Keypoint>>& keypointsCurrent, const std::vector<DescriptorMatch>& matches)
+                bool SolARMapperOpencv::isKeyFrameCandidate(const std::vector<SRef<Keypoint>>& keypointsRef, const std::vector<SRef<Keypoint>>& keypointsCurrent, const std::vector<DescriptorMatch>& matches, const unsigned int imageWidth)
                 {
                     if (matches.size() < m_minNbMatchesIsKeyframe)
                         return false;
@@ -133,7 +133,7 @@ namespace SolAR {
                         SRef<Keypoint> keypointRef = keypointsRef[matches[i].getIndexInDescriptorA()];
                         SRef<Keypoint> keypointCurrent = keypointsCurrent[matches[i].getIndexInDescriptorB()];
 
-                        totalMatchesDist+=((*keypointRef)-(*keypointCurrent)).norm();
+                        totalMatchesDist+=((*keypointRef)-(*keypointCurrent)).norm()/imageWidth;
                     }
                     return (totalMatchesDist/matches.size()>m_minMeanDistanceIsKeyframe);
 
