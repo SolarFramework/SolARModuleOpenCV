@@ -50,11 +50,11 @@ class SolARImageViewerOpencv;
 class SolARKeypointDetectorOpencv;
 class SolARMarker2DNaturalImageOpencv;
 class SolARMarker2DSquaredBinaryOpencv;
+class SolARMatchesOverlayOpencv;
 class SolARPerspectiveControllerOpencv;
 class SolARPoseEstimationPnpEPFL;
 class SolARPoseEstimationPnpOpencv;
 class SolARPoseFinderFrom2D2DOpencv;
-class SolARSideBySideOverlayOpencv;
 class SolARSVDFundamentalMatrixDecomposerOpencv;
 class SolARSVDTriangulationOpencv;
 class SolAR2D3DCorrespondencesFinderOpencv;
@@ -195,9 +195,9 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpen
                              "52babb5e-9d33-11e8-98d0-529269fb1459",
                              "SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv component")
 
-XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv,
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMatchesOverlayOpencv,
                              "e95302be-3fe1-44e0-97bf-a98380464af9",
-                             "SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv component")
+                             "SolAR::MODULES::OPENCV::SolARMatchesOverlayOpencv component")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv,
                              "31188e79-6bd5-43df-9633-6d6c5d7afb5c",

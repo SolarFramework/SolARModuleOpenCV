@@ -149,9 +149,9 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="6063a606-9d30-11e8-98d0-529269fb1459" description="I3DTransformFinderFrom2D2D"/>
         </component>
-		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9" description="SolARSideBySideOverlayOpencv">
+		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9" description="SolARMatchesOverlayOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="a801354a-3e00-467c-b390-48c76fa8c53a" description="ISideBySideOverlay"/>
+                <interface uuid="a801354a-3e00-467c-b390-48c76fa8c53a" description="IMatchesOverlay"/>
         </component>
 		<component uuid="31188e79-6bd5-43df-9633-6d6c5d7afb5c" description="SolARSVDFundamentalMatrixDecomposerOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
