@@ -29,7 +29,7 @@ using namespace std;
 #include "api/features/IDescriptorMatcher.h"
 #include "api/features/IMatchesFilter.h"
 #include "api/display/IImageViewer.h"
-#include "api/display/ISideBySideOverlay.h"
+#include "api/display/IMatchesOverlay.h"
 
 
 using namespace SolAR;
@@ -69,13 +69,13 @@ int main(int argc, char **argv)
     SRef<features::IDescriptorsExtractor>   extractorAKAZE2 = xpcfComponentManager->create<SolARDescriptorsExtractorAKAZE2Opencv>()->bindTo<features::IDescriptorsExtractor>();
     SRef<features::IDescriptorMatcher>      matcher = xpcfComponentManager->create<SolARDescriptorMatcherKNNOpencv>()->bindTo<features::IDescriptorMatcher>();
     SRef<features::IMatchesFilter>          matchesFilterGeometric = xpcfComponentManager->create<SolARGeometricMatchesFilterOpencv>()->bindTo<features::IMatchesFilter>();
-    SRef<display::ISideBySideOverlay>       overlay = xpcfComponentManager->create<SolARSideBySideOverlayOpencv>()->bindTo<display::ISideBySideOverlay>();
+    SRef<display::IMatchesOverlay>          overlayMatches = xpcfComponentManager->create<SolARMatchesOverlayOpencv>()->bindTo<display::IMatchesOverlay>();
     SRef<display::IImageViewer>             viewerWithoutFilter = xpcfComponentManager->create<SolARImageViewerOpencv>("withoutFilter")->bindTo<display::IImageViewer>();
     SRef<display::IImageViewer>             viewerWithFilter = xpcfComponentManager->create<SolARImageViewerOpencv>("withFilter")->bindTo<display::IImageViewer>();
 
     /* we need to check that components are well created*/
     if (!image1Loader || !image2Loader || !keypointsDetector || !extractorAKAZE2 || !matcher ||
-        !matchesFilterGeometric || !overlay || !viewerWithoutFilter || !viewerWithFilter)
+        !matchesFilterGeometric || !overlayMatches || !viewerWithoutFilter || !viewerWithFilter)
     {
         LOG_ERROR("One or more component creations have failed");
         return -1;
@@ -130,7 +130,7 @@ int main(int argc, char **argv)
    LOG_INFO("number of original matches: {}", matches.size());
 
    // Draw the original matches in a dedicated image
-   overlay->drawMatchesLines(image1, image2, matchesImage, keypoints1, keypoints2, matches);
+   overlayMatches->draw(image1, image2, matchesImage, keypoints1, keypoints2, matches);
 
    // Apply geometric filter
    matchesFilterGeometric->filter(matches,matches,keypoints1, keypoints2);
@@ -138,7 +138,7 @@ int main(int argc, char **argv)
    LOG_INFO("number of filtered matches: {}", matches.size());
 
    // Draw the filtered matches in a dedicated image
-   overlay->drawMatchesLines(image1, image2, filteredMatchesImage, keypoints1, keypoints2, matches);
+   overlayMatches->draw(image1, image2, filteredMatchesImage, keypoints1, keypoints2, matches);
 
    while (true){
        if (viewerWithoutFilter->display(matchesImage) == SolAR::FrameworkReturnCode::_STOP ||

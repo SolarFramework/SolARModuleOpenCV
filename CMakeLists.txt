@@ -24,7 +24,7 @@ set (SOURCES
     src/SolARDescriptorMatcherKNNOpencv.cpp
     src/SolARDescriptorMatcherRadiusOpencv.cpp
     src/SolARGeometricMatchesFilterOpencv.cpp
-    src/SolARSideBySideOverlayOpencv.cpp
+    src/SolARMatchesOverlayOpencv.cpp
     src/SolAR2DOverlayOpencv.cpp
     src/SolARHomographyEstimationOpencv.cpp
     src/SolARPoseEstimationPnpEPFL.cpp
@@ -79,7 +79,7 @@ set (HEADERS
     interfaces/SolARPoseEstimationPnpEPFL.h
     interfaces/SolARPoseEstimationPnpOpencv.h
     interfaces/SolARGeometricMatchesFilterOpencv.h
-    interfaces/SolARSideBySideOverlayOpencv.h
+    interfaces/SolARMatchesOverlayOpencv.h
     interfaces/SolAR2DOverlayOpencv.h
     interfaces/SolARSVDTriangulationOpencv.h
     src/AKAZE2/AKAZEConfig.h

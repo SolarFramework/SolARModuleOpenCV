@@ -80,7 +80,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
             for (int i = 0;i<nbPoints;++i){
                 point1 = *(points_image1.at(i));
                 point2 = *(points_image2.at(i));
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[0],m_color[1],m_color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode.compare("RANDOM") == 0)
@@ -118,7 +118,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[0],color[1],color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -135,7 +135,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
             for (int i = 0;i<nbPoints;++i){
                 point1 = *(points_image1.at(matches[i].getIndexInDescriptorA()));
                 point2 = *(points_image2.at(matches[i].getIndexInDescriptorB()));
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[0],m_color[1],m_color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode.compare("RANDOM") == 0)
@@ -173,7 +173,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[0],color[1],color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -218,7 +218,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
             for (int i = 0;i<nbPoints;++i){
                 point1 = *(points_image1.at(i));
                 point2 = *(points_image2.at(i));
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[0],m_color[1],m_color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode.compare("RANDOM") == 0)
@@ -256,7 +256,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[0],color[1],color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -273,7 +273,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
             for (int i = 0;i<nbPoints;++i){
                 point1 = *(points_image1.at(matches[i].getIndexInDescriptorA()));
                 point2 = *(points_image2.at(matches[i].getIndexInDescriptorB()));
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[0],m_color[1],m_color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode.compare("RANDOM") == 0)
@@ -311,7 +311,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[0],color[1],color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -353,7 +353,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
             for (int i = 0;i<nbPoints;++i){
                 point1 = *(points1.at(i));
                 point2 = *(points2.at(i));
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[0],m_color[1],m_color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode.compare("RANDOM") == 0)
@@ -391,7 +391,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(color[0],color[1],color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -409,7 +409,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
             for (int i = 0;i<nbPoints;++i){
                 point1 = *(points1.at(matches[i].getIndexInDescriptorA()));
                 point2 = *(points2.at(matches[i].getIndexInDescriptorB()));
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[0],m_color[1],m_color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode.compare("RANDOM") == 0)
@@ -447,7 +447,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(color[0],color[1],color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -491,7 +491,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
             for (int i = 0;i<nbPoints;++i){
                 point1 = *(points1.at(i));
                 point2 = *(points2.at(i));
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[0],m_color[1],m_color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode.compare("RANDOM") == 0)
@@ -529,7 +529,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(color[0],color[1],color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -547,7 +547,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
             for (int i = 0;i<nbPoints;++i){
                 point1 = *(points1.at(matches[i].getIndexInDescriptorA()));
                 point2 = *(points2.at(matches[i].getIndexInDescriptorB()));
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[0],m_color[1],m_color[2]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode.compare("RANDOM") == 0)
