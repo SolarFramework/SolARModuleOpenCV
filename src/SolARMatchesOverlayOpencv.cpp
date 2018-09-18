@@ -466,8 +466,6 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
         outImage->setSize(image->getWidth(), image->getHeight());
     }
 
-    LOG_DEBUG(" mode = {}", m_mode);
-
     cv::Mat img, outImg;
     Point2Df point1, point2;
 
