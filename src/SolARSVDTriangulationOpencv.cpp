@@ -32,10 +32,12 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ComponentBase(xpcf::toUUID<SolARSVDTriangulationOpencv>())
+SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ConfigurableBase(xpcf::toUUID<SolARSVDTriangulationOpencv>())
 {
    addInterface<api::solver::map::ITriangulator>(this);
    LOG_DEBUG(" SolARSVDTriangulationOpencv constructor");
+   SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+   params->wrapFloat("reprojErrorThreshold", m_ReprojErrorThreshold);
 
    m_camMatrix.create(3, 3);
    m_camDistorsion.create(5, 1);
@@ -191,14 +193,14 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
     cv::Mat_<double> Kinv;
 
     cv::invert(m_camMatrix,Kinv);
-    //std::cout<<"KInv :" << Kinv <<std::endl;
-    double t = cv::getTickCount();
     // Create a vector to store the reprojection error of each triangulated 3D points
     std::vector<double> reproj_error;
     // unsigned int pts_size = pt2d_1.size();
     unsigned int pts_size = matches.size();
 
-    // KPose2 represents the transformation from 3D space to 2D image (K*[R|T]).
+    // KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
+    cv::Mat_<double> KPose1;
+    KPose1 = m_camMatrix * cv::Mat(Pose1);
     cv::Mat_<double> KPose2;
     KPose2 = m_camMatrix * cv::Mat(Pose2);
 
@@ -215,40 +217,40 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
         cv::Mat_<double> um2 = Kinv * cv::Mat_<double>(u2);
         u2.x = um2(0); u2.y = um2(1); u2.z = um2(2);
 
-        //std::cout<<"point1: "<< kp1 <<", u1: "<<u1<<std::endl;
-        //std::cout<<"P1: "<<Pose1<<std::endl;
-
-         //std::cout<<"point2: "<< kp2 <<", u2: "<<u2<<std::endl;
-         //std::cout<<"P2: "<<Pose2<<std::endl;
-
         // Compute the position of the 3D point projected in u1 for the camera1 with Pose1 and projected in u2 for the camera 2 with Pose 2
         //cv::Mat_<double> X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
         cv::Mat_<double> X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
-        //double error;
-
 
         //std::cout<<"X: "<<X<<std::endl;
 
         // Reproject this point on the image plane of the second camera
-        cv::Mat_<double> xPt_img = KPose2 * X;				//reproject
-   //       std::cout <<	"Point * K: " << xPt_img << std::endl;
-        cv::Point2f xPt_img_(xPt_img(0) / xPt_img(2), xPt_img(1) / xPt_img(2));
+        cv::Mat_<double> xPt_img1 = KPose1 * X;				//reproject
+        cv::Point2f xPt_img_1(xPt_img1(0) / xPt_img1(2), xPt_img1(1) / xPt_img1(2));
+        cv::Mat_<double> xPt_img2 = KPose2 * X;				//reproject
+        cv::Point2f xPt_img_2(xPt_img2(0) / xPt_img2(2), xPt_img2(1) / xPt_img2(2));
 
-        double reprj_err = norm(xPt_img_ - kp2);
-        //std::cout<<"x: "<<xPt_img_<<", error"<<reprj_err<<std::endl;
-        reproj_error.push_back(reprj_err);
+        if (xPt_img1(2) > 0 && xPt_img2(2) > 0)
+        {
+            double reprj_err = (norm(xPt_img_1 - kp1)+norm(xPt_img_2 - kp2))/2.0f;
+            if (reprj_err < m_ReprojErrorThreshold)
+            {
+                reproj_error.push_back(reprj_err);
 
-        xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
-        std::vector<int>visibility = std::vector<int>(50, -1);
+                xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
+                std::vector<int>visibility = std::vector<int>(50, -1);
 
-       visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
-       visibility[working_views.second] = matches[i].getIndexInDescriptorB();
+                visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
+                visibility[working_views.second] = matches[i].getIndexInDescriptorB();
 
-       cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
-       pcloud.push_back(cp);
+                cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
+                pcloud.push_back(cp);
+            }
+        }
+        else
+            LOG_DEBUG("Point has been triangulated behind the camera.");
      }
+    LOG_DEBUG("{}/{} points have been triangulated", pcloud.size(), matches.size());
     cv::Scalar mse = cv::mean(reproj_error);
-    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
     return mse[0];
 }
 
@@ -282,8 +284,11 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>
     // unsigned int pts_size = pt2d_1.size();
     unsigned int pts_size = matches.size();
 
-    // KPose2 represents the transforration from 3D space to 2D image (K*[R|T]).
-    cv::Mat_<double> KPose2 = m_camMatrix * cv::Mat(Pose2);
+    // KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
+    cv::Mat_<double> KPose1;
+    KPose1 = m_camMatrix * cv::Mat(Pose1);
+    cv::Mat_<double> KPose2;
+    KPose2 = m_camMatrix * cv::Mat(Pose2);
 
     for (int i = 0; i<pts_size; i++) {
         cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()]->getX(),pointsView1[matches[i].getIndexInDescriptorA()]->getY());
@@ -313,23 +318,34 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>
         //std::cout<<"X: "<<X<<std::endl;
 
         // Reproject this point on the image plane of the second camera
-        cv::Mat_<double> xPt_img = KPose2 * X;				//reproject
-   //       std::cout <<	"Point * K: " << xPt_img << std::endl;
-        cv::Point2f xPt_img_(xPt_img(0) / xPt_img(2), xPt_img(1) / xPt_img(2));
+        cv::Mat_<double> xPt_img1 = KPose1 * X;				//reproject
+        cv::Point2f xPt_img_1(xPt_img1(0) / xPt_img1(2), xPt_img1(1) / xPt_img1(2));
+        cv::Mat_<double> xPt_img2 = KPose2 * X;				//reproject
+        cv::Point2f xPt_img_2(xPt_img2(0) / xPt_img2(2), xPt_img2(1) / xPt_img2(2));
 
-        double reprj_err = norm(xPt_img_ - kp2);
-        //std::cout<<"x: "<<xPt_img_<<", error"<<reprj_err<<std::endl;
-        reproj_error.push_back(reprj_err);
+        if (xPt_img1(2) > 0 && xPt_img2(2) > 0)
+        {
+            double reprj_err = (norm(xPt_img_1 - kp1)+norm(xPt_img_2 - kp2))/2.0f;
+            if (reprj_err < m_ReprojErrorThreshold)
+            {
 
-        xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
-        std::vector<int>visibility = std::vector<int>(50, -1);
+                //std::cout<<"x: "<<xPt_img_<<", error"<<reprj_err<<std::endl;
+                reproj_error.push_back(reprj_err);
 
-       visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
-       visibility[working_views.second] = matches[i].getIndexInDescriptorB();
+                xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
+                std::vector<int>visibility = std::vector<int>(50, -1);
 
-       cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
-       pcloud.push_back(cp);
+               visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
+               visibility[working_views.second] = matches[i].getIndexInDescriptorB();
+
+               cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
+               pcloud.push_back(cp);
+            }
+        }
+        else
+            LOG_DEBUG("Point has been triangulated behind the camera.");
      }
+    LOG_DEBUG("{}/{} points have been triangulated", pcloud.size(), matches.size());
     cv::Scalar mse = cv::mean(reproj_error);
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
     return mse[0];
