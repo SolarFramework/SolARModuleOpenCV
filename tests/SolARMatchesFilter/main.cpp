@@ -15,29 +15,22 @@
  */
 
 #include <iostream>
-#include <string>
-#include <vector>
 
-// ADD COMPONENTS HEADERS HERE
+#include <boost/log/core.hpp>
 
-#include "SolARImageLoaderOpencv.h"
-#include "SolARCameraOpencv.h"
-#include "SolARKeypointDetectorOpencv.h"
-#include "SolARDescriptorsExtractorSIFTOpencv.h"
-//#include "SolARDescriptorMatcherKNNOpencv.h"
-#include "SolARDescriptorMatcherRadiusOpencv.h"
-#include "SolARImageViewerOpencv.h"
-#include "SolARSideBySideOverlayOpencv.h"
-#include "SolARBasicMatchesFilterOpencv.h"
-#include "SolARGeometricMatchesFilterOpencv.h"
+using namespace std;
+#include "SolARModuleOpencv_traits.h"
 
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/xfeatures2d/cuda.hpp"
-#include "opencv2/opencv_modules.hpp"
-#include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/xfeatures2d.hpp>
+#include "xpcf/xpcf.h"
+#include "api/image/IImageLoader.h"
+#include "api/input/devices/ICamera.h"
+#include "api/features/IKeypointDetector.h"
+#include "api/features/IDescriptorsExtractor.h"
+#include "api/features/IDescriptorMatcher.h"
+#include "api/features/IMatchesFilter.h"
+#include "api/display/IImageViewer.h"
+#include "api/display/ISideBySideOverlay.h"
+
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
@@ -46,18 +39,50 @@ using namespace SolAR::MODULES::OPENCV;
 
 namespace xpcf  = org::bcom::xpcf;
 
-
-int run(int argc, char **argv)
+int main(int argc, char **argv)
 {
+#if NDEBUG
+    boost::log::core::get()->set_logging_enabled(false);
+#endif
 
- // declarations
-    SRef<image::IImageLoader>               imageLoader;
-    SRef<features::IKeypointDetector>       keypointsDetector;
-    SRef<features::IDescriptorsExtractor>   extractorSIFT;
-    SRef<features::IDescriptorMatcher>      matcher;
-    SRef<display::IImageViewer>             viewer;
+//    SolARLog::init();
+    LOG_ADD_LOG_TO_CONSOLE();
 
-    SRef<display::ISideBySideOverlay>       overlay;
+    LOG_INFO("program is running");
+
+
+    /* instantiate component manager*/
+    /* this is needed in dynamic mode */
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+
+    if(xpcfComponentManager->load("conf_MatchesFilter.xml")!=org::bcom::xpcf::_SUCCESS)
+    {
+        LOG_ERROR("Failed to load the configuration file conf_NaturalImageMarker.xml", argv[1])
+        return -1;
+    }
+    // declare and create components
+    LOG_INFO("Start creating components");
+
+    SRef<image::IImageLoader>               image1Loader = xpcfComponentManager->create<SolARImageLoaderOpencv>("image1")->bindTo<image::IImageLoader>();
+    SRef<image::IImageLoader>               image2Loader = xpcfComponentManager->create<SolARImageLoaderOpencv>("image2")->bindTo<image::IImageLoader>();
+    SRef<features::IKeypointDetector>       keypointsDetector = xpcfComponentManager->create<SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
+    SRef<features::IDescriptorsExtractor>   extractorAKAZE2 = xpcfComponentManager->create<SolARDescriptorsExtractorAKAZE2Opencv>()->bindTo<features::IDescriptorsExtractor>();
+    SRef<features::IDescriptorMatcher>      matcher = xpcfComponentManager->create<SolARDescriptorMatcherKNNOpencv>()->bindTo<features::IDescriptorMatcher>();
+    SRef<features::IMatchesFilter>          matchesFilterGeometric = xpcfComponentManager->create<SolARGeometricMatchesFilterOpencv>()->bindTo<features::IMatchesFilter>();
+    SRef<display::ISideBySideOverlay>       overlay = xpcfComponentManager->create<SolARSideBySideOverlayOpencv>()->bindTo<display::ISideBySideOverlay>();
+    SRef<display::IImageViewer>             viewerWithoutFilter = xpcfComponentManager->create<SolARImageViewerOpencv>("withoutFilter")->bindTo<display::IImageViewer>();
+    SRef<display::IImageViewer>             viewerWithFilter = xpcfComponentManager->create<SolARImageViewerOpencv>("withFilter")->bindTo<display::IImageViewer>();
+
+    /* we need to check that components are well created*/
+    if (!image1Loader || !image2Loader || !keypointsDetector || !extractorAKAZE2 || !matcher ||
+        !matchesFilterGeometric || !overlay || !viewerWithoutFilter || !viewerWithFilter)
+    {
+        LOG_ERROR("One or more component creations have failed");
+        return -1;
+    }
+    LOG_INFO("All components have been created");
+
+    // Declare data structures used to exchange information between components
 
     SRef<Image>                             image1;
     SRef<Image>                             image2;
@@ -70,53 +95,20 @@ int run(int argc, char **argv)
     SRef<DescriptorBuffer>                  descriptors2;
     std::vector<DescriptorMatch>            matches;
 
-    std::vector<SRef<Point2Df>>             matchedKeypoints1;
-    std::vector<SRef<Point2Df>>             matchedKeypoints2;
+    SRef<Image>                             matchesImage;
+    SRef<Image>                             filteredMatchesImage;
 
-    std::vector<SRef<Point2Df>>             gmatchedKeypoints1;
-    std::vector<SRef<Point2Df>>             gmatchedKeypoints2;
-
-    std::vector<SRef<Point2Df>>             ggmatchedKeypoints1;
-    std::vector<SRef<Point2Df>>             ggmatchedKeypoints2;
-
-
-    SRef<Image>                             viewerImage1;
-    SRef<Image>                             viewerImage2;
-    SRef<Image>                             viewerImage3;
-
-    SRef<features::IMatchesFilter>          matchesFilterBasic;
-    SRef<features::IMatchesFilter>          matchesFilterGeometric;
-    std::vector<DescriptorMatch>            gmatches;
-    std::vector<DescriptorMatch>            ggmatches;
-
-    // The escape key to exit the sample
-    char escape_key = 27;
-
- // component creation
-    xpcf::ComponentFactory::createComponent<SolARImageLoaderOpencv>(xpcf::toUUID<image::IImageLoader>(), imageLoader);  
-    xpcf::ComponentFactory::createComponent<SolARKeypointDetectorOpencv>(xpcf::toUUID<features::IKeypointDetector>(), keypointsDetector);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorsExtractorSIFTOpencv>(xpcf::toUUID<features::IDescriptorsExtractor>(), extractorSIFT);
-    xpcf::ComponentFactory::createComponent<SolARDescriptorMatcherRadiusOpencv>(xpcf::toUUID<features::IDescriptorMatcher>(), matcher);
-    xpcf::ComponentFactory::createComponent<SolARSideBySideOverlayOpencv>(xpcf::toUUID<display::ISideBySideOverlay>(), overlay);
-    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(xpcf::toUUID<display::IImageViewer>(), viewer);
-    xpcf::ComponentFactory::createComponent<SolARBasicMatchesFilterOpencv>(xpcf::toUUID<features::IMatchesFilter>(), matchesFilterBasic);
-    xpcf::ComponentFactory::createComponent<SolARGeometricMatchesFilterOpencv>(xpcf::toUUID<features::IMatchesFilter>(), matchesFilterGeometric);
-
-
-
-     keypointsDetector->setType(KeypointDetectorType::SIFT);
    // Load the first image
-   if (imageLoader->loadImage(argv[1],
-                               image1) != FrameworkReturnCode::_SUCCESS)
+   if (image1Loader->getImage(image1) != FrameworkReturnCode::_SUCCESS)
    {
-      LOG_ERROR("Cannot load image with path {}", argv[1]);
+      LOG_ERROR("Cannot load image with path {}", image1Loader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->getStringValue());
       return -1;
    }
 
    // Load the second image
-   if (imageLoader->loadImage(argv[2], image2) != FrameworkReturnCode::_SUCCESS)
+   if (image2Loader->getImage(image2) != FrameworkReturnCode::_SUCCESS)
    {
-      LOG_ERROR("Cannot load image with path {}", argv[2]);
+      LOG_ERROR("Cannot load image with path {}", image2Loader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->getStringValue());
       return -1;
    }
 
@@ -126,82 +118,35 @@ int run(int argc, char **argv)
    // Detect the keypoints of the second image
    keypointsDetector->detect(image2, keypoints2);
 
-   // Compute the SIFT descriptor for each keypoint extracted from the first image
-   extractorSIFT->extract(image1, keypoints1, descriptors1);
+   // Compute the AKAZE2 descriptor for each keypoint extracted from the first image
+   extractorAKAZE2->extract(image1, keypoints1, descriptors1);
 
-   // Compute the SIFT descriptor for each keypoint extracted from the second image
-   extractorSIFT->extract(image2, keypoints2, descriptors2);
+   // Compute the AKAZE2 descriptor for each keypoint extracted from the second image
+   extractorAKAZE2->extract(image2, keypoints2, descriptors2);
 
    // Compute the matches between the keypoints of the first image and the keypoints of the second image
    matcher->match(descriptors1, descriptors2, matches);
 
-  int vizPoints0 = int(matches.size()/3);
-   std::cout<<"->original matches: "<<matches.size()<<std::endl;
+   LOG_INFO("number of original matches: {}", matches.size());
 
-   matchedKeypoints1.clear();
-   matchedKeypoints2.clear();
+   // Draw the original matches in a dedicated image
+   overlay->drawMatchesLines(image1, image2, matchesImage, keypoints1, keypoints2, matches);
 
+   // Apply geometric filter
+   matchesFilterGeometric->filter(matches,matches,keypoints1, keypoints2);
 
-   for( int i = 0; i < matches.size(); i++ )
-   {
-       matchedKeypoints1.push_back(xpcf::utils::make_shared<Point2Df>(keypoints1[ matches[i].getIndexInDescriptorA()]->getX(),keypoints1[ matches[i].getIndexInDescriptorA()]->getY()));
-       matchedKeypoints2.push_back(xpcf::utils::make_shared<Point2Df>(keypoints2[ matches[i].getIndexInDescriptorB()]->getX(),keypoints2[ matches[i].getIndexInDescriptorB()]->getY()));
-   }
+   LOG_INFO("number of filtered matches: {}", matches.size());
 
-   // Draw the matches in a dedicated image
-   overlay->drawMatchesLines(image1, image2, viewerImage1, matchedKeypoints1, matchedKeypoints2, vizPoints0);
-   matchesFilterBasic->filter(matches,gmatches,keypoints1, keypoints2);
-   std::cout<<"->filtred matches with redanduncy: "<<gmatches.size()<<std::endl;
+   // Draw the filtered matches in a dedicated image
+   overlay->drawMatchesLines(image1, image2, filteredMatchesImage, keypoints1, keypoints2, matches);
 
-    gmatchedKeypoints1.clear();
-    gmatchedKeypoints2.clear();
-
-    for( int i = 0; i < gmatches.size(); i++ ){
-       gmatchedKeypoints1.push_back(xpcf::utils::make_shared<Point2Df>(keypoints1[gmatches[i].getIndexInDescriptorA()]->getX(),keypoints1[ gmatches[i].getIndexInDescriptorA()]->getY()));
-       gmatchedKeypoints2.push_back(xpcf::utils::make_shared<Point2Df>(keypoints2[gmatches[i].getIndexInDescriptorB()]->getX(),keypoints2[ gmatches[i].getIndexInDescriptorB()]->getY()));
-    }
-    int vizPoints1 = int(gmatches.size()/2.5);
-     overlay->drawMatchesLines(image1, image2, viewerImage2, gmatchedKeypoints1, gmatchedKeypoints2,vizPoints1);
-
-    matchesFilterGeometric->filter(gmatches,ggmatches,keypoints1, keypoints2);
-    std::cout<<"->filtred matches with epipolar constraint: "<<ggmatches.size()<<std::endl;
-
-    ggmatchedKeypoints1.clear();
-    ggmatchedKeypoints2.clear();
-
-    for( int i = 0; i < ggmatches.size(); i++ ){
-       ggmatchedKeypoints1.push_back(xpcf::utils::make_shared<Point2Df>(keypoints1[ggmatches[i].getIndexInDescriptorA()]->getX(),keypoints1[ ggmatches[i].getIndexInDescriptorA()]->getY()));
-       ggmatchedKeypoints2.push_back(xpcf::utils::make_shared<Point2Df>(keypoints2[ggmatches[i].getIndexInDescriptorB()]->getX(),keypoints2[ ggmatches[i].getIndexInDescriptorB()]->getY()));
-    }
-    int vizPoints2 = int(ggmatches.size());
-    overlay->drawMatchesLines(image1, image2, viewerImage3, ggmatchedKeypoints1, ggmatchedKeypoints2,vizPoints2);
-
-   bool process = true;
-   while (process){
-       viewer->display("original matches", viewerImage1,1280,480);
-       viewer->display("filtred matches (redanduncy)", viewerImage2,1280,480);
-       viewer->display("filtred matches (epipolar)", viewerImage3,1280,480);
-       if(cv::waitKey(0) == 27){
-           process = false;
-       }
+   while (true){
+       if (viewerWithoutFilter->display(matchesImage) == SolAR::FrameworkReturnCode::_STOP ||
+           viewerWithFilter->display(filteredMatchesImage) == SolAR::FrameworkReturnCode::_STOP)
+           break;
    }
 
    return 0;
-}
-
-int printHelp(){
-        printf(" usage :\n");
-        printf(" exe firstImagePath secondImagePath configFilePath\n");
-        return 1;
-}
-
-int main(int argc, char **argv){
-    if(argc == 4){
-        run(argc,argv);
-         return 1;
-    }
-    else
-        return(printHelp());
 }
 
 

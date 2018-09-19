@@ -22,7 +22,7 @@
 // Definition of SolARKeypointDetectorOpencv Class //
 // part of SolAR namespace //
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
@@ -36,26 +36,37 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARKeypointDetectorOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARKeypointDetectorOpencv : public org::bcom::xpcf::ConfigurableBase,
         public IKeypointDetector {
 public:
+
     SolARKeypointDetectorOpencv();
     ~SolARKeypointDetectorOpencv();
     void unloadComponent () override final;
+
+    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
+
     void setType(KeypointDetectorType type);
     KeypointDetectorType  getType();
  
     void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints);
 
 private:
-	int m_id;
-    KeypointDetectorType m_type;
+    /// @brief the type of descriptor used for the extraction (AKAZE, AKAZE2, ORB, BRISK)
+    std::string m_type;
+
+    /// @brief the ratio to apply to the size of the input image to compute the descriptor.
+    /// A ratio must be less or equal to 1. A ratio less than 1 will speedup computation
+    float m_imageRatio=1.0f;
+
+    /// @brief the number of descriptors that are selected. If negative, all extracted descriptors are selected
+    int m_nbDescriptors = 1000;
+
+
+    int m_id;
     cv::Ptr<cv::Feature2D> m_detector;
     cv::KeyPointsFilter kptsFilter;
 
-    //TODO: user parameters to expose
-    unsigned int m_select_best_N_features = 1000; //select the first 1000 best features
-    float m_ratio=1.0f;//resize image to speedup computation.
 };
 
 extern int deduceOpenCVType(SRef<Image> img);

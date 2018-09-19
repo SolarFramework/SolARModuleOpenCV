@@ -23,7 +23,7 @@ namespace SolAR {
 namespace MODULES {
 namespace OPENCV {
 class SolAR2DOverlayOpencv;
-class SolAR3DOverlayOpencv;
+class SolAR3DOverlayBoxOpencv;
 class SolARCameraCalibrationOpencv;
 class SolARCameraOpencv;
 class SolARContoursExtractorOpencv;
@@ -53,12 +53,15 @@ class SolARMarker2DSquaredBinaryOpencv;
 class SolARPerspectiveControllerOpencv;
 class SolARPoseEstimationPnpEPFL;
 class SolARPoseEstimationPnpOpencv;
+class SolARPoseFinderFrom2D2DOpencv;
 class SolARSideBySideOverlayOpencv;
 class SolARSVDFundamentalMatrixDecomposerOpencv;
 class SolARSVDTriangulationOpencv;
 class SolAR2D3DCorrespondencesFinderOpencv;
 class SolARMapFilterOpencv;
 class SolARMapperOpencv;
+class SolARVideoAsCameraOpencv;
+class SolARImagesAsCameraOpencv;
 }
 }
 }
@@ -67,9 +70,9 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv,
                              "cc51d685-9797-4ffd-a9dd-cec4f367fa6a",
                              "SolAR::MODULES::OPENCV::SolAR2DOverlayOpencv component")
 
-XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv,
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAR3DOverlayBoxOpencv,
                              "2db01f59-9793-4cd5-8e13-b25d0ed5735b",
-                             "SolAR::MODULES::OPENCV::SolAR3DOverlayOpencv component")
+                             "SolAR::MODULES::OPENCV::SolAR3DOverlayBoxOpencv component")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARCameraCalibrationOpencv,
                              "702a7f53-e5ec-45d2-887d-daa99a34a33c",
@@ -188,6 +191,10 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpenc
                              "0753ade1-7932-4e29-a71c-66155e309a53",
                              "SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv component")
 
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv,
+                             "52babb5e-9d33-11e8-98d0-529269fb1459",
+                             "SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv component")
+
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv,
                              "e95302be-3fe1-44e0-97bf-a98380464af9",
                              "SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv component")
@@ -212,6 +219,13 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMapFilterOpencv,
                              "09205b96-7cba-4415-bc61-64744bc26222",
                              "SolAR::MODULES::OPENCV::SolARMapFilterOpencv component")
 
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv,
+                             "fa4a780a-9720-11e8-9eb6-529269fb1459",
+                             "SolAR::MODULES::OPENCV::SolARCameraOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImagesAsCameraOpencv,
+                             "b8a8b963-ba55-4ea4-b045-d9e7e8f6db02",
+                             "SolAR::MODULES::OPENCV::SolARCameraOpencv component")
 
 
 

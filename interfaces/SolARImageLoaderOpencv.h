@@ -19,7 +19,7 @@
 
 #include "api/image/IImageLoader.h"
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 
@@ -29,14 +29,29 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARImageLoaderOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARImageLoaderOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::image::IImageLoader {
 public:
     SolARImageLoaderOpencv();
     ~SolARImageLoaderOpencv();
-    void unloadComponent () override final;
-    FrameworkReturnCode loadImage(const std::string & filename, SRef<Image> & img);
+    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
+    void unloadComponent () override final;
+    ///
+    /// \brief getImage method returns the image previously loaded when its configuration parameter path has been set
+    ///
+    FrameworkReturnCode getImage(SRef<Image> & img);
+
+    ///
+    /// \brief reloadImage method load a image if as instance its path (set as a configuration parameter of the implemented component) has changed
+    ///
+    FrameworkReturnCode reloadImage();
+
+private:
+    /// @brief The path of the image to load
+    std::string m_filePath = "";
+
+    SRef<Image> m_img;
 };
 
 }

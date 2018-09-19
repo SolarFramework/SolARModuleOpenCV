@@ -15,19 +15,6 @@
  */
 
 #include "SolAR2D3DcorrespondencesFinderOpencv.h"
-#include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio/videoio.hpp"
-#include "opencv2/video/video.hpp"
-#include "opencv2/calib3d/calib3d.hpp"
-
-#include "xpcf/component/ComponentBase.h"
-
-
-#include <map>
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -54,7 +41,7 @@ namespace SolAR {
                                                                            std::vector<SRef<CloudPoint>>&shared_mapPoint,
                                                                            std::vector<SRef<Point3Df>>&shared_3dpoint,
                                                                            std::vector<SRef<Point2Df>>&shared_2dpoint,
-																			std::vector<DescriptorMatch> & found_matches,
+                                                                           std::vector<DescriptorMatch> & found_matches,
                                                                            std::vector<DescriptorMatch> & remaining_matches){
 
                  for (int j = 0; j < current_matches.size(); ++j){
@@ -65,10 +52,9 @@ namespace SolAR {
                             shared_3dpoint.push_back(xpcf::utils::make_shared<Point3Df>(cloud[i]->getX(), cloud[i]->getY(),cloud[i]->getZ()));
                             shared_2dpoint.push_back(xpcf::utils::make_shared<Point2Df>(current_kpoints[current_matches[j].getIndexInDescriptorB()]->getX(),
                                                                               current_kpoints[current_matches[j].getIndexInDescriptorB()]->getY()));
-							found_matches.push_back(current_matches[j]);
+                            found_matches.push_back(current_matches[j]);
 							matchFound = true ;
-                           // break for if found?
-							
+                            break;
                         }
                     }
                     if (!matchFound)

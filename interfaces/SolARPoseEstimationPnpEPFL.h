@@ -20,10 +20,10 @@
 #include <vector>
 #include "opencv2/core.hpp"
 
-#include "api/solver/pose/I3DTransformFinder.h"
+#include "api/solver/pose/I3DTransformFinderFrom2D3D.h"
 
 #include "SolAROpencvAPI.h"
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 
 namespace SolAR {
     using namespace datastructure;
@@ -33,8 +33,8 @@ namespace SolAR {
          * @class SolARPoseEstimationPnpEPFL
          * @brief Finds the camera pose of 2D-3D points correspondaces based on EPFL pnp algorithm.
          */
-        class SOLAROPENCV_EXPORT_API SolARPoseEstimationPnpEPFL : public org::bcom::xpcf::ComponentBase,
-            public api::solver::pose::I3DTransformFinder
+        class SOLAROPENCV_EXPORT_API SolARPoseEstimationPnpEPFL : public org::bcom::xpcf::ConfigurableBase,
+            public api::solver::pose::I3DTransformFinderFrom2D3D
         {
         public:
             ///@brief SolARPoseEstimationPnpEPFL constructor.
@@ -42,25 +42,29 @@ namespace SolAR {
             ///@brief SolARPoseEstimationPnpEPFL destructor.
             ~SolARPoseEstimationPnpEPFL();
 
-            /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on EPFL Perspective from N Points algorithm
-            /// @param[in] Set of 2d_points seen in view_1.
-            /// @param[in] Set of 3d_points corresponding to view_1.
-            /// @param[out] Camera pose in the world coordinates system of the view_1.
+            /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
+            /// @param[in] imagePoints, set of 2d_points seen in view_1.
+            /// @param[in]  worldPoints, set of 3d_points corresponding to view_1.
+            /// @param[out] pose, camera pose (pose of the world in the coordinate system of the camera) expressed as a Transform3D.
+            /// @param[in] initialPose (Optional), a tranfsform3D to initialize the pose (reducing the convergence time and improving its success).
             FrameworkReturnCode estimate( const std::vector<SRef<Point2Df>> & imagePoints,
                                           const std::vector<SRef<Point3Df>> & worldPoints,
-                                          Transform3Df & pose) override;
+                                          Transform3Df & pose,
+                                          const Transform3Df initialPose = Transform3Df::Identity()) override;
 
-            /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on EPFL Perspective from N Points algorithm
-            /// @param[in] Set of 2d_points seen in view_1.
-            /// @param[in] Set of 3d_points corresponding to view_1.
-            /// @param[out] image 2d points that are inliers
-            /// @param[out] world 3d points that are inliers.
-            /// @param[out] Camera pose in the world coordinates system of the view_1.
+            /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
+            /// @param[in] imagePoints, set of 2d_points seen in view_1.
+            /// @param[in]  worldPoints, set of 3d_points corresponding to view_1.
+            /// @param[out] imagePoints_inlier, image 2d points that are inliers
+            /// @param[out] worldPoints_inlier, world 3d points that are inliers.
+            /// @param[out] pose, camera pose (pose of the world in the coordinate system of the camera) expressed as a Transform3D.
+            /// @param[in] initialPose (Optional), a tranfsform3D to initialize the pose (reducing the convergence time and improving its success).
             FrameworkReturnCode estimate( const std::vector<SRef<Point2Df>> & imagePoints,
                                           const std::vector<SRef<Point3Df>> & worldPoints,
                                           std::vector<SRef<Point2Df>>&imagePoints_inlier,
                                           std::vector<SRef<Point3Df>>&worldPoints_inlier,
-                                          Transform3Df & pose) override;
+                                          Transform3Df & pose,
+                                          const Transform3Df initialPose = Transform3Df::Identity()) override;
 
 
             /// @brief this method is used to set intrinsic parameters and distorsion of the camera
@@ -73,6 +77,9 @@ namespace SolAR {
 
 
 private:
+            int m_maxNumberCorrespondences = 20;
+
+
             /// @brief Sets the camera calibration matrix and distorsion parameters.
             /// @param[in] Camera projection center coordinate u.
             /// @param[in] Camera projection center coordinate v.

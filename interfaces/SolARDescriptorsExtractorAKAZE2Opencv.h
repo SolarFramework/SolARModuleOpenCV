@@ -22,7 +22,7 @@
 // Definition of SolARDescriptorExtractorOpencv Class //
 // part of SolAR namespace //
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
@@ -35,11 +35,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorAKAZE2Opencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorAKAZE2Opencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorsExtractor {
 public:
     SolARDescriptorsExtractorAKAZE2Opencv();
     ~SolARDescriptorsExtractorAKAZE2Opencv();
+
+    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
     void unloadComponent () override final;
     inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE2") ;};
 
@@ -47,6 +49,7 @@ public:
 
 private:
     cv::Ptr<cv::AKAZE2> m_extractor;
+    double m_threshold = 3e-4;
 };
 
 }

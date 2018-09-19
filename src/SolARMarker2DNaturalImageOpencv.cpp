@@ -17,7 +17,6 @@
 #include <boost/filesystem.hpp>
 #include "SolARMarker2DNaturalImageOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/highgui.hpp"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -28,26 +27,23 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARMarker2DNaturalImageOpencv::SolARMarker2DNaturalImageOpencv():ComponentBase(xpcf::toUUID<SolARMarker2DNaturalImageOpencv>())
+    SolARMarker2DNaturalImageOpencv::SolARMarker2DNaturalImageOpencv():ConfigurableBase(xpcf::toUUID<SolARMarker2DNaturalImageOpencv>())
     {        
         addInterface<api::input::files::IMarker2DNaturalImage>(this);
-        LOG_DEBUG("SolARMarker2DNaturalImageOpencv constructor")
+        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+        params->wrapString("filePath", m_filePath);
+
         m_size.width = 0;
         m_size.height = 0;
+
+        LOG_DEBUG("SolARMarker2DNaturalImageOpencv constructor")
     }
 
-    SolARMarker2DNaturalImageOpencv::SolARMarker2DNaturalImageOpencv(const std::string & filename, const float width, const float height):SolARMarker2DNaturalImageOpencv()
-    {
-        m_size.width = width;
-        m_size.height = height;
-        loadMarker(filename);
-    }
-
-    FrameworkReturnCode SolARMarker2DNaturalImageOpencv::loadMarker(const std::string & filename)
+    FrameworkReturnCode SolARMarker2DNaturalImageOpencv::loadMarker()
     {
         std::string imagePath;
 
-        cv::FileStorage fs(filename, cv::FileStorage::READ);
+        cv::FileStorage fs(m_filePath, cv::FileStorage::READ);
         fs["MarkerWidth"] >> m_size.width;
         fs["MarkerHeight"] >> m_size.height;
         fs["ImagePath"] >> imagePath;
@@ -63,7 +59,7 @@ namespace OPENCV {
         boost::filesystem::path imageFullPath(imagePath);
         if (imageFullPath.is_relative())
         {
-            imageFullPath = filename;
+            imageFullPath = m_filePath;
             boost::filesystem::path parentPath = imageFullPath.parent_path();
             imageFullPath.remove_filename();
             imageFullPath/=imagePath;
@@ -74,7 +70,7 @@ namespace OPENCV {
         m_ocvImage = cv::imread(imageFullPath.string(), CV_LOAD_IMAGE_COLOR);
         if(! m_ocvImage.data )  // Check for invalid input
         {
-            LOG_ERROR("Error: Could not open or find the 2D natural image marker {}", filename)
+            LOG_ERROR("Error: Could not open or find the 2D natural image marker {}", m_filePath)
             return FrameworkReturnCode::_ERROR_LOAD_IMAGE;
         }
 

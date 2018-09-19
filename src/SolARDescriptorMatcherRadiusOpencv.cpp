@@ -15,9 +15,6 @@
  */
 
 #include "SolARDescriptorMatcherRadiusOpencv.h"
-#include <iostream>
-#include <utility>
-
 #include "SolAROpenCVHelper.h"
 
 namespace xpcf  = org::bcom::xpcf;
@@ -30,11 +27,12 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorMatcherRadiusOpencv::SolARDescriptorMatcherRadiusOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorMatcherRadiusOpencv>())
+SolARDescriptorMatcherRadiusOpencv::SolARDescriptorMatcherRadiusOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorMatcherRadiusOpencv>())
 {
     addInterface<IDescriptorMatcher>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapFloat("maxDistance", m_maxDistance);
     LOG_DEBUG(" SolARDescriptorMatcherRadiusOpencv constructor")
-    m_maxDistance = 1.0f;
 }
 
 SolARDescriptorMatcherRadiusOpencv::~SolARDescriptorMatcherRadiusOpencv()

@@ -25,61 +25,67 @@
 #include "opencv2/core.hpp"
 
 namespace SolAR {
-    using namespace datastructure;
-    namespace MODULES {
-        namespace OPENCV {
-        /**
-         * @class SolARSVDFundamentalMatrixDecomposerOpencv
-         * @brief Decomposes Fundamental matrix on a set of camera poses based on opencv SVD solving.
-         */
-            class SOLAROPENCV_EXPORT_API SolARSVDFundamentalMatrixDecomposerOpencv : public org::bcom::xpcf::ComponentBase,
-                public api::solver::pose::I2DTO3DTransformDecomposer
-            {
-            public:
-                ///@brief SolARSVDFundamentalMatrixDecomposerOpencv constructor.
-                SolARSVDFundamentalMatrixDecomposerOpencv();
-                ///@brief SolARSVDFundamentalMatrixDecomposerOpencv destructor.
-                ~SolARSVDFundamentalMatrixDecomposerOpencv();
-                /// @brief Decomposes Fundamental matrix four possible camera poses based on opencv svd solving.
-                /// @param[in] The Fundamental matrix.
-                /// @param[in] Camera calibration matrix parameters.
-                /// @param[in] Camera distorsion parameters.
-                /// @param[out] Decomposed camera poses in the world coordinate system.
-                bool decompose(const Transform2Df&F,
-                               const CamCalibration&K,
-                               const CamDistortion& dist,
-                               std::vector<Transform3Df>& decomposedPoses) override;
+using namespace datastructure;
+namespace MODULES {
+namespace OPENCV {
+/**
+ * @class SolARSVDFundamentalMatrixDecomposerOpencv
+ * @brief Decomposes Fundamental matrix on a set of camera poses based on opencv SVD solving.
+ */
+class SOLAROPENCV_EXPORT_API SolARSVDFundamentalMatrixDecomposerOpencv : public org::bcom::xpcf::ComponentBase,
+    public api::solver::pose::I2Dto3DTransformDecomposer{
+public:
+    ///@brief SolARSVDFundamentalMatrixDecomposerOpencv constructor.
+    SolARSVDFundamentalMatrixDecomposerOpencv();
+    ///@brief SolARSVDFundamentalMatrixDecomposerOpencv destructor.
+    ~SolARSVDFundamentalMatrixDecomposerOpencv();
 
-                void unloadComponent () override final;
+    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
+    /// @param[in] Camera calibration matrix parameters.
+    /// @param[in] Camera distorsion parameters.
+    void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams)  override;
 
+    /// @brief Decomposes Fundamental matrix four possible camera poses based on opencv svd solving.
+    /// @param[in] The Fundamental matrix.
+    /// @param[in] Camera calibration matrix parameters.
+    /// @param[in] Camera distorsion parameters.
+    /// @param[out] Decomposed camera poses in the world coordinate system.
+    bool decompose(const Transform2Df& F,
+                   std::vector<Transform3Df>& decomposedPoses) override;
 
-            private:
-                bool decomposeInternal(cv::Mat_<double>& E,
-                                       cv::Mat_<double>& R1,
-                                       cv::Mat_<double>& R2,
-                                       cv::Mat_<double>& t1,
-                                       cv::Mat_<double>& t2);
-                /// @brief Decomposes Esstential matrix on SVD representation.
-                /// @param[in] The Essential matrix.
-                /// @param[out] Matrix U of the essntial matrix.
-                /// @param[out] Matrix V of the essntial matrix.
-                /// @param[out] Matrix W of the essntial matrix.
-                void takeSVDOfE(cv::Mat_<double>& E,
-                                cv::Mat& svd_u,
-                                cv::Mat& svd_vt,
-                                cv::Mat& svd_w);
+    void unloadComponent () override final;
 
 
-                void fillposes(const cv::Mat_<double>& R1,
-                               const cv::Mat_<double>& R2,
-                               const cv::Mat_<double>& t1,
-                               const cv::Mat_<double>& t2,
-                               std::vector<Transform3Df>&decomposedPoses);
+private:
+    cv::Mat_<double> m_camMatrix;
+    cv::Mat_<double> m_camDistorsion;
 
-            };
+    bool decomposeInternal(cv::Mat_<double>& E,
+                           cv::Mat_<double>& R1,
+                           cv::Mat_<double>& R2,
+                           cv::Mat_<double>& t1,
+                           cv::Mat_<double>& t2);
+    /// @brief Decomposes Esstential matrix on SVD representation.
+    /// @param[in] The Essential matrix.
+    /// @param[out] Matrix U of the essntial matrix.
+    /// @param[out] Matrix V of the essntial matrix.
+    /// @param[out] Matrix W of the essntial matrix.
+    void takeSVDOfE(cv::Mat_<double>& E,
+                    cv::Mat& svd_u,
+                    cv::Mat& svd_vt,
+                    cv::Mat& svd_w);
 
-        }
-    }
+
+    void fillposes(const cv::Mat_<double>& R1,
+                   const cv::Mat_<double>& R2,
+                   const cv::Mat_<double>& t1,
+                   const cv::Mat_<double>& t2,
+                   std::vector<Transform3Df>&decomposedPoses);
+
+};
+
+}
+}
 }
 
 #endif // SolARHomographyEstimationOpencv_H

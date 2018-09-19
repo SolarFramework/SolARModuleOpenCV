@@ -15,9 +15,7 @@
  */
 
 #include "SolARImageFilterAdaptiveBinaryOpencv.h"
-#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpenCVHelper.h"
-
 
 namespace xpcf  = org::bcom::xpcf;
 

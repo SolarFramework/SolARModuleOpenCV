@@ -1,9 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include "IComponentManager.h"
+
 #include "SolARModuleOpencv_traits.h"
 #include "api/image/IImageLoader.h"
+#include "xpcf/xpcf.h"
 
 #define BOOST_TEST_MODULE SolARModuleOpenCVUnitTests
 #include <boost/test/unit_test.hpp>

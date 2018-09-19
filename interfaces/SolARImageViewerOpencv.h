@@ -19,7 +19,7 @@
 
 #include "api/display/IImageViewer.h"
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 
@@ -28,16 +28,35 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARImageViewerOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARImageViewerOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::display::IImageViewer {
 public:
     SolARImageViewerOpencv();
     ~SolARImageViewerOpencv();
     void unloadComponent () override final;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, const int w_window=0, const int h_window=0) override;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, const char* exitKey, const int w_window=0, const int h_window=0) override;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, const uint32_t duration, const int w_window=0, const int h_window=0);
 
+    /// \brief this method displays an image contained in a Image object in a window
+    /// @param[in] img The image to display in the window
+    /// @return FrameworkReturnCode::_SUCCESS if the window is created, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode display(SRef<Image> img) override;
+
+private:
+    /// @brief the title of the window on which the image will be displayed
+    std::string m_title = "";
+
+    /// @brief the width of the window on which the image will be displayed (if <=0, the width of the input image)
+    int m_width = 0;
+
+    /// @brief the height of the window on which the image will be displayed (if <=0, the height of the input image)
+    int m_height = 0;
+
+    /// @brief The key code to press to close the window. If negative, no key is defined to close the window
+    int m_exitKey = 27;
+
+    /// @brief The duration in milliseconds before closing the window. If negative or null, the window remains open.
+    unsigned int m_duration = 0;
+
+    bool m_isFirstDisplay = true;
 };
 
 }

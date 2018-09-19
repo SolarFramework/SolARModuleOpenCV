@@ -1,7 +1,20 @@
-#include "SolARMapperOpencv.h"
-#include <iostream>
-#include <utility>
+/**
+ * @copyright Copyright (c) 2017 B-com http://www.b-com.com/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
+#include "SolARMapperOpencv.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -15,23 +28,35 @@ namespace SolAR {
 
                 SolARMapperOpencv::SolARMapperOpencv():ComponentBase(xpcf::toUUID<SolARMapperOpencv>())
                 {
-                     addInterface<IMapper>(this);
-                #ifdef DEBUG
-                    std::cout << " SolARMapperOpencv constructor" << std::endl;
-                #endif
+                    addInterface<IMapper>(this);
                     m_map = org::bcom::xpcf::utils::make_shared<Map>() ;
                 }
 
-
-                void  SolARMapperOpencv::addNewKeyFrame(const SRef<Keyframe>&new_kframe){
-                    m_kframes.push_back(new_kframe);
+                void SolARMapperOpencv::addNewKeyFrame(const SRef<Frame> & frame, SRef<Keyframe>& newKeyframe) {
+                    newKeyframe = xpcf::utils::make_shared<Keyframe>(frame->getView(), frame->getDescriptors(), m_kframes.size(), frame->m_pose, frame->getKeyPoints());
+                    m_kframes.push_back(newKeyframe);
                 }
+
                 void  SolARMapperOpencv::removeKeyframe(const SRef<Keyframe>&old_kframe){
                 }
                 void SolARMapperOpencv::addMatches(const std::pair<int,int>&working_views,
-                                                   const std::vector<DescriptorMatch>&new_matches){
+                                                   const std::vector<DescriptorMatch>& found_matches,
+                                                   const std::vector<DescriptorMatch>& new_matches){
                     m_gmatches[std::make_pair(working_views.first, working_views.second)] = new_matches;
-                    // I have to add working view pair to extend matches matrix
+
+                    // Update the visibility map for cloud points that are visible by both keyframes (match and have a 3D correspondent)
+                    SRef<std::vector<SRef<CloudPoint>>> pointCloud = m_map->getPointCloud();
+                    for (int i = 0; i < found_matches.size(); i++)
+                    {
+                        for (int j = 0; j < pointCloud->size(); j++)
+                        {
+                            if ((*pointCloud)[j]->m_visibility[working_views.first] == found_matches[i].getIndexInDescriptorA())
+                            {
+                                (*pointCloud)[j]->m_visibility[working_views.second] == found_matches[i].getIndexInDescriptorB();
+                                break;
+                            }
+                        }
+                    }
                 }
 
 
@@ -39,22 +64,42 @@ namespace SolAR {
                                                 SRef<Keyframe>&kframe_t1,
                                                 std::vector<SRef<CloudPoint>>&initCloud,
                                                 std::vector<DescriptorMatch>&matches){
+
+                    kframe_t0->addVisibleMapPoints(initCloud);
+                    kframe_t1->addVisibleMapPoints(initCloud);
                     m_kframes.push_back(kframe_t0);
                     m_kframes.push_back(kframe_t1);
                     m_gmatches[std::make_pair(kframe_t0->m_idx, kframe_t1->m_idx)] = matches;
-                    std::cout << " init map with "<<initCloud.size()<<" pointst"<<std::endl;
+                    LOG_DEBUG("init map with {} points", initCloud.size());
                     m_map->addCloudPoints(initCloud) ;
                     return true;
                 }
 
 
-                bool SolARMapperOpencv::updateMap(/*new_triangulated_cloud*/const SRef<Keyframe>&new_kframe,
-                                                  const std::vector<DescriptorMatch>&new_matches){
-					addNewKeyFrame(new_kframe);
-                    std::pair<int,int>working_views = std::make_pair(new_kframe->m_idx-1,new_kframe->m_idx);
-                    addMatches(working_views,new_matches);
-                    // addPointCloud(m_cloud, new_cloud);
+                bool SolARMapperOpencv::updateMap(const SRef<Keyframe>& new_kframe,
+                                                  const std::vector<DescriptorMatch>& found_matches,
+                                                  const std::vector<DescriptorMatch>& new_matches,
+                                                  const std::vector<SRef<CloudPoint>>& newCloud){
+                    // Add the 3D points already visible from the previous keyframe
+                    std::vector<SRef<CloudPoint>> previous_cloud;
+                    SRef<std::vector<SRef<CloudPoint>>> pointCloud = m_map->getPointCloud();
+                    for (int i = 0; i < found_matches.size(); i++)
+                    {
+                        for (int j = 0; j < pointCloud->size(); j++)
+                        {
+                            if ((*pointCloud)[j]->m_visibility[new_kframe->m_idx -1] == found_matches[i].getIndexInDescriptorA())
+                            {
+                                previous_cloud.push_back((*pointCloud)[j]);
+                            }
+                        }
+                    }
+                    new_kframe->addVisibleMapPoints(previous_cloud);
 
+                    // Add the 3D points that have just been triangulated
+                    new_kframe->addVisibleMapPoints(newCloud);
+                    std::pair<int,int>working_views = std::make_pair(new_kframe->m_idx-1,new_kframe->m_idx);
+                    addMatches(working_views,found_matches, new_matches);
+                    m_map->addCloudPoints(newCloud);
                     return true;
                 }
 
@@ -63,7 +108,7 @@ namespace SolAR {
                          return m_kframes[idx];
                     }
                     else{
-                        std::cerr<<"error, can't retrieve last keyframe, id must be lower than keyframes size"<<std::endl;
+                        LOG_ERROR("error, can't retrieve last keyframe, id must be lower than keyframes size");
                     }
                 }
                 void SolARMapperOpencv::associateReferenceKeyFrameToFrame(SRef<Frame> frame)
@@ -96,7 +141,7 @@ namespace SolAR {
                     Quaternionf rkeyFrame(poseKeyFrame.rotation()) ;
                     float rotationDistance = rFrame.angularDistance(rkeyFrame) ;
 
-					std::cout << " Translation Distance " << translationDistance << "  Angular Distance " << rotationDistance << std::endl;
+                    LOG_DEBUG(" Translation Distance {}, Angular Distance {}", translationDistance, rotationDistance);
 
 
                     // to do : add  these threshold as parameters somewhere
@@ -105,12 +150,7 @@ namespace SolAR {
                     // For now : 20 frames and enough track points only!!
 					if (conditionAddKeyFrame)
                     {
-                        std::cout << " Add new Key Frame" << std::endl ;
-                        std::cout << " Nb Frames " << frame->getNumberOfFramesSinceLastKeyFrame() << std::endl ;
-                        std::cout << " Track points " <<  frame->getCommonMapPointsWithReferenceKeyFrame().size() << std::endl ;
-                        std::cout << " Redudancy " << redudancyValue << std::endl ;
-                        std::cout << " Translation Distance " << translationDistance  << "  Angular Distance " << rotationDistance << std::endl ;
-						
+                        LOG_DEBUG(" Add new Key Frame \nNb Frames {} \nTrack Points {} \nRedundancy {} \nTranslation Distance {} \nRotation Distance {}", frame->getNumberOfFramesSinceLastKeyFrame(), frame->getCommonMapPointsWithReferenceKeyFrame().size(), redudancyValue, translationDistance, rotationDistance);
                         return m_kframes.size(); // index of key frame matches with array length
 
                     }

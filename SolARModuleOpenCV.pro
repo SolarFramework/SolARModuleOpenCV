@@ -58,14 +58,12 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
     interfaces/SolARDescriptorMatcherKNNOpencv.h \
     interfaces/SolARDescriptorMatcherRadiusOpencv.h \
-    interfaces/SolARHomographyMatrixDecompositionOpencv.h \
     interfaces/SolARFundamentalMatrixEstimationOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
     interfaces/SolARPoseEstimationPnpEPFL.h \
     interfaces/SolARPoseEstimationPnpOpencv.h \
     interfaces/SolARGeometricMatchesFilterOpencv.h \
     interfaces/SolARSideBySideOverlayOpencv.h \
-    interfaces/SolAR3DOverlayOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolARSVDTriangulationOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
@@ -82,7 +80,12 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARMapFilterOpencv.h \
     interfaces/SolARMapperOpencv.h \
-    interfaces/SolARImageFilterErodeOpencv.h
+    interfaces/SolARImageFilterErodeOpencv.h \
+    interfaces/SolARVideoAsCameraOpencv.h \
+    interfaces/SolARImagesAsCameraOpencv.h \
+    interfaces/SolAR3DOverlayBoxOpencv.h \
+    interfaces/SolARHomographyMatrixDecomposerOpencv.h \
+    interfaces/SolARPoseFinderFrom2D2DOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
@@ -106,7 +109,6 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolARSideBySideOverlayOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
-    src/SolAR3DOverlayOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
     src/SolARPoseEstimationPnpEPFL.cpp \
     src/SolARPoseEstimationPnpOpencv.cpp \
@@ -116,7 +118,6 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/AKAZE2/fed.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
-    src/SolARHomographyMatrixDecompositionOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
     src/SolARImageFilterBinaryOpencv.cpp \
@@ -126,7 +127,12 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolAR2D3DcorrespondencesFinderOpencv.cpp \
     src/SolARMapFilterOpencv.cpp \
     src/SolARMapperOpencv.cpp \
-    src/SolARImageFilterErodeOpencv.cpp
+    src/SolARImageFilterErodeOpencv.cpp \
+    src/SolARVideoAsCameraOpencv.cpp \
+    src/SolARImagesAsCameraOpencv.cpp \
+    src/SolAR3DOverlayBoxOpencv.cpp \
+    src/SolARHomographyMatrixDecomposerOpencv.cpp \
+    src/SolARPoseFinderFrom2D2DOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
