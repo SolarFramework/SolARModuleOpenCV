@@ -37,8 +37,8 @@ SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ConfigurableBase(xpcf
    addInterface<api::solver::map::ITriangulator>(this);
    LOG_DEBUG(" SolARSVDTriangulationOpencv constructor");
    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-   params->wrapFloat("reprojErrorThreshold", m_ReprojErrorThreshold);
-
+   params->wrapFloat("reprojErrorThreshold", m_reprojErrorThreshold);
+   params->wrapInteger("cheiralityCheck", m_cheiralityCheck);
    m_camMatrix.create(3, 3);
    m_camDistorsion.create(5, 1);
 }
@@ -229,10 +229,10 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
         cv::Mat_<double> xPt_img2 = KPose2 * X;				//reproject
         cv::Point2f xPt_img_2(xPt_img2(0) / xPt_img2(2), xPt_img2(1) / xPt_img2(2));
 
-        if (xPt_img1(2) > 0 && xPt_img2(2) > 0)
+        if (!m_cheiralityCheck || (xPt_img1(2) > 0 && xPt_img2(2) > 0))
         {
             double reprj_err = (norm(xPt_img_1 - kp1)+norm(xPt_img_2 - kp2))/2.0f;
-            if (reprj_err < m_ReprojErrorThreshold)
+            if (reprj_err < m_reprojErrorThreshold)
             {
                 reproj_error.push_back(reprj_err);
 
@@ -323,10 +323,10 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>
         cv::Mat_<double> xPt_img2 = KPose2 * X;				//reproject
         cv::Point2f xPt_img_2(xPt_img2(0) / xPt_img2(2), xPt_img2(1) / xPt_img2(2));
 
-        if (xPt_img1(2) > 0 && xPt_img2(2) > 0)
+        if (!m_cheiralityCheck || (xPt_img1(2) > 0 && xPt_img2(2) > 0))
         {
             double reprj_err = (norm(xPt_img_1 - kp1)+norm(xPt_img_2 - kp2))/2.0f;
-            if (reprj_err < m_ReprojErrorThreshold)
+            if (reprj_err < m_reprojErrorThreshold)
             {
 
                 //std::cout<<"x: "<<xPt_img_<<", error"<<reprj_err<<std::endl;
