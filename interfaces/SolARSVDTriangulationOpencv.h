@@ -119,8 +119,11 @@ public:
     void unloadComponent () override final;
 
  private:
-    //@brief maximum reprojection error to keep the triangulate point
-    float m_ReprojErrorThreshold = 0.5f;
+    //@brief maximum reprojection error to keep the triangulated 3D point
+    float m_reprojErrorThreshold = 0.5f;
+
+    //@brief if not null, the point reconstructed behind the camera are removed
+    int m_cheiralityCheck = 1;
 
     // Camera calibration matrix
     cv::Mat_<double> m_camMatrix;
