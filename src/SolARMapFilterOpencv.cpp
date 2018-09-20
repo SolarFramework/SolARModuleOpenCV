@@ -34,7 +34,7 @@ SolARMapFilterOpencv::SolARMapFilterOpencv():ConfigurableBase(xpcf::toUUID<SolAR
     params->wrapInteger("cheiralityCheck", m_cheiralityCheck);
 }
 
-void  SolARMapFilterOpencv::filter(const SRef<Keyframe> view1, const SRef<Keyframe> view2, const std::vector<SRef<CloudPoint>>& input,  std::vector<SRef<CloudPoint>>& output)
+void  SolARMapFilterOpencv::filter(const Transform3Df pose1, const Transform3Df pose2, const std::vector<SRef<CloudPoint>>& input,  std::vector<SRef<CloudPoint>>& output)
 {
     if (input.size() == 0)
     {
@@ -47,8 +47,8 @@ void  SolARMapFilterOpencv::filter(const SRef<Keyframe> view1, const SRef<Keyfra
     {
         // Check for cheirality (if the point is in front of the camera)
         Vector4f cp ((*input[i])(0), (*input[i])(1), (*input[i])(2), 1.0f);
-        Vector4f pointInCam1Ref = view1->m_pose * cp;
-        Vector4f pointInCam2Ref = view2->m_pose * cp;
+        Vector4f pointInCam1Ref = pose1 * cp;
+        Vector4f pointInCam2Ref = pose2 * cp;
 
         if ((!m_cheiralityCheck) || ((pointInCam1Ref(2) >= 0) && pointInCam2Ref(2) >=0))
         {
