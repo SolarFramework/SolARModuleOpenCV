@@ -55,7 +55,7 @@ namespace SolAR {
                         {
                             if ((*pointCloud)[j]->m_visibility[working_views.first] == found_matches[i].getIndexInDescriptorA())
                             {
-                                (*pointCloud)[j]->m_visibility[working_views.second] == found_matches[i].getIndexInDescriptorB();
+                                (*pointCloud)[j]->m_visibility[working_views.second] = found_matches[i].getIndexInDescriptorB();
                                 break;
                             }
                         }
