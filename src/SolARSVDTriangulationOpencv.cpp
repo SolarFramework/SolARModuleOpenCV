@@ -32,13 +32,10 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ConfigurableBase(xpcf::toUUID<SolARSVDTriangulationOpencv>())
+SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ComponentBase(xpcf::toUUID<SolARSVDTriangulationOpencv>())
 {
    addInterface<api::solver::map::ITriangulator>(this);
    LOG_DEBUG(" SolARSVDTriangulationOpencv constructor");
-   SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-   params->wrapFloat("reprojErrorThreshold", m_reprojErrorThreshold);
-   params->wrapInteger("cheiralityCheck", m_cheiralityCheck);
    m_camMatrix.create(3, 3);
    m_camDistorsion.create(5, 1);
 }
@@ -229,27 +226,18 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
         cv::Mat_<double> xPt_img2 = KPose2 * X;				//reproject
         cv::Point2f xPt_img_2(xPt_img2(0) / xPt_img2(2), xPt_img2(1) / xPt_img2(2));
 
-        if (!m_cheiralityCheck || (xPt_img1(2) > 0 && xPt_img2(2) > 0))
-        {
-            double reprj_err = (norm(xPt_img_1 - kp1)+norm(xPt_img_2 - kp2))/2.0f;
-            if (reprj_err < m_reprojErrorThreshold)
-            {
-                reproj_error.push_back(reprj_err);
+        double reprj_err = (norm(xPt_img_1 - kp1)+norm(xPt_img_2 - kp2))/2.0f;
+        reproj_error.push_back(reprj_err);
 
-                xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
-                std::vector<int>visibility = std::vector<int>(50, -1);
+        xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
+        std::vector<int>visibility = std::vector<int>(50, -1);
 
-                visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
-                visibility[working_views.second] = matches[i].getIndexInDescriptorB();
+        visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
+        visibility[working_views.second] = matches[i].getIndexInDescriptorB();
 
-                cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
-                pcloud.push_back(cp);
-            }
-        }
-        else
-            LOG_DEBUG("Point has been triangulated behind the camera.");
+        cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
+        pcloud.push_back(cp);
      }
-    LOG_DEBUG("{}/{} points have been triangulated", pcloud.size(), matches.size());
     cv::Scalar mse = cv::mean(reproj_error);
     return mse[0];
 }
@@ -323,29 +311,19 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>
         cv::Mat_<double> xPt_img2 = KPose2 * X;				//reproject
         cv::Point2f xPt_img_2(xPt_img2(0) / xPt_img2(2), xPt_img2(1) / xPt_img2(2));
 
-        if (!m_cheiralityCheck || (xPt_img1(2) > 0 && xPt_img2(2) > 0))
-        {
-            double reprj_err = (norm(xPt_img_1 - kp1)+norm(xPt_img_2 - kp2))/2.0f;
-            if (reprj_err < m_reprojErrorThreshold)
-            {
+        double reprj_err = (norm(xPt_img_1 - kp1)+norm(xPt_img_2 - kp2))/2.0f;
 
-                //std::cout<<"x: "<<xPt_img_<<", error"<<reprj_err<<std::endl;
-                reproj_error.push_back(reprj_err);
+        reproj_error.push_back(reprj_err);
 
-                xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
-                std::vector<int>visibility = std::vector<int>(50, -1);
+        xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
+        std::vector<int>visibility = std::vector<int>(50, -1);
 
-               visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
-               visibility[working_views.second] = matches[i].getIndexInDescriptorB();
+       visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
+       visibility[working_views.second] = matches[i].getIndexInDescriptorB();
 
-               cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
-               pcloud.push_back(cp);
-            }
-        }
-        else
-            LOG_DEBUG("Point has been triangulated behind the camera.");
+       cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
+       pcloud.push_back(cp);
      }
-    LOG_DEBUG("{}/{} points have been triangulated", pcloud.size(), matches.size());
     cv::Scalar mse = cv::mean(reproj_error);
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
     return mse[0];

@@ -18,7 +18,7 @@
 #ifndef SOLARSVDTRIANGULATIONOPENCV_H
 #define SOLARSVDTRIANGULATIONOPENCV_H
 
-#include "xpcf/component/ConfigurableBase.h"
+#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 #include "api/solver/map/ITriangulator.h"
@@ -36,7 +36,7 @@ namespace OPENCV {
 * @class SolARSVDTriangulationOpencv
 * @brief Triangulates set of corresponding 2D-2D points correspondances with known respective camera poses based on opencv SVD.
 */
-class SOLAROPENCV_EXPORT_API SolARSVDTriangulationOpencv : public org::bcom::xpcf::ConfigurableBase,
+class SOLAROPENCV_EXPORT_API SolARSVDTriangulationOpencv : public org::bcom::xpcf::ComponentBase,
     public api::solver::map::ITriangulator {
 public:
     ///@brief SolARSVDTriangulationOpencv constructor.
@@ -119,12 +119,6 @@ public:
     void unloadComponent () override final;
 
  private:
-    //@brief maximum reprojection error to keep the triangulated 3D point
-    float m_reprojErrorThreshold = 0.5f;
-
-    //@brief if not null, the point reconstructed behind the camera are removed
-    int m_cheiralityCheck = 1;
-
     // Camera calibration matrix
     cv::Mat_<double> m_camMatrix;
     // inverse of the Camera calibration matrix
