@@ -73,7 +73,7 @@ set (HEADERS
     interfaces/SolARDescriptorMatcherKNNOpencv.h
     interfaces/SolARDescriptorMatcherRadiusOpencv.h
     interfaces/SolARFundamentalMatrixEstimationOpencv.h
-    interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
+    interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h
     interfaces/SolARPoseEstimationPnpEPFL.h
     interfaces/SolARPoseEstimationPnpOpencv.h
     interfaces/SolARGeometricMatchesFilterOpencv.h
