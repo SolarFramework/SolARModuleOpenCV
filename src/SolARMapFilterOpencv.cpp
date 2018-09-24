@@ -46,9 +46,8 @@ void  SolARMapFilterOpencv::filter(const Transform3Df pose1, const Transform3Df 
     for (int i = 0; i < input.size(); i++)
     {
         // Check for cheirality (if the point is in front of the camera)
-        Vector4f cp ((*input[i])(0), (*input[i])(1), (*input[i])(2), 1.0f);
-        Vector4f pointInCam1Ref = pose1 * cp;
-        Vector4f pointInCam2Ref = pose2 * cp;
+        Vector3f pointInCam1Ref = pose1 * (*input[i]);
+        Vector3f pointInCam2Ref = pose2 * (*input[i]);
 
         if ((!m_cheiralityCheck) || ((pointInCam1Ref(2) >= 0) && pointInCam2Ref(2) >=0))
         {

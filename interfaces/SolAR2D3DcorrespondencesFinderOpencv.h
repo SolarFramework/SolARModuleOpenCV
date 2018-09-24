@@ -33,7 +33,7 @@ namespace SolAR {
                                          std::vector<SRef<CloudPoint>>&shared_mapPoint,
                                          std::vector<SRef<Point3Df>>&shared_3dpoint,
                                          std::vector<SRef<Point2Df>>&shared_2dpoint,
-											std::vector<DescriptorMatch> & found_matches,
+                                         std::vector<DescriptorMatch> & found_matches,
                                          std::vector<DescriptorMatch> & remaining_matches) override;
 
                 void unloadComponent () override final;
