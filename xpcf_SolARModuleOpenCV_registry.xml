@@ -117,14 +117,6 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="0eadc8b7-1265-434c-a4c6-6da8a028e06e" description="IKeypointDetector"/>
         </component>
-		<component uuid="09205b96-7cba-4415-bc61-64744bc26222" description="SolARMapFilterOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="e0d6cc82-6af2-493d-901a-2384fca0b16f" description="IMapFilter"/>
-        </component>
-		<component uuid="8e3c926a-0861-46f7-80b2-8abb5576692c" description="SolARMapperOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="90075c1b-915b-469d-b92d-41c5d575bf15" description="IMapper"/>
-        </component>
         <component uuid="efcdb590-c570-11e7-abc4-cec278b6b50a" description="SolARMarker2DNaturalImageOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="3c9cee8a-e9ca-4c16-851a-669a94c2a68d" description="IMarker"/>
