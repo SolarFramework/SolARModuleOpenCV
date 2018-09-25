@@ -181,8 +181,9 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
              in3d.push_back(cv::Point3f(worldPoints[i]->getX(),worldPoints[i]->getY(),worldPoints[i]->getZ()));
          }
      }
+
      if (in3d.size()!=in2d.size() || in3d.size()<3 ){
-         LOG_ERROR("wolrd/image inliers points must be valid ( equal and > to 2)");
+         LOG_WARNING("world/image inliers points must be valid ( equal and > to 2): {} inliers for {} input points",in3d.size(), worldPoints.size());
          return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
      }
 
