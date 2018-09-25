@@ -171,7 +171,7 @@ double SolARSVDTriangulationOpencv::getReprojectionErrorCloud(const std::vector<
 double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>>& pointsView1,
                                                 const std::vector<SRef<Point2Df>>& pointsView2,
                                                 const std::vector<DescriptorMatch> &matches,
-                                                const std::pair<int,int>&working_views,
+                                                const std::pair<unsigned int,unsigned int>&working_views,
                                                 const Transform3Df& poseView1,
                                                 const Transform3Df& poseView2,
                                                 std::vector<SRef<CloudPoint>>& pcloud){
@@ -245,7 +245,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
 double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>>& pointsView1,
                                                 const std::vector<SRef<Keypoint>>& pointsView2,
                                                 const std::vector<DescriptorMatch> &matches,
-                                                const std::pair<int,int>&working_views,
+                                                const std::pair<unsigned int,unsigned int>&working_views,
                                                 const Transform3Df& poseView1,
                                                 const Transform3Df& poseView2,
                                                 std::vector<SRef<CloudPoint>>& pcloud){
