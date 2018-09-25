@@ -230,7 +230,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
         reproj_error.push_back(reprj_err);
 
         xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
-        std::vector<int>visibility = std::vector<int>(50, -1);
+        std::map<unsigned int, unsigned int> visibility;
 
         visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
         visibility[working_views.second] = matches[i].getIndexInDescriptorB();
@@ -316,7 +316,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>
         reproj_error.push_back(reprj_err);
 
         xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
-        std::vector<int>visibility = std::vector<int>(50, -1);
+        std::map<unsigned int, unsigned int> visibility;
 
        visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
        visibility[working_views.second] = matches[i].getIndexInDescriptorB();
