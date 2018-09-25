@@ -26,10 +26,9 @@ namespace SolAR {
                 /// @param[in] Set of 2d_points seen in view_1.
                 /// @param[in] Set of 3d_points corresponding to view_1.
                 /// @param[out] Camera pose in the world coordinates system of the view_1.
-                FrameworkReturnCode find(const std::vector<SRef<CloudPoint>>&cloud,
-                                         const int keyframe_idx,
+                FrameworkReturnCode find(const SRef<Keyframe> referenceKeyframe,
+                                         const SRef<Frame> currentFrame,
                                          const std::vector<DescriptorMatch>&current_matches,
-                                         const std::vector<SRef<Keypoint>>&current_kpoints,
                                          std::vector<SRef<CloudPoint>>&shared_mapPoint,
                                          std::vector<SRef<Point3Df>>&shared_3dpoint,
                                          std::vector<SRef<Point2Df>>&shared_2dpoint,
