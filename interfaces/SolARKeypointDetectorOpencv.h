@@ -62,6 +62,9 @@ private:
     /// @brief the number of descriptors that are selected. If negative, all extracted descriptors are selected
     int m_nbDescriptors = 1000;
 
+	/// @brief the threshold of detector to accept a keypoint
+	float m_threshold = 1e-3;
+
 
     int m_id;
     cv::Ptr<cv::Feature2D> m_detector;
