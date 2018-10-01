@@ -198,8 +198,6 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
     // KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
     cv::Mat_<double> KPose1;
     KPose1 = m_camMatrix * cv::Mat(Pose1);
-    cv::Mat_<double> KPose2;
-    KPose2 = m_camMatrix * cv::Mat(Pose2);
 
     for (int i = 0; i<pts_size; i++) {
         cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()]->getX(),pointsView1[matches[i].getIndexInDescriptorA()]->getY());
@@ -223,10 +221,8 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
         // Reproject this point on the image plane of the second camera
         cv::Mat_<double> xPt_img1 = KPose1 * X;				//reproject
         cv::Point2f xPt_img_1(xPt_img1(0) / xPt_img1(2), xPt_img1(1) / xPt_img1(2));
-        cv::Mat_<double> xPt_img2 = KPose2 * X;				//reproject
-        cv::Point2f xPt_img_2(xPt_img2(0) / xPt_img2(2), xPt_img2(1) / xPt_img2(2));
 
-        double reprj_err = (norm(xPt_img_1 - kp1)+norm(xPt_img_2 - kp2))/2.0f;
+        double reprj_err = norm(xPt_img_1 - kp1);
         reproj_error.push_back(reprj_err);
 
         xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
@@ -275,8 +271,6 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>
     // KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
     cv::Mat_<double> KPose1;
     KPose1 = m_camMatrix * cv::Mat(Pose1);
-    cv::Mat_<double> KPose2;
-    KPose2 = m_camMatrix * cv::Mat(Pose2);
 
     for (int i = 0; i<pts_size; i++) {
         cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()]->getX(),pointsView1[matches[i].getIndexInDescriptorA()]->getY());
@@ -308,10 +302,8 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>
         // Reproject this point on the image plane of the second camera
         cv::Mat_<double> xPt_img1 = KPose1 * X;				//reproject
         cv::Point2f xPt_img_1(xPt_img1(0) / xPt_img1(2), xPt_img1(1) / xPt_img1(2));
-        cv::Mat_<double> xPt_img2 = KPose2 * X;				//reproject
-        cv::Point2f xPt_img_2(xPt_img2(0) / xPt_img2(2), xPt_img2(1) / xPt_img2(2));
 
-        double reprj_err = (norm(xPt_img_1 - kp1)+norm(xPt_img_2 - kp2))/2.0f;
+        double reprj_err = norm(xPt_img_1 - kp1);
 
         reproj_error.push_back(reprj_err);
 

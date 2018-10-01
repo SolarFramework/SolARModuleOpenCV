@@ -26,14 +26,6 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-
-struct solarInlier{
-    int idx;
-    double reproj_error;
-    bool operator<( const solarInlier& val ) const {
-            return reproj_error < val.reproj_error;
-        }
-};
 SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
     addInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
@@ -172,9 +164,6 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
      for (int i = 0; i<projected3D.size(); i++) {
          double err_reprj = norm(projected3D[i]-imageCVPoints[i]);
          if (err_reprj <m_reprojError) {
-             solarInlier inn;
-             inn.idx = i; inn.reproj_error = err_reprj;
-
              worldPoints_inlier.push_back(worldPoints[i]);
              imagePoints_inlier.push_back(imagePoints[i]);
 

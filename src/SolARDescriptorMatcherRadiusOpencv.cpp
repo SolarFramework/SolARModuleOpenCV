@@ -41,8 +41,8 @@ SolARDescriptorMatcherRadiusOpencv::~SolARDescriptorMatcherRadiusOpencv()
 }
 
 DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
-            SRef<DescriptorBuffer>& desc1,
-            SRef<DescriptorBuffer>& desc2,
+            SRef<DescriptorBuffer> desc1,
+            SRef<DescriptorBuffer> desc2,
             std::vector<DescriptorMatch>& matches)
     {
  
@@ -94,7 +94,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
     }
  
  DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
-           SRef<DescriptorBuffer>& descriptors1,
+           SRef<DescriptorBuffer> descriptors1,
            std::vector<SRef<DescriptorBuffer>>& descriptors2,
            std::vector<DescriptorMatch>& matches
     )

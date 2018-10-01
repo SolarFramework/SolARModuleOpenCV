@@ -41,7 +41,7 @@ SolARDescriptorMatcherKNNOpencv::~SolARDescriptorMatcherKNNOpencv()
 }
 
 /*
-DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(SRef<DescriptorBuffer>& descriptors1,SRef<DescriptorBuffer>& descriptors2,std::vector<std::vector< cv::DMatch >>& matches,int nbOfMatches)
+DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(SRef<DescriptorBuffer> descriptors1,SRef<DescriptorBuffer> descriptors2,std::vector<std::vector< cv::DMatch >>& matches,int nbOfMatches)
 {
     matches.clear();
 
@@ -86,7 +86,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(SRef<Descripto
 }
 */
 DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(
-       SRef<DescriptorBuffer>& desc1,SRef<DescriptorBuffer>& desc2, std::vector<DescriptorMatch>& matches){
+       SRef<DescriptorBuffer> desc1,SRef<DescriptorBuffer> desc2, std::vector<DescriptorMatch>& matches){
  
     matches.clear();
 
@@ -132,7 +132,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(
 }
  
 DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(
-       SRef<DescriptorBuffer>& descriptors1,
+       SRef<DescriptorBuffer> descriptors1,
        std::vector<SRef<DescriptorBuffer>>& descriptors2,
         std::vector<DescriptorMatch>& matches
         ){
