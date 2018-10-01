@@ -116,6 +116,15 @@ public:
                        const Transform3Df& poseView2,
                        std::vector<SRef<CloudPoint>>& pcloud) override;
 
+	/// @brief triangulate pairs of points 2d captured from current keyframe with its reference keyframe using their poses (with respect to the camera instrinsic parameters).
+	/// @param[in] curKeyframe, current keyframe.
+	/// @param[in] matches, the matches between the keypoints of the view1 and the keypoints of the view 2.
+	/// @param[out] pcloud, Set of triangulated 3d_points.
+	/// @return the mean re-projection error (mean distance in pixels between the original 2D points and the projection of the reconstructed 3D points)
+	double triangulate(	const SRef<Keyframe> &curKeyframe,
+						const std::vector<DescriptorMatch>&matches,
+						std::vector<SRef<CloudPoint>>& pcloud) override;
+
     void unloadComponent () override final;
 
  private:
