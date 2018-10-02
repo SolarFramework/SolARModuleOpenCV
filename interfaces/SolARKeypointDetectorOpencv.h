@@ -53,7 +53,7 @@ public:
 
 private:
     /// @brief the type of descriptor used for the extraction (AKAZE, AKAZE2, ORB, BRISK)
-    std::string m_type;
+    std::string m_type = "AKAZE2";
 
     /// @brief the ratio to apply to the size of the input image to compute the descriptor.
     /// A ratio must be less or equal to 1. A ratio less than 1 will speedup computation
