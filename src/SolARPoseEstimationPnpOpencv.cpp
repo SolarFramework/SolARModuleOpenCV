@@ -26,14 +26,6 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-
-struct solarInlier{
-    int idx;
-    double reproj_error;
-    bool operator<( const solarInlier& val ) const {
-            return reproj_error < val.reproj_error;
-        }
-};
 SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
     addInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
@@ -41,6 +33,7 @@ SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xp
     params->wrapInteger("iterationsCount", m_iterationsCount);
     params->wrapFloat("reprojError", m_reprojError);
     params->wrapFloat("confidence", m_confidence);
+	params->wrapInteger("minNbInliers", m_NbInliersToValidPose);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
@@ -171,9 +164,6 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
      for (int i = 0; i<projected3D.size(); i++) {
          double err_reprj = norm(projected3D[i]-imageCVPoints[i]);
          if (err_reprj <m_reprojError) {
-             solarInlier inn;
-             inn.idx = i; inn.reproj_error = err_reprj;
-
              worldPoints_inlier.push_back(worldPoints[i]);
              imagePoints_inlier.push_back(imagePoints[i]);
 
@@ -181,8 +171,9 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
              in3d.push_back(cv::Point3f(worldPoints[i]->getX(),worldPoints[i]->getY(),worldPoints[i]->getZ()));
          }
      }
-     if (in3d.size()!=in2d.size() || in3d.size()<3 ){
-         LOG_ERROR("wolrd/image inliers points must be valid ( equal and > to 2)");
+	 
+     if (in3d.size()!=in2d.size() || in3d.size() < std::max(3, m_NbInliersToValidPose)){
+         LOG_WARNING("world/image inliers points must be valid ( equal and > to {}): {} inliers for {} input points", std::max(3, m_NbInliersToValidPose), in3d.size(), worldPoints.size());
          return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
      }
 

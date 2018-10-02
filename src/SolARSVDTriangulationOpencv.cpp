@@ -36,7 +36,6 @@ SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ComponentBase(xpcf::t
 {
    addInterface<api::solver::map::ITriangulator>(this);
    LOG_DEBUG(" SolARSVDTriangulationOpencv constructor");
-
    m_camMatrix.create(3, 3);
    m_camDistorsion.create(5, 1);
 }
@@ -172,10 +171,81 @@ double SolARSVDTriangulationOpencv::getReprojectionErrorCloud(const std::vector<
 double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>>& pointsView1,
                                                 const std::vector<SRef<Point2Df>>& pointsView2,
                                                 const std::vector<DescriptorMatch> &matches,
-                                                const std::pair<int,int>&working_views,
+                                                const std::pair<unsigned int,unsigned int>&working_views,
                                                 const Transform3Df& poseView1,
                                                 const Transform3Df& poseView2,
                                                 std::vector<SRef<CloudPoint>>& pcloud){
+    Transform3Df poseView1Inverse = poseView1.inverse();
+    Transform3Df poseView2Inverse = poseView2.inverse();
+    cv::Matx34d Pose1( poseView1Inverse(0, 0),poseView1Inverse(0, 1),poseView1Inverse(0, 2), poseView1Inverse(0, 3),
+                       poseView1Inverse(1, 0),poseView1Inverse(1, 1),poseView1Inverse(1, 2), poseView1Inverse(1, 3),
+                       poseView1Inverse(2, 0),poseView1Inverse(2, 1),poseView1Inverse(2, 2), poseView1Inverse(2, 3));
+
+
+
+    cv::Matx34d Pose2(poseView2Inverse(0, 0),poseView2Inverse(0, 1),poseView2Inverse(0, 2), poseView2Inverse(0, 3),
+                      poseView2Inverse(1, 0),poseView2Inverse(1, 1),poseView2Inverse(1, 2), poseView2Inverse(1, 3),
+                      poseView2Inverse(2, 0),poseView2Inverse(2, 1),poseView2Inverse(2, 2), poseView2Inverse(2, 3));
+
+    cv::Mat_<double> Kinv;
+
+    cv::invert(m_camMatrix,Kinv);
+    // Create a vector to store the reprojection error of each triangulated 3D points
+    std::vector<double> reproj_error;
+    // unsigned int pts_size = pt2d_1.size();
+    unsigned int pts_size = matches.size();
+
+    // KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
+    cv::Mat_<double> KPose1;
+    KPose1 = m_camMatrix * cv::Mat(Pose1);
+
+    for (int i = 0; i<pts_size; i++) {
+        cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()]->getX(),pointsView1[matches[i].getIndexInDescriptorA()]->getY());
+        cv::Point3d u1(kp1.x, kp1.y, 1.0);
+        // um1 represents an homogenous point in 3D camera space positionned on the image plan
+        cv::Mat_<double> um1 = Kinv * cv::Mat_<double>(u1);
+        u1.x = um1(0); u1.y = um1(1); u1.z = um1(2);
+
+        cv::Point2f kp2 = cv::Point2f(pointsView2[matches[i].getIndexInDescriptorB()]->getX(),pointsView2[matches[i].getIndexInDescriptorB()]->getY());
+        cv::Point3d u2(kp2.x, kp2.y, 1.0);
+        // um1 represents an homogenous point in 3D camera space positionned on the image plan
+        cv::Mat_<double> um2 = Kinv * cv::Mat_<double>(u2);
+        u2.x = um2(0); u2.y = um2(1); u2.z = um2(2);
+
+        // Compute the position of the 3D point projected in u1 for the camera1 with Pose1 and projected in u2 for the camera 2 with Pose 2
+        //cv::Mat_<double> X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
+        cv::Mat_<double> X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
+
+        //std::cout<<"X: "<<X<<std::endl;
+
+        // Reproject this point on the image plane of the second camera
+        cv::Mat_<double> xPt_img1 = KPose1 * X;				//reproject
+        cv::Point2f xPt_img_1(xPt_img1(0) / xPt_img1(2), xPt_img1(1) / xPt_img1(2));
+
+        double reprj_err = norm(xPt_img_1 - kp1);
+        reproj_error.push_back(reprj_err);
+
+        xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
+        std::map<unsigned int, unsigned int> visibility;
+
+        visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
+        visibility[working_views.second] = matches[i].getIndexInDescriptorB();
+
+        cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
+        pcloud.push_back(cp);
+     }
+    cv::Scalar mse = cv::mean(reproj_error);
+    return mse[0];
+}
+
+double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>>& pointsView1,
+                                                const std::vector<SRef<Keypoint>>& pointsView2,
+                                                const std::vector<DescriptorMatch> &matches,
+                                                const std::pair<unsigned int,unsigned int>&working_views,
+                                                const Transform3Df& poseView1,
+                                                const Transform3Df& poseView2,
+                                                std::vector<SRef<CloudPoint>>& pcloud){
+
     Transform3Df poseView1Inverse = poseView1.inverse();
     Transform3Df poseView2Inverse = poseView2.inverse();
     cv::Matx34d Pose1( poseView1Inverse(0, 0),poseView1Inverse(0, 1),poseView1Inverse(0, 2), poseView1Inverse(0, 3),
@@ -198,9 +268,9 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
     // unsigned int pts_size = pt2d_1.size();
     unsigned int pts_size = matches.size();
 
-    // KPose2 represents the transformation from 3D space to 2D image (K*[R|T]).
-    cv::Mat_<double> KPose2;
-    KPose2 = m_camMatrix * cv::Mat(Pose2);
+    // KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
+    cv::Mat_<double> KPose1;
+    KPose1 = m_camMatrix * cv::Mat(Pose1);
 
     for (int i = 0; i<pts_size; i++) {
         cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()]->getX(),pointsView1[matches[i].getIndexInDescriptorA()]->getY());
@@ -222,7 +292,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
          //std::cout<<"P2: "<<Pose2<<std::endl;
 
         // Compute the position of the 3D point projected in u1 for the camera1 with Pose1 and projected in u2 for the camera 2 with Pose 2
-        //cv::Mat_<double> X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
+
         cv::Mat_<double> X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
         //double error;
 
@@ -230,16 +300,15 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
         //std::cout<<"X: "<<X<<std::endl;
 
         // Reproject this point on the image plane of the second camera
-        cv::Mat_<double> xPt_img = KPose2 * X;				//reproject
-   //       std::cout <<	"Point * K: " << xPt_img << std::endl;
-        cv::Point2f xPt_img_(xPt_img(0) / xPt_img(2), xPt_img(1) / xPt_img(2));
+        cv::Mat_<double> xPt_img1 = KPose1 * X;				//reproject
+        cv::Point2f xPt_img_1(xPt_img1(0) / xPt_img1(2), xPt_img1(1) / xPt_img1(2));
 
-        double reprj_err = norm(xPt_img_ - kp2);
-        //std::cout<<"x: "<<xPt_img_<<", error"<<reprj_err<<std::endl;
+        double reprj_err = norm(xPt_img_1 - kp1);
+
         reproj_error.push_back(reprj_err);
 
         xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
-        std::vector<int>visibility = std::vector<int>(50, -1);
+        std::map<unsigned int, unsigned int> visibility;
 
        visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
        visibility[working_views.second] = matches[i].getIndexInDescriptorB();
@@ -252,87 +321,90 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
     return mse[0];
 }
 
-double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Keypoint>>& pointsView1,
-                                                const std::vector<SRef<Keypoint>>& pointsView2,
-                                                const std::vector<DescriptorMatch> &matches,
-                                                const std::pair<int,int>&working_views,
-                                                const Transform3Df& poseView1,
-                                                const Transform3Df& poseView2,
-                                                std::vector<SRef<CloudPoint>>& pcloud){
+double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> &curKeyframe,
+												const std::vector<DescriptorMatch>&matches,
+												std::vector<SRef<CloudPoint>>& pcloud) {
+ 
+	SRef<Keyframe> refKeyframe = curKeyframe->getReferenceKeyframe();
+	std::vector<SRef<Keypoint>> pointsView1 = refKeyframe->getKeypoints();
+	std::vector<SRef<Keypoint>> pointsView2 = curKeyframe->getKeypoints();
 
-    Transform3Df poseView1Inverse = poseView1.inverse();
-    Transform3Df poseView2Inverse = poseView2.inverse();
-    cv::Matx34d Pose1( poseView1Inverse(0, 0),poseView1Inverse(0, 1),poseView1Inverse(0, 2), poseView1Inverse(0, 3),
-                       poseView1Inverse(1, 0),poseView1Inverse(1, 1),poseView1Inverse(1, 2), poseView1Inverse(1, 3),
-                       poseView1Inverse(2, 0),poseView1Inverse(2, 1),poseView1Inverse(2, 2), poseView1Inverse(2, 3));
+	Transform3Df poseView1 = refKeyframe->getPose();
+	Transform3Df poseView2 = curKeyframe->getPose();
 
-
-
-    cv::Matx34d Pose2(poseView2Inverse(0, 0),poseView2Inverse(0, 1),poseView2Inverse(0, 2), poseView2Inverse(0, 3),
-                      poseView2Inverse(1, 0),poseView2Inverse(1, 1),poseView2Inverse(1, 2), poseView2Inverse(1, 3),
-                      poseView2Inverse(2, 0),poseView2Inverse(2, 1),poseView2Inverse(2, 2), poseView2Inverse(2, 3));
-
-    cv::Mat_<double> Kinv;
-
-    cv::invert(m_camMatrix,Kinv);
-    //std::cout<<"KInv :" << Kinv <<std::endl;
-    double t = cv::getTickCount();
-    // Create a vector to store the reprojection error of each triangulated 3D points
-    std::vector<double> reproj_error;
-    // unsigned int pts_size = pt2d_1.size();
-    unsigned int pts_size = matches.size();
-
-    // KPose2 represents the transforration from 3D space to 2D image (K*[R|T]).
-    cv::Mat_<double> KPose2 = m_camMatrix * cv::Mat(Pose2);
-
-    for (int i = 0; i<pts_size; i++) {
-        cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()]->getX(),pointsView1[matches[i].getIndexInDescriptorA()]->getY());
-        cv::Point3d u1(kp1.x, kp1.y, 1.0);
-        // um1 represents an homogenous point in 3D camera space positionned on the image plan
-        cv::Mat_<double> um1 = Kinv * cv::Mat_<double>(u1);
-        u1.x = um1(0); u1.y = um1(1); u1.z = um1(2);
-
-        cv::Point2f kp2 = cv::Point2f(pointsView2[matches[i].getIndexInDescriptorB()]->getX(),pointsView2[matches[i].getIndexInDescriptorB()]->getY());
-        cv::Point3d u2(kp2.x, kp2.y, 1.0);
-        // um1 represents an homogenous point in 3D camera space positionned on the image plan
-        cv::Mat_<double> um2 = Kinv * cv::Mat_<double>(u2);
-        u2.x = um2(0); u2.y = um2(1); u2.z = um2(2);
-
-        //std::cout<<"point1: "<< kp1 <<", u1: "<<u1<<std::endl;
-        //std::cout<<"P1: "<<Pose1<<std::endl;
-
-         //std::cout<<"point2: "<< kp2 <<", u2: "<<u2<<std::endl;
-         //std::cout<<"P2: "<<Pose2<<std::endl;
-
-        // Compute the position of the 3D point projected in u1 for the camera1 with Pose1 and projected in u2 for the camera 2 with Pose 2
-
-        cv::Mat_<double> X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
-        //double error;
+	Transform3Df poseView1Inverse = poseView1.inverse();
+	Transform3Df poseView2Inverse = poseView2.inverse();
+	cv::Matx34d Pose1(poseView1Inverse(0, 0), poseView1Inverse(0, 1), poseView1Inverse(0, 2), poseView1Inverse(0, 3),
+		poseView1Inverse(1, 0), poseView1Inverse(1, 1), poseView1Inverse(1, 2), poseView1Inverse(1, 3),
+		poseView1Inverse(2, 0), poseView1Inverse(2, 1), poseView1Inverse(2, 2), poseView1Inverse(2, 3));
 
 
-        //std::cout<<"X: "<<X<<std::endl;
 
-        // Reproject this point on the image plane of the second camera
-        cv::Mat_<double> xPt_img = KPose2 * X;				//reproject
-   //       std::cout <<	"Point * K: " << xPt_img << std::endl;
-        cv::Point2f xPt_img_(xPt_img(0) / xPt_img(2), xPt_img(1) / xPt_img(2));
+	cv::Matx34d Pose2(poseView2Inverse(0, 0), poseView2Inverse(0, 1), poseView2Inverse(0, 2), poseView2Inverse(0, 3),
+		poseView2Inverse(1, 0), poseView2Inverse(1, 1), poseView2Inverse(1, 2), poseView2Inverse(1, 3),
+		poseView2Inverse(2, 0), poseView2Inverse(2, 1), poseView2Inverse(2, 2), poseView2Inverse(2, 3));
 
-        double reprj_err = norm(xPt_img_ - kp2);
-        //std::cout<<"x: "<<xPt_img_<<", error"<<reprj_err<<std::endl;
-        reproj_error.push_back(reprj_err);
+	cv::Mat_<double> Kinv;
 
-        xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
-        std::vector<int>visibility = std::vector<int>(50, -1);
+	cv::invert(m_camMatrix, Kinv);
+	//std::cout<<"KInv :" << Kinv <<std::endl;
+	double t = cv::getTickCount();
+	// Create a vector to store the reprojection error of each triangulated 3D points
+	std::vector<double> reproj_error;
+	// unsigned int pts_size = pt2d_1.size();
+	unsigned int pts_size = matches.size();
 
-       visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
-       visibility[working_views.second] = matches[i].getIndexInDescriptorB();
+	// KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
+	cv::Mat_<double> KPose1;
+	KPose1 = m_camMatrix * cv::Mat(Pose1);
 
-       cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
-       pcloud.push_back(cp);
-     }
-    cv::Scalar mse = cv::mean(reproj_error);
-    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-    return mse[0];
+	for (int i = 0; i < pts_size; i++) {
+		cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()]->getX(), pointsView1[matches[i].getIndexInDescriptorA()]->getY());
+		cv::Point3d u1(kp1.x, kp1.y, 1.0);
+		// um1 represents an homogenous point in 3D camera space positionned on the image plan
+		cv::Mat_<double> um1 = Kinv * cv::Mat_<double>(u1);
+		u1.x = um1(0); u1.y = um1(1); u1.z = um1(2);
+
+		cv::Point2f kp2 = cv::Point2f(pointsView2[matches[i].getIndexInDescriptorB()]->getX(), pointsView2[matches[i].getIndexInDescriptorB()]->getY());
+		cv::Point3d u2(kp2.x, kp2.y, 1.0);
+		// um1 represents an homogenous point in 3D camera space positionned on the image plan
+		cv::Mat_<double> um2 = Kinv * cv::Mat_<double>(u2);
+		u2.x = um2(0); u2.y = um2(1); u2.z = um2(2);
+
+		//std::cout<<"point1: "<< kp1 <<", u1: "<<u1<<std::endl;
+		//std::cout<<"P1: "<<Pose1<<std::endl;
+
+		 //std::cout<<"point2: "<< kp2 <<", u2: "<<u2<<std::endl;
+		 //std::cout<<"P2: "<<Pose2<<std::endl;
+
+		// Compute the position of the 3D point projected in u1 for the camera1 with Pose1 and projected in u2 for the camera 2 with Pose 2
+
+		cv::Mat_<double> X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
+		//double error;
+
+
+		//std::cout<<"X: "<<X<<std::endl;
+
+		// Reproject this point on the image plane of the second camera
+		cv::Mat_<double> xPt_img1 = KPose1 * X;				//reproject
+		cv::Point2f xPt_img_1(xPt_img1(0) / xPt_img1(2), xPt_img1(1) / xPt_img1(2));
+
+		double reprj_err = norm(xPt_img_1 - kp1);
+
+		reproj_error.push_back(reprj_err);
+
+		xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
+		std::map<unsigned int, unsigned int> visibility;
+
+		visibility[refKeyframe->m_idx] = matches[i].getIndexInDescriptorA();
+		visibility[curKeyframe->m_idx] = matches[i].getIndexInDescriptorB();
+
+		cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2), 0.0, 0.0, 0.0, reprj_err, visibility);
+		pcloud.push_back(cp);
+	}
+	cv::Scalar mse = cv::mean(reproj_error);
+	t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+	return mse[0];
 }
 
 void SolARSVDTriangulationOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {

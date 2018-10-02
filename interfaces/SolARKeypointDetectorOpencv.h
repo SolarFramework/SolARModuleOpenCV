@@ -53,7 +53,7 @@ public:
 
 private:
     /// @brief the type of descriptor used for the extraction (AKAZE, AKAZE2, ORB, BRISK)
-    std::string m_type;
+    std::string m_type = "AKAZE2";
 
     /// @brief the ratio to apply to the size of the input image to compute the descriptor.
     /// A ratio must be less or equal to 1. A ratio less than 1 will speedup computation
@@ -61,6 +61,9 @@ private:
 
     /// @brief the number of descriptors that are selected. If negative, all extracted descriptors are selected
     int m_nbDescriptors = 1000;
+
+	/// @brief the threshold of detector to accept a keypoint
+	float m_threshold = 1e-3;
 
 
     int m_id;

@@ -18,9 +18,9 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" description="IDescriptorMatcher"/>
         </component>
-		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9" description="SolARSideBySideOverlayOpencv">
+		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9" description="SolARMatchesOverlayOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="a801354a-3e00-467c-b390-48c76fa8c53a" description="ISideBySideOverlay"/>
+                <interface uuid="a801354a-3e00-467c-b390-48c76fa8c53a" description="IMatchesOverlay"/>
         </component>
 		<component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" description="SolARImageViewerOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
@@ -46,9 +46,9 @@
 		<component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9"> <!-- SolARDescriptorMatcherHammingBruteForceOpencv -->
 			<property name="distanceRatio" type="Float" value="0.9"/>
 		</component>
-		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9"> <!-- SolARSideBySideOverlayOpencv -->
+		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9"> <!-- SolARMatchesOverlayOpencv -->
             <property name="thickness" type="UnsignedInteger" value="1"/>
-			<property name="randomColor" type="UnsignedInteger" value="1"/>
+			<property name="mode" type="string" value="RANDOM"/>
 			<property name="color"  type="UnsignedInteger">
 				<value>0</value>
 				<value>0</value>

@@ -84,6 +84,9 @@ namespace SolAR {
                 /// @brief The probability that the algorithm produces a useful result.
                 float m_confidence = 0.99f;
 
+				/// @brief The minimum of number of inliers to valid a good pose estimation
+				int m_NbInliersToValidPose = 10;
+
 
                 cv::Mat m_camMatrix;
                 cv::Mat m_camDistorsion;

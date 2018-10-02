@@ -30,7 +30,7 @@ namespace OPENCV {
         addInterface<api::input::devices::ICamera>(this);
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
         params->wrapString("calibrationFile", m_calibrationFile);
-        params->wrapString("ImagesDirectoryPath", m_ImagesDirectoryPath);
+        params->wrapString("imagesDirectoryPath", m_ImagesDirectoryPath);
         m_is_resolution_set = false;
     }
 

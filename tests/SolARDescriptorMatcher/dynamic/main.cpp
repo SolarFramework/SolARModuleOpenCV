@@ -20,7 +20,7 @@
 #include "api/image/IImageLoader.h"
 #include "api/features/IKeypointDetector.h"
 #include "api/display/IImageViewer.h"
-#include "api/display/ISideBySideOverlay.h"
+#include "api/display/IMatchesOverlay.h"
 #include "api/features/IDescriptorMatcher.h"
 #include "api/features/IDescriptorsExtractor.h"
 
@@ -62,7 +62,7 @@ int main(int argc,char** argv)
     SRef<features::IKeypointDetector> keypointsDetector = xpcfComponentManager->create<SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
     SRef<features::IDescriptorsExtractor> extractorAKAZE2 = xpcfComponentManager->create<SolARDescriptorsExtractorAKAZE2Opencv>()->bindTo<features::IDescriptorsExtractor>();
     SRef<features::IDescriptorMatcher> matcher = xpcfComponentManager->create<SolARDescriptorMatcherHammingBruteForceOpencv>()->bindTo<features::IDescriptorMatcher>();
-    SRef<display::ISideBySideOverlay> overlay = xpcfComponentManager->create<SolARSideBySideOverlayOpencv>()->bindTo<display::ISideBySideOverlay>();
+    SRef<display::IMatchesOverlay> overlay = xpcfComponentManager->create<SolARMatchesOverlayOpencv>()->bindTo<display::IMatchesOverlay>();
     SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
 
     if (!imageLoaderImage1  || !imageLoaderImage2 || !keypointsDetector || !extractorAKAZE2 || !matcher || !overlay || !viewer)
@@ -113,7 +113,7 @@ int main(int argc,char** argv)
     matcher->match(descriptors1, descriptors2, matches);
 
     // Draw the matches in a dedicated image
-    overlay->drawMatchesLines(image1, image2, viewerImage, keypoints1, keypoints2, matches);
+    overlay->draw(image1, image2, viewerImage, keypoints1, keypoints2, matches);
 
     while (true)
     {

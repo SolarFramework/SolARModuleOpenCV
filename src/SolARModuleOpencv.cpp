@@ -48,12 +48,10 @@
 #include "SolARPoseEstimationPnpEPFL.h"
 #include "SolARPoseEstimationPnpOpencv.h"
 #include "SolARPoseFinderFrom2D2DOpencv.h"
-#include "SolARSideBySideOverlayOpencv.h"
+#include "SolARMatchesOverlayOpencv.h"
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
 #include "SolARSVDTriangulationOpencv.h"
 #include "SolAR2D3DcorrespondencesFinderOpencv.h"
-#include "SolARMapFilterOpencv.h"
-#include "SolARMapperOpencv.h"
 #include "SolARVideoAsCameraOpencv.h"
 #include "SolARImagesAsCameraOpencv.h"
 
@@ -191,7 +189,7 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv>(componentUUID,interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMatchesOverlayOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
@@ -204,14 +202,6 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv>(componentUUID,interfaceRef);
-    }
-    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
-    {
-        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMapperOpencv>(componentUUID,interfaceRef);
-    }
-    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
-    {
-        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMapFilterOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
@@ -258,11 +248,9 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv)
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSideBySideOverlayOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMatchesOverlayOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv)
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapperOpencv)
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapFilterOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImagesAsCameraOpencv)
