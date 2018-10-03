@@ -66,6 +66,47 @@ namespace SolAR {
                 return FrameworkReturnCode::_SUCCESS;
 
             }
+
+			FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(	const SRef<Frame> lastFrame,
+																			const SRef<Frame> currentFrame,
+																			const std::vector<DescriptorMatch>&current_matches,
+																			std::vector<SRef<CloudPoint>>&shared_mapPoint,
+																			std::vector<SRef<Point3Df>>&shared_3dpoint,
+																			std::vector<SRef<Point2Df>>&shared_2dpoint,
+																			std::vector<DescriptorMatch> & found_matches,
+																			std::vector<DescriptorMatch> & remaining_matches) {
+
+				const std::map<unsigned int, unsigned int> kpKeyframeVisibility = lastFrame->getVisibleKeypoints();
+				const std::map<unsigned int, SRef<CloudPoint>> frameVisibility = lastFrame->getReferenceKeyframe()->getVisibleMapPoints();
+				const std::vector<SRef<Keypoint>> current_kpoints = currentFrame->getKeypoints();
+				std::map<unsigned int, unsigned int> newKpKeyframeVisibility;
+				for (int j = 0; j < current_matches.size(); ++j)
+				{
+					std::map<unsigned int, unsigned int>::const_iterator it_kp = kpKeyframeVisibility.find(current_matches[j].getIndexInDescriptorA());
+					if (it_kp != kpKeyframeVisibility.end()) {
+						newKpKeyframeVisibility[current_matches[j].getIndexInDescriptorB()] = it_kp->second;
+						std::map<unsigned int, SRef<CloudPoint>>::const_iterator it_pcl = frameVisibility.find(it_kp->second);
+						if (it_pcl != frameVisibility.end())
+						{
+							shared_mapPoint.push_back(it_pcl->second);
+							shared_3dpoint.push_back(xpcf::utils::make_shared<Point3Df>(it_pcl->second->getX(), it_pcl->second->getY(), it_pcl->second->getZ()));
+							shared_2dpoint.push_back(xpcf::utils::make_shared<Point2Df>(current_kpoints[current_matches[j].getIndexInDescriptorB()]->getX(),
+								current_kpoints[current_matches[j].getIndexInDescriptorB()]->getY()));
+							found_matches.push_back(DescriptorMatch(it_kp->second, current_matches[j].getIndexInDescriptorB(), current_matches[j].getMatchingScore()));							
+						}
+						else
+						{
+							remaining_matches.push_back(DescriptorMatch(it_kp->second, current_matches[j].getIndexInDescriptorB(), current_matches[j].getMatchingScore()));
+						}
+					}
+				}
+
+				currentFrame->addVisibleKeypoints(newKpKeyframeVisibility);
+
+				// std::cout<<" point cloud size: "<<cloud.size()<<" shared: "<<shared_3dpoint.size()<<std::endl;
+				return FrameworkReturnCode::_SUCCESS;
+
+			}
         }
     }
 }
