@@ -59,7 +59,7 @@ namespace SolAR {
 
                  for (int j = 0; j < current_matches.size(); ++j){
                     bool matchFound = false ;
-                    for (int i = 0; i < cloud.size(); ++i) {
+                    for (int i = 0; i < cloud.size(); ++i){
                         if (cloud[i]->m_visibility [keyframe_idx] == current_matches[j].getIndexInDescriptorA()) {
                             shared_mapPoint.push_back(cloud[i]);
 
@@ -79,7 +79,6 @@ namespace SolAR {
 
                // std::cout<<" point cloud size: "<<cloud.size()<<" shared: "<<shared_3dpoint.size()<<std::endl;
                 return FrameworkReturnCode::_SUCCESS;
-
             }
         }
     }

@@ -31,6 +31,8 @@ namespace SolAR {
 
                 // this method should be called with timestamp
                 SRef<Keyframe> getCurrentKeyframe(int idx);
+                std::vector<SRef<Keyframe>> getKeyframes() override;
+
                 std::map<std::pair<int, int>, std::vector<DescriptorMatch> > getMatchesMatrix() override;
                 void associateReferenceKeyFrameToFrame(SRef<Frame> frame)  ;
 
