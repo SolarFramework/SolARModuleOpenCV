@@ -42,7 +42,7 @@ namespace SolAR {
                         {
                             if ((*pointCloud)[j]->m_visibility[working_views.first] == found_matches[i].getIndexInDescriptorA())
                             {
-                                (*pointCloud)[j]->m_visibility[working_views.second] == found_matches[i].getIndexInDescriptorB();
+                                (*pointCloud)[j]->m_visibility[working_views.second] = found_matches[i].getIndexInDescriptorB();
                                 break;
                             }
                         }
@@ -104,6 +104,11 @@ namespace SolAR {
                         std::cerr<<"error, can't retrieve last keyframe, id must be lower than keyframes size"<<std::endl;
                     }
                 }
+
+                std::vector<SRef<Keyframe>> SolARMapperOpencv::getKeyframes(){
+                    return m_kframes;
+                }
+
                 void SolARMapperOpencv::associateReferenceKeyFrameToFrame(SRef<Frame> frame)
                 {
                     // for now : choose last one
@@ -155,8 +160,6 @@ namespace SolAR {
                     return -1 ;
 
                 }
-
-
            }
         }
 }
