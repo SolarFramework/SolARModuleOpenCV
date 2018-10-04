@@ -15,10 +15,6 @@
  */
 
 #include "SolARDescriptorMatcherHammingBruteForceOpencv.h"
-
-#include <iostream>
-#include <utility>
-
 #include "SolAROpenCVHelper.h"
 
 namespace xpcf  = org::bcom::xpcf;
@@ -31,10 +27,12 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorMatcherHammingBruteForceOpencv::SolARDescriptorMatcherHammingBruteForceOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorMatcherHammingBruteForceOpencv>())
+SolARDescriptorMatcherHammingBruteForceOpencv::SolARDescriptorMatcherHammingBruteForceOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorMatcherHammingBruteForceOpencv>())
 {
 
     addInterface<IDescriptorMatcher>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapFloat("distanceRatio", m_distanceRatio);
     LOG_DEBUG(" SolARDescriptorMatcherHammingBruteForceOpencv constructor")
 }
 
@@ -48,6 +46,7 @@ bool sortByDistanceBFM(const std::pair<int,float> &lhs, const std::pair<int,floa
     return lhs.second < rhs.second;
 }
 
+/*
 DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(SRef<DescriptorBuffer>& descriptors1,SRef<DescriptorBuffer>& descriptors2,std::vector<std::vector< cv::DMatch >>& matches,int nbOfMatches)
 {
     matches.clear();
@@ -81,9 +80,9 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
     return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
 
 }
-
+*/
 DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
-       SRef<DescriptorBuffer>& desc1,SRef<DescriptorBuffer>& desc2, std::vector<DescriptorMatch>& matches){
+       SRef<DescriptorBuffer> desc1,SRef<DescriptorBuffer> desc2, std::vector<DescriptorMatch>& matches){
  
     // check if the descriptors type match
     if(desc1->getDescriptorType() != desc2->getDescriptorType()){
@@ -105,22 +104,21 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
     std::vector< std::vector<cv::DMatch> > nn_matches;
     
     matcher.knnMatch(cvDescriptor1, cvDescriptor2, nn_matches,2);
-
-    float nn_match_ratio = 0.8f;
     
     matches.clear();
     for(unsigned i = 0; i < nn_matches.size(); i++) {
-             if(nn_matches[i][0].distance < nn_match_ratio * nn_matches[i][1].distance) {
-                  
+        if (nn_matches[i].size()==1)
+            matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
+        else if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
                  matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
-             }
+        }
     }
   
      return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
 }
  
 DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
-       SRef<DescriptorBuffer>& descriptors1,
+       SRef<DescriptorBuffer> descriptors1,
        std::vector<SRef<DescriptorBuffer>>& descriptors2,
         std::vector<DescriptorMatch>& matches
         ){
@@ -164,11 +162,10 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
     std::vector< std::vector<cv::DMatch> > nn_matches;
     matcher.knnMatch(cvDescriptors1, cvDescriptors2, nn_matches, 2);
 
-    float nn_match_ratio = 0.8f;
      matches.clear();
     for(unsigned i = 0; i < nn_matches.size(); i++) {
     
-             if(nn_matches[i][0].distance < nn_match_ratio * nn_matches[i][1].distance) {
+             if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
                   
                  matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx, nn_matches[i][0].distance ));
              }

@@ -17,7 +17,6 @@
 #include "SolARPerspectiveControllerOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/opencv.hpp"
-#include "opencv2/core.hpp"
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -28,25 +27,23 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARPerspectiveControllerOpencv::SolARPerspectiveControllerOpencv():ComponentBase(xpcf::toUUID<SolARPerspectiveControllerOpencv>())
+    SolARPerspectiveControllerOpencv::SolARPerspectiveControllerOpencv():ConfigurableBase(xpcf::toUUID<SolARPerspectiveControllerOpencv>())
     {
         addInterface<api::image::IPerspectiveController>(this);
-    }
-
-    void SolARPerspectiveControllerOpencv::setParameters (const Sizei outputImageSize)
-    {
-        m_outputImageSize = outputImageSize;
+        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+        params->wrapInteger("outputImageWidth", m_outputImageWidth);
+        params->wrapInteger("outputImageHeight", m_outputImageHeight);
     }
 
     FrameworkReturnCode SolARPerspectiveControllerOpencv::correct(const SRef<Image> inputImg, SRef<Contour2Df> & contour, SRef<Image> & outputImage)
     {
         std::vector<cv::Point2f> points;
-        cv::Size patches_size(m_outputImageSize.width, m_outputImageSize.height);
+        cv::Size patches_size(m_outputImageWidth, m_outputImageHeight);
         std::vector<cv::Point2f> markerCorners2D;
         markerCorners2D.push_back(cv::Point2f(0, 0));
-        markerCorners2D.push_back(cv::Point2f(m_outputImageSize.width - 1, 0));
-        markerCorners2D.push_back(cv::Point2f(m_outputImageSize.width - 1, m_outputImageSize.height - 1));
-        markerCorners2D.push_back(cv::Point2f(0, m_outputImageSize.height - 1));
+        markerCorners2D.push_back(cv::Point2f(m_outputImageWidth - 1, 0));
+        markerCorners2D.push_back(cv::Point2f(m_outputImageWidth - 1, m_outputImageHeight - 1));
+        markerCorners2D.push_back(cv::Point2f(0, m_outputImageHeight - 1));
 
         cv::Mat cv_inputImg = SolAROpenCVHelper::mapToOpenCV(inputImg);
           // For each contour, extract the patch
@@ -76,14 +73,22 @@ namespace OPENCV {
     FrameworkReturnCode SolARPerspectiveControllerOpencv::correct(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours, std::vector<SRef<Image>> & patches)
     {
         if (inputImg == nullptr)
+        {
+            LOG_ERROR("The input image for PerspectiveControllerOpenCV is null");
             return FrameworkReturnCode::_ERROR_;
+        }
+        if (m_outputImageWidth <=0 || m_outputImageHeight <=0)
+        {
+            LOG_ERROR("The width or height of the output image for PerspectiveControllerOpenCV is null or negative");
+            return FrameworkReturnCode::_ERROR_;
+        }
         std::vector<cv::Point2f> points;
-        cv::Size patches_size(m_outputImageSize.width, m_outputImageSize.height);
+        cv::Size patches_size(m_outputImageWidth, m_outputImageHeight);
         std::vector<cv::Point2f> markerCorners2D;
         markerCorners2D.push_back(cv::Point2f(0, 0));
-        markerCorners2D.push_back(cv::Point2f(m_outputImageSize.width - 1, 0));
-        markerCorners2D.push_back(cv::Point2f(m_outputImageSize.width - 1, m_outputImageSize.height - 1));
-        markerCorners2D.push_back(cv::Point2f(0, m_outputImageSize.height - 1));
+        markerCorners2D.push_back(cv::Point2f(m_outputImageWidth - 1, 0));
+        markerCorners2D.push_back(cv::Point2f(m_outputImageWidth - 1, m_outputImageHeight - 1));
+        markerCorners2D.push_back(cv::Point2f(0, m_outputImageHeight - 1));
 
         cv::Mat cv_inputImg = SolAROpenCVHelper::mapToOpenCV(inputImg);
         patches.clear();

@@ -22,7 +22,7 @@
 // Definition of SolARDescriptorMatcherRadiusOpencv Class //
 // part of SolAR namespace //
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/core.hpp"
@@ -36,7 +36,7 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherRadiusOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherRadiusOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorMatcher {
 public:
     SolARDescriptorMatcherRadiusOpencv();
@@ -44,18 +44,21 @@ public:
     void unloadComponent () override final;
 
   DescriptorMatcher::RetCode match(
-            SRef<DescriptorBuffer>& desc1,
-            SRef<DescriptorBuffer>& desc2,
+            SRef<DescriptorBuffer> desc1,
+            SRef<DescriptorBuffer> desc2,
             std::vector<DescriptorMatch>& matches);
 
     DescriptorMatcher::RetCode match(
-           SRef<DescriptorBuffer>& descriptors1,
+           SRef<DescriptorBuffer> descriptors1,
            std::vector<SRef<DescriptorBuffer>>& descriptors2,
            std::vector<DescriptorMatch>& matches
         );
 
 private:
-    float m_maxDistance;
+    /// @brief Threshold for the distance between matched descriptors. Distance means here metric distance (e.g. Hamming distance), not the distance between coordinates (which is measured in Pixels)
+    float m_maxDistance = 1.0f;
+
+
     cv::FlannBasedMatcher m_matcher;
 
 };

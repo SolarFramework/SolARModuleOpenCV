@@ -19,7 +19,7 @@
 
 #include "api/features/IDescriptorsExtractorSBPattern.h"
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
@@ -27,13 +27,11 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorSBPatternOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorSBPatternOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorsExtractorSBPattern {
 public:
     SolARDescriptorsExtractorSBPatternOpencv();
     ~SolARDescriptorsExtractorSBPatternOpencv() = default;
-
-    void setParameters (const int patternSize) override;
 
     FrameworkReturnCode extract(const std::vector<SRef<Image>>& inputImages, const std::vector<SRef<Contour2Df>>& contours, SRef<DescriptorBuffer> & pattern_descriptors, std::vector<SRef<Contour2Df>> & recognized_contours) override;
     FrameworkReturnCode extract(const SRef<SquaredBinaryPattern> pattern, SRef<DescriptorBuffer> & descriptor) override;
@@ -45,8 +43,8 @@ private:
     bool isPattern(SRef<Image> image);
 
 private:
-    // Define the internal size of the pattern (without the black border), with first the number of rows, and secondly the number of columns
-    int m_patternSize;
+    // Define the internal size of the pattern (without the black border)
+    int m_patternSize = 5;
 };
 
 }

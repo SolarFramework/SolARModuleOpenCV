@@ -15,9 +15,6 @@
  */
 
 #include "SolARDescriptorMatcherRadiusOpencv.h"
-#include <iostream>
-#include <utility>
-
 #include "SolAROpenCVHelper.h"
 
 namespace xpcf  = org::bcom::xpcf;
@@ -30,11 +27,12 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorMatcherRadiusOpencv::SolARDescriptorMatcherRadiusOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorMatcherRadiusOpencv>())
+SolARDescriptorMatcherRadiusOpencv::SolARDescriptorMatcherRadiusOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorMatcherRadiusOpencv>())
 {
     addInterface<IDescriptorMatcher>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapFloat("maxDistance", m_maxDistance);
     LOG_DEBUG(" SolARDescriptorMatcherRadiusOpencv constructor")
-    m_maxDistance = 1.0f;
 }
 
 SolARDescriptorMatcherRadiusOpencv::~SolARDescriptorMatcherRadiusOpencv()
@@ -43,8 +41,8 @@ SolARDescriptorMatcherRadiusOpencv::~SolARDescriptorMatcherRadiusOpencv()
 }
 
 DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
-            SRef<DescriptorBuffer>& desc1,
-            SRef<DescriptorBuffer>& desc2,
+            SRef<DescriptorBuffer> desc1,
+            SRef<DescriptorBuffer> desc2,
             std::vector<DescriptorMatch>& matches)
     {
  
@@ -96,7 +94,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
     }
  
  DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
-           SRef<DescriptorBuffer>& descriptors1,
+           SRef<DescriptorBuffer> descriptors1,
            std::vector<SRef<DescriptorBuffer>>& descriptors2,
            std::vector<DescriptorMatch>& matches
     )

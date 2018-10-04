@@ -16,11 +16,7 @@
 
 #include "SolARDescriptorsExtractorORBOpencv.h"
 #include "SolARImageConvertorOpencv.h"
-#include <iostream>
 #include "SolAROpenCVHelper.h"
-#include <utility>
-
-#include <array>
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv)
 

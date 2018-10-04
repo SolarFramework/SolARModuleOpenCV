@@ -1,9 +1,21 @@
+/**
+ * @copyright Copyright (c) 2017 B-com http://www.b-com.com/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #include "SolARGeometricMatchesFilterOpencv.h"
-#include "SolAROpenCVHelper.h"
-#include <set>
 
-
-using namespace org::bcom::xpcf;
 namespace xpcf  = org::bcom::xpcf;
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv)
@@ -13,10 +25,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv():ComponentBase(xpcf::toUUID<SolARGeometricMatchesFilterOpencv>())
+SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv():ConfigurableBase(xpcf::toUUID<SolARGeometricMatchesFilterOpencv>())
 { 
-    addInterface<api::features::IMatchesFilter>(this);
     LOG_DEBUG("SolARGeometricMatchesFilterOpencv constructor")
+    addInterface<api::features::IMatchesFilter>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapFloat("confidence", m_confidence);
+    params->wrapFloat("outlierDistanceRatio", m_outlierDistanceRatio);
 }
 
 
@@ -54,7 +69,7 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
         {
             double minVal, maxVal;
             cv::minMaxIdx(pts1, &minVal, &maxVal);
-            F = cv::findFundamentalMat(pts1, pts2, cv::FM_RANSAC, 0.006 * maxVal, 0.99, status); //threshold from [Snavely07 4.1]
+            F = cv::findFundamentalMat(pts1, pts2, cv::FM_RANSAC, m_outlierDistanceRatio * maxVal, m_confidence, status);
         }
 
         for (unsigned int i = 0; i<status.size(); i++) {

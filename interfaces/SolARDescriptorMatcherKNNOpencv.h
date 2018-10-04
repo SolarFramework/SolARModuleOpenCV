@@ -22,7 +22,7 @@
 // Definition of SolARDescriptorMatcherOpencv Class //
 // part of SolAR namespace //
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/core.hpp"
@@ -39,7 +39,7 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorMatcher {
 public:
     SolARDescriptorMatcherKNNOpencv();
@@ -47,18 +47,25 @@ public:
     void unloadComponent () override final;
 
   DescriptorMatcher::RetCode match(
-            SRef<DescriptorBuffer>& desc1,
-            SRef<DescriptorBuffer>& desc2,
+            SRef<DescriptorBuffer> desc1,
+            SRef<DescriptorBuffer> desc2,
             std::vector<DescriptorMatch>& matches);
 
     DescriptorMatcher::RetCode match(
-           SRef<DescriptorBuffer>& descriptors1,
+           SRef<DescriptorBuffer> descriptors1,
            std::vector<SRef<DescriptorBuffer>>& descriptors2,
            std::vector<DescriptorMatch>& matches
         );
 
 
 private:
+
+    /// @brief distance ratio used to keep good matches.
+    /// Several matches can correspond to a given keypoint of the first image. The first match with the best score is always retained.
+    /// But here, we can also retain the second match if its distance or score is greater than the score of the best match * m_distanceRatio.
+    float m_distanceRatio = 0.75f;
+
+
     int m_id;
     cv::FlannBasedMatcher m_matcher;
 

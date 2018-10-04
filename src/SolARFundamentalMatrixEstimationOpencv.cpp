@@ -16,15 +16,7 @@
 
 #include "SolARFundamentalMatrixEstimationOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio/videoio.hpp"
-#include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
-
-#include <map>
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -35,10 +27,14 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARFundamentalMatrixEstimationOpencv::SolARFundamentalMatrixEstimationOpencv():ComponentBase(xpcf::toUUID<SolARFundamentalMatrixEstimationOpencv>())
+SolARFundamentalMatrixEstimationOpencv::SolARFundamentalMatrixEstimationOpencv():ConfigurableBase(xpcf::toUUID<SolARFundamentalMatrixEstimationOpencv>())
 {
     addInterface<api::solver::pose::I2DTransformFinder>(this);
-    LOG_DEBUG("SolARFundamentalMatrixEstimationOpencv constructor")
+    LOG_DEBUG("SolARFundamentalMatrixEstimationOpencv constructor");
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapFloat("confidenceLevel", m_confidenceLevel);
+    params->wrapFloat("outlierDistanceRatio", m_outlierDistanceRatio);
+
 }
 
 SolARFundamentalMatrixEstimationOpencv::~SolARFundamentalMatrixEstimationOpencv(){
@@ -68,7 +64,7 @@ api::solver::pose::Transform2DFinder::RetCode SolARFundamentalMatrixEstimationOp
         points_view2[i].y=dstPoints.at(i)->getY();
     }
     cv::minMaxIdx(points_view1, &minVal, &maxVal);
-    F = cv::findFundamentalMat(points_view1, points_view2, cv::FM_RANSAC, 0.006 * maxVal, 0.99, status);
+    F = cv::findFundamentalMat(points_view1, points_view2, cv::FM_RANSAC, m_outlierDistanceRatio * maxVal, m_confidenceLevel, status);
     if(!F.data){
         LOG_DEBUG("Fundamental matrix is empty")
         return api::solver::pose::Transform2DFinder::TRANSFORM2D_EMPTY;
