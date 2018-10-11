@@ -90,6 +90,8 @@ xpcf::XPCFErrorCode SolAR3DOverlayBoxOpencv::onConfigured()
 void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displayImage)
 {
 
+    Transform3Df poseInverse =pose.inverse();
+
     // image where parallelepiped will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 
@@ -101,21 +103,21 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displ
     cv::Mat Tvec;   Tvec.create(3, 1, CV_32FC1);
 
 
-    Rvec.at<float>(0,0) = pose(0,0);
-    Rvec.at<float>(0,1) = pose(0,1);
-    Rvec.at<float>(0,2) = pose(0,2);
+    Rvec.at<float>(0,0) = poseInverse(0,0);
+    Rvec.at<float>(0,1) = poseInverse(0,1);
+    Rvec.at<float>(0,2) = poseInverse(0,2);
 
-    Rvec.at<float>(1,0) = pose(1,0);
-    Rvec.at<float>(1,1) = pose(1,1);
-    Rvec.at<float>(1,2) = pose(1,2);
+    Rvec.at<float>(1,0) = poseInverse(1,0);
+    Rvec.at<float>(1,1) = poseInverse(1,1);
+    Rvec.at<float>(1,2) = poseInverse(1,2);
 
-    Rvec.at<float>(2,0) = pose(2,0);
-    Rvec.at<float>(2,1) = pose(2,1);
-    Rvec.at<float>(2,2) = pose(2,2);
+    Rvec.at<float>(2,0) = poseInverse(2,0);
+    Rvec.at<float>(2,1) = poseInverse(2,1);
+    Rvec.at<float>(2,2) = poseInverse(2,2);
 
-    Tvec.at<float>(0,0) = pose(0,3);
-    Tvec.at<float>(1,0) = pose(1,3);
-    Tvec.at<float>(2,0) = pose(2,3);
+    Tvec.at<float>(0,0) = poseInverse(0,3);
+    Tvec.at<float>(1,0) = poseInverse(1,3);
+    Tvec.at<float>(2,0) = poseInverse(2,3);
 
     cv::Mat rodrig;
     cv::Rodrigues(Rvec,rodrig);

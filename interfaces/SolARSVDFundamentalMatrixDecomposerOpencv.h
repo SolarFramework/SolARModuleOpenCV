@@ -33,7 +33,7 @@ namespace OPENCV {
  * @brief Decomposes Fundamental matrix on a set of camera poses based on opencv SVD solving.
  */
 class SOLAROPENCV_EXPORT_API SolARSVDFundamentalMatrixDecomposerOpencv : public org::bcom::xpcf::ComponentBase,
-    public api::solver::pose::I2DTO3DTransformDecomposer{
+    public api::solver::pose::I2Dto3DTransformDecomposer{
 public:
     ///@brief SolARSVDFundamentalMatrixDecomposerOpencv constructor.
     SolARSVDFundamentalMatrixDecomposerOpencv();

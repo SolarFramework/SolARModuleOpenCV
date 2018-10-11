@@ -14,22 +14,9 @@
  * limitations under the License.
  */
 
-#include <iostream>
-
 #include "SolARPoseEstimationPnpEPFL.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio/videoio.hpp"
-#include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
-
-#include "xpcf/component/ComponentFactory.h"
-
-
-#include <map>
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL);
 
@@ -62,8 +49,9 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<
                                                          Transform3Df & pose,
                                                          const Transform3Df initialPose) {
     SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(m_maxNumberCorrespondences);
-    Eigen::Matrix3f R = initialPose.rotation();
-    Eigen::Vector3f T = initialPose.translation();
+    Transform3Df initialPoseInverse = initialPose.inverse();
+    Eigen::Matrix3f R = initialPoseInverse.rotation();
+    Eigen::Vector3f T = initialPoseInverse.translation();
     SolARPoseEstimationPnpEPFL::reset_correspondences();
 
     for (int i = 0; i < worldPoints.size(); i++) {
@@ -94,6 +82,8 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<
        pose(3,1) = 0.0;
           pose(3,2) = 0.0;
              pose(3,3) = 1.0;
+
+    pose = pose.inverse();
     return FrameworkReturnCode::_SUCCESS;
 }
 
@@ -105,8 +95,9 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<
                                                          const Transform3Df initialPose) {
 
     SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(worldPoints.size());
-    Eigen::Matrix3f R = initialPose.rotation();
-    Eigen::Vector3f T = initialPose.translation();
+    Transform3Df initialPoseInverse = initialPose.inverse();
+    Eigen::Matrix3f R = initialPoseInverse.rotation();
+    Eigen::Vector3f T = initialPoseInverse.translation();
     SolARPoseEstimationPnpEPFL::reset_correspondences();
     for (int i = 0; i < worldPoints.size(); i++) {
          double Xw, Yw, Zw, u, v;
@@ -126,9 +117,7 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<
          for (int j = 0; j < 3; ++j) {
             pose(i,j) = R_est[i][j];
           }
-         std::cout<<std::endl;
       }
-     std::cout<<std::endl;
       for (int i = 0; i < 3; ++i) {
           pose(i,3) = t_est[i];
       }
@@ -137,6 +126,8 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<
       pose(3,1)  = 0.0;
       pose(3,2)  = 0.0;
       pose(3,3)  = 1.0;
+
+      pose = pose.inverse();
 
     return FrameworkReturnCode::_SUCCESS;
 }
@@ -466,13 +457,6 @@ void SolARPoseEstimationPnpEPFL::estimate_R_and_t(double R[3][3], double t[3])
     t[2] = pc0[2] - dot(R[2], pw0);
 }
 
-void SolARPoseEstimationPnpEPFL::print_pose(const double R[3][3], const double t[3])
-{
-    std::cout << R[0][0] << " " << R[0][1] << " " << R[0][2] << " " << t[0] << std::endl;
-    std::cout << R[1][0] << " " << R[1][1] << " " << R[1][2] << " " << t[1] << std::endl;
-    std::cout << R[2][0] << " " << R[2][1] << " " << R[2][2] << " " << t[2] << std::endl;
-}
-
 void SolARPoseEstimationPnpEPFL::solve_for_sign(void)
 {
     if (pcs[2] < 0.0) {
@@ -729,7 +713,7 @@ void SolARPoseEstimationPnpEPFL::qr_solve(CvMat * A, CvMat * b, CvMat * X)
 
         if (eta == 0) {
             A1[k] = A2[k] = 0.0;
-            std::cerr << "God damnit, A is singular, this shouldn't happen." << std::endl;
+            LOG_ERROR("God damnit, A is singular, this shouldn't happen.");
             return;
         }
         else {

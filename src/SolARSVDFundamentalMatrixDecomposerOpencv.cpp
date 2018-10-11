@@ -13,33 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <iostream>
 
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio/videoio.hpp"
-#include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
-
-
-#include "xpcf/component/ComponentFactory.h"
-
-#include <map>
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv);
 
 namespace xpcf  = org::bcom::xpcf;
+
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
 SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOpencv():ComponentBase(xpcf::toUUID<SolARSVDFundamentalMatrixDecomposerOpencv>()){
-    addInterface<api::solver::pose::I2DTO3DTransformDecomposer>(this);
+    addInterface<api::solver::pose::I2Dto3DTransformDecomposer>(this);
     LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
 
     m_camMatrix.create(3, 3);
@@ -87,6 +76,10 @@ void SolARSVDFundamentalMatrixDecomposerOpencv::fillposes(const cv::Mat_<double>
         decomposedPoses[3](2,0) = R2(2,0);decomposedPoses[3](2,1) = R2(2,1);decomposedPoses[3](2,2) = R2(2,2);decomposedPoses[3](2,3) = t2(2);
         decomposedPoses[3](3,0) = 0.0    ;decomposedPoses[3](3,1) = 0.0    ;decomposedPoses[3](3,2) = 0.0    ;decomposedPoses[3](3,3) = 1.0;
 
+        decomposedPoses[0] = decomposedPoses[0].inverse();
+        decomposedPoses[1] = decomposedPoses[1].inverse();
+        decomposedPoses[2] = decomposedPoses[2].inverse();
+        decomposedPoses[3] = decomposedPoses[3].inverse();
 }
 
 bool SolARSVDFundamentalMatrixDecomposerOpencv::decomposeInternal(cv::Mat_<double>& E,
@@ -113,8 +106,8 @@ bool SolARSVDFundamentalMatrixDecomposerOpencv::decomposeInternal(cv::Mat_<doubl
         cv::Matx33d Wt(0, 1, 0,
                       -1, 0, 0,
                        0, 0, 1);
-        std::cout<<"svd_u :"<<std::endl<<svd_u<<std::endl;
-        std::cout<<"svd_w :"<<std::endl<<svd_w<<std::endl;
+        LOG_DEBUG("svd_u :\n{}", svd_u);
+        LOG_DEBUG("svd_w :\n{}",svd_w);
 
         R1 = svd_u * cv::Mat(W) * svd_vt; //H
         R2 = svd_u * cv::Mat(Wt) * svd_vt; //

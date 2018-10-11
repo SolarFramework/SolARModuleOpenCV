@@ -68,7 +68,6 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARPoseEstimationPnpEPFL.h \
     interfaces/SolARPoseEstimationPnpOpencv.h \
     interfaces/SolARGeometricMatchesFilterOpencv.h \
-    interfaces/SolARSideBySideOverlayOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolARSVDTriangulationOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
@@ -83,14 +82,13 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageFilterBlurOpencv.h \
     interfaces/SolARImageFilterDilateOpencv.h \
     interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
-    interfaces/SolARMapFilterOpencv.h \
-    interfaces/SolARMapperOpencv.h \
     interfaces/SolARImageFilterErodeOpencv.h \
     interfaces/SolARVideoAsCameraOpencv.h \
+    interfaces/SolARImagesAsCameraOpencv.h \
     interfaces/SolAR3DOverlayBoxOpencv.h \
     interfaces/SolARHomographyMatrixDecomposerOpencv.h \
-    interfaces/SolARPoseFinderFrom2D2DOpencv.h
-#    interfaces/SolARBundlerOpencv.h
+    interfaces/SolARPoseFinderFrom2D2DOpencv.h \
+    interfaces/SolARMatchesOverlayOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
@@ -112,7 +110,6 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
-    src/SolARSideBySideOverlayOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
     src/SolARPoseEstimationPnpEPFL.cpp \
@@ -130,14 +127,13 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARImageFilterBlurOpencv.cpp \
     src/SolARImageFilterDilateOpencv.cpp \
     src/SolAR2D3DcorrespondencesFinderOpencv.cpp \
-    src/SolARMapFilterOpencv.cpp \
-    src/SolARMapperOpencv.cpp \
     src/SolARImageFilterErodeOpencv.cpp \
     src/SolARVideoAsCameraOpencv.cpp \
+    src/SolARImagesAsCameraOpencv.cpp \
     src/SolAR3DOverlayBoxOpencv.cpp \
     src/SolARHomographyMatrixDecomposerOpencv.cpp \
-    src/SolARPoseFinderFrom2D2DOpencv.cpp
-#    src/SolARBundlerOpencv.cpp
+    src/SolARPoseFinderFrom2D2DOpencv.cpp \
+    src/SolARMatchesOverlayOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers

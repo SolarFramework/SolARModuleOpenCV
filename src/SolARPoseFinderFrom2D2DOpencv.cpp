@@ -13,17 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <iostream>
 
 #include "SolARPoseFinderFrom2D2DOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
-
-#include "xpcf/component/ComponentFactory.h"
-
-
-#include <map>
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv);
 
@@ -55,6 +48,7 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
                                                             std::vector<DescriptorMatch>& inlierMatches){
     double minVal, maxVal;
 
+    Transform3Df poseView1Inverse = poseView1.inverse();
     std::vector<cv::Point2f> points_view1;
     std::vector<cv::Point2f> points_view2;
 
@@ -100,7 +94,7 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
     cvPos.copyTo(cvTransform(cv::Rect_<float>(3,0,1,3)));
     Transform3Df view2Transform;
     SolAROpenCVHelper::convertCVMatToSolar(cvTransform, view2Transform);
-    poseView2 = view2Transform * poseView1 ;
+    poseView2 = view2Transform * poseView1Inverse ;
 
     int nbInliers = 0;
     std::vector<DescriptorMatch> inlierMatches_output;
@@ -122,6 +116,8 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
     }
 
     inlierMatches = inlierMatches_output;
+
+    poseView2 = poseView2.inverse();
     return FrameworkReturnCode::_SUCCESS;
 }
 
@@ -134,8 +130,9 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
 
     std::vector<cv::Point2f> points_view1;
     std::vector<cv::Point2f> points_view2;
-
     cv::Mat inliers;
+
+    Transform3Df poseView1Inverse = poseView1.inverse();
 
     if (inlierMatches.empty()) // Inliers are not defined, take all input 2D points
     {
@@ -177,7 +174,7 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
     cvPos.copyTo(cvTransform(cv::Rect_<float>(3,0,1,3)));
     Transform3Df view2Transform;
     SolAROpenCVHelper::convertCVMatToSolar(cvTransform, view2Transform);
-    poseView2 = view2Transform * poseView1 ;
+    poseView2 = view2Transform * poseView1Inverse ;
 
     int nbInliers = 0;
     std::vector<DescriptorMatch> inlierMatches_output;
@@ -198,6 +195,7 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
         LOG_DEBUG("Nbinliers : {} (// {})", inlierMatches.size(), inlierMatches.size());
     }
 
+    poseView2 = poseView2.inverse();
     inlierMatches = inlierMatches_output;
     return FrameworkReturnCode::_SUCCESS;
 }

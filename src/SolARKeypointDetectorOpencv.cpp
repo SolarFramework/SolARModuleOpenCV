@@ -16,13 +16,6 @@
 
 #include "SolARKeypointDetectorOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include <iostream>
-#include <utility>
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include "xpcf/api/IComponentManager.h"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv)
 
@@ -52,6 +45,7 @@ SolARKeypointDetectorOpencv::SolARKeypointDetectorOpencv():ConfigurableBase(xpcf
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapFloat("imageRatio", m_imageRatio);
     params->wrapInteger("nbDescriptors", m_nbDescriptors);
+	params->wrapFloat("threshold", m_threshold);
     params->wrapString("type", m_type);
     LOG_DEBUG("SolARKeypointDetectorOpencv constructor");
 }
@@ -86,19 +80,31 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
     switch (type) {
 	case (KeypointDetectorType::AKAZE):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
-		m_detector = AKAZE::create();
+		if (m_threshold > 0)
+			m_detector = AKAZE::create(5, 0, 3, m_threshold);
+		else
+			m_detector = AKAZE::create();
 		break;
 	case (KeypointDetectorType::AKAZE2):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE2)");
-		m_detector = AKAZE2::create();
+		if (m_threshold > 0)
+			m_detector = AKAZE2::create(5, 0, 3, m_threshold);
+		else
+			m_detector = AKAZE2::create();
 		break;
 	case (KeypointDetectorType::ORB):
         LOG_DEBUG("KeypointDetectorImp::setType(ORB)");
-        m_detector=ORB::create();
+		if (m_nbDescriptors > 0)
+			m_detector=ORB::create(m_nbDescriptors);
+		else
+			m_detector = ORB::create();
         break;
     case (KeypointDetectorType::BRISK):
         LOG_DEBUG("KeypointDetectorImp::setType(BRISK)");
-        m_detector=BRISK::create();
+		if (m_threshold > 0)
+			m_detector = BRISK::create((int)m_threshold);
+		else
+			m_detector=BRISK::create();
         break;
 
 

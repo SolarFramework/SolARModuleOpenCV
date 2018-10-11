@@ -15,9 +15,6 @@
  */
 
 #include "SolARDescriptorMatcherHammingBruteForceOpencv.h"
-
-#include <iostream>
-#include <utility>
 #include "SolAROpenCVHelper.h"
 
 namespace xpcf  = org::bcom::xpcf;
@@ -85,7 +82,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
 }
 */
 DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
-       SRef<DescriptorBuffer>& desc1,SRef<DescriptorBuffer>& desc2, std::vector<DescriptorMatch>& matches){
+       SRef<DescriptorBuffer> desc1,SRef<DescriptorBuffer> desc2, std::vector<DescriptorMatch>& matches){
  
     // check if the descriptors type match
     if(desc1->getDescriptorType() != desc2->getDescriptorType()){
@@ -121,7 +118,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
 }
  
 DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
-       SRef<DescriptorBuffer>& descriptors1,
+       SRef<DescriptorBuffer> descriptors1,
        std::vector<SRef<DescriptorBuffer>>& descriptors2,
         std::vector<DescriptorMatch>& matches
         ){

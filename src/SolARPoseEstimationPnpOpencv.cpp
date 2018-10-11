@@ -13,22 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <iostream>
-
 #include "SolARPoseEstimationPnpOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio/videoio.hpp"
-#include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
-
-#include "xpcf/component/ComponentFactory.h"
-
-
-#include <map>
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv);
 
@@ -39,14 +26,6 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-
-struct solarInlier{
-    int idx;
-    double reproj_error;
-    bool operator<( const solarInlier& val ) const {
-            return reproj_error < val.reproj_error;
-        }
-};
 SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
     addInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
@@ -54,6 +33,7 @@ SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xp
     params->wrapInteger("iterationsCount", m_iterationsCount);
     params->wrapFloat("reprojError", m_reprojError);
     params->wrapFloat("confidence", m_confidence);
+	params->wrapInteger("minNbInliers", m_NbInliersToValidPose);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
@@ -73,6 +53,8 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
 
+    Transform3Df initialPoseInverse = initialPose.inverse();
+
     if (worldPoints.size()!=imagePoints.size() || worldPoints.size()< 4 ){
         LOG_WARNING("world/image points must be valid ( equal and > to 4)");
         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
@@ -90,12 +72,12 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     cv::Mat raux, taux;
 
     // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
-    if (!initialPose.isApprox(Transform3Df::Identity()))
+    if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
     {
-        RotationMatrixf initialRot = initialPose.rotation();
+        RotationMatrixf initialRot = initialPoseInverse.rotation();
         cv::Mat cvInitialPose = SolAROpenCVHelper::mapToOpenCV(initialRot);
         cv::Rodrigues(cvInitialPose, raux);
-        Vector3f initialTranslation = initialPose.translation();
+        Vector3f initialTranslation = initialPoseInverse.translation();
         taux = SolAROpenCVHelper::mapToOpenCV(initialTranslation);
 
         cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1, cv::SOLVEPNP_ITERATIVE);
@@ -123,6 +105,8 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     pose(3,2)  = 0.0;
     pose(3,3)  = 1.0;
 
+    pose = pose.inverse();
+
     return FrameworkReturnCode::_SUCCESS;
 
 }
@@ -137,6 +121,8 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
     std::vector<int> inliers;
+
+    Transform3Df initialPoseInverse = initialPose.inverse();
 
     if (worldPoints.size()!=imagePoints.size() || worldPoints.size()< 4 ){
         LOG_WARNING("world/image points must be valid ( equal and > to 4)");
@@ -155,12 +141,12 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
      cv::Mat inliers_cv;
 
      // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
-     if (!initialPose.isApprox(Transform3Df::Identity()))
+     if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
      {
-         RotationMatrixf initialRot = initialPose.rotation();
+         RotationMatrixf initialRot = initialPoseInverse.rotation();
          cv::Mat cvInitialPose = SolAROpenCVHelper::mapToOpenCV(initialRot);
          cv::Rodrigues(cvInitialPose, raux);
-         Vector3f initialTranslation = initialPose.translation();
+         Vector3f initialTranslation = initialPoseInverse.translation();
          taux = SolAROpenCVHelper::mapToOpenCV(initialTranslation);
 
          cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, true,
@@ -178,9 +164,6 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
      for (int i = 0; i<projected3D.size(); i++) {
          double err_reprj = norm(projected3D[i]-imageCVPoints[i]);
          if (err_reprj <m_reprojError) {
-             solarInlier inn;
-             inn.idx = i; inn.reproj_error = err_reprj;
-
              worldPoints_inlier.push_back(worldPoints[i]);
              imagePoints_inlier.push_back(imagePoints[i]);
 
@@ -188,8 +171,9 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
              in3d.push_back(cv::Point3f(worldPoints[i]->getX(),worldPoints[i]->getY(),worldPoints[i]->getZ()));
          }
      }
-     if (in3d.size()!=in2d.size() || in3d.size()<3 ){
-         std::cerr<<"wolrd/image inliers points must be valid ( equal and > to 2)"<<std::endl;
+	 
+     if (in3d.size()!=in2d.size() || in3d.size() < std::max(3, m_NbInliersToValidPose)){
+         LOG_WARNING("world/image inliers points must be valid ( equal and > to {}): {} inliers for {} input points", std::max(3, m_NbInliersToValidPose), in3d.size(), worldPoints.size());
          return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
      }
 
@@ -214,6 +198,8 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     pose(3,1)  = 0.0;
     pose(3,2)  = 0.0;
     pose(3,3)  = 1.0;
+
+    pose = pose.inverse();
 
     return FrameworkReturnCode::_SUCCESS;
 }

@@ -17,30 +17,15 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <boost/log/core.hpp>
+#include "xpcf/xpcf.h"
 
-// ADD COMPONENTS HEADERS HERE
+// ADD COMPONENTS HEADERS HER
 
-#include "SolARImageLoaderOpencv.h"
-#include "SolARCameraOpencv.h"
-#include "SolARKeypointDetectorOpencv.h"
-#include "SolARDescriptorsExtractorSIFTOpencv.h"
-//#include "SolARDescriptorMatcherKNNOpencv.h"
-#include "SolARDescriptorMatcherRadiusOpencv.h"
-#include "SolARImageViewerOpencv.h"
-#include "SolARSideBySideOverlayOpencv.h"
-#include "SolARBasicMatchesFilterOpencv.h"
-#include "SolARGeometricMatchesFilterOpencv.h"
-
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/xfeatures2d/cuda.hpp"
-#include "opencv2/opencv_modules.hpp"
-#include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/xfeatures2d.hpp>
-
-#include "SolARFundamentalMatrixEstimationOpencv.h"
-
+#include "SolARModuleOpencv_traits.h"
+#include "api/input/devices/ICamera.h"
+#include "api/solver/pose/I2DTransformFinder.h"
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
@@ -50,7 +35,7 @@ using namespace SolAR::MODULES::OPENCV;
 namespace xpcf  = org::bcom::xpcf;
 
 void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2Df>>&pt2d){
-    cv::namedWindow("toto debug",0);
+
     std::ifstream ox(path_file);
     float pt[2];
   //  Point2Df point_temp;
@@ -62,89 +47,56 @@ void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2
        v[0]  = std::stof(dummy);
        ox>>dummy;
        v[1]= std::stof(dummy);
-       pt2d[i]  = sptrnms::make_shared<Point2Df>(v[0], v[1]);
+       pt2d[i]  = xpcf::utils::make_shared<Point2Df>(v[0], v[1]);
     }
   ox.close();
 }
-int run( std::string& path_points1, std::string& path_points2,std::string& path_fileout)
-{
+
+int main() {
+#if NDEBUG
+    boost::log::core::get()->set_logging_enabled(false);
+#endif
+
+    LOG_ADD_LOG_TO_CONSOLE();
+
+    std::string path_points1 = "../data/pt1_F.txt";
+    std::string path_points2 = "../data/pt2_F.txt";
+
+    /* instantiate component manager*/
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+
+    if(xpcfComponentManager->load("conf_FundamentalMatrixEstimation.xml")!=org::bcom::xpcf::_SUCCESS)
+    {
+        LOG_ERROR("Failed to load the configuration file conf_FundamentalMatrixEstimation.xml")
+        return -1;
+    }
+
+    // declare and create components
+    LOG_INFO("Start creating components");
+
+    // component creation
+    SRef<input::devices::ICamera> camera = xpcfComponentManager->create<SolARCameraOpencv>()->bindTo<input::devices::ICamera>();
+    SRef<solver::pose::I2DTransformFinder> fundamentalFinder = xpcfComponentManager->create<SolARHomographyEstimationOpencv>()->bindTo<solver::pose::I2DTransformFinder>();
+
+    /* we need to check that components are well created*/
+    if (!camera || !fundamentalFinder)
+    {
+        LOG_ERROR("One or more component creations have failed");
+        return -1;
+    }
 
  // declarations
-    xpcf::utils::uuids::string_generator              gen;
-    SRef<solver::pose::IFundamentalMatrixEstimation>  fundamentalFinder;
-    SRef<display::IImageViewer>                       viewer;
-    SRef<display::ISideBySideOverlay>                 overlay;
-    SRef<Image>                                       image;
+    Transform2Df                                      F;
+    std::vector<SRef<Point2Df>>                       points_view1;
+    std::vector<SRef<Point2Df>>                       points_view2;
 
+ // Initialization
+   const int nb_points = 6953;
+   load_2dpoints(path_points1, nb_points, points_view1);
+   load_2dpoints(path_points2, nb_points, points_view2);
 
-    Transform2Df F;
+   fundamentalFinder->find(points_view1, points_view2, F);
 
-
-
-    std::vector<SRef<Point2Df>>                      points_view1;
-    std::vector<SRef<Point2Df>>                      points_view2;
-
-
-
-
-    // The escape key to exit the sample
-    char escape_key = 27;
-
- // component creation
-    xpcf::ComponentFactory::createComponent<SolARImageViewerOpencv>(xpcf::toUUID<display::IImageViewer>(), viewer);
-    xpcf::ComponentFactory::createComponent<SolARFundamentalMatrixEstimationOpencv>(xpcf::toUUID<solver::pose::IFundamentalMatrixEstimation>(), fundamentalFinder);
-
-
-   const int points_no = 6953;
-
-   load_2dpoints(path_points1,points_no, points_view1);
-   load_2dpoints(path_points2,points_no, points_view2);
-
-   fundamentalFinder->findFundamental(points_view1, points_view2, F);
-
-   for(int ii = 0; ii < 3; ++ii){
-       for(int jj = 0; jj < 3; ++jj){
-           std::cout<<F(ii,jj)<<" ";
-       }
-       std::cout<<std::endl;
-   }
-
-   std::ofstream ox(path_fileout.c_str());
-   for (int ii = 0; ii < 3; ++ii) {
-	   for (int jj = 0; jj < 3; ++jj) {
-		   ox << F(ii, jj) << " ";
-	   }
-	   ox << std::endl;
-   }
-   ox.close();
-
-
+   LOG_INFO("Fundamental Matrix: \n {}", F.matrix());
    return 0;
 }
-
-int printHelp(){
-        printf(" usage :\n");
-        printf(" exe path_points1 path_points2 fileOut\n");
-        return 1;
-}
-
-int main(int argc, char **argv){
-
-
-
-    if(argc == 4){
-		std::string path_points1 = std::string(argv[1]);
-		std::string path_points2 = std::string(argv[2]);
-		std::string path_fileout = std::string(argv[3]);
-
-        run(path_points1, path_points2, path_fileout);
-
-        return 1;
-    }
-    else
-        return(printHelp());
-        
-}
-
-
-

@@ -24,8 +24,6 @@
 
 #include "SolAROpencvAPI.h"
 
-#include "datastructure/Pose.h"
-
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {

@@ -18,12 +18,10 @@ CONFIG(release,debug|release) {
 
 win32:CONFIG -= static
 win32:CONFIG += shared
-QMAKE_TARGET.arch = x86_64 #must be defined prior to include
+
 DEPENDENCIESCONFIG = sharedlib
 #NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
 include ($$(BCOMDEVROOT)/builddefs/qmake/templateappconfig.pri)
-
-HEADERS += \
 
 SOURCES += \
     main.cpp
@@ -48,6 +46,3 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 
 }
-
-#DISTFILES += \
-#    xpcf_registry_test.xml
