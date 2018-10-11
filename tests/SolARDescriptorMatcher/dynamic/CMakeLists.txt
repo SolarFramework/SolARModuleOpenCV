@@ -26,16 +26,7 @@ endif(WIN32)
 set (BUILDCONFIG $<$<CONFIG:Debug>:debug>$<$<NOT:$<CONFIG:Debug>>:release>)
 
 set(FILES_TO_COPY
-
-$ENV{BCOMDEVROOT}/thirdParties/opencv/3.4.3/lib/x86_64/shared/${BUILDCONFIG}/${LIBPREFIX}opencv_world${OPENCV_VERSION}.${LIBEXTENSION}
-
-
-
-
-
-
-
-
+	$ENV{BCOMDEVROOT}/thirdParties/opencv/3.4.3/lib/x86_64/shared/${BUILDCONFIG}/${LIBPREFIX}opencv_world${OPENCV_VERSION}.${LIBEXTENSION}
 
 	$ENV{BCOMDEVROOT}/thirdParties/boost/1.68.0/lib/x86_64/shared/${BUILDCONFIG}/${LIBPREFIX}boost_filesystem.${LIBEXTENSION}
 	$ENV{BCOMDEVROOT}/thirdParties/boost/1.68.0/lib/x86_64/shared/${BUILDCONFIG}/${LIBPREFIX}boost_system.${LIBEXTENSION}
