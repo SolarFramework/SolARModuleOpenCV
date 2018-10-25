@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry>
-	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" path="$BCOMDEVROOT/bcomBuild/SolARModuleOpenCV/0.4.0/lib/x86_64/shared">
-         <component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" description="SolARCameraOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" description="ICamera"/>
+	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$BCOMDEVROOT/bcomBuild/SolARModuleOpenCV/0.4.0/lib/x86_64/shared">
+         <component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" name="SolARCameraOpencv" description="SolARCameraOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
         </component>
-		<component uuid="fb9dac20-2a44-44b2-aa42-2871eec31427" description="SolARHomographyEstimationOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="45dd370a-0eab-4a7f-93d0-43453b4c7517" description="Transform2DFinder"/>
+		<component uuid="fb9dac20-2a44-44b2-aa42-2871eec31427" name="SolARHomographyEstimationOpencv" description="SolARHomographyEstimationOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="45dd370a-0eab-4a7f-93d0-43453b4c7517" name="Transform2DFinder" description="Transform2DFinder"/>
         </component>
-		<component uuid="31188e79-6bd5-43df-9633-6d6c5d7afb5c" description="SolARSVDFundamentalMatrixDecomposerOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="1697e697-e6df-4e6a-b8e7-d78ddc03f3f6" description="IFundamentalMatrixDecomposer"/>
+		<component uuid="31188e79-6bd5-43df-9633-6d6c5d7afb5c" name="SolARSVDFundamentalMatrixDecomposerOpencv" description="SolARSVDFundamentalMatrixDecomposerOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="1697e697-e6df-4e6a-b8e7-d78ddc03f3f6" name="IFundamentalMatrixDecomposer" description="IFundamentalMatrixDecomposer"/>
         </component>		
     </module>
 	
