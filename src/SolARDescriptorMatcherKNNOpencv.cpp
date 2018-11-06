@@ -40,51 +40,7 @@ SolARDescriptorMatcherKNNOpencv::~SolARDescriptorMatcherKNNOpencv()
     LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv destructor")
 }
 
-/*
-DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(SRef<DescriptorBuffer> descriptors1,SRef<DescriptorBuffer> descriptors2,std::vector<std::vector< cv::DMatch >>& matches,int nbOfMatches)
-{
-    matches.clear();
 
-    // check if the descriptors type match
-    if (descriptors1->getDescriptorDataType() != descriptors2->getDescriptorDataType() ){
-            return DescriptorMatcher::DESCRIPTORS_DONT_MATCH;
-     }
-
-    if(descriptors1->getNbDescriptors()==0 || descriptors2->getNbDescriptors()==0){
-        return DescriptorMatcher::DESCRIPTOR_EMPTY;
-    }
-
-    // to prevent pb in knn search
-    nbOfMatches=cv::min(nbOfMatches,(int)descriptors2->getNbDescriptors());
-
-    //since it is an openCV implementation we need to convert back the descriptors from SolAR to Opencv
-
-    uint32_t type_conversion= SolAROpenCVHelper::deduceOpenDescriptorCVType(descriptors1->getDescriptorDataType());
-
-    cv::Mat cvDescriptor1(descriptors1->getNbDescriptors(), descriptors1->getNbElements(), type_conversion);
-    cvDescriptor1.data=(uchar*)descriptors1->data();
-
-    cv::Mat cvDescriptor2(descriptors2->getNbDescriptors(), descriptors2->getNbElements(), type_conversion);
-    cvDescriptor2.data=(uchar*)descriptors2->data();
-/*
-    if (descriptors1->getDescriptorDataType() != DescriptorBuffer::TYPE_32F)
-       cvDescriptor1.convertTo(cvDescriptor1, CV_32F);
-    if (descriptors2->getDescriptorDataType() != DescriptorBuffer::TYPE_32F)
-       cvDescriptor2.convertTo(cvDescriptor2, CV_32F);
-*/
-/*
-    std::vector< std::vector<cv::DMatch> > nn_matches;
-    m_matcher.knnMatch(cvDescriptor1, cvDescriptor2, matches,nbOfMatches);
-
-    for(unsigned i = 0; i < nn_matches.size(); i++) {
-             if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
-                 matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
-             }
-    }
-    return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
-
-}
-*/
 DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(
        SRef<DescriptorBuffer> desc1,SRef<DescriptorBuffer> desc2, std::vector<DescriptorMatch>& matches){
  
@@ -94,9 +50,11 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(
     if(desc1->getDescriptorType() != desc2->getDescriptorType()){
         return DescriptorMatcher::DESCRIPTORS_DONT_MATCH;
     }
-    if (desc1->getNbDescriptors() == 0 || desc2->getNbDescriptors() == 0)
+
+    if (desc1->getNbDescriptors() == 0 || desc2->getNbDescriptors() == 0){
         return DescriptorMatcher::RetCode::DESCRIPTOR_EMPTY;
- 
+    }
+
 	if (desc1->getNbDescriptors()<2 || desc2->getNbDescriptors()<2) {  
 		matches.clear();
 		return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;  // not enough descriptors to use opencv::knnMatch
