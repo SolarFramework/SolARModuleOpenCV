@@ -37,6 +37,11 @@ DEFINES += "_BCOM_SHARED=__declspec(dllexport)"
 
 INCLUDEPATH += interfaces/
 
+# my ssba path files:
+
+#INCLUDEPATH += "D:/AmineLib/SSBA/"
+#LIBS += "D:/AmineLib/SSBA/build/Release"
+
 HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageConvertorOpencv.h \
     interfaces/SolARImageLoaderOpencv.h \

@@ -43,6 +43,7 @@ namespace SolAR {
                                                                            std::vector<DescriptorMatch> & found_matches,
                                                                            std::vector<DescriptorMatch> & remaining_matches){
 
+
                  const std::map<unsigned int, SRef<CloudPoint>> keyframeVisibility = referenceKeyframe->getVisibleMapPoints();
                  const std::vector<SRef<Keypoint>> current_kpoints =  currentFrame->getKeypoints();
                  for (int j = 0; j < current_matches.size(); ++j)
@@ -64,7 +65,6 @@ namespace SolAR {
 
                // std::cout<<" point cloud size: "<<cloud.size()<<" shared: "<<shared_3dpoint.size()<<std::endl;
                 return FrameworkReturnCode::_SUCCESS;
-
             }
 
 			FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(	const SRef<Frame> lastFrame,

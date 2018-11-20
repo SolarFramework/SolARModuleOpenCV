@@ -161,5 +161,5 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
                 <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" description="ICamera"/>
         </component>
-    </module>
+    </module>    
 </xpcf-registry>
