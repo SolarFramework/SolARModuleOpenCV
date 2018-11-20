@@ -1,165 +1,165 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry>
     <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" path="$BCOMDEVROOT/bcomBuild/SolARModuleOpenCV/0.4.0/lib/x86_64/shared">
-        <component uuid="cedd8c47-e7b0-47bf-abb1-7fb54d198117" description="SolAR2D3DCorrespondencesFinderOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="0404e8b9-b824-4852-a34d-6eafa7563918" description="I2D3DCorrespondencesFinder"/>
+        <component uuid="cedd8c47-e7b0-47bf-abb1-7fb54d198117" name="SolAR2D3DCorrespondencesFinderOpencv" description="SolAR2D3DCorrespondencesFinderOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="0404e8b9-b824-4852-a34d-6eafa7563918" name="I2D3DCorrespondencesFinder" description="I2D3DCorrespondencesFinder"/>
         </component>
-		<component uuid="cc51d685-9797-4ffd-a9dd-cec4f367fa6a" description="SolAR2DOverlayOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="62b8b0b5-9344-40e6-a288-e609eb3ff0f1" description="I2DOverlay"/>
+		<component uuid="cc51d685-9797-4ffd-a9dd-cec4f367fa6a" name="SolAR2DOverlayOpencv" description="SolAR2DOverlayOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="62b8b0b5-9344-40e6-a288-e609eb3ff0f1" name="I2DOverlay" description="I2DOverlay"/>
         </component>
-		<component uuid="2db01f59-9793-4cd5-8e13-b25d0ed5735b" description="SolAR3DOverlayBoxOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="81a20f52-6bf9-4949-b914-df2f614bc945" description="I3DOverlay"/>
+		<component uuid="2db01f59-9793-4cd5-8e13-b25d0ed5735b" name="SolAR3DOverlayBoxOpencv" description="SolAR3DOverlayBoxOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="81a20f52-6bf9-4949-b914-df2f614bc945" name="I3DOverlay" description="I3DOverlay"/>
         </component>
-		<component uuid="702a7f53-e5ec-45d2-887d-daa99a34a33c" description="SolARCameraCalibrationOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="0e83b228-b9ca-413d-9dc2-db45c427428b" description="ICameraCalibration"/>
+		<component uuid="702a7f53-e5ec-45d2-887d-daa99a34a33c" name="SolARCameraCalibrationOpencv" description="SolARCameraCalibrationOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="0e83b228-b9ca-413d-9dc2-db45c427428b" name="ICameraCalibration" description="ICameraCalibration"/>
         </component>
-        <component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" description="SolARCameraOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" description="ICamera"/>
+        <component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" name="SolARCameraOpencv" description="SolARCameraOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
         </component>
-        <component uuid="6acf8de2-cc63-11e7-abc4-cec278b6b50a" description="SolARContoursExtractorOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="42d82ab6-cc62-11e7-abc4-cec278b6b50a" description="IContoursExtractor"/>
+        <component uuid="6acf8de2-cc63-11e7-abc4-cec278b6b50a" name="SolARContoursExtractorOpencv" description="SolARContoursExtractorOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="42d82ab6-cc62-11e7-abc4-cec278b6b50a" name="IContoursExtractor" description="IContoursExtractor"/>
         </component>
-        <component uuid="4309dcc6-cc73-11e7-abc4-cec278b6b50a" description="SolARContoursFilterBinaryMarkerOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="6b3de3a0-cc72-11e7-abc4-cec278b6b50a" description="IContoursFilter"/>
+        <component uuid="4309dcc6-cc73-11e7-abc4-cec278b6b50a" name="SolARContoursFilterBinaryMarkerOpencv" description="SolARContoursFilterBinaryMarkerOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="6b3de3a0-cc72-11e7-abc4-cec278b6b50a" name="IContoursFilter" description="IContoursFilter"/>
         </component>
-        <component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9" description="SolARDescriptorMatcherHammingBruteForceOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" description="IDescriptorMatcher"/>
+        <component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9" name="SolARDescriptorMatcherHammingBruteForceOpencv" description="SolARDescriptorMatcherHammingBruteForceOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
         </component>
-		<component uuid="7823dac8-1597-41cf-bdef-59aa22f3d40a" description="SolARDescriptorMatcherKNNOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" description="IDescriptorMatcher"/>
+		<component uuid="7823dac8-1597-41cf-bdef-59aa22f3d40a" name="SolARDescriptorMatcherKNNOpencv" description="SolARDescriptorMatcherKNNOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
         </component>
-		<component uuid="549f7873-96e4-4eae-b4a0-ae8d80664ce5" description="SolARDescriptorMatcherRadiusOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" description="IDescriptorMatcher"/>
+		<component uuid="549f7873-96e4-4eae-b4a0-ae8d80664ce5" name="SolARDescriptorMatcherRadiusOpencv" description="SolARDescriptorMatcherRadiusOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
         </component>
-        <component uuid="c8cc68db-9abd-4dab-9204-2fe4e9d010cd" description="SolARDescriptorsExtractorAKAZEOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" description="IDescriptorsExtractor"/>
+        <component uuid="c8cc68db-9abd-4dab-9204-2fe4e9d010cd" name="SolARDescriptorsExtractorAKAZEOpencv" description="SolARDescriptorsExtractorAKAZEOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" name="IDescriptorsExtractor" description="IDescriptorsExtractor"/>
         </component>
-        <component uuid="21238c00-26dd-11e8-b467-0ed5f89f718b" description="SolARDescriptorsExtractorAKAZE2Opencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" description="IDescriptorsExtractor"/>
+        <component uuid="21238c00-26dd-11e8-b467-0ed5f89f718b" name="SolARDescriptorsExtractorAKAZE2Opencv" description="SolARDescriptorsExtractorAKAZE2Opencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" name="IDescriptorsExtractor" description="IDescriptorsExtractor"/>
         </component>
-        <component uuid="0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a" description="SolARDescriptorsExtractorORBOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" description="IDescriptorsExtractor"/>
+        <component uuid="0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a" name="SolARDescriptorsExtractorORBOpencv" description="SolARDescriptorsExtractorORBOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" name="IDescriptorsExtractor" description="IDescriptorsExtractor"/>
         </component>
-        <component uuid="d25625ba-ce3a-11e7-abc4-cec278b6b50a" description="SolARDescriptorsExtractorSBPatternOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="2e2bde18-ce39-11e7-abc4-cec278b6b50a" description="IDescriptorsExtractorSBPattern"/>
+        <component uuid="d25625ba-ce3a-11e7-abc4-cec278b6b50a" name="SolARDescriptorsExtractorSBPatternOpencv" description="SolARDescriptorsExtractorSBPatternOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="2e2bde18-ce39-11e7-abc4-cec278b6b50a" name="IDescriptorsExtractor" description="IDescriptorsExtractorSBPattern"/>
         </component>
-		 <component uuid="31188e79-6bd5-43df-9633-6d6c5d7afb5c" description="SolARFundamentalMatrixDecompisitionValidationOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="0f715b50-e0e5-4508-aaf0-cb252ea59ad4" description="IFundamentalMatrixDecompositionValidation"/>
+		 <component uuid="31188e79-6bd5-43df-9633-6d6c5d7afb5c" name="SolARFundamentalMatrixDecompisitionValidationOpencv" description="SolARFundamentalMatrixDecompisitionValidationOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="0f715b50-e0e5-4508-aaf0-cb252ea59ad4" name="IFundamentalMatrixDecompositionValidation" description="IFundamentalMatrixDecompositionValidation"/>
         </component>
-		<component uuid="79b29b50-cf4d-441e-b5de-1de829b91c41" description="SolARFundamentalMatrixEstimationOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="45dd370a-0eab-4a7f-93d0-43453b4c7517" description="I2DTransformFinder"/>
+		<component uuid="79b29b50-cf4d-441e-b5de-1de829b91c41" name="SolARFundamentalMatrixEstimationOpencv" description="SolARFundamentalMatrixEstimationOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="45dd370a-0eab-4a7f-93d0-43453b4c7517" name="I2DTransformFinder" description="I2DTransformFinder"/>
         </component>
-		<component uuid="3731691e-2c4c-4d37-a2ce-06d1918f8d41" description="SolARGeometricMatchesFilterOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="e0d6cc82-6af2-493d-901a-2384fca0b16f" description="IMatchesFilter"/>
+		<component uuid="3731691e-2c4c-4d37-a2ce-06d1918f8d41" name="SolARGeometricMatchesFilterOpencv" description="SolARGeometricMatchesFilterOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="e0d6cc82-6af2-493d-901a-2384fca0b16f" name="IMatchesFilter" description="IMatchesFilter"/>
         </component>
-		<component uuid="fb9dac20-2a44-44b2-aa42-2871eec31427" description="SolARHomographyEstimationOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="45dd370a-0eab-4a7f-93d0-43453b4c7517" description="Transform2DFinder"/>
+		<component uuid="fb9dac20-2a44-44b2-aa42-2871eec31427" name="SolARHomographyEstimationOpencv" description="SolARHomographyEstimationOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="45dd370a-0eab-4a7f-93d0-43453b4c7517" name="Transform2DFinder" description="Transform2DFinder"/>
         </component>
-        <component uuid="b5fab395-2184-4123-b0d5-4af74d0a2d79" description="SolARHomographyMatrixDecomposerOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="0404e8b9-b824-4852-a34d-6eafa7563918" description="I2DTO3DTransformDecomposer"/>
+        <component uuid="b5fab395-2184-4123-b0d5-4af74d0a2d79" name="SolARHomographyMatrixDecomposerOpencv" description="SolARHomographyMatrixDecomposerOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="0404e8b9-b824-4852-a34d-6eafa7563918" name="I2DTO3DTransformDecomposer" description="I2DTO3DTransformDecomposer"/>
         </component>        
-        <component uuid="fd7fb607-144f-418c-bcf2-f7cf71532c22" description="SolARImageConvertorOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="9c982719-6cb4-4831-aa88-9e01afacbd16" description="IImageConvertor"/>
+        <component uuid="fd7fb607-144f-418c-bcf2-f7cf71532c22" name="SolARImageConvertorOpencv" description="SolARImageConvertorOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="9c982719-6cb4-4831-aa88-9e01afacbd16" name="IImageConvertor" description="IImageConvertor"/>
         </component>
-        <component uuid="e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2" description="SolARImageFilterBinaryOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        <component uuid="e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2" name="SolARImageFilterBinaryOpencv" description="SolARImageFilterBinaryOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" name="IImageFilter" description="IImageFilter"/>
         </component>
-        <component uuid="901e7a07-5013-4907-be41-0259fca3726c" description="SolARImageFilterAdaptiveBinaryOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        <component uuid="901e7a07-5013-4907-be41-0259fca3726c" name="SolARImageFilterAdaptiveBinaryOpencv" description="SolARImageFilterAdaptiveBinaryOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" name="IImageFilter" description="IImageFilter"/>
         </component>
-        <component uuid="deb083aa-69fb-409a-af94-151d476de922" description="SolARImageFilterBlurOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        <component uuid="deb083aa-69fb-409a-af94-151d476de922" name="SolARImageFilterBlurOpencv" description="SolARImageFilterBlurOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" name="IImageFilter" description="IImageFilter"/>
         </component>
-        <component uuid="7ac9d1b8-afda-4c99-b8df-92e71015a3be" description="SolARImageFilterDilateOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        <component uuid="7ac9d1b8-afda-4c99-b8df-92e71015a3be" name="SolARImageFilterDilateOpencv" description="SolARImageFilterDilateOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" name="IImageFilter" description="IImageFilter"/>
         </component>
-        <component uuid="58b09819-64bc-4a80-b6a2-9fe7b179f3fc" description="SolARImageFilterErodeOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" description="IImageFilter"/>
+        <component uuid="58b09819-64bc-4a80-b6a2-9fe7b179f3fc" name="SolARImageFilterErodeOpencv" description="SolARImageFilterErodeOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" name="IImageFilter" description="IImageFilter"/>
         </component>                
-        <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" description="SolARImageLoaderOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" description="IImageLoader"/>
+        <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="SolARImageLoaderOpencv" description="SolARImageLoaderOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" name="IImageLoader" description="IImageLoader"/>
         </component>
-        <component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" description="SolARImageViewerOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" description="IImageViewer"/>
+        <component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="SolARImageViewerOpencv" description="SolARImageViewerOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
         </component>
-        <component uuid="b8a8b963-ba55-4ea4-b045-d9e7e8f6db02" description="SolARImagesAsCameraOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" description="ICamera"/>
+        <component uuid="b8a8b963-ba55-4ea4-b045-d9e7e8f6db02" name="SolARImagesAsCameraOpencv" description="SolARImagesAsCameraOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
         </component>
-        <component uuid="e81c7e4e-7da6-476a-8eba-078b43071272" description="SolARKeypointDetectorOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="0eadc8b7-1265-434c-a4c6-6da8a028e06e" description="IKeypointDetector"/>
+        <component uuid="e81c7e4e-7da6-476a-8eba-078b43071272" name="SolARKeypointDetectorOpencv" description="SolARKeypointDetectorOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="0eadc8b7-1265-434c-a4c6-6da8a028e06e" name="IKeypointDetector" description="IKeypointDetector"/>
         </component>
-        <component uuid="efcdb590-c570-11e7-abc4-cec278b6b50a" description="SolARMarker2DNaturalImageOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="3c9cee8a-e9ca-4c16-851a-669a94c2a68d" description="IMarker"/>
-                <interface uuid="e9cdcf6e-c54c-11e7-abc4-cec278b6b50a" description="IMarker2Dquared"/>
-                <interface uuid="8fed06f8-c54d-11e7-abc4-cec278b6b50a" description="IMarker2DNaturalImage"/>
+        <component uuid="efcdb590-c570-11e7-abc4-cec278b6b50a" name="SolARMarker2DNaturalImageOpencv"  description="SolARMarker2DNaturalImageOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="3c9cee8a-e9ca-4c16-851a-669a94c2a68d" name="IMarker" description="IMarker"/>
+                <interface uuid="e9cdcf6e-c54c-11e7-abc4-cec278b6b50a" name="IMarker2DSquared" description="IMarker2DSquared"/>
+                <interface uuid="8fed06f8-c54d-11e7-abc4-cec278b6b50a" name="IMarker2DNaturalImage" description="IMarker2DNaturalImage"/>
         </component>
         <component uuid="5d2b8da9-528e-4e5e-96c1-f883edcf3b1c" description="SolARMarker2DSquaredBinaryOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="3c9cee8a-e9ca-4c16-851a-669a94c2a68d" description="IMarker"/>
-                <interface uuid="e9cdcf6e-c54c-11e7-abc4-cec278b6b50a" description="IMarker2Dquared"/>
-                <interface uuid="12d592ff-aa46-40a6-8d65-7fbfb382d60b" description="IMarker2DSquaredBinary"/>
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="3c9cee8a-e9ca-4c16-851a-669a94c2a68d" name="IMarker" description="IMarker"/>
+                <interface uuid="e9cdcf6e-c54c-11e7-abc4-cec278b6b50a" name="IMarker2DSquared" description="IMarker2DSquared"/>
+                <interface uuid="12d592ff-aa46-40a6-8d65-7fbfb382d60b" name="IMarker2DSquaredBinary" description="IMarker2DSquaredBinary"/>
         </component>
-        <component uuid="9c960f2a-cd6e-11e7-abc4-cec278b6b50a" description="SolARPerspectiveControllerOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="4a7d5c34-cd6e-11e7-abc4-cec278b6b50a" description="IPerspectiveController"/>
+        <component uuid="9c960f2a-cd6e-11e7-abc4-cec278b6b50a" name="SolARPerspectiveControllerOpencv" description="SolARPerspectiveControllerOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="4a7d5c34-cd6e-11e7-abc4-cec278b6b50a" name="IPerspectiveController" description="IPerspectiveController"/>
         </component>
-        <component uuid="a38edf79-f0dc-45ca-92fc-2b336fceedf9" description="SolARPoseEstimationPnpEPFL">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="77281cda-47c2-4bb7-bde6-5b0d02e75dae" description="I3DTransformFinderFrom2D3D"/>
+        <component uuid="a38edf79-f0dc-45ca-92fc-2b336fceedf9" name="SolARPoseEstimationPnpEPFL" description="SolARPoseEstimationPnpEPFL">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="77281cda-47c2-4bb7-bde6-5b0d02e75dae" name="I3DTransformFinderFrom2D3D" description="I3DTransformFinderFrom2D3D"/>
         </component>		
-        <component uuid="0753ade1-7932-4e29-a71c-66155e309a53" description="SolARPoseEstimationPnpOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="77281cda-47c2-4bb7-bde6-5b0d02e75dae" description="I3DTransformFinderFrom2D3D"/>
+        <component uuid="0753ade1-7932-4e29-a71c-66155e309a53" name="SolARPoseEstimationPnpOpencv" description="SolARPoseEstimationPnpOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="77281cda-47c2-4bb7-bde6-5b0d02e75dae" name="I3DTransformFinderFrom2D3D" description="I3DTransformFinderFrom2D3D"/>
         </component>
-		<component uuid="52babb5e-9d33-11e8-98d0-529269fb1459" description="SolARPoseFinderFrom2D2DOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="6063a606-9d30-11e8-98d0-529269fb1459" description="I3DTransformFinderFrom2D2D"/>
+		<component uuid="52babb5e-9d33-11e8-98d0-529269fb1459" name="SolARPoseFinderFrom2D2DOpencv" description="SolARPoseFinderFrom2D2DOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="6063a606-9d30-11e8-98d0-529269fb1459" name="I3DTransformFinderFrom2D2D" description="I3DTransformFinderFrom2D2D"/>
         </component>
-		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9" description="SolARMatchesOverlayOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="a801354a-3e00-467c-b390-48c76fa8c53a" description="IMatchesOverlay"/>
+		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9" name="SolARMatchesOverlayOpencv" description="SolARMatchesOverlayOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="a801354a-3e00-467c-b390-48c76fa8c53a" name="IMatchesOverlay" description="IMatchesOverlay"/>
         </component>
-		<component uuid="31188e79-6bd5-43df-9633-6d6c5d7afb5c" description="SolARSVDFundamentalMatrixDecomposerOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="1697e697-e6df-4e6a-b8e7-d78ddc03f3f6" description="IFundamentalMatrixDecomposer"/>
+		<component uuid="31188e79-6bd5-43df-9633-6d6c5d7afb5c" name="SolARSVDFundamentalMatrixDecomposerOpencv" description="SolARSVDFundamentalMatrixDecomposerOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="1697e697-e6df-4e6a-b8e7-d78ddc03f3f6" name="IFundamentalMatrixDecomposer" description="IFundamentalMatrixDecomposer"/>
         </component>
-		<component uuid="85274ecd-2914-4f12-96de-37c6040633a4" description="SolARSVDTriangulationOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="3a01b0e9-9a76-43f5-97b3-85bb6979b953" description="ITriangulator"/>
+		<component uuid="85274ecd-2914-4f12-96de-37c6040633a4" name="SolARSVDTriangulationOpencv" description="SolARSVDTriangulationOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="3a01b0e9-9a76-43f5-97b3-85bb6979b953" name="ITriangulator" description="ITriangulator"/>
         </component>
-		 <component uuid="fa4a780a-9720-11e8-9eb6-529269fb1459" description="SolARVideoAsCameraOpencv">
-                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" description="IComponentIntrospect"/>
-                <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" description="ICamera"/>
+		 <component uuid="fa4a780a-9720-11e8-9eb6-529269fb1459" name="SolARVideoAsCameraOpencv" description="SolARVideoAsCameraOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
         </component>
     </module>    
 </xpcf-registry>
