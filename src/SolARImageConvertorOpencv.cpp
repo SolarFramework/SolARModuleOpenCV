@@ -15,27 +15,21 @@
  */
 
 #include "SolARImageConvertorOpencv.h"
-#include "opencv2/highgui/highgui.hpp"
-
 #include "SolAROpenCVHelper.h"
-
-#include <iostream>
-#include <utility>
-#include "ComponentFactory.h"
+#include "opencv2/highgui/highgui.hpp"
 
 namespace xpcf  = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARImageConvertorOpencv::SolARImageConvertorOpencv()
-{
-    setUUID(SolARImageConvertorOpencv::UUID);
-    addInterface<api::image::IImageConvertor>(this,api::image::IImageConvertor::UUID, "interface api::image::IImageConvertor");
+SolARImageConvertorOpencv::SolARImageConvertorOpencv():ComponentBase(xpcf::toUUID<SolARImageConvertorOpencv>())
+{  
+    addInterface<api::image::IImageConvertor>(this);
 }
 
 

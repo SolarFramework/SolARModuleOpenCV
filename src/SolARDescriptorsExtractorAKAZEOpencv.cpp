@@ -16,14 +16,9 @@
 
 #include "SolARDescriptorsExtractorAKAZEOpencv.h"
 #include "SolARImageConvertorOpencv.h"
-#include <iostream>
 #include "SolAROpenCVHelper.h"
-#include <utility>
 
-#include <array>
-
-//#include <boost/thread/thread.hpp>
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv)
 
 namespace xpcf = org::bcom::xpcf;
 using namespace cv;
@@ -34,21 +29,31 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorsExtractorAKAZEOpencv::SolARDescriptorsExtractorAKAZEOpencv()
+SolARDescriptorsExtractorAKAZEOpencv::SolARDescriptorsExtractorAKAZEOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorsExtractorAKAZEOpencv>())
 {
-    setUUID(SolARDescriptorsExtractorAKAZEOpencv::UUID);
-    addInterface<api::features::IDescriptorsExtractor>(this,api::features::IDescriptorsExtractor::UUID, "interface SolARDescriptorsExtractorOpencv");
+    addInterface<api::features::IDescriptorsExtractor>(this);
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZEOpencv constructor")
     // m_extractor must have a default implementation : initialize default extractor type
     m_extractor=AKAZE::create();
-    const double akaze_thresh = 3e-4;
-    m_extractor->setThreshold(akaze_thresh);
+
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapDouble("threshold", m_threshold);
+
 }
 
 
 SolARDescriptorsExtractorAKAZEOpencv::~SolARDescriptorsExtractorAKAZEOpencv()
 {
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZEOpencv destructor")
+}
+
+xpcf::XPCFErrorCode SolARDescriptorsExtractorAKAZEOpencv::onConfigured()
+{
+    LOG_DEBUG(" SolARDescriptorsExtractorAKAZEOpencv onConfigured");
+    if (m_extractor->empty())
+        return xpcf::_FAIL;
+    m_extractor->setThreshold(m_threshold);
+    return xpcf::_SUCCESS;
 }
 
 void SolARDescriptorsExtractorAKAZEOpencv::extract(const SRef<Image> image, const std::vector<SRef<Keypoint> > &keypoints, SRef<DescriptorBuffer>& descriptors){

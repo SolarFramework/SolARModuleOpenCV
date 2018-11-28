@@ -16,29 +16,23 @@
 
 #include "SolARContoursExtractorOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/opencv.hpp"
-#include "opencv2/core.hpp"
 
-#include "ComponentFactory.h"
+#include "opencv2/opencv.hpp"
 
 namespace xpcf = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursExtractorOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARContoursExtractorOpencv::SolARContoursExtractorOpencv()
+    SolARContoursExtractorOpencv::SolARContoursExtractorOpencv():ConfigurableBase(xpcf::toUUID<SolARContoursExtractorOpencv>())
     {
-        setUUID(SolARContoursExtractorOpencv::UUID);
-        addInterface<api::features::IContoursExtractor>(this,api::features::IContoursExtractor::UUID, "interface api::features::ContoursExtractor");
-    }
-
-    void SolARContoursExtractorOpencv::setParameters (float minContourSize)
-    {
-        m_minContourSize = minContourSize;
+        addInterface<api::features::IContoursExtractor>(this);
+        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+        params->wrapInteger("minContourEdges",m_minContourEdges);
     }
 
     FrameworkReturnCode SolARContoursExtractorOpencv::extract(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours)
@@ -59,7 +53,7 @@ namespace OPENCV {
             for (size_t i = 0; i<ocv_contours.size(); i++)
             {
                 size_t contourSize = ocv_contours[i].size();
-                if (contourSize > m_minContourSize)
+                if (contourSize > m_minContourEdges)
                 {
                     SRef<Contour2Df> contour = xpcf::utils::make_shared<Contour2Df>();
                     for (size_t j = 0; j < contourSize; j++)

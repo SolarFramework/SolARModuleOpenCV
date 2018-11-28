@@ -75,7 +75,7 @@ namespace cv
         , img_width(-1)
         , img_height(-1)
         {
-          cout << "AKAZE_Impl2 constructor called" << endl;
+       //   cout << "AKAZE_Impl2 constructor called" << endl;
         }
 
         virtual ~AKAZE_Impl2()

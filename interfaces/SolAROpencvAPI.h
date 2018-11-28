@@ -26,5 +26,5 @@
 #else //_WIN32
 #define SOLAROPENCV_EXPORT_API
 #endif //_WIN32
-
+#include "SolARModuleOpencv_traits.h"
 #endif //SOLAR_OPENCV_API

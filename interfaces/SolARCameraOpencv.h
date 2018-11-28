@@ -18,10 +18,12 @@
 #define SOLARCAMERAOPENCV_H
 
 #include <vector>
+#include <string>
+#include "api/input/devices/ICamera.h"
+
 #include "opencv2/opencv.hpp"
 
-#include "ComponentBase.h"
-#include "api/input/devices/ICamera.h"
+#include "xpcf/component/ConfigurableBase.h"
 
 #include "SolAROpencvAPI.h"
 
@@ -30,17 +32,16 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARCameraOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARCameraOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::devices::ICamera {
 public:
     SolARCameraOpencv(); // to replace with ISolARDeviceInfo ! should be set later with init method ? default behavior on devices with facefront/rear embedded cams ?
 
     ~SolARCameraOpencv() = default;
 
-    FrameworkReturnCode start(uint32_t device_id) override;
-    FrameworkReturnCode start(std::string inputFileName)override;
+    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
-    FrameworkReturnCode loadCameraParameters (const std::string & filename) override;
+    FrameworkReturnCode start() override;
 
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
 
@@ -55,11 +56,16 @@ public:
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
     void unloadComponent () override final;
-    XPCF_DECLARE_UUID("5B7396F4-A804-4F3C-A0EB-FB1D56042BB4");
 
  private:
-     int m_device_id;
+     /// @brief Path to the calibration file of the camera
+     std::string m_calibrationFile = "";
+
+     /// @brief The ID of the camera to capture with
+     unsigned int m_deviceID;
+
      cv::VideoCapture m_capture;
+     bool m_is_resolution_set;
      Sizei m_resolution;
 
      CamCalibration m_intrinsic_parameters;

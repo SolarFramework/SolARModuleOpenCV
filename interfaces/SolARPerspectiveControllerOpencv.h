@@ -18,7 +18,7 @@
 #define SOLARPERSPECTIVECONTROLLEROPENCV_H
 
 #include "api/image/IPerspectiveController.h"
-#include "ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
@@ -26,22 +26,22 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARPerspectiveControllerOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARPerspectiveControllerOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::image::IPerspectiveController {
 public:
     SolARPerspectiveControllerOpencv();
     ~SolARPerspectiveControllerOpencv() = default;
 
-    void setParameters (const Sizei outputImageSize)  override;
-
     FrameworkReturnCode correct(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours, std::vector<SRef<Image>> & patches) override;
     FrameworkReturnCode correct(const SRef<Image> inputImg, SRef<Contour2Df> & contour, SRef<Image> & patch) override;
 
     void unloadComponent () override final;
-    XPCF_DECLARE_UUID("9c960f2a-cd6e-11e7-abc4-cec278b6b50a");
 
 private:
-    Sizei m_outputImageSize;
+    /// @brief The width in pixels of the output image
+    int m_outputImageWidth = 640;
+    /// @brief The Height in pixels of the output image
+    int m_outputImageHeight = 480;
 };
 
 }

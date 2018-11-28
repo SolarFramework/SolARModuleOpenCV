@@ -18,7 +18,8 @@
 #define SOLARMARKER2DSQUAREDBINARYOPENCV_H
 
 #include "api/input/files/IMarker2DSquaredBinary.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 
 #include "opencv2/opencv.hpp"
@@ -32,18 +33,21 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARMarker2DSquaredBinaryOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARMarker2DSquaredBinaryOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::files::IMarker2DSquaredBinary{
 public:
 
    SolARMarker2DSquaredBinaryOpencv();
    ~SolARMarker2DSquaredBinaryOpencv();
 
-    FrameworkReturnCode loadMarker(const std::string & filename) override;
+    FrameworkReturnCode loadMarker() override;
 
     void unloadComponent () override final;
- //   void testMethod();
-    XPCF_DECLARE_UUID("5d2b8da9-528e-4e5e-96c1-f883edcf3b1c");
+
+ private:
+    /// @brief the path to the file describing the 2D Squared binary marker
+    std::string m_filePath ="";
+
 };
 
 }

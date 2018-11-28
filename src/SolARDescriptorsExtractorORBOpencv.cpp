@@ -16,13 +16,9 @@
 
 #include "SolARDescriptorsExtractorORBOpencv.h"
 #include "SolARImageConvertorOpencv.h"
-#include <iostream>
 #include "SolAROpenCVHelper.h"
-#include <utility>
 
-#include <array>
-
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv)
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -32,14 +28,12 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorsExtractorORBOpencv::SolARDescriptorsExtractorORBOpencv()
+SolARDescriptorsExtractorORBOpencv::SolARDescriptorsExtractorORBOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorsExtractorORBOpencv>())
 {
-    setUUID(SolARDescriptorsExtractorORBOpencv::UUID);
-    addInterface<api::features::IDescriptorsExtractor>(this,api::features::IDescriptorsExtractor::UUID, "interface SolARDescriptorsExtractorOpencv");
+    addInterface<api::features::IDescriptorsExtractor>(this);
     m_extractor=cv::ORB::create();
     LOG_DEBUG(" SolARDescriptorsExtractorORBOpencv constructor")
 }
-
 
 SolARDescriptorsExtractorORBOpencv::~SolARDescriptorsExtractorORBOpencv()
 {

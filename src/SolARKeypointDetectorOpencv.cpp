@@ -16,15 +16,8 @@
 
 #include "SolARKeypointDetectorOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include <iostream>
-#include <utility>
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include "IComponentManager.h"
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv)
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -35,21 +28,39 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARKeypointDetectorOpencv::SolARKeypointDetectorOpencv()
+static std::map<std::string,KeypointDetectorType> stringToType = {{"AKAZE",KeypointDetectorType::AKAZE},
+                                                                  {"AKAZE2",KeypointDetectorType::AKAZE2},
+                                                                  {"ORB",KeypointDetectorType::ORB},
+                                                                  {"BRISK",KeypointDetectorType::BRISK}};
+
+static std::map<KeypointDetectorType,std::string> typeToString = {{KeypointDetectorType::AKAZE, "AKAZE"},
+                                                                  {KeypointDetectorType::AKAZE2,"AKAZE2"},
+                                                                  {KeypointDetectorType::ORB,"ORB"},
+                                                                  {KeypointDetectorType::BRISK,"BRISK"}};
+
+SolARKeypointDetectorOpencv::SolARKeypointDetectorOpencv():ConfigurableBase(xpcf::toUUID<SolARKeypointDetectorOpencv>())
 {
-    setUUID(SolARKeypointDetectorOpencv::UUID);
-    addInterface<api::features::IKeypointDetector>(this,api::features::IKeypointDetector::UUID, "interface api::features::IKeypointDetectorOpencv");
+    addInterface<api::features::IKeypointDetector>(this);
 
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapFloat("imageRatio", m_imageRatio);
+    params->wrapInteger("nbDescriptors", m_nbDescriptors);
+	params->wrapFloat("threshold", m_threshold);
+    params->wrapString("type", m_type);
     LOG_DEBUG("SolARKeypointDetectorOpencv constructor");
-    m_type=KeypointDetectorType::AKAZE;
 }
-
 
 SolARKeypointDetectorOpencv::~SolARKeypointDetectorOpencv()
 {
     LOG_DEBUG("SolARKeypointDetectorOpencv destructor");
 }
 
+xpcf::XPCFErrorCode SolARKeypointDetectorOpencv::onConfigured()
+{
+    LOG_DEBUG(" SolARKeypointDetectorOpencv onConfigured");
+    setType(stringToType.at(m_type));
+    return xpcf::_SUCCESS;
+}
 
 void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
 {
@@ -65,23 +76,35 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
         BRISK,
         BRIEF,
         */
-    m_type=type;
-    switch (m_type) {
+    m_type=typeToString.at(type);
+    switch (type) {
 	case (KeypointDetectorType::AKAZE):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
-		m_detector = AKAZE::create();
+		if (m_threshold > 0)
+			m_detector = AKAZE::create(5, 0, 3, m_threshold);
+		else
+			m_detector = AKAZE::create();
 		break;
 	case (KeypointDetectorType::AKAZE2):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE2)");
-		m_detector = AKAZE2::create();
+		if (m_threshold > 0)
+			m_detector = AKAZE2::create(5, 0, 3, m_threshold);
+		else
+			m_detector = AKAZE2::create();
 		break;
 	case (KeypointDetectorType::ORB):
         LOG_DEBUG("KeypointDetectorImp::setType(ORB)");
-        m_detector=ORB::create();
+		if (m_nbDescriptors > 0)
+			m_detector=ORB::create(m_nbDescriptors);
+		else
+			m_detector = ORB::create();
         break;
     case (KeypointDetectorType::BRISK):
         LOG_DEBUG("KeypointDetectorImp::setType(BRISK)");
-        m_detector=BRISK::create();
+		if (m_threshold > 0)
+			m_detector = BRISK::create((int)m_threshold);
+		else
+			m_detector=BRISK::create();
         break;
 
 
@@ -94,7 +117,7 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
 
 KeypointDetectorType SolARKeypointDetectorOpencv::getType()
 {
-    return m_type;
+    return stringToType.at(m_type);
 }
 
 void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints)
@@ -103,7 +126,7 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<S
 
     // the input image is down-scaled to accelerate the keypoints extraction
 
-    float ratioInv=1.f/m_ratio;
+    float ratioInv=1.f/m_imageRatio;
 
     keypoints.clear();
 
@@ -112,13 +135,13 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<S
 
     cv::Mat img_1;
     cvtColor( opencvImage, img_1, CV_BGR2GRAY );
-    cv::resize(img_1, img_1, Size(img_1.cols*m_ratio,img_1.rows*m_ratio), 0, 0);
+    cv::resize(img_1, img_1, Size(img_1.cols*m_imageRatio,img_1.rows*m_imageRatio), 0, 0);
 
     try
     {
         if(!m_detector){
-            LOG_DEBUG(" detector is initialized with default value : {}", (int)this->m_type)
-            setType(this->m_type);
+            LOG_DEBUG(" detector is initialized with default value : {}", this->m_type)
+            setType(stringToType.at(this->m_type));
         }
         m_detector->detect(img_1, kpts, Mat());
     }
@@ -129,11 +152,11 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<S
         return;
     }
 
-
-    kptsFilter.retainBest(kpts,m_select_best_N_features);
+    if (m_nbDescriptors >= 0)
+        kptsFilter.retainBest(kpts,m_nbDescriptors);
 
     for(std::vector<cv::KeyPoint>::iterator itr=kpts.begin();itr!=kpts.end();++itr){
-        sptrnms::shared_ptr<Keypoint> kpa = sptrnms::make_shared<Keypoint>();
+       SRef<Keypoint> kpa = xpcf::utils::make_shared<Keypoint>();
 
         kpa->init((*itr).pt.x*ratioInv,(*itr).pt.y*ratioInv,(*itr).size,(*itr).angle,(*itr).response,(*itr).octave,(*itr).class_id) ;
         keypoints.push_back(kpa);

@@ -14,42 +14,58 @@
  * limitations under the License.
  */
 
-#include "SolARModuleManagerOpencv.h"
+#include "xpcf/xpcf.h"
+
+#include "SolARModuleOpencv_traits.h"
+#include "api/image/IImageLoader.h"
+#include "api/features/IKeypointDetector.h"
+#include "api/display/IImageViewer.h"
+#include "api/display/IMatchesOverlay.h"
+#include "api/features/IDescriptorMatcher.h"
+#include "api/features/IDescriptorsExtractor.h"
+
 #include <iostream>
+#include <boost/log/core.hpp>
 #include <string>
 #include <vector>
 
 using namespace SolAR;
+using namespace SolAR::MODULES::OPENCV;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
 
 namespace xpcf  = org::bcom::xpcf;
 
-int run(int argc,char** argv)
+int main(int argc,char** argv)
 {
-    // instantiate module manager
-    MODULES::OPENCV::SolARModuleManagerOpencv opencvModule(argv[3]);
-    if (!opencvModule.isLoaded()) // xpcf library load has failed
+#if NDEBUG
+    boost::log::core::get()->set_logging_enabled(false);
+#endif
+
+    LOG_ADD_LOG_TO_CONSOLE();
+
+    /* instantiate component manager*/
+    /* this is needed in dynamic mode */
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+
+    if(xpcfComponentManager->load("conf_DescriptorMatcher.xml")!=org::bcom::xpcf::_SUCCESS)
     {
-        LOG_ERROR("XPCF library load has failed")
+        LOG_ERROR("Failed to load the configuration file conf_DescriptorMatcher.xml")
         return -1;
     }
 
+    // declare and create components
+    LOG_INFO("Start creating components");
 
-    std::cout<<MODULES::OPENCV::UUID::DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE<<std::endl;
+    SRef<image::IImageLoader> imageLoaderImage1 = xpcfComponentManager->create<SolARImageLoaderOpencv>("image1")->bindTo<image::IImageLoader>();
+    SRef<image::IImageLoader> imageLoaderImage2 = xpcfComponentManager->create<SolARImageLoaderOpencv>("image2")->bindTo<image::IImageLoader>();
+    SRef<features::IKeypointDetector> keypointsDetector = xpcfComponentManager->create<SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
+    SRef<features::IDescriptorsExtractor> extractorAKAZE2 = xpcfComponentManager->create<SolARDescriptorsExtractorAKAZE2Opencv>()->bindTo<features::IDescriptorsExtractor>();
+    SRef<features::IDescriptorMatcher> matcher = xpcfComponentManager->create<SolARDescriptorMatcherHammingBruteForceOpencv>()->bindTo<features::IDescriptorMatcher>();
+    SRef<display::IMatchesOverlay> overlay = xpcfComponentManager->create<SolARMatchesOverlayOpencv>()->bindTo<display::IMatchesOverlay>();
+    SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
 
- // declarations and creation of components
-    SRef<image::IImageLoader> imageLoader1 = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    SRef<image::IImageLoader> imageLoader2 = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    SRef<features::IKeypointDetector> keypointsDetector = opencvModule.createComponent<features::IKeypointDetector>(MODULES::OPENCV::UUID::KEYPOINT_DETECTOR);
-    SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
-    SRef<display::ISideBySideOverlay> overlay = opencvModule.createComponent<display::ISideBySideOverlay>(MODULES::OPENCV::UUID::OVERLAYSBS);
-
-    SRef<features::IDescriptorMatcher> matcher = opencvModule.createComponent<features::IDescriptorMatcher>(MODULES::OPENCV::UUID::DESCRIPTOR_MATCHER_HAMMING_BRUTEFORCE);
-    SRef<features::IDescriptorsExtractor> extractorAKAZE = opencvModule.createComponent<features::IDescriptorsExtractor>(MODULES::OPENCV::UUID::DESCRIPTORS_EXTRACTOR_AKAZE);
-  
-
-    if (!imageLoader1 || !imageLoader2 || !keypointsDetector || !extractorAKAZE || !matcher || !viewer || !overlay)
+    if (!imageLoaderImage1  || !imageLoaderImage2 || !keypointsDetector || !extractorAKAZE2 || !matcher || !overlay || !viewer)
     {
         LOG_ERROR("One or more component creations have failed");
         return -1;
@@ -57,8 +73,8 @@ int run(int argc,char** argv)
 
     SRef<Image>                                        image1;
     SRef<Image>                                        image2;
-    std::vector< sptrnms::shared_ptr<Keypoint>>        keypoints1;
-    std::vector< sptrnms::shared_ptr<Keypoint>>        keypoints2;
+    std::vector< SRef<Keypoint>>                       keypoints1;
+    std::vector< SRef<Keypoint>>                       keypoints2;
     SRef<DescriptorBuffer>                             descriptors1;
     SRef<DescriptorBuffer>                             descriptors2;
     std::vector<DescriptorMatch>                       matches;
@@ -66,25 +82,19 @@ int run(int argc,char** argv)
     std::vector<SRef<Point2Df>>                        matchedKeypoints2;
     SRef<Image>                                        viewerImage;
 
-    // The escape key to exit the sample
-    char escape_key = 27;
-
- // components initialisation
-    // nothing to do
-
  // Start
-    // Load the first image
-    if (imageLoader1->loadImage(argv[1], image1) != FrameworkReturnCode::_SUCCESS)
+    // Get the first image (the path of this image is defined in the conf_DetectorMatcher.xml)
+    if (imageLoaderImage1->getImage(image1) != FrameworkReturnCode::_SUCCESS)
     {
-       LOG_ERROR("Cannot load image with path {}", argv[1]);
-       return -1;
+        LOG_WARNING("First image {} cannot be loaded", imageLoaderImage1->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->getStringValue());
+        return 0;
     }
 
-    // Load the second image
-    if (imageLoader2->loadImage(argv[2], image2) != FrameworkReturnCode::_SUCCESS)
+    // Get the second image (the path of this image is defined in the conf_DetectorMatcher.xml)
+    if (imageLoaderImage2->getImage(image2) != FrameworkReturnCode::_SUCCESS)
     {
-       LOG_ERROR("Cannot load image with path {}", argv[2]);
-       return -1;
+        LOG_WARNING("Second image {} cannot be loaded", imageLoaderImage2->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->getStringValue());
+        return 0;
     }
 
     // Detect the keypoints of the first image
@@ -94,57 +104,28 @@ int run(int argc,char** argv)
     keypointsDetector->detect(image2, keypoints2);
 
     // Compute the AKAZE descriptor for each keypoint extracted from the first image
-    extractorAKAZE->extract(image1, keypoints1, descriptors1);
+    extractorAKAZE2->extract(image1, keypoints1, descriptors1);
 
     // Compute the AKAZE descriptor for each keypoint extracted from the second image
-    extractorAKAZE->extract(image2, keypoints2, descriptors2);
+    extractorAKAZE2->extract(image2, keypoints2, descriptors2);
 
     // Compute the matches between the keypoints of the first image and the keypoints of the second image
     matcher->match(descriptors1, descriptors2, matches);
 
-    // Reorder the keypoints that match in to vector of 2D point (nth point of first vector matching with nth point of the second vector)
-    // For OpenCV module testing. A keypoint reindexer component is available in the module "Tools"
-    matchedKeypoints1.clear();
-    matchedKeypoints2.clear();
-
-    for( int i = 0; i < matches.size(); i++ )
-    {
-        matchedKeypoints1.push_back(xpcf::utils::make_shared<Point2Df>(keypoints1[ matches[i].getIndexInDescriptorA()]->getX(),keypoints1[ matches[i].getIndexInDescriptorA()]->getY()));
-        matchedKeypoints2.push_back(xpcf::utils::make_shared<Point2Df>(keypoints2[ matches[i].getIndexInDescriptorB()]->getX(),keypoints2[ matches[i].getIndexInDescriptorB()]->getY()));
-    }
-
     // Draw the matches in a dedicated image
-    overlay->drawMatchesLines(image1, image2, viewerImage, matchedKeypoints1, matchedKeypoints2);
+    overlay->draw(image1, image2, viewerImage, keypoints1, keypoints2, matches);
 
-    bool proceed = true;
-    while (proceed)
+    while (true)
     {
         // Display the image with matches in a viewer. If escape key is pressed, exit the loop.
-        if (viewer->display("show matches", viewerImage, &escape_key) == FrameworkReturnCode::_STOP)
+        if (viewer->display(viewerImage) == FrameworkReturnCode::_STOP)
         {
-            proceed = false;
-            LOG_INFO("End of DescriptorMatcherOpenCVStaticTest");
+            LOG_INFO("End of DescriptorMatcherOpenCVTest");
+            break;
         }
     }
 
     return 0;
-}
-
-
-int printHelp(){
-        printf(" usage :\n");
-        printf(" exe firstImagePath secondImagePath configFilePath\n");
-        return 1;
-}
-
-
-int main(int argc, char **argv){
-    if(argc == 4){
-        run(argc,argv);
-         return 1;
-    }
-    else
-        return(printHelp());
 }
 
 

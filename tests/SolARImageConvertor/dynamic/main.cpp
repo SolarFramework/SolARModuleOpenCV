@@ -14,32 +14,50 @@
  * limitations under the License.
  */
 
-#include "SolARModuleManagerOpencv.h"
+#include "xpcf/xpcf.h"
+#include "SolARModuleOpencv_traits.h"
+#include "api/image/IImageLoader.h"
+#include "api/image/IImageConvertor.h"
+#include "api/display/IImageViewer.h"
 
 #include <iostream>
+#include <boost/log/core.hpp>
 #include <map>
 
 using namespace std;
 using namespace SolAR;
+using namespace SolAR::MODULES::OPENCV;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
 
 namespace xpcf  = org::bcom::xpcf;
 
-int run(int argc, char **argv)
+int main(int argc, char **argv)
 {
-    // instantiate module manager
-    MODULES::OPENCV::SolARModuleManagerOpencv opencvModule(argv[2]);
-    if (!opencvModule.isLoaded()) // xpcf library load has failed
+#if NDEBUG
+    boost::log::core::get()->set_logging_enabled(false);
+#endif
+
+    LOG_ADD_LOG_TO_CONSOLE();
+
+    /* instantiate component manager*/
+    /* this is needed in dynamic mode */
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+
+    if(xpcfComponentManager->load("conf_ImageConvertor.xml")!=org::bcom::xpcf::_SUCCESS)
     {
-        LOG_ERROR("XPCF library load has failed")
+        LOG_ERROR("Failed to load the configuration file conf_ImageConvertor.xml")
         return -1;
     }
 
+    // declare and create components
+    LOG_INFO("Start creating components");
+
+
     // components declarations and creation
-    SRef<image::IImageLoader> imageLoader = opencvModule.createComponent<image::IImageLoader>(MODULES::OPENCV::UUID::IMAGE_LOADER);
-    SRef<image::IImageConvertor> convertor = opencvModule.createComponent<image::IImageConvertor>(MODULES::OPENCV::UUID::IMAGE_CONVERTOR);
-    SRef<display::IImageViewer> viewer = opencvModule.createComponent<display::IImageViewer>(MODULES::OPENCV::UUID::IMAGE_VIEWER);
+    SRef<image::IImageLoader> imageLoader = xpcfComponentManager->create<SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
+    SRef<image::IImageConvertor> convertor = xpcfComponentManager->create<SolARImageConvertorOpencv>()->bindTo<image::IImageConvertor>();
+    SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
 
     if (!imageLoader || !convertor || !viewer)
     {
@@ -48,44 +66,27 @@ int run(int argc, char **argv)
     }
 
     SRef<Image> image;
-    SRef<Image> convertedImage = xpcf::utils::make_shared<Image>(Image::ImageLayout::LAYOUT_GREY,
-                                                                 Image::PixelOrder::INTERLEAVED,Image::DataType::TYPE_8U);;
+    SRef<Image> convertedImage;
 
-    // The escape key to exit the sample
-    char escape_key = 27;
 
-    // USE your components here, e.g SolarComponentInstance->testMethod();
-    if (imageLoader->loadImage(argv[1], image) != FrameworkReturnCode::_SUCCESS)
+    // Start
+    // Get the image (the path of this image is defined in the conf_ImageConvertor.xml)
+    if (imageLoader->getImage(image) != FrameworkReturnCode::_SUCCESS)
     {
-       LOG_ERROR("Cannot load image with path {}", argv[1]);
-       return -1;
+       LOG_WARNING("image {} cannot be loaded", imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->getStringValue());
+       return 0;
     }
 
     convertor->convert(image, convertedImage, Image::LAYOUT_GREY);
 
-    bool proceed = true;
-    while (proceed)
+    while (true)
     {
-        if (viewer->display("SolAR Image Conversion", convertedImage, &escape_key) == FrameworkReturnCode::_STOP)
+        if (viewer->display(convertedImage) == FrameworkReturnCode::_STOP)
         {
-            proceed = false;
             std::cout << "end of ImageConvertor test" << std::endl;
+            break;
         }
     }
 
     return 0;
-}
-
-int printHelp(){
-        printf(" usage :\n");
-        printf(" exe ImageFilePath configFilePath \n");
-        return 1;
-}
-
-
-int main(int argc, char *argv[]){
-    if(argc==3)
-        return run(argc,argv);
-    else
-        return(printHelp());
 }

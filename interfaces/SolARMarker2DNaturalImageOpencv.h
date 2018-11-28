@@ -18,7 +18,8 @@
 #define SOLARMARKER2DNATURALIMAGEOPENCV_H
 
 #include "api/input/files/IMarker2DNaturalImage.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include "opencv2/opencv.hpp"
 
@@ -27,21 +28,22 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARMarker2DNaturalImageOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARMarker2DNaturalImageOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::files::IMarker2DNaturalImage {
 public:
     SolARMarker2DNaturalImageOpencv();
-    SolARMarker2DNaturalImageOpencv(const std::string & filename, const float width, const float height);
 
     ~SolARMarker2DNaturalImageOpencv() = default;
     void unloadComponent () override final;
 
-    FrameworkReturnCode loadMarker(const std::string & filename) override;
+    FrameworkReturnCode loadMarker() override;
     FrameworkReturnCode getImage(SRef<Image> & img) override;
 
-    XPCF_DECLARE_UUID("efcdb590-c570-11e7-abc4-cec278b6b50a");
  private:
      cv::Mat m_ocvImage;
+
+     /// @brief the path to the file describing the 2D Squared binary marker
+     std::string m_filePath ="";
 };
 
 }

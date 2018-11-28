@@ -16,30 +16,21 @@
 
 #include "SolARDescriptorsExtractorSBPatternOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/opencv.hpp"
-#include "opencv2/core.hpp"
-
-#include "ComponentFactory.h"
 
 namespace xpcf = org::bcom::xpcf;
-
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARDescriptorsExtractorSBPatternOpencv::SolARDescriptorsExtractorSBPatternOpencv()
+    SolARDescriptorsExtractorSBPatternOpencv::SolARDescriptorsExtractorSBPatternOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorsExtractorSBPatternOpencv>())
     {
-        setUUID(SolARDescriptorsExtractorSBPatternOpencv::UUID);
-        addInterface<api::features::IDescriptorsExtractorSBPattern>(this,api::features::IDescriptorsExtractorSBPattern::UUID, "interface api::features::IDescriptorsExtractorSBPattern");
-        m_patternSize = 5;
-    }
+        addInterface<api::features::IDescriptorsExtractorSBPattern>(this);
 
-    void SolARDescriptorsExtractorSBPatternOpencv::setParameters (const int patternSize)
-    {
-        m_patternSize = patternSize;
+        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+        params->wrapInteger("patternSize", m_patternSize);
     }
 
     FrameworkReturnCode SolARDescriptorsExtractorSBPatternOpencv::extract(const SRef<SquaredBinaryPattern> pattern, SRef<DescriptorBuffer> & descriptor)
@@ -118,9 +109,6 @@ namespace OPENCV {
     bool SolARDescriptorsExtractorSBPatternOpencv::isPattern(const SRef<Image> image)
     {
         cv::Mat cv_image = SolAROpenCVHelper::mapToOpenCV(image);
-
-        // Threshold image
-        //cv::threshold(cv_image, cv_image, 125, 255, cv::THRESH_BINARY | cv::THRESH_OTSU);
 
         //Markers are divided in nxm regions, of which the inner n-2xm-2 belongs to pattern info
         //We check here if the external border is entirely black

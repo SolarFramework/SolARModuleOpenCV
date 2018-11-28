@@ -18,7 +18,8 @@
 #define SOLARCONTOURSFILTERBINARYMARKEROPENCV_H
 
 #include "api/features/IContoursFilter.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
@@ -26,21 +27,28 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARContoursFilterBinaryMarkerOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARContoursFilterBinaryMarkerOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IContoursFilter {
 public:
     SolARContoursFilterBinaryMarkerOpencv();
     ~SolARContoursFilterBinaryMarkerOpencv() = default;
 
-    void setParameters (float m_minContourLength)  override;
-
     FrameworkReturnCode filter(const std::vector<SRef<Contour2Df>> & input_contours, std::vector<SRef<Contour2Df>> & filtered_contours) override;
 
-    void unloadComponent () override final;
-    XPCF_DECLARE_UUID("4309dcc6-cc73-11e7-abc4-cec278b6b50a");
+    void unloadComponent () override final; 
 
-private:
-    float m_minContourLength;
+private:    
+    /// @brief The maximum distance between the original curve and its approximation.
+    /// This filter first simplifies the contour if its curve is low. The simplified contour will not be more than epsilon pixels away from the original contour.
+    float m_epsilon = 0.05;
+
+    /// @brief The minimum length of an edge of a contour in pixels after simplification.
+    /// Any simplified contour which will have at least one edge that will have a length in pixel less than this value will be removed from the input filters
+    float m_minContourLength = 20.0;
+
+    /// @brief The minimum average distance in pixels between corners of a contour and the same corners of another contour
+    /// If the corners are too close from the same corners of another contour, the contour with the lower perimeter is removed
+    float m_minDistanceBetweenContourCorners = 10.0;
 };
 
 }

@@ -16,28 +16,22 @@
 
 #include "SolARImageLoaderOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include <iostream>
-#include <utility>
-#include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <stdexcept>
-#include <vector>
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv);
+namespace xpcf = org::bcom::xpcf;
 
-using namespace org::bcom::xpcf;
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARImageLoaderOpencv::SolARImageLoaderOpencv()
-{
-    setUUID(SolARImageLoaderOpencv::UUID);
-    addInterface<api::image::IImageLoader>(this,api::image::IImageLoader::UUID, "interface api::image::IImageLoader");
+SolARImageLoaderOpencv::SolARImageLoaderOpencv():ConfigurableBase(xpcf::toUUID<SolARImageLoaderOpencv>())
+{ 
+    addInterface<api::image::IImageLoader>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapString("filePath", m_filePath);
     LOG_DEBUG(" SolARImageLoaderOpencv constructor")
 }
 
@@ -63,13 +57,33 @@ static FrameworkReturnCode safeErrorCodeConvert(int errCode)
     return OpenCVImageCodeMap[errCode];
 }
 
-FrameworkReturnCode SolARImageLoaderOpencv::loadImage(const std::string & filename, SRef<Image> & img)
+xpcf::XPCFErrorCode SolARImageLoaderOpencv::onConfigured()
 {
+    LOG_DEBUG(" SolARImageLoaderOpencv onConfigured");
 
-    cv::Mat img_src = cv::imread(filename);
+    // Load the image when its path has been read
+    if (reloadImage() == FrameworkReturnCode::_SUCCESS)
+        return xpcf::_SUCCESS;
+    else
+        return xpcf::_FAIL;
+}
+
+FrameworkReturnCode SolARImageLoaderOpencv::reloadImage()
+{
+    // Load the image when its path has been read
+    cv::Mat img_src = cv::imread(m_filePath);
     if (img_src.data == NULL)
-        return FrameworkReturnCode::_ERROR_LOAD_IMAGE;
-    return SolAROpenCVHelper::convertToSolar(img_src,img);
+        return FrameworkReturnCode::_ERROR_;
+    return SolAROpenCVHelper::convertToSolar(img_src,m_img);
+}
+
+FrameworkReturnCode SolARImageLoaderOpencv::getImage(SRef<Image> & img)
+{
+   if (m_img == nullptr)
+        return FrameworkReturnCode::_ERROR_;
+
+   img = m_img;
+   return FrameworkReturnCode::_SUCCESS;
 }
 
 }

@@ -15,20 +15,23 @@
  */
 
 #include "SolARMarker2DSquaredBinaryOpencv.h"
-#include "ComponentFactory.h"
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARMarker2DSquaredBinaryOpencv::SolARMarker2DSquaredBinaryOpencv()
+    SolARMarker2DSquaredBinaryOpencv::SolARMarker2DSquaredBinaryOpencv():ConfigurableBase(xpcf::toUUID<SolARMarker2DSquaredBinaryOpencv>())
     {
-        setUUID(SolARMarker2DSquaredBinaryOpencv::UUID);
-        addInterface<api::input::files::IMarker2DSquaredBinary>(this,api::input::files::IMarker2DSquaredBinary::UUID, "interface api::input::files::IMarker2DSquaredBinary");
+        addInterface<api::input::files::IMarker2DSquaredBinary>(this);
         LOG_DEBUG("SolARMarker2DSquaredBinaryOpencv constructor")
+        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+        params->wrapString("filePath", m_filePath);
+
         m_size.width = 0;
         m_size.height = 0;
     }
@@ -38,15 +41,21 @@ namespace OPENCV {
     LOG_DEBUG(" SolARMarker2DSquaredBinaryOpencv")
     }
 
-    FrameworkReturnCode SolARMarker2DSquaredBinaryOpencv::loadMarker(const std::string & filename)
+    FrameworkReturnCode SolARMarker2DSquaredBinaryOpencv::loadMarker()
     {
         cv::Mat cv_pattern;
 
-        cv::FileStorage fs(filename, cv::FileStorage::READ);
+        if (m_filePath.empty())
+        {
+            LOG_ERROR("Binary Marker file path has not be defined", m_filePath)
+            return FrameworkReturnCode::_ERROR_;
+        }
+
+        cv::FileStorage fs(m_filePath, cv::FileStorage::READ);
 
         if (!fs.isOpened())
         {
-            LOG_ERROR("Binary Marker file {} cannot be loaded", filename)
+            LOG_ERROR("Binary Marker file {} cannot be loaded", m_filePath)
             return FrameworkReturnCode::_ERROR_;
         }
 
@@ -60,7 +69,7 @@ namespace OPENCV {
 
         if (nbRows== 0 || nbCols ==0)
         {
-            LOG_ERROR("In Binary Marker file {}, the pattern matrix is empty", filename)
+            LOG_ERROR("In Binary Marker file {}, the pattern matrix is empty", m_filePath)
             return FrameworkReturnCode::_ERROR_;
         }
 

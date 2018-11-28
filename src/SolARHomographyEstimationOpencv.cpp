@@ -16,34 +16,26 @@
 
 #include "SolARHomographyEstimationOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/core.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio/videoio.hpp"
-#include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
 
+namespace xpcf  = org::bcom::xpcf;
 
-#include "ComponentFactory.h"
-
-#include <map>
-
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv()
+SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv():ConfigurableBase(xpcf::toUUID<SolARHomographyEstimationOpencv>())
 {
-    setUUID(SolARHomographyEstimationOpencv::UUID);
-    addInterface<api::solver::pose::IHomographyEstimation>(this,api::solver::pose::IHomographyEstimation::UUID, "interface api::solver::pose::IHomographyEstimation");
     LOG_DEBUG("SolARHomographyEstimationOpencv constructor")
+    addInterface<api::solver::pose::I2DTransformFinder>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapDouble("ransacReprojThreshold", m_ransacReprojThreshold);
 }
 
-api::solver::pose::HomographyEstimation::RetCode SolARHomographyEstimationOpencv::findHomography(const std::vector< SRef<Point2Df> >& srcPoints,
+api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::find(const std::vector< SRef<Point2Df> >& srcPoints,
                                           const std::vector< SRef<Point2Df> >& dstPoints,
                                           Transform2Df & homography)
 {
@@ -64,17 +56,15 @@ api::solver::pose::HomographyEstimation::RetCode SolARHomographyEstimationOpencv
         scene.push_back( point);
     }
 
-    H = cv::findHomography( obj, scene, CV_RANSAC, 8 );
+    H = cv::findHomography( obj, scene, CV_RANSAC, m_ransacReprojThreshold );
 	if (!H.data) {
 		LOG_DEBUG("Homography matrix is empty")
-		return api::solver::pose::HomographyEstimation::HOMOGRAPHY_EMPTY;
+        return api::solver::pose::Transform2DFinder::TRANSFORM2D_EMPTY;
 	}
 
     H.convertTo(H,CV_32F);
-
     SolAROpenCVHelper::convertCVMatToSolar(H,homography);
-
-    return api::solver::pose::HomographyEstimation::HOMOGRAPHY_ESTIMATION_OK;
+    return api::solver::pose::Transform2DFinder::TRANSFORM2D_ESTIMATION_OK;
 }
 
 }

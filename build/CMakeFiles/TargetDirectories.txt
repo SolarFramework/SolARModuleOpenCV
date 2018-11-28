@@ -1,0 +1,8 @@
+/home/atadrist/BCOM/SolAR/sources-github/sources/Modules/SolARModuleOpenCV/build/CMakeFiles/install/strip.dir
+/home/atadrist/BCOM/SolAR/sources-github/sources/Modules/SolARModuleOpenCV/build/CMakeFiles/install/local.dir
+/home/atadrist/BCOM/SolAR/sources-github/sources/Modules/SolARModuleOpenCV/build/CMakeFiles/uninstall.dir
+/home/atadrist/BCOM/SolAR/sources-github/sources/Modules/SolARModuleOpenCV/build/CMakeFiles/SolARModuleOpenCV.dir
+/home/atadrist/BCOM/SolAR/sources-github/sources/Modules/SolARModuleOpenCV/build/CMakeFiles/list_install_components.dir
+/home/atadrist/BCOM/SolAR/sources-github/sources/Modules/SolARModuleOpenCV/build/CMakeFiles/edit_cache.dir
+/home/atadrist/BCOM/SolAR/sources-github/sources/Modules/SolARModuleOpenCV/build/CMakeFiles/rebuild_cache.dir
+/home/atadrist/BCOM/SolAR/sources-github/sources/Modules/SolARModuleOpenCV/build/CMakeFiles/install.dir

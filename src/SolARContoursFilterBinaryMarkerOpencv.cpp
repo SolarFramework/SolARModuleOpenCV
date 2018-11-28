@@ -16,29 +16,25 @@
 
 #include "SolARContoursFilterBinaryMarkerOpencv.h"
 #include "SolAROpenCVHelper.h"
-#include "opencv2/opencv.hpp"
-#include "opencv2/core.hpp"
 
-#include "ComponentFactory.h"
+#include "opencv2/opencv.hpp"
 
 namespace xpcf = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv);
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-    SolARContoursFilterBinaryMarkerOpencv::SolARContoursFilterBinaryMarkerOpencv()
+    SolARContoursFilterBinaryMarkerOpencv::SolARContoursFilterBinaryMarkerOpencv():ConfigurableBase(xpcf::toUUID<SolARContoursFilterBinaryMarkerOpencv>())
     {
-        setUUID(SolARContoursFilterBinaryMarkerOpencv::UUID);
-        addInterface<api::features::IContoursFilter>(this,api::features::IContoursFilter::UUID, "interface ContoursFilterOpencv");
-    }
-
-    void SolARContoursFilterBinaryMarkerOpencv::setParameters (float minContourLength)
-    {
-        m_minContourLength = minContourLength;
+        addInterface<api::features::IContoursFilter>(this);
+        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+        params->wrapFloat("minContourLength",m_minContourLength);
+        params->wrapFloat("espilon",m_epsilon);
+        params->wrapFloat("minDistanceBetweenContourCorners",m_minDistanceBetweenContourCorners);
     }
 
     // Compute the perimeter of a contour
@@ -61,7 +57,7 @@ namespace OPENCV {
         for (size_t i = 0; i<input_contours.size(); i++)
         {
             // Approximate to a polygon
-            double eps = input_contours[i]->size() * 0.05;
+            double eps = input_contours[i]->size() * m_epsilon;
             cv::approxPolyDP(SolAROpenCVHelper::convertToOpenCV(*(input_contours[i])), approxCurve, eps, true);
             // We interested only in polygons that contains only four points and that are convex
             if ((approxCurve.size() == 4) && (cv::isContourConvex(approxCurve)))
@@ -100,6 +96,7 @@ namespace OPENCV {
 
         // Remove candidates for which a corner is close to the same corner of another contour
         std::vector<std::pair<int, int>> tooNearCandidates;
+        float minSquaredDistance = m_minDistanceBetweenContourCorners * m_minDistanceBetweenContourCorners;
         for (size_t i = 0; i<possibleMarkers.size(); i++)
         {
             //calculate the average distance of each corner to the nearest corner of the other marker candidate
@@ -112,7 +109,7 @@ namespace OPENCV {
                     distSquared += v.dot(v);
                 }
                 distSquared /= 4;
-                if (distSquared < 100)
+                if (distSquared < minSquaredDistance)
                 {
                     tooNearCandidates.push_back(std::pair<int, int>(i, j));
                 }

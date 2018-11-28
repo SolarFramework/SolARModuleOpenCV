@@ -18,7 +18,8 @@
 #define SOLARCONTOURSEXTRACTOROPENCV_H
 
 #include "api/features/IContoursExtractor.h"
-#include "ComponentBase.h"
+
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
@@ -26,21 +27,19 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARContoursExtractorOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARContoursExtractorOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IContoursExtractor {
 public:
     SolARContoursExtractorOpencv();
     ~SolARContoursExtractorOpencv() = default;
 
-    void setParameters (float minContourSize)  override;
-
     FrameworkReturnCode extract(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours) override;
 
     void unloadComponent () override final;
-    XPCF_DECLARE_UUID("6acf8de2-cc63-11e7-abc4-cec278b6b50a");
 
 private:
-    float m_minContourSize;
+    /// @brief The minimum number of edges of a contour to extract. If negative value, extract all contours.
+    int m_minContourEdges = -1;
 };
 
 }

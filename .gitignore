@@ -4,6 +4,7 @@
 
 *-Release
 
+*.vcxproj*
 
 # Prerequisites
 *.d
@@ -13,6 +14,8 @@
 *.lo
 *.o
 *.obj
+
+.\build
 
 # Precompiled Headers
 *.gch
@@ -52,6 +55,10 @@
 .vs*
 x64*
 
+*.txt
+*.log
+*.tlog
+*.TMP
+*.tmp
 
-tests/SolARHomographyEstimation/xpcf_custom\.xml
 

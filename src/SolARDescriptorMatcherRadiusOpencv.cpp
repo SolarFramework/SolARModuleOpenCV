@@ -15,12 +15,11 @@
  */
 
 #include "SolARDescriptorMatcherRadiusOpencv.h"
-#include <iostream>
-#include <utility>
-
 #include "SolAROpenCVHelper.h"
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv);
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv)
 
 namespace SolAR {
 using namespace datastructure;
@@ -28,12 +27,12 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorMatcherRadiusOpencv::SolARDescriptorMatcherRadiusOpencv()
+SolARDescriptorMatcherRadiusOpencv::SolARDescriptorMatcherRadiusOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorMatcherRadiusOpencv>())
 {
-    setUUID(SolARDescriptorMatcherRadiusOpencv::UUID);
-    addInterface<IDescriptorMatcher>(this,IDescriptorMatcher::UUID, "interface IDescriptorMatcher");
+    addInterface<IDescriptorMatcher>(this);
+    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+    params->wrapFloat("maxDistance", m_maxDistance);
     LOG_DEBUG(" SolARDescriptorMatcherRadiusOpencv constructor")
-    m_maxDistance = 1.0f;
 }
 
 SolARDescriptorMatcherRadiusOpencv::~SolARDescriptorMatcherRadiusOpencv()
@@ -42,8 +41,8 @@ SolARDescriptorMatcherRadiusOpencv::~SolARDescriptorMatcherRadiusOpencv()
 }
 
 DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
-            SRef<DescriptorBuffer>& desc1,
-            SRef<DescriptorBuffer>& desc2,
+            SRef<DescriptorBuffer> desc1,
+            SRef<DescriptorBuffer> desc2,
             std::vector<DescriptorMatch>& matches)
     {
  
@@ -86,7 +85,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
           
             }
         }
- 
+
      if (matches.size()>0)
         return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
      else
@@ -95,7 +94,7 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
     }
  
  DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
-           SRef<DescriptorBuffer>& descriptors1,
+           SRef<DescriptorBuffer> descriptors1,
            std::vector<SRef<DescriptorBuffer>>& descriptors2,
            std::vector<DescriptorMatch>& matches
     )

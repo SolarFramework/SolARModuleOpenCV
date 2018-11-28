@@ -19,7 +19,7 @@
 
 #include "api/display/IImageViewer.h"
 
-#include "ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 
@@ -28,18 +28,35 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARImageViewerOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARImageViewerOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::display::IImageViewer {
 public:
     SolARImageViewerOpencv();
     ~SolARImageViewerOpencv();
     void unloadComponent () override final;
-    FrameworkReturnCode display(const char * title, SRef<Image> img) override;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, const char* exitKey) override;
-    FrameworkReturnCode display(const char * title, SRef<Image> img, uint32_t duration);
 
-    XPCF_DECLARE_UUID("19ea4e13-7085-4e3f-92ca-93f200ffb01b");
+    /// \brief this method displays an image contained in a Image object in a window
+    /// @param[in] img The image to display in the window
+    /// @return FrameworkReturnCode::_SUCCESS if the window is created, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode display(SRef<Image> img) override;
 
+private:
+    /// @brief the title of the window on which the image will be displayed
+    std::string m_title = "";
+
+    /// @brief the width of the window on which the image will be displayed (if <=0, the width of the input image)
+    int m_width = 0;
+
+    /// @brief the height of the window on which the image will be displayed (if <=0, the height of the input image)
+    int m_height = 0;
+
+    /// @brief The key code to press to close the window. If negative, no key is defined to close the window
+    int m_exitKey = 27;
+
+    /// @brief The duration in milliseconds before closing the window. If negative or null, the window remains open.
+    unsigned int m_duration = 0;
+
+    bool m_isFirstDisplay = true;
 };
 
 }

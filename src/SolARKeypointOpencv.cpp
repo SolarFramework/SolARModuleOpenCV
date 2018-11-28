@@ -18,7 +18,7 @@
 #include <iostream>
 #include <utility>
 
-//XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::SolARKeypointOpencv);
+//XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::SolARKeypointOpencv)
 
 
 namespace SolAR {
