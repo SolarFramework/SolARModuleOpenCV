@@ -1,1 +1,17 @@
-= SolARContainerOpencv Repository
+= SolARModuleOpencv Repository
+
+== System and configuration supported:
+* Windows, OpenCV 3.2.1 : OK
+* Windows, OpenCV 3.4.3 : OK
+* Ubuntu 16.04, OpenCV 3.4.1 : OK
+* Ubuntu 16.04, OpenCV 3.4.3 : OK
+* Ubuntu 18.04, OpenCV 3.4.1 : OK
+* Ubuntu 18.04, OpenCV 3.4.3 : FAILED, we do not plan to fix it.
+** This configuration relies on a specific version of dependencies for opencv that are not part of Ubuntu 18.04 anymore...
+  If you perform an ldd on libSolARModuleOpenCV.so, you will observe the list of missing version for 
+  libwebp.so.5, libpng12.so.0, libjasper.so.1, libavcodec-ffmpeg.so.56, libavformat-ffmpeg.so.56, libavutil-ffmpeg.so.54, libswscale-ffmpeg.so.3 
+  
+  * Ubuntu 18.04, OpenCV 4.0.0-alpha : OK, an ongoing branch exist to prepare the support with opencv 4.0 gold version expected by the end of October
+  
+  
+

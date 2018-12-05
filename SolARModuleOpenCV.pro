@@ -6,7 +6,7 @@ CONFIG -= qt
 TARGET = SolARModuleOpenCV
 INSTALLSUBDIR = bcomBuild
 FRAMEWORK = $$TARGET
-VERSION=0.4.0
+VERSION=0.5.0
 
 DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
@@ -36,6 +36,11 @@ DEFINES += "_BCOM_SHARED=__declspec(dllexport)"
 }
 
 INCLUDEPATH += interfaces/
+
+# my ssba path files:
+
+#INCLUDEPATH += "D:/AmineLib/SSBA/"
+#LIBS += "D:/AmineLib/SSBA/build/Release"
 
 HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageConvertorOpencv.h \
