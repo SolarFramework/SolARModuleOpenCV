@@ -61,6 +61,7 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     }
 
     for (int i=0;i<imagePoints.size();++i) {
+
         Point2Df point2D = *(imagePoints.at(i));
         Point3Df point3D = *(worldPoints.at(i));
         imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
@@ -71,20 +72,20 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     cv::Mat_<float> Tvec;
     cv::Mat raux, taux;
 
+    
     // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
-    if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
-    {
-        RotationMatrixf initialRot = initialPoseInverse.rotation();
-        cv::Mat cvInitialPose = SolAROpenCVHelper::mapToOpenCV(initialRot);
-        cv::Rodrigues(cvInitialPose, raux);
-        Vector3f initialTranslation = initialPoseInverse.translation();
-        taux = SolAROpenCVHelper::mapToOpenCV(initialTranslation);
+    if (!initialPoseInverse.isApprox(Transform3Df::Identity())){
 
+        int type = inferOpenCVType<float>(); // typeid ??
+        raux = cv::Mat(3,3,type,(void *)initialPoseInverse.rotation().data());
+        taux = cv::Mat(3,1,type,(void *)initialPoseInverse.translation().data());
+        
         cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1, cv::SOLVEPNP_ITERATIVE);
     }
-    else
+    else{
         cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 0, cv::SOLVEPNP_ITERATIVE);
-
+    }
+    
     raux.convertTo(Rvec, CV_32F);
     taux.convertTo(Tvec, CV_32F);
 
@@ -144,10 +145,10 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
      if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
      {
          RotationMatrixf initialRot = initialPoseInverse.rotation();
-         cv::Mat cvInitialPose = SolAROpenCVHelper::mapToOpenCV(initialRot);
+         cv::Mat cvInitialPose ;//= SolAROpenCVHelper::mapToOpenCV(initialRot);
          cv::Rodrigues(cvInitialPose, raux);
          Vector3f initialTranslation = initialPoseInverse.translation();
-         taux = SolAROpenCVHelper::mapToOpenCV(initialTranslation);
+         //taux = SolAROpenCVHelper::mapToOpenCV();
 
          cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, true,
                                m_iterationsCount, m_reprojError, m_confidence, inliers_cv);
