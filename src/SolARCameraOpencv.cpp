@@ -32,6 +32,8 @@ namespace OPENCV {
         params->wrapString("calibrationFile", m_calibrationFile);
         params->wrapUnsignedInteger("deviceID", m_deviceID);
         m_is_resolution_set = false;
+        m_intrinsic_parameters = CamCalibration::Identity();
+        m_distorsion_parameters = CamDistortion::Zero();
     }
 
     xpcf::XPCFErrorCode SolARCameraOpencv::onConfigured()
@@ -46,56 +48,58 @@ namespace OPENCV {
         cv::Mat intrinsic_parameters;
         cv::Mat distortion_parameters;
 
-        if (fs.isOpened())
-        {
-            int width, height;
-            fs["image_width"] >> width;
-            fs["image_height"] >> height;
-            fs["camera_matrix"] >> intrinsic_parameters;
-            fs["distortion_coefficients"] >> distortion_parameters;
-
-            m_resolution.width = width;
-            m_resolution.height = height;
-            m_is_resolution_set = true;
-
-            if (intrinsic_parameters.empty())
-            {
-                LOG_ERROR ("SolARCameraOpencv::loadCameraParameters: Use the landmark camera_matrix to define the intrinsic matrix in the .yml camera calibration file")
-                return xpcf::_FAIL;
-            }
-
-            if (intrinsic_parameters.rows == m_intrinsic_parameters.rows() && intrinsic_parameters.cols == m_intrinsic_parameters.cols())
-                for (int i = 0; i < intrinsic_parameters.rows; i++)
-                    for (int j = 0; j < intrinsic_parameters.cols; j++)
-                        m_intrinsic_parameters(i,j) = (float)intrinsic_parameters.at<double>(i,j);
-            else
-            {
-                LOG_ERROR("SolARCameraOpencv::loadCameraParameters: Camera Calibration should be a 3x3 Matrix")
-                return xpcf::_FAIL;
-            }
-
-            if (distortion_parameters.empty())
-            {
-                LOG_ERROR("SolARCameraOpencv::loadCameraParameters: Use the landmark distortion_coefficients to define the distortion vector in the .yml camera calibration file")
-                return xpcf::_FAIL;
-            }
-
-            if (distortion_parameters.rows == m_distorsion_parameters.rows() && distortion_parameters.cols == m_distorsion_parameters.cols())
-                for (int i = 0; i < distortion_parameters.rows; i++)
-                    for (int j = 0; j < distortion_parameters.cols; j++)
-                        m_distorsion_parameters(i,j) = distortion_parameters.at<double>(i,j);
-            else
-            {
-                LOG_ERROR("SolARCameraOpencv::loadCameraParameters: Camera distortion matrix should be a 5x1 Matrix")
-                return xpcf::_FAIL;
-            }
-            return xpcf::_SUCCESS;
-        }
-        else
+        if (!fs.isOpened())
         {
             LOG_ERROR("SolARCameraOpencv::loadCameraParameters: Cannot open camera calibration file ")
             return xpcf::_FAIL;
         }
+
+        int width, height;
+        fs["image_RGBDCamerawidth"] >> width;
+        fs["image_height"] >> height;
+        fs["camera_matrix"] >> intrinsic_parameters;
+        fs["distortion_coefficients"] >> distortion_parameters;
+
+        m_resolution.width = width;
+        m_resolution.height = height;
+        m_is_resolution_set = true;
+
+        if (intrinsic_parameters.empty())
+        {
+            LOG_ERROR ("SolARCameraOpencv::loadCameraParameters: Use the landmark camera_matrix to define the intrinsic matrix in the .yml camera calibration file")
+            return xpcf::_FAIL;
+        }
+
+        if (intrinsic_parameters.rows == m_intrinsic_parameters.rows() && intrinsic_parameters.cols == m_intrinsic_parameters.cols())
+        {
+            for (int i = 0; i < intrinsic_parameters.rows; i++)
+                for (int j = 0; j < intrinsic_parameters.cols; j++)
+                    m_intrinsic_parameters(i,j) = (float)intrinsic_parameters.at<double>(i,j);
+        }
+        else
+        {
+            LOG_ERROR("SolARCameraOpencv::loadCameraParameters: Camera Calibration should be a 3x3 Matrix")
+            return xpcf::_FAIL;
+        }
+
+        if (distortion_parameters.empty())
+        {
+            LOG_ERROR("SolARCameraOpencv::loadCameraParameters: Use the landmark distortion_coefficients to define the distortion vector in the .yml camera calibration file")
+            return xpcf::_FAIL;
+        }
+
+        if (distortion_parameters.rows == m_distorsion_parameters.rows() && distortion_parameters.cols == m_distorsion_parameters.cols())
+        {
+            for (int i = 0; i < distortion_parameters.rows; i++)
+                for (int j = 0; j < distortion_parameters.cols; j++)
+                    m_distorsion_parameters(i,j) = distortion_parameters.at<double>(i,j);
+        }
+        else
+        {
+            LOG_ERROR("SolARCameraOpencv::loadCameraParameters: Camera distortion matrix should be a 5x1 Matrix")
+            return xpcf::_FAIL;
+        }
+        return xpcf::_SUCCESS;
     }
 
     void SolARCameraOpencv::setResolution(Sizei resolution)
@@ -152,11 +156,11 @@ namespace OPENCV {
          return m_resolution;
      }
 
-    CamCalibration SolARCameraOpencv::getIntrinsicsParameters(){
+    const CamCalibration& SolARCameraOpencv::getIntrinsicsParameters() const{
         return m_intrinsic_parameters;
     }
 
-    CamDistortion SolARCameraOpencv::getDistorsionParameters(){
+    const CamDistortion& SolARCameraOpencv::getDistorsionParameters() const{
         return m_distorsion_parameters;
     }
 

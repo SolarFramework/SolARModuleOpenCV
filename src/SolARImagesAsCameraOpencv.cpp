@@ -152,11 +152,11 @@ namespace OPENCV {
          return m_resolution;
      }
 
-    CamCalibration SolARImagesAsCameraOpencv::getIntrinsicsParameters(){
+    const CamCalibration& SolARImagesAsCameraOpencv::getIntrinsicsParameters() const{
         return m_intrinsic_parameters;
     }
 
-    CamDistortion SolARImagesAsCameraOpencv::getDistorsionParameters(){
+    const CamDistortion& SolARImagesAsCameraOpencv::getDistorsionParameters() const{
         return m_distorsion_parameters;
     }
 

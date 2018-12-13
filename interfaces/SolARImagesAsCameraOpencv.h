@@ -50,8 +50,8 @@ public:
     void setDistorsionParameters(const CamDistortion & distorsion_parameters) override;
 
     Sizei getResolution () override;
-    CamCalibration getIntrinsicsParameters() override;
-    CamDistortion getDistorsionParameters() override;
+    const CamCalibration& getIntrinsicsParameters() const override;
+    const CamDistortion& getDistorsionParameters() const override;
 
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
