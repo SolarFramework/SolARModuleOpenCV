@@ -45,13 +45,13 @@ public:
 
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
 
-    void setResolution(Sizei resolution) override;
-    void setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
-    void setDistorsionParameters(const CamDistortion & distorsion_parameters) override;
+    FrameworkReturnCode setResolution(Sizei resolution) override;
+    FrameworkReturnCode setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
+    FrameworkReturnCode setDistortionParameters(const CamDistortion & distortion_parameters) override;
 
     Sizei getResolution () override;
     const CamCalibration& getIntrinsicsParameters() const override;
-    const CamDistortion& getDistorsionParameters() const override;
+    const CamDistortion& getDistortionParameters() const override;
 
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
@@ -69,7 +69,7 @@ public:
      Sizei m_resolution;
 
      CamCalibration m_intrinsic_parameters = CamCalibration::Identity();
-     CamDistortion m_distorsion_parameters = CamDistortion::Zero();
+     CamDistortion m_distortion_parameters = CamDistortion::Zero();
 
 };
 

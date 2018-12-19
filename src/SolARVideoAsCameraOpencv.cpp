@@ -80,10 +80,10 @@ namespace OPENCV {
                 return xpcf::_FAIL;
             }
 
-            if (distortion_parameters.rows == m_distorsion_parameters.rows() && distortion_parameters.cols == m_distorsion_parameters.cols())
+            if (distortion_parameters.rows == m_distortion_parameters.rows() && distortion_parameters.cols == m_distortion_parameters.cols())
                 for (int i = 0; i < distortion_parameters.rows; i++)
                     for (int j = 0; j < distortion_parameters.cols; j++)
-                        m_distorsion_parameters(i,j) = distortion_parameters.at<double>(i,j);
+                        m_distortion_parameters(i,j) = distortion_parameters.at<double>(i,j);
             else
             {
                 LOG_ERROR("SolARVideoAsCameraOpencv::loadCameraParameters: Camera distortion matrix should be a 5x1 Matrix")
@@ -98,10 +98,11 @@ namespace OPENCV {
         }
     }
 
-    void SolARVideoAsCameraOpencv::setResolution(Sizei resolution)
+    FrameworkReturnCode SolARVideoAsCameraOpencv::setResolution(Sizei resolution)
     {
         m_resolution = resolution;
         m_is_resolution_set = true;
+        return FrameworkReturnCode::_SUCCESS;
     }
 
     FrameworkReturnCode SolARVideoAsCameraOpencv::getNextImage(SRef<Image> & img)
@@ -139,12 +140,12 @@ namespace OPENCV {
         }
     }
 
-    void SolARVideoAsCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){
-//        m_intrinsic_parameters = intrinsic_parameters;
+    FrameworkReturnCode SolARVideoAsCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){
+        return FrameworkReturnCode::_NOT_IMPLEMENTED;
     }
 
-     void SolARVideoAsCameraOpencv::setDistorsionParameters(const CamDistortion & distorsion_parameters){
-//           m_distorsion_parameters = distorsion_parameters;
+     FrameworkReturnCode SolARVideoAsCameraOpencv::setDistortionParameters(const CamDistortion & distortion_parameters){
+        return FrameworkReturnCode::_NOT_IMPLEMENTED;
      }
 
      Sizei SolARVideoAsCameraOpencv::getResolution()
@@ -156,8 +157,8 @@ namespace OPENCV {
         return m_intrinsic_parameters;
     }
 
-    const CamDistortion& SolARVideoAsCameraOpencv::getDistorsionParameters() const{
-        return m_distorsion_parameters;
+    const CamDistortion& SolARVideoAsCameraOpencv::getDistortionParameters() const{
+        return m_distortion_parameters;
     }
 
 }

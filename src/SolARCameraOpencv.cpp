@@ -33,7 +33,7 @@ namespace OPENCV {
         params->wrapUnsignedInteger("deviceID", m_deviceID);
         m_is_resolution_set = false;
         m_intrinsic_parameters = CamCalibration::Identity();
-        m_distorsion_parameters = CamDistortion::Zero();
+        m_distortion_parameters = CamDistortion::Zero();
     }
 
     xpcf::XPCFErrorCode SolARCameraOpencv::onConfigured()
@@ -88,11 +88,11 @@ namespace OPENCV {
             return xpcf::_FAIL;
         }
 
-        if (distortion_parameters.rows == m_distorsion_parameters.rows() && distortion_parameters.cols == m_distorsion_parameters.cols())
+        if (distortion_parameters.rows == m_distortion_parameters.rows() && distortion_parameters.cols == m_distortion_parameters.cols())
         {
             for (int i = 0; i < distortion_parameters.rows; i++)
                 for (int j = 0; j < distortion_parameters.cols; j++)
-                    m_distorsion_parameters(i,j) = distortion_parameters.at<double>(i,j);
+                    m_distortion_parameters(i,j) = distortion_parameters.at<double>(i,j);
         }
         else
         {
@@ -102,10 +102,11 @@ namespace OPENCV {
         return xpcf::_SUCCESS;
     }
 
-    void SolARCameraOpencv::setResolution(Sizei resolution)
+    FrameworkReturnCode SolARCameraOpencv::setResolution(Sizei resolution)
     {
         m_resolution = resolution;
         m_is_resolution_set = true;
+        return FrameworkReturnCode::_SUCCESS;
     }
 
     FrameworkReturnCode SolARCameraOpencv::getNextImage(SRef<Image> & img)
@@ -143,12 +144,12 @@ namespace OPENCV {
         }
     }
 
-    void SolARCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){
-//        m_intrinsic_parameters = intrinsic_parameters;
+    FrameworkReturnCode SolARCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){
+        return FrameworkReturnCode::_NOT_IMPLEMENTED;
     }
 
-     void SolARCameraOpencv::setDistorsionParameters(const CamDistortion & distorsion_parameters){
-//           m_distorsion_parameters = distorsion_parameters;
+     FrameworkReturnCode SolARCameraOpencv::setDistortionParameters(const CamDistortion & distortion_parameters){
+        return FrameworkReturnCode::_NOT_IMPLEMENTED;
      }
 
      Sizei SolARCameraOpencv::getResolution()
@@ -160,8 +161,8 @@ namespace OPENCV {
         return m_intrinsic_parameters;
     }
 
-    const CamDistortion& SolARCameraOpencv::getDistorsionParameters() const{
-        return m_distorsion_parameters;
+    const CamDistortion& SolARCameraOpencv::getDistortionParameters() const{
+        return m_distortion_parameters;
     }
 
 }
