@@ -33,7 +33,11 @@ static std::map<DescriptorBuffer::DataType,uint32_t> solarDescriptor2cvType =
 
 
 
-static std::map<std::tuple<uint32_t,std::size_t,uint32_t>,int> solar2cvTypeConvertMap = {{std::make_tuple(8,1,3),CV_8UC3},{std::make_tuple(8,1,1),CV_8UC1}};
+static std::map<std::tuple<uint32_t,std::size_t,uint32_t>,int> solar2cvTypeConvertMap = {
+    {std::make_tuple(8,1,3),CV_8UC3},
+    {std::make_tuple(8,1,1),CV_8UC1},
+    {std::make_tuple(16,1,1), CV_16UC1}
+};
 
 static std::map<int,std::pair<Image::ImageLayout,Image::DataType>> cv2solarTypeConvertMap = {{CV_8UC3,{Image::ImageLayout::LAYOUT_BGR,Image::DataType::TYPE_8U}},
                                                                                                       {CV_8UC1,{Image::ImageLayout::LAYOUT_GREY,Image::DataType::TYPE_8U}}};

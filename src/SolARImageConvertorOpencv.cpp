@@ -38,8 +38,10 @@ SolARImageConvertorOpencv::~SolARImageConvertorOpencv()
 
 }
 
-static std::map<std::pair<Image::ImageLayout,Image::ImageLayout>,int> convertMapInfos = {{{Image::ImageLayout::LAYOUT_RGB,Image::ImageLayout::LAYOUT_GREY},CV_RGB2GRAY},
-                                                                                       {{Image::ImageLayout::LAYOUT_BGR,Image::ImageLayout::LAYOUT_GREY},CV_BGR2GRAY}};
+static std::map<std::pair<Image::ImageLayout,Image::ImageLayout>,int> convertMapInfos = {
+    {{Image::ImageLayout::LAYOUT_RGB,Image::ImageLayout::LAYOUT_GREY},CV_RGB2GRAY},
+    {{Image::ImageLayout::LAYOUT_BGR,Image::ImageLayout::LAYOUT_GREY},CV_BGR2GRAY}
+};
 
 inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, SRef<Image> imgDst)
 {
@@ -54,7 +56,7 @@ inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, Image::ImageLayout dst
     return convertMapInfos.at(key);
 }
 
-FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout)
+FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout, const float scale)
 {
     if (imgDst == nullptr)
         imgDst = xpcf::utils::make_shared<Image> (destLayout, imgSrc->getPixelOrder(), imgSrc->getDataType());
@@ -64,19 +66,34 @@ FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<
     cv::Mat imgSource, imgConverted;
     SolAROpenCVHelper::mapToOpenCV(imgSrc,imgSource);
     SolAROpenCVHelper::mapToOpenCV(imgDst,imgConverted);
-    cv::cvtColor(imgSource, imgConverted, deduceOpenCVConversionMode(imgSrc,destLayout));
+    bool processed = false;
+    if( imgSrc->getImageLayout() != destLayout )
+    {
+        cv::cvtColor(imgSource, imgConverted, deduceOpenCVConversionMode(imgSrc,destLayout), scale);
+        processed = true;
+    }
+    if( scale != 1.f )
+    {
+        cv::Mat imgTmp(imgSource.rows,
+                       imgSource.cols,
+                       CV_32F);
+
+        processed ? imgConverted.convertTo( imgTmp, CV_32F, scale ) :
+                    imgSource.convertTo( imgTmp, CV_32F, scale );
+        imgTmp.convertTo( imgConverted, imgConverted.type() );
+    }
 
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<Image>& imgDst)
+FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, const float scale)
 {
    if (imgDst == nullptr)
    {
        LOG_ERROR("The imgDst has not been instantiated before calling convert method. Pleae, instantiate it or call the convert method that takes in argument the layout of the output image.")
        return FrameworkReturnCode::_ERROR_;
    }
-   return convert(imgSrc,imgDst,imgDst->getImageLayout());
+   return convert(imgSrc,imgDst,imgDst->getImageLayout(),scale);
 }
 
 }
