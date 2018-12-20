@@ -40,6 +40,12 @@ public:
     /// @return FrameworkReturnCode::_SUCCESS if the window is created, else FrameworkReturnCode::_ERROR_
     FrameworkReturnCode display(SRef<Image> img) override;
 
+    /// \brief this method displays an image contained in a Image object in a window, get the key ascii code pressed.
+    /// @param[in] img The image to display in the window
+    /// @param[out] key The pressed key ascii code, 0 if no key is pressed
+    /// @return FrameworkReturnCode::_SUCCESS if the window is created, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode displayKey(SRef<Image> img, char& key) override;
+
 private:
     /// @brief the title of the window on which the image will be displayed
     std::string m_title = "";

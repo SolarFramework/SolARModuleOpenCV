@@ -83,7 +83,13 @@ static FrameworkReturnCode safeErrorCodeConvert(int errCode)
 
 FrameworkReturnCode SolARImageViewerOpencv::display(SRef<Image> img)
 {
-    char key=' ';
+   char key=0;
+   return displayKey(img, key);
+}
+
+FrameworkReturnCode SolARImageViewerOpencv::displayKey(SRef<Image> img, char& key)
+{
+    key=0;
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
     cv::namedWindow( m_title,0); // Create a window for display.
     if (m_isFirstDisplay)
