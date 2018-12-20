@@ -28,7 +28,7 @@ namespace MODULES {
 namespace OPENCV {
 
 SolARImageConvertorOpencv::SolARImageConvertorOpencv():ComponentBase(xpcf::toUUID<SolARImageConvertorOpencv>())
-{  
+{
     addInterface<api::image::IImageConvertor>(this);
 }
 
@@ -66,6 +66,10 @@ FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<
     cv::Mat imgSource, imgConverted;
     SolAROpenCVHelper::mapToOpenCV(imgSrc,imgSource);
     SolAROpenCVHelper::mapToOpenCV(imgDst,imgConverted);
+
+    /************* TEMPORARY HACK *************/
+    // TODO : the 16bit -> 8bit conversion with scaling should be moved to the image viewer
+    // because the conversion is only made for viewing purposes
     bool processed = false;
     if( imgSrc->getImageLayout() != destLayout )
     {
@@ -82,6 +86,7 @@ FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<
                     imgSource.convertTo( imgTmp, CV_32F, scale );
         imgTmp.convertTo( imgConverted, imgConverted.type() );
     }
+    /******************************************/
 
     return FrameworkReturnCode::_SUCCESS;
 }
