@@ -16,6 +16,7 @@
 
 #include "SolARImageViewerOpencv.h"
 #include <opencv2/highgui.hpp>
+#include "core/Log.h"
 
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageViewerOpencv)

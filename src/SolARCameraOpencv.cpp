@@ -16,6 +16,7 @@
 
 #include "SolARCameraOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -116,8 +117,6 @@ namespace OPENCV {
     }
 
     FrameworkReturnCode SolARCameraOpencv::start(){
-
-        LOG_INFO(" SolARCameraOpencv::setParameters");
         if(m_capture.isOpened())
         {
             m_capture.release();
@@ -125,6 +124,7 @@ namespace OPENCV {
         m_capture = cv::VideoCapture( m_deviceID);
         if (m_capture.isOpened())
         {
+            LOG_INFO("Camera with id {} has started", m_deviceID);
             if (m_is_resolution_set)
             {
                 m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_resolution.width );

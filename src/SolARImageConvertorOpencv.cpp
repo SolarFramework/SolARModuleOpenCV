@@ -17,6 +17,7 @@
 #include "SolARImageConvertorOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/highgui/highgui.hpp"
+#include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 

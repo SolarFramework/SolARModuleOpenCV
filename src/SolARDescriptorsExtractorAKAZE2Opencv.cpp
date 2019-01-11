@@ -17,6 +17,7 @@
 #include "SolARDescriptorsExtractorAKAZE2Opencv.h"
 #include "SolARImageConvertorOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 //#include <boost/thread/thread.hpp>
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv)

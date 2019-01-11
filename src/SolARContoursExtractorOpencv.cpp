@@ -16,6 +16,7 @@
 
 #include "SolARContoursExtractorOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 #include "opencv2/opencv.hpp"
 

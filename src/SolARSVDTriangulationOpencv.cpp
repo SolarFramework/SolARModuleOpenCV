@@ -18,6 +18,7 @@
 
 #include "SolARSVDTriangulationOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
 
 namespace xpcf  = org::bcom::xpcf;

@@ -16,6 +16,7 @@
 
 #include "SolARPoseFinderFrom2D2DOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv);
