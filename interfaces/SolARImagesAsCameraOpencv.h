@@ -41,7 +41,13 @@ public:
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
+    /// @brief Start the Images acquisition
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
     FrameworkReturnCode start() override;
+
+    /// @brief Stop the Images acquisition
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
+    FrameworkReturnCode stop() override;
 
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
 

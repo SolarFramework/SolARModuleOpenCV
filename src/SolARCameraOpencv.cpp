@@ -35,6 +35,14 @@ namespace OPENCV {
         m_is_resolution_set = false;
     }
 
+    SolARCameraOpencv::~SolARCameraOpencv()
+    {
+        if(m_capture.isOpened())
+        {
+            m_capture.release();
+        }
+    }
+
     xpcf::XPCFErrorCode SolARCameraOpencv::onConfigured()
     {
         LOG_DEBUG(" SolARCameraOpencv onConfigured");
@@ -137,6 +145,15 @@ namespace OPENCV {
             LOG_ERROR("Cannot open camera with id {}", m_deviceID);
             return FrameworkReturnCode::_ERROR_;
         }
+    }
+
+    FrameworkReturnCode SolARCameraOpencv::stop()
+    {
+        if(m_capture.isOpened())
+        {
+            m_capture.release();
+        }
+        return FrameworkReturnCode::_SUCCESS;
     }
 
     void SolARCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){

@@ -140,6 +140,15 @@ namespace OPENCV {
         }
     }
 
+    FrameworkReturnCode SolARVideoAsCameraOpencv::stop()
+    {
+        if(m_capture.isOpened())
+        {
+            m_capture.release();
+        }
+        return FrameworkReturnCode::_SUCCESS;
+    }
+
     void SolARVideoAsCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){
 //        m_intrinsic_parameters = intrinsic_parameters;
     }
