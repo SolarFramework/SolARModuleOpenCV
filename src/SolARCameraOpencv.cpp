@@ -115,7 +115,8 @@ namespace OPENCV {
 
     FrameworkReturnCode SolARCameraOpencv::getNextImage(SRef<Image> & img)
     {
-
+        if (!m_capture.isOpened())
+            return FrameworkReturnCode::_ERROR_ACCESS_IMAGE;
         cv::Mat cvFrame;
         m_capture >> cvFrame;
         if(!cvFrame.data)
