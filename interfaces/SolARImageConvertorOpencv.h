@@ -41,7 +41,7 @@ public:
     ~SolARImageConvertorOpencv();
 
     FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst) override;
-    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
+    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout, bool haveToFlip) override;
 
     void unloadComponent () override final;
 

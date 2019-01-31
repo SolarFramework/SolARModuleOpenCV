@@ -55,7 +55,7 @@ inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, Image::ImageLayout dst
     return convertMapInfos.at(key);
 }
 
-FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout)
+FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout, bool haveToFlip)
 {
     if (imgDst == nullptr)
         imgDst = xpcf::utils::make_shared<Image> (destLayout, imgSrc->getPixelOrder(), imgSrc->getDataType());
@@ -64,6 +64,10 @@ FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<
 
     cv::Mat imgSource, imgConverted;
     SolAROpenCVHelper::mapToOpenCV(imgSrc,imgSource);
+
+    if(haveToFlip)
+        cv::flip(imgSource,imgSource,0);
+
     SolAROpenCVHelper::mapToOpenCV(imgDst,imgConverted);
     cv::cvtColor(imgSource, imgConverted, deduceOpenCVConversionMode(imgSrc,destLayout));
 
@@ -77,7 +81,7 @@ FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<
        LOG_ERROR("The imgDst has not been instantiated before calling convert method. Pleae, instantiate it or call the convert method that takes in argument the layout of the output image.")
        return FrameworkReturnCode::_ERROR_;
    }
-   return convert(imgSrc,imgDst,imgDst->getImageLayout());
+   return convert(imgSrc,imgDst,imgDst->getImageLayout(),false);
 }
 
 }
