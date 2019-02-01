@@ -121,7 +121,7 @@ KeypointDetectorType SolARKeypointDetectorOpencv::getType()
     return stringToType.at(m_type);
 }
 
-void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints)
+void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints,bool m_haveToBeFlip)
 {
     std::vector<cv::KeyPoint> kpts;
 
@@ -133,6 +133,8 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<S
 
     // instantiation of an opencv image from an input IImage
     cv::Mat opencvImage = SolAROpenCVHelper::mapToOpenCV(image);
+    if(m_haveToBeFlip)
+        cv::flip(opencvImage, opencvImage,0);
 
     cv::Mat img_1;
     cvtColor( opencvImage, img_1, CV_BGR2GRAY );

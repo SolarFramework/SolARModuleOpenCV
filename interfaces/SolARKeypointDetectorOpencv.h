@@ -49,7 +49,7 @@ public:
     void setType(KeypointDetectorType type);
     KeypointDetectorType  getType();
  
-    void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints);
+    void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints,bool m_haveToBeFlip);
 
 private:
     /// @brief the type of descriptor used for the extraction (AKAZE, AKAZE2, ORB, BRISK)
@@ -64,7 +64,6 @@ private:
 
 	/// @brief the threshold of detector to accept a keypoint
 	float m_threshold = 1e-3;
-
 
     int m_id;
     cv::Ptr<cv::Feature2D> m_detector;
