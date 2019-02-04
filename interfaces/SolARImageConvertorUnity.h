@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SolARImageConvertorOpencv_H
-#define SolARImageConvertorOpencv_H
+#ifndef SolARImageConvertorUnity_H
+#define SolARImageConvertorUnity_H
 
 #include "api/image/IImageConvertor.h"
 
@@ -34,11 +34,11 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARImageConvertorOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARImageConvertorUnity : public org::bcom::xpcf::ComponentBase,
         public api::image::IImageConvertor {
 public:
-    SolARImageConvertorOpencv();
-    ~SolARImageConvertorOpencv();
+    SolARImageConvertorUnity();
+    ~SolARImageConvertorUnity();
 
     FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst) override;
     FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;

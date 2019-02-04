@@ -49,7 +49,7 @@ public:
     void setType(KeypointDetectorType type);
     KeypointDetectorType  getType();
  
-    void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints,bool m_haveToBeFlip);
+    void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints);
 
 private:
     /// @brief the type of descriptor used for the extraction (AKAZE, AKAZE2, ORB, BRISK)

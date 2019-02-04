@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-#include "SolARImageConvertorOpencv.h"
+#include "SolARImageConvertorUnity.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/highgui/highgui.hpp"
 #include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv)
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageConvertorUnity)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARImageConvertorOpencv::SolARImageConvertorOpencv():ComponentBase(xpcf::toUUID<SolARImageConvertorOpencv>())
+SolARImageConvertorUnity::SolARImageConvertorUnity():ComponentBase(xpcf::toUUID<SolARImageConvertorUnity>())
 {  
     addInterface<api::image::IImageConvertor>(this);
 }
 
 
-SolARImageConvertorOpencv::~SolARImageConvertorOpencv()
+SolARImageConvertorUnity::~SolARImageConvertorUnity()
 {
 
 }
@@ -42,20 +42,7 @@ SolARImageConvertorOpencv::~SolARImageConvertorOpencv()
 static std::map<std::pair<Image::ImageLayout,Image::ImageLayout>,int> convertMapInfos = {{{Image::ImageLayout::LAYOUT_RGB,Image::ImageLayout::LAYOUT_GREY},CV_RGB2GRAY},
                                                                                        {{Image::ImageLayout::LAYOUT_BGR,Image::ImageLayout::LAYOUT_GREY},CV_BGR2GRAY}};
 
-inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, SRef<Image> imgDst)
-{
-    // TODO : handle safe mode if missing map entry
-    return convertMapInfos.at(std::make_pair<Image::ImageLayout,Image::ImageLayout>(imgSrc->getImageLayout(),imgDst->getImageLayout()));
-}
-
-inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, Image::ImageLayout dstLayout)
-{
-    std::pair<Image::ImageLayout,Image::ImageLayout> key(imgSrc->getImageLayout(),dstLayout);
-    // TODO : handle safe mode if missing map entry
-    return convertMapInfos.at(key);
-}
-
-FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout)
+FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout)
 {
     if (imgDst == nullptr)
         imgDst = xpcf::utils::make_shared<Image> (destLayout, imgSrc->getPixelOrder(), imgSrc->getDataType());
@@ -71,7 +58,7 @@ FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<Image>& imgDst)
+FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst)
 {
    if (imgDst == nullptr)
    {

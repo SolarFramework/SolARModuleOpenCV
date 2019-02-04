@@ -133,7 +133,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolAR3DOverlayBoxOpencv.cpp \
     src/SolARHomographyMatrixDecomposerOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
-    src/SolARMatchesOverlayOpencv.cpp
+    src/SolARMatchesOverlayOpencv.cpp \
+    src/SolARImageConvertorUnity.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
