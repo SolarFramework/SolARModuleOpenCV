@@ -34,6 +34,7 @@
 #include "SolARHomographyEstimationOpencv.h"
 #include "SolARHomographyMatrixDecomposerOpencv.h"
 #include "SolARImageConvertorOpencv.h"
+#include "SolARImageConvertorUnity.h"
 #include "SolARImageFilterBinaryOpencv.h"
 #include "SolARImageFilterAdaptiveBinaryOpencv.h"
 #include "SolARImageFilterBlurOpencv.h"
@@ -130,6 +131,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageConvertorOpencv>(componentUUID,interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageConvertorUnity>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {

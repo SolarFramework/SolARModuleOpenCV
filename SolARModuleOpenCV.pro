@@ -44,6 +44,7 @@ INCLUDEPATH += interfaces/
 
 HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageConvertorOpencv.h \
+    interfaces/SolARImageConvertorUnity.h \
     interfaces/SolARImageLoaderOpencv.h \
     interfaces/SolARImageViewerOpencv.h \
     interfaces/SolARKeypointDetectorOpencv.h \
@@ -94,6 +95,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
     src/SolARImageLoaderOpencv.cpp \
     src/SolARImageConvertorOpencv.cpp \
+    src/SolARImageConvertorUnity.cpp \
     src/SolARImageViewerOpencv.cpp \
     src/SolARCameraOpencv.cpp \
     src/SolAROpenCVHelper.cpp \

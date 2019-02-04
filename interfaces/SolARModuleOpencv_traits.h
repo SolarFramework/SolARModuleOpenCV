@@ -40,6 +40,7 @@ class SolARGeometricMatchesFilterOpencv;
 class SolARHomographyEstimationOpencv;
 class SolARHomographyMatrixDecomposerOpencv;
 class SolARImageConvertorOpencv;
+class SolARImageConvertorUnity;
 class SolARImageFilterBinaryOpencv;
 class SolARImageFilterAdaptiveBinaryOpencv;
 class SolARImageFilterBlurOpencv;
@@ -153,6 +154,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv,
                              "fd7fb607-144f-418c-bcf2-f7cf71532c22",
                              "SolARImageConvertorOpencv",
                              "SolAR::MODULES::OPENCV::SolARImageConvertorOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageConvertorUnity,
+                             "65282fb3-6651-4e73-b532-5a64ade0ead0",
+                             "SolARImageConvertorUnity",
+                             "SolAR::MODULES::OPENCV::SolARImageConvertorUnity component")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterBinaryOpencv,
                              "e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2",

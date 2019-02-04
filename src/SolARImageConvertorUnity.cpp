@@ -42,43 +42,18 @@ SolARImageConvertorUnity::~SolARImageConvertorUnity()
 static std::map<std::pair<Image::ImageLayout,Image::ImageLayout>,int> convertMapInfos = {{{Image::ImageLayout::LAYOUT_RGB,Image::ImageLayout::LAYOUT_GREY},CV_RGB2GRAY},
                                                                                        {{Image::ImageLayout::LAYOUT_BGR,Image::ImageLayout::LAYOUT_GREY},CV_BGR2GRAY}};
 
-inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, SRef<Image> imgDst)
-{
-    // TODO : handle safe mode if missing map entry
-    return convertMapInfos.at(std::make_pair<Image::ImageLayout,Image::ImageLayout>(imgSrc->getImageLayout(),imgDst->getImageLayout()));
-}
-
-inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, Image::ImageLayout dstLayout)
-{
-    std::pair<Image::ImageLayout,Image::ImageLayout> key(imgSrc->getImageLayout(),dstLayout);
-    // TODO : handle safe mode if missing map entry
-    return convertMapInfos.at(key);
-}
-
 FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout)
 {
-    if (imgDst == nullptr)
-        imgDst = xpcf::utils::make_shared<Image> (destLayout, imgSrc->getPixelOrder(), imgSrc->getDataType());
-
-    imgDst->setSize(imgSrc->getWidth(),imgSrc->getHeight());
-
-    cv::Mat imgSource, imgConverted;
-    SolAROpenCVHelper::mapToOpenCV(imgSrc,imgSource);
-
-    SolAROpenCVHelper::mapToOpenCV(imgDst,imgConverted);
-    cv::cvtColor(imgSource, imgConverted, deduceOpenCVConversionMode(imgSrc,destLayout));
+    cv::Mat opencvImage = SolAROpenCVHelper::mapToOpenCV(imgSrc);
+    cv::flip(opencvImage, opencvImage,0);
+    SolAROpenCVHelper::convertToSolar(opencvImage, imgDst);
 
     return FrameworkReturnCode::_SUCCESS;
 }
 
 FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst)
 {
-   if (imgDst == nullptr)
-   {
-       LOG_ERROR("The imgDst has not been instantiated before calling convert method. Pleae, instantiate it or call the convert method that takes in argument the layout of the output image.")
-       return FrameworkReturnCode::_ERROR_;
-   }
-   return convert(imgSrc,imgDst,imgDst->getImageLayout());
+   return FrameworkReturnCode::_SUCCESS;
 }
 
 }
