@@ -44,6 +44,7 @@ namespace OPENCV {
 
     ptvec.resize(inputPoints.size());
     out_ptvec.resize(inputPoints.size());
+    outputPoints.resize(inputPoints.size());
 
     for(unsigned int k = 0; k < inputPoints.size();k++){
         ptvec[k].x = inputPoints[k]->getX();
@@ -53,7 +54,7 @@ namespace OPENCV {
       cv::undistortPoints(ptvec,out_ptvec, m_camMatrix, m_camDistorsion);
 
     for(unsigned int k = 0; k < out_ptvec.size();k++){
-        //out_ptvec[k] =  xpcf::utils::make_shared<Point2Df>( out_ptvec[k].x, out_ptvec[k].y );
+        outputPoints[k] = ( xpcf::utils::make_shared<Point2Df>( out_ptvec[k].x, out_ptvec[k].y ));
     }
         return FrameworkReturnCode::_SUCCESS;
     }
