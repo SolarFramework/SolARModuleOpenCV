@@ -27,6 +27,7 @@
 #include "api/input/devices/ICamera.h"
 #include "api/solver/pose/I2DTransformFinder.h"
 #include "api/solver/pose/I2Dto3DTransformDecomposer.h"
+#include "core/log.h"
 
 using namespace SolAR;
 using namespace SolAR::datastructure;

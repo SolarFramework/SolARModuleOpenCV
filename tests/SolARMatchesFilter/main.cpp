@@ -30,6 +30,7 @@ using namespace std;
 #include "api/features/IMatchesFilter.h"
 #include "api/display/IImageViewer.h"
 #include "api/display/IMatchesOverlay.h"
+#include "core/log.h"
 
 
 using namespace SolAR;

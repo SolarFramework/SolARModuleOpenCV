@@ -24,6 +24,7 @@
 
 #include "SolARModuleOpencv_traits.h"
 #include "api/input/files/IMarker2DSquaredBinary.h"
+#include "core/log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 

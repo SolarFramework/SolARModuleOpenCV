@@ -23,6 +23,7 @@
 #include "api/display/IMatchesOverlay.h"
 #include "api/features/IDescriptorMatcher.h"
 #include "api/features/IDescriptorsExtractor.h"
+#include "core/log.h"
 
 #include <iostream>
 #include <boost/log/core.hpp>

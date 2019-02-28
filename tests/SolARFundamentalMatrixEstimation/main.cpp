@@ -26,6 +26,7 @@
 #include "SolARModuleOpencv_traits.h"
 #include "api/input/devices/ICamera.h"
 #include "api/solver/pose/I2DTransformFinder.h"
+#include "core/log.h"
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
