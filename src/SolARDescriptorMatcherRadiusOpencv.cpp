@@ -55,12 +55,6 @@ DescriptorMatcher::RetCode SolARDescriptorMatcherRadiusOpencv::match(
  
         if (desc1->getNbDescriptors() == 0 || desc2->getNbDescriptors() == 0)
             return DescriptorMatcher::RetCode::DESCRIPTOR_EMPTY;
- 
-        std::cout << "Ref fiducial" << std::endl;
-        std::cout << desc1->data() << std::endl;
-
-        std::cout << "Ref fiducial" << std::endl;
-        std::cout << desc1->data() << std::endl;
 
         std::vector<std::vector<cv::DMatch>> cv_matches;
         std::vector<cv::DMatch> good_matches;
