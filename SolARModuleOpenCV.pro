@@ -140,6 +140,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
+    QMAKE_LINK=clang++
+    QMAKE_CXX = clang++	
 }
 
 macx {

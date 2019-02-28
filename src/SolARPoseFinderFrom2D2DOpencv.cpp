@@ -50,6 +50,9 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
     double minVal, maxVal;
 
     Transform3Df poseView1Inverse = poseView1.inverse();
+    LOG_INFO("Estimated pose of poseView1: \n {}", poseView1.matrix());
+    LOG_INFO("Estimated pose of poseView1Inverse: \n {}", poseView1Inverse.matrix());
+
     std::vector<cv::Point2f> points_view1;
     std::vector<cv::Point2f> points_view2;
 
@@ -81,11 +84,14 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
             points_view2[i].y=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB())->getY();
         }
     }
+
     cv::minMaxIdx(points_view1, &minVal, &maxVal);
     cv::Point2f pp; pp.x=m_camCalibration(0,2); pp.y=m_camCalibration(1,2);
     cv::Mat Ecv = cv::findEssentialMat(points_view1, points_view2, m_camCalibration(0,0), pp, cv::RANSAC, m_confidence, m_outlierDistanceRatio * maxVal, inliers);
     cv::Mat cvRot;
     cv::Mat cvPos;
+
+     std::cout <<"Essential matrix : "<<Ecv<<" "<<std::endl;
 
     cv::recoverPose(Ecv, points_view1, points_view2, cvRot, cvPos, m_camCalibration(0,0), pp, inliers);
 
@@ -96,6 +102,8 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
     Transform3Df view2Transform;
     SolAROpenCVHelper::convertCVMatToSolar(cvTransform, view2Transform);
     poseView2 = view2Transform * poseView1Inverse ;
+
+    LOG_INFO("Estimated pose of poseView2: \n {}", poseView2.matrix());
 
     int nbInliers = 0;
     std::vector<DescriptorMatch> inlierMatches_output;

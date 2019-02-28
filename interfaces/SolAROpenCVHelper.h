@@ -36,7 +36,7 @@ namespace OPENCV {
 class SOLAROPENCV_EXPORT_API SolAROpenCVHelper {
 public:
     template <class T,int Rows, int Cols>
-    static FrameworkReturnCode convertCVMatToSolar(const cv::Mat& openCVMat, Matrix<T, Rows , Cols > & solarMat);
+    static FrameworkReturnCode convertCVMatToSolar(const cv::Mat& openCVMat, Matrix<T, Rows , Cols, 1 > & solarMat);
     template <class T,int Dim>
     static FrameworkReturnCode convertCVMatToSolar(const cv::Mat& openCVMat, Transform<T,Dim> & solarTransform);
 
@@ -127,7 +127,7 @@ FrameworkReturnCode SolAROpenCVHelper::convertCVMatToSolar(const cv::Mat& openCV
 }
 
 template <class T, int Rows, int Cols>
-cv::Mat SolAROpenCVHelper::mapToOpenCV (const Matrix<T, Rows , Cols >&  solarMat)
+cv::Mat SolAROpenCVHelper::mapToOpenCV (const Matrix<T, Rows , Cols>&  solarMat)
 {
     int type = inferOpenCVType<T>(); // typeid ??
     cv::Mat mat(solarMat.rows(),solarMat.cols(),type,(void *)solarMat.data());
