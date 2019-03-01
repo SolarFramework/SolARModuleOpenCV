@@ -61,6 +61,7 @@ class SolARPoseFinderFrom2D2DOpencv;
 class SolARSVDFundamentalMatrixDecomposerOpencv;
 class SolARSVDTriangulationOpencv;
 class SolAR2D3DCorrespondencesFinderOpencv;
+class SolARUndistortPointsOpencv;
 class SolARVideoAsCameraOpencv;
 }
 }
@@ -262,11 +263,14 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFin
                              "SolAR2D3DCorrespondencesFinderOpencv",
                              "SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv component")
 
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARUndistortPointsOpencv,
+                             "d926e249-8b7f-46e0-8cbd-f981ceb8f921",
+                             "SolARUndistortPoints",
+                             "SolAR::MODULES::OPENCV::SolARUndistortPoints component")
+
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv,
                              "fa4a780a-9720-11e8-9eb6-529269fb1459",
                              "SolARCameraOpencv",
                              "SolAR::MODULES::OPENCV::SolARCameraOpencv component")
-
-
 
 #endif // SOLARMODULEOPENCV_TRAITS_H

@@ -8,6 +8,7 @@ set (SOURCES
     src/SolARKeypointDetectorOpencv.cpp
     src/SolARImageLoaderOpencv.cpp
     src/SolARImageConvertorOpencv.cpp
+	src/SolARImageConvertorUnity.cpp
     src/SolARImageViewerOpencv.cpp
     src/SolARCameraOpencv.cpp
     src/SolAROpenCVHelper.cpp
@@ -49,11 +50,13 @@ set (SOURCES
     src/SolARHomographyMatrixDecomposerOpencv.cpp
     src/SolARPoseFinderFrom2D2DOpencv.cpp
     src/SolARMatchesOverlayOpencv.cpp
+	src/SolARUndistortPointsOpencv.cpp
     )
 
 set (HEADERS
     interfaces/SolARCameraOpencv.h
     interfaces/SolARImageConvertorOpencv.h
+	interfaces/SolARImageConvertorUnity.h
     interfaces/SolARImageLoaderOpencv.h
     interfaces/SolARImageViewerOpencv.h
     interfaces/SolARKeypointDetectorOpencv.h
@@ -100,6 +103,7 @@ set (HEADERS
     interfaces/SolARHomographyMatrixDecomposerOpencv.h
     interfaces/SolARPoseFinderFrom2D2DOpencv.h
     interfaces/SolARMatchesOverlayOpencv.h
+	interfaces/SolARUndistortPointsOpencv.h
 )
 
 install (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xpcf_SolARModuleOpenCV_registry.xml" DESTINATION $ENV{BCOMDEVROOT}/.xpcf/SolAR/	)
