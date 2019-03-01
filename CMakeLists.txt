@@ -28,6 +28,7 @@ set (SOURCES
     src/SolARHomographyEstimationOpencv.cpp
     src/SolARPoseEstimationPnpEPFL.cpp
     src/SolARPoseEstimationPnpOpencv.cpp
+	src/SolARPoseEstimationSACPnpOpencv.cpp
     src/SolARDescriptorsExtractorAKAZE2Opencv.cpp
     src/AKAZE2/akaze.cpp
     src/AKAZE2/AKAZEFeatures.cpp
@@ -76,6 +77,7 @@ set (HEADERS
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h
     interfaces/SolARPoseEstimationPnpEPFL.h
     interfaces/SolARPoseEstimationPnpOpencv.h
+	interfaces/SolARPoseEstimationSACPnpOpencv.h
     interfaces/SolARGeometricMatchesFilterOpencv.h
     interfaces/SolAR2DOverlayOpencv.h
     interfaces/SolARSVDTriangulationOpencv.h
