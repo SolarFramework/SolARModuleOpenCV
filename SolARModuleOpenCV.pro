@@ -68,7 +68,7 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
     interfaces/SolARPoseEstimationPnpEPFL.h \
     interfaces/SolARPoseEstimationPnpOpencv.h \
-    inetrfaces/SolARPoseEstimationSACPnpOpencv.h \
+    interfaces/SolARPoseEstimationSACPnpOpencv.h \
     interfaces/SolARGeometricMatchesFilterOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolARSVDTriangulationOpencv.h \
