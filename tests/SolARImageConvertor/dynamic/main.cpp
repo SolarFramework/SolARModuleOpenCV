@@ -19,7 +19,7 @@
 #include "api/image/IImageLoader.h"
 #include "api/image/IImageConvertor.h"
 #include "api/display/IImageViewer.h"
-#include "core/log.h"
+#include "core/Log.h"
 
 #include <iostream>
 #include <boost/log/core.hpp>
