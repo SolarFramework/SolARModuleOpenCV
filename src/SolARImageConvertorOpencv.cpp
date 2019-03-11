@@ -17,6 +17,7 @@
 #include "SolARImageConvertorOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/highgui/highgui.hpp"
+#include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -63,6 +64,7 @@ FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<
 
     cv::Mat imgSource, imgConverted;
     SolAROpenCVHelper::mapToOpenCV(imgSrc,imgSource);
+
     SolAROpenCVHelper::mapToOpenCV(imgDst,imgConverted);
     cv::cvtColor(imgSource, imgConverted, deduceOpenCVConversionMode(imgSrc,destLayout));
 

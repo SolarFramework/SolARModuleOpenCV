@@ -40,6 +40,7 @@ class SolARGeometricMatchesFilterOpencv;
 class SolARHomographyEstimationOpencv;
 class SolARHomographyMatrixDecomposerOpencv;
 class SolARImageConvertorOpencv;
+class SolARImageConvertorUnity;
 class SolARImageFilterBinaryOpencv;
 class SolARImageFilterAdaptiveBinaryOpencv;
 class SolARImageFilterBlurOpencv;
@@ -55,10 +56,12 @@ class SolARMatchesOverlayOpencv;
 class SolARPerspectiveControllerOpencv;
 class SolARPoseEstimationPnpEPFL;
 class SolARPoseEstimationPnpOpencv;
+class SolARPoseEstimationSACPnpOpencv;
 class SolARPoseFinderFrom2D2DOpencv;
 class SolARSVDFundamentalMatrixDecomposerOpencv;
 class SolARSVDTriangulationOpencv;
 class SolAR2D3DCorrespondencesFinderOpencv;
+class SolARUndistortPointsOpencv;
 class SolARVideoAsCameraOpencv;
 }
 }
@@ -154,6 +157,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv,
                              "SolARImageConvertorOpencv",
                              "SolAR::MODULES::OPENCV::SolARImageConvertorOpencv component")
 
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageConvertorUnity,
+                             "65282fb3-6651-4e73-b532-5a64ade0ead0",
+                             "SolARImageConvertorUnity",
+                             "SolAR::MODULES::OPENCV::SolARImageConvertorUnity component")
+
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterBinaryOpencv,
                              "e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2",
                              "SolARImageFilterBinaryOpencv",
@@ -225,6 +233,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpenc
                              "SolARPoseEstimationPnpOpencv",
                              "SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv component")
 
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationSACPnpOpencv,
+                             "4d369049-809c-4e99-9994-5e8167bab808",
+                             "SolARPoseEstimationSACPnpOpencv",
+                             "SolAR::MODULES::OPENCV::SolARPoseEstimationSACPnpOpencv component")
+
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv,
                              "52babb5e-9d33-11e8-98d0-529269fb1459",
                              "SolARPoseFinderFrom2D2DOpencv",
@@ -250,11 +263,14 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFin
                              "SolAR2D3DCorrespondencesFinderOpencv",
                              "SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv component")
 
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARUndistortPointsOpencv,
+                             "d926e249-8b7f-46e0-8cbd-f981ceb8f921",
+                             "SolARUndistortPoints",
+                             "SolAR::MODULES::OPENCV::SolARUndistortPoints component")
+
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv,
                              "fa4a780a-9720-11e8-9eb6-529269fb1459",
                              "SolARCameraOpencv",
                              "SolAR::MODULES::OPENCV::SolARCameraOpencv component")
-
-
 
 #endif // SOLARMODULEOPENCV_TRAITS_H

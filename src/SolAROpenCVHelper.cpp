@@ -52,7 +52,7 @@ int SolAROpenCVHelper::deduceOpenCVType(SRef<Image> img)
 
 void SolAROpenCVHelper::mapToOpenCV (SRef<Image> imgSrc, cv::Mat& imgDest)
 {
-    cv::Mat imgCV(imgSrc->getHeight(),imgSrc->getWidth(),deduceOpenCVType(imgSrc), imgSrc->data());
+    cv::Mat imgCV(imgSrc->getHeight(),imgSrc->getWidth(),deduceOpenCVType(imgSrc), imgSrc->data()); 
     imgDest = imgCV;
 }
 

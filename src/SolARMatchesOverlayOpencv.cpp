@@ -16,6 +16,7 @@
 
 #include "SolARMatchesOverlayOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/video/video.hpp"
 #include <random>
 

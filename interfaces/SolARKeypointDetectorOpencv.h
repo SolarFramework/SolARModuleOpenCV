@@ -65,7 +65,6 @@ private:
 	/// @brief the threshold of detector to accept a keypoint
 	float m_threshold = 1e-3;
 
-
     int m_id;
     cv::Ptr<cv::Feature2D> m_detector;
     cv::KeyPointsFilter kptsFilter;

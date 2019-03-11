@@ -1,5 +1,5 @@
 TARGET = SolARDescriptorMatcherOpenCVDynTest
-VERSION=1.0.0
+VERSION=0.5.1
 
 CONFIG += c++11
 CONFIG -= qt

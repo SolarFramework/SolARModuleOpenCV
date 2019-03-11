@@ -34,6 +34,7 @@
 #include "SolARHomographyEstimationOpencv.h"
 #include "SolARHomographyMatrixDecomposerOpencv.h"
 #include "SolARImageConvertorOpencv.h"
+#include "SolARImageConvertorUnity.h"
 #include "SolARImageFilterBinaryOpencv.h"
 #include "SolARImageFilterAdaptiveBinaryOpencv.h"
 #include "SolARImageFilterBlurOpencv.h"
@@ -47,6 +48,7 @@
 #include "SolARPerspectiveControllerOpencv.h"
 #include "SolARPoseEstimationPnpEPFL.h"
 #include "SolARPoseEstimationPnpOpencv.h"
+#include "SolARPoseEstimationSACPnpOpencv.h"
 #include "SolARPoseFinderFrom2D2DOpencv.h"
 #include "SolARMatchesOverlayOpencv.h"
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
@@ -133,6 +135,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageConvertorUnity>(componentUUID,interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageFilterBinaryOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
@@ -178,6 +184,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv>(componentUUID,interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationSACPnpOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
@@ -247,6 +257,7 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationSACPnpOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMatchesOverlayOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv)

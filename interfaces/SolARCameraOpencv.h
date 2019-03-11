@@ -37,12 +37,20 @@ class SOLAROPENCV_EXPORT_API SolARCameraOpencv : public org::bcom::xpcf::Configu
 public:
     SolARCameraOpencv(); // to replace with ISolARDeviceInfo ! should be set later with init method ? default behavior on devices with facefront/rear embedded cams ?
 
-    ~SolARCameraOpencv() = default;
+    ~SolARCameraOpencv();
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
+    /// @brief Start the acquisition device referenced by its device_id
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
     FrameworkReturnCode start() override;
 
+    /// @brief Stop the acquisition device
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
+    FrameworkReturnCode stop() override;
+
+    /// @brief Fill the SRef img buffer with a last image captured by the camera device.
+    /// @return FrameworkReturnCode to track sucessful or failing event.
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
 
     void setResolution(Sizei resolution) override;
