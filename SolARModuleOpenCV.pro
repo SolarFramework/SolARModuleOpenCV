@@ -68,6 +68,7 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
     interfaces/SolARPoseEstimationPnpEPFL.h \
     interfaces/SolARPoseEstimationPnpOpencv.h \
+    interfaces/SolARPoseEstimationSACPnpOpencv.h \
     interfaces/SolARGeometricMatchesFilterOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolARSVDTriangulationOpencv.h \
@@ -89,7 +90,8 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolAR3DOverlayBoxOpencv.h \
     interfaces/SolARHomographyMatrixDecomposerOpencv.h \
     interfaces/SolARPoseFinderFrom2D2DOpencv.h \
-    interfaces/SolARMatchesOverlayOpencv.h
+    interfaces/SolARMatchesOverlayOpencv.h \
+    interfaces/SolARUndistortPointsOpencv.h 
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
@@ -116,6 +118,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
     src/SolARPoseEstimationPnpEPFL.cpp \
     src/SolARPoseEstimationPnpOpencv.cpp \
+    src/SolARPoseEstimationSACPnpOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZE2Opencv.cpp \
     src/AKAZE2/akaze.cpp \
     src/AKAZE2/AKAZEFeatures.cpp \
@@ -136,10 +139,12 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARHomographyMatrixDecomposerOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
     src/SolARMatchesOverlayOpencv.cpp \
-    src/SolARImageConvertorUnity.cpp
+	src/SolARUndistortPointsOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
+    QMAKE_LINK=clang++
+    QMAKE_CXX = clang++	
 }
 
 macx {
