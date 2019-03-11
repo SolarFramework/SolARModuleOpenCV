@@ -16,6 +16,7 @@
 
 #include "SolARImagesAsCameraOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -138,6 +139,16 @@ namespace OPENCV {
             return FrameworkReturnCode::_ERROR_;
         }
     }
+
+    FrameworkReturnCode SolARImagesAsCameraOpencv::stop()
+    {
+        if(m_capture.isOpened())
+        {
+            m_capture.release();
+        }
+        return FrameworkReturnCode::_SUCCESS;
+    }
+
 
     void SolARImagesAsCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){
 //        m_intrinsic_parameters = intrinsic_parameters;

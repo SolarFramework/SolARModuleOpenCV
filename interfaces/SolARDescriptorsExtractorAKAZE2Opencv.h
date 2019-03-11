@@ -18,6 +18,7 @@
 #define SOLARDESCRIPTORSEXTRACTORAKAZE2OPENCV_H
 
 #include "api/features/IDescriptorsExtractor.h"
+#include "SolARImageConvertorOpencv.h"
 
 // Definition of SolARDescriptorExtractorOpencv Class //
 // part of SolAR namespace //
@@ -49,6 +50,8 @@ public:
 
 private:
     cv::Ptr<cv::AKAZE2> m_extractor;
+    SolARImageConvertorOpencv m_convertor;
+
     double m_threshold = 3e-4;
 };
 

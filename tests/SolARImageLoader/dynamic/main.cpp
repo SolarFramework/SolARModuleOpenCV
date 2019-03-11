@@ -24,6 +24,7 @@
 #include "SolARModuleOpencv_traits.h"
 #include "api/image/IImageLoader.h"
 #include "api/display/IImageViewer.h"
+#include "core/Log.h"
 
 using namespace SolAR;
 using namespace SolAR::datastructure;

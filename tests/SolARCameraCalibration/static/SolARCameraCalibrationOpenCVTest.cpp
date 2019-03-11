@@ -22,8 +22,9 @@
 #include "SolARImageLoaderOpencv.h"
 #include "SolARImageViewerOpencv.h"
 #include "SolARCameraCalibrationOpencv.h"
-
 #include "SolARCameraOpencv.h"
+
+#include "core/Log.h"
 
 #include <iostream>
 #include <map>

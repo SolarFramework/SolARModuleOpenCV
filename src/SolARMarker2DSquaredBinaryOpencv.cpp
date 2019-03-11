@@ -15,6 +15,7 @@
  */
 
 #include "SolARMarker2DSquaredBinaryOpencv.h"
+#include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 

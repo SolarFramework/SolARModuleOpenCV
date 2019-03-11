@@ -16,6 +16,7 @@
 
 #include "SolARVideoAsCameraOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -109,8 +110,14 @@ namespace OPENCV {
 
         cv::Mat cvFrame;
         m_capture >> cvFrame;
-        if(!cvFrame.data)
+        if (cvFrame.empty() || !cvFrame.data)
+        {
             return FrameworkReturnCode::_ERROR_LOAD_IMAGE;
+        }
+        unsigned int w=cvFrame.rows;
+        unsigned int h=cvFrame.cols;
+        if(w!=m_resolution.width || h!=m_resolution.height)
+            cv::resize(cvFrame, cvFrame, cv::Size((int)m_resolution.width,(int)m_resolution.height), 0, 0);
 
         return SolAROpenCVHelper::convertToSolar(cvFrame,img);
     }
@@ -137,6 +144,15 @@ namespace OPENCV {
             LOG_ERROR("Cannot open video file {]", m_videoPath);
             return FrameworkReturnCode::_ERROR_;
         }
+    }
+
+    FrameworkReturnCode SolARVideoAsCameraOpencv::stop()
+    {
+        if(m_capture.isOpened())
+        {
+            m_capture.release();
+        }
+        return FrameworkReturnCode::_SUCCESS;
     }
 
     void SolARVideoAsCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){

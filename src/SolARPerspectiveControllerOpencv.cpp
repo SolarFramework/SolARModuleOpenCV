@@ -17,6 +17,7 @@
 #include "SolARPerspectiveControllerOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/opencv.hpp"
+#include "core/Log.h"
 
 namespace xpcf = org::bcom::xpcf;
 

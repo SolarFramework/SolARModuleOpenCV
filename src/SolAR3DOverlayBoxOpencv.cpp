@@ -16,6 +16,7 @@
 
 #include "SolAR3DOverlayBoxOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/core.hpp"
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
