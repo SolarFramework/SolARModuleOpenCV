@@ -42,7 +42,7 @@
 *.app
 
 #others
-
+*.*pre1
 *.rej
 *.stash
 *.rc
@@ -50,6 +50,7 @@
 *.exp
 *.ilk
 *.pdb
+*.autosave
 
 # Visual Studio files
 .vs*
