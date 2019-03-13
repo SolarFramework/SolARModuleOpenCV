@@ -6,7 +6,7 @@ CONFIG -= qt
 TARGET = SolARModuleOpenCV
 INSTALLSUBDIR = bcomBuild
 FRAMEWORK = $$TARGET
-VERSION=0.5.1
+VERSION=0.5.2
 
 DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
@@ -72,6 +72,7 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARGeometricMatchesFilterOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolARSVDTriangulationOpencv.h \
+    interfaces/SolAROpticalFlowPyrLKOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
     src/AKAZE2/AKAZEFeatures.h \
     src/AKAZE2/fed.h \
@@ -125,6 +126,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/AKAZE2/fed.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
+    src/SolAROpticalFlowPyrLKOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
     src/SolARImageFilterBinaryOpencv.cpp \
@@ -139,7 +141,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARHomographyMatrixDecomposerOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
     src/SolARMatchesOverlayOpencv.cpp \
-	src/SolARUndistortPointsOpencv.cpp
+    src/SolARUndistortPointsOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers

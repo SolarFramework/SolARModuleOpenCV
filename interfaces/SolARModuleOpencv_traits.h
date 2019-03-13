@@ -53,6 +53,7 @@ class SolARKeypointDetectorOpencv;
 class SolARMarker2DNaturalImageOpencv;
 class SolARMarker2DSquaredBinaryOpencv;
 class SolARMatchesOverlayOpencv;
+class SolAROpticalFlowPyrLKOpencv;
 class SolARPerspectiveControllerOpencv;
 class SolARPoseEstimationPnpEPFL;
 class SolARPoseEstimationPnpOpencv;
@@ -206,6 +207,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv
                              "e81c7e4e-7da6-476a-8eba-078b43071272",
                              "SolARKeypointDetectorOpencv",
                              "SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAROpticalFlowPyrLKOpencv,
+                             "b513e9ff-d2e7-4dcf-9a29-4ed95c512158",
+                             "SolAROpticalFlowPyrLKOpencv",
+                             "A component to estimate the optical flow between two images based on pyramidal Lucas-Kanade approach")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv,
                              "efcdb590-c570-11e7-abc4-cec278b6b50a",

@@ -57,6 +57,10 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="2e2bde18-ce39-11e7-abc4-cec278b6b50a" name="IDescriptorsExtractor" description="IDescriptorsExtractorSBPattern"/>
         </component>
+		<component uuid="b513e9ff-d2e7-4dcf-9a29-4ed95c512158" name="SolAROpticalFlowPyrLKOpencv" description="SolAROpticalFlowPyrLKOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="3c74cd7f-950c-43ee-8886-9f4ddf763c27" name="IOpticalFlowEstimator" description="IDescriptorMatcher"/>
+        </component>
 		 <component uuid="31188e79-6bd5-43df-9633-6d6c5d7afb5c" name="SolARFundamentalMatrixDecompisitionValidationOpencv" description="SolARFundamentalMatrixDecompisitionValidationOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="0f715b50-e0e5-4508-aaf0-cb252ea59ad4" name="IFundamentalMatrixDecompositionValidation" description="IFundamentalMatrixDecompositionValidation"/>

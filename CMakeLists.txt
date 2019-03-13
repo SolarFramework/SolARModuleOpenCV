@@ -36,6 +36,7 @@ set (SOURCES
     src/AKAZE2/fed.cpp
     src/AKAZE2/nldiffusion_functions.cpp
     src/SolARSVDTriangulationOpencv.cpp
+	src/SolAROpticalFlowPytLKOpencv.cpp
     src/SolARFundamentalMatrixEstimationOpencv.cpp
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
     src/SolARImageFilterBinaryOpencv.cpp
@@ -84,6 +85,7 @@ set (HEADERS
     interfaces/SolARGeometricMatchesFilterOpencv.h
     interfaces/SolAR2DOverlayOpencv.h
     interfaces/SolARSVDTriangulationOpencv.h
+	interfaces/SolAROpticalFlowPyrLKOpencv.h
     src/AKAZE2/AKAZEConfig.h
     src/AKAZE2/AKAZEFeatures.h
     src/AKAZE2/fed.h
