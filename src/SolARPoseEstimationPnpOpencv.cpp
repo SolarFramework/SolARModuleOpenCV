@@ -93,14 +93,11 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     cv::Mat_<float> rotMat(3, 3);
     cv::Rodrigues(Rvec, rotMat);
 
-    Eigen::Matrix3f Rpose;
-    Eigen::Vector3f Tpose;
-
-    for (int col = 0; col<3; col++){
-          for (int row = 0; row<3; row++){
-                  pose(row,col) = rotMat(row, col);
-          }
-         pose(col,3) = Tvec(col);
+    for (int row = 0; row<3; row++){
+        for (int col = 0; col<3; col++){
+            pose(row,col) = rotMat(row, col);
+         }
+         pose(row,3) = Tvec(row);
     }
     pose(3,0)  = 0.0;
     pose(3,1)  = 0.0;
