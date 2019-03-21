@@ -37,7 +37,7 @@ set (SOURCES
     src/AKAZE2/fed.cpp
     src/AKAZE2/nldiffusion_functions.cpp
     src/SolARSVDTriangulationOpencv.cpp
-	src/SolAROpticalFlowPytLKOpencv.cpp
+	src/SolAROpticalFlowPyrLKOpencv.cpp
     src/SolARFundamentalMatrixEstimationOpencv.cpp
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp
     src/SolARImageFilterBinaryOpencv.cpp
