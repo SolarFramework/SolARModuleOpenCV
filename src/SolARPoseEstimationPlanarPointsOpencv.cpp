@@ -96,25 +96,28 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
     }
 
     // Refine the homography matrix only with inliers
-    oHw = cv::findHomography(worldCVPoints, correctedImageCVPoints);
+    oHw = cv::findHomography(tmp_cvWorldPoints, tmp_cvImagePoints);
 
     // Normalization to ensure that ||c1|| = 1
     double norm = sqrt(oHw.at<double>(0, 0) * oHw.at<double>(0, 0) + oHw.at<double>(1, 0) * oHw.at<double>(1, 0) + oHw.at<double>(2, 0) * oHw.at<double>(2, 0));
     oHw /= norm;
 
+    // 3rd column = cross product between first and second columns
+    oHw.col(2)= oHw.col(0).cross(oHw.col(1));
+
     for (int row = 0; row<3; row++){
-        for (int col = 0; col<2; col++){
+        for (int col = 0; col<3; col++){
             pose(row,col) = (float)(oHw.at<double>(row, col));
         }
-        pose(row,2) = (float)(oHw.at<double>(row,0) * oHw.at<double>(row,1));
         pose(row,3) = (float)(oHw.at<double>(row,2));
     }
+
     pose(3,0)  = 0.0;
     pose(3,1)  = 0.0;
     pose(3,2)  = 0.0;
     pose(3,3)  = 1.0;
 
-    //pose = pose.inverse();
+    pose = pose.inverse();
 
     return FrameworkReturnCode::_SUCCESS;
 }
