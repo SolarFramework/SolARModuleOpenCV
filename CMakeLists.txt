@@ -27,6 +27,7 @@ set (SOURCES
     src/SolARGeometricMatchesFilterOpencv.cpp
     src/SolAR2DOverlayOpencv.cpp
     src/SolARHomographyEstimationOpencv.cpp
+	src/SolARPoseEstimationPlanarPointsOpencv.cpp
     src/SolARPoseEstimationPnpEPFL.cpp
     src/SolARPoseEstimationPnpOpencv.cpp
 	src/SolARPoseEstimationSACPnpOpencv.cpp
@@ -79,6 +80,7 @@ set (HEADERS
     interfaces/SolARDescriptorMatcherRadiusOpencv.h
     interfaces/SolARFundamentalMatrixEstimationOpencv.h
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h
+	interfaces/SolARPoseEstimationPlanarPointsOpencv.h
     interfaces/SolARPoseEstimationPnpEPFL.h
     interfaces/SolARPoseEstimationPnpOpencv.h
 	interfaces/SolARPoseEstimationSACPnpOpencv.h

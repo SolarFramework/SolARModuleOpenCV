@@ -55,6 +55,7 @@ class SolARMarker2DSquaredBinaryOpencv;
 class SolARMatchesOverlayOpencv;
 class SolAROpticalFlowPyrLKOpencv;
 class SolARPerspectiveControllerOpencv;
+class SolARPoseEstimationPlanarPointsOpencv;
 class SolARPoseEstimationPnpEPFL;
 class SolARPoseEstimationPnpOpencv;
 class SolARPoseEstimationSACPnpOpencv;
@@ -227,6 +228,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPerspectiveControllerO
                              "9c960f2a-cd6e-11e7-abc4-cec278b6b50a",
                              "SolARPerspectiveControllerOpencv",
                              "SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPlanarPointsOpencv,
+                             "9fbadf80-251f-4160-94f8-a64dc3d40a2f",
+                             "SolARPoseEstimationPlanarPointsEPFL",
+                             "Estimates the camera pose from 2D-3D planar points correspodances")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL,
                              "a38edf79-f0dc-45ca-92fc-2b336fceedf9",

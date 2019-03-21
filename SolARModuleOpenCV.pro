@@ -66,6 +66,7 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARDescriptorMatcherRadiusOpencv.h \
     interfaces/SolARFundamentalMatrixEstimationOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
+    interfaces/SolARPoseEstimationPlanarPointsOpencv.h \
     interfaces/SolARPoseEstimationPnpEPFL.h \
     interfaces/SolARPoseEstimationPnpOpencv.h \
     interfaces/SolARPoseEstimationSACPnpOpencv.h \
@@ -117,6 +118,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
+    src/SolARPoseEstimationPlanarPointsOpencv.cpp \
     src/SolARPoseEstimationPnpEPFL.cpp \
     src/SolARPoseEstimationPnpOpencv.cpp \
     src/SolARPoseEstimationSACPnpOpencv.cpp \
