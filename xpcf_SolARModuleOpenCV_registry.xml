@@ -121,6 +121,10 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="0eadc8b7-1265-434c-a4c6-6da8a028e06e" name="IKeypointDetector" description="IKeypointDetector"/>
         </component>
+		 <component uuid="22c2ca9f-e43b-4a88-8337-4a166a789971" name="SolARKeypointDetectorRegionOpencv" description="SolARKeypointDetectorRegionOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="64ccce51-b445-4ec5-a0fa-44156e8bc370" name="IKeypointDetectorRegion" description="IKeypointDetectorRegion"/>
+        </component>
         <component uuid="efcdb590-c570-11e7-abc4-cec278b6b50a" name="SolARMarker2DNaturalImageOpencv"  description="SolARMarker2DNaturalImageOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="3c9cee8a-e9ca-4c16-851a-669a94c2a68d" name="IMarker" description="IMarker"/>
@@ -136,6 +140,14 @@
         <component uuid="9c960f2a-cd6e-11e7-abc4-cec278b6b50a" name="SolARPerspectiveControllerOpencv" description="SolARPerspectiveControllerOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="4a7d5c34-cd6e-11e7-abc4-cec278b6b50a" name="IPerspectiveController" description="IPerspectiveController"/>
+        </component>
+		<component uuid="741fc298-0149-4322-a7a9-ccb971e857ba" name="SolARProjectOpencv" description="SolARProjectOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="b485f37d-a8ea-49f6-b361-f2b30777d9ba" name="IProject" description="IProject"/>
+        </component>
+		<component uuid="9938354d-6476-437e-8325-97e82666a46e" name="SolARUnprojectPlanarPointsOpencv" description="SolARUnprojectPlanarPointsOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="21113a74-de60-4a3c-8b65-f3112beb3dc6" name="IUnproject" description="IUnproject"/>
         </component>
 		<component uuid="9fbadf80-251f-4160-94f8-a64dc3d40a2f" name="SolARPoseEstimationPlanarPointsOpencv" description="Estimates the camera pose from 2D-3D planar points correspodances">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>

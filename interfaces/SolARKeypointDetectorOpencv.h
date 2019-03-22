@@ -46,10 +46,10 @@ public:
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
-    void setType(KeypointDetectorType type);
+    void setType(KeypointDetectorType type) override;
     KeypointDetectorType  getType();
  
-    void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints);
+    void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints) override;
 
 private:
     /// @brief the type of descriptor used for the extraction (AKAZE, AKAZE2, ORB, BRISK)

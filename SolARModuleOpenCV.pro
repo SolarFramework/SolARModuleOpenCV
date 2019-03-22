@@ -48,12 +48,15 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageLoaderOpencv.h \
     interfaces/SolARImageViewerOpencv.h \
     interfaces/SolARKeypointDetectorOpencv.h \
+    interfaces/SolARKeypointDetectorRegionOpencv.h \
     interfaces/SolAROpenCVHelper.h \
     interfaces/SolAROpencvAPI.h \
     interfaces/SolARCameraCalibrationOpencv.h \
     interfaces/SolARMarker2DNaturalImageOpencv.h \
     interfaces/SolARContoursExtractorOpencv.h \
     interfaces/SolARPerspectiveControllerOpencv.h \
+    interfaces/SolARProjectOpencv.h \
+    interfaces/SolARUnprojectPlanarPointsOpencv.h \
     interfaces/SolARMarker2DSquaredBinaryOpencv.h \
     interfaces/SolARContoursFilterBinaryMarkerOpencv.h \
     interfaces/SolARDescriptorsExtractorSBPatternOpencv.h \
@@ -97,6 +100,7 @@ HEADERS += interfaces/SolARCameraOpencv.h \
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
+    src/SolARKeypointDetectorRegionOpencv.cpp \
     src/SolARImageLoaderOpencv.cpp \
     src/SolARImageConvertorOpencv.cpp \
     src/SolARImageConvertorUnity.cpp \
@@ -107,6 +111,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARMarker2DNaturalImageOpencv.cpp \
     src/SolARContoursExtractorOpencv.cpp \
     src/SolARPerspectiveControllerOpencv.cpp \
+    src/SolARProjectOpencv.cpp \
+    src/SolARUnprojectPlanarPointsOpencv.cpp \
     src/SolARMarker2DSquaredBinaryOpencv.cpp \
     src/SolARContoursFilterBinaryMarkerOpencv.cpp \
     src/SolARDescriptorsExtractorSBPatternOpencv.cpp \
