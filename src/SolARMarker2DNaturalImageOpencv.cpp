@@ -86,6 +86,33 @@ namespace OPENCV {
         return SolAROpenCVHelper::convertToSolar(m_ocvImage,img);
     }
 
+    FrameworkReturnCode SolARMarker2DNaturalImageOpencv::getImageCorners(std::vector<SRef<Point2Df>>& imageCorners) const
+    {
+        imageCorners.clear();
+        if (!m_ocvImage.data)
+        {
+            LOG_DEBUG("Marker image has not been loaded");
+            FrameworkReturnCode::_ERROR_;
+        }
+        imageCorners.push_back(xpcf::utils::make_shared<Point2Df>(0.0f, 0.0f));
+        imageCorners.push_back(xpcf::utils::make_shared<Point2Df>(m_ocvImage.size().width, 0.0f));
+        imageCorners.push_back(xpcf::utils::make_shared<Point2Df>(m_ocvImage.size().width,m_ocvImage.size().height));
+        imageCorners.push_back(xpcf::utils::make_shared<Point2Df>(0.0f, m_ocvImage.size().height));
+
+        return FrameworkReturnCode::_SUCCESS;
+    }
+
+    FrameworkReturnCode SolARMarker2DNaturalImageOpencv::getWorldCorners(std::vector<SRef<Point3Df>>& worldCorners) const
+    {
+        worldCorners.clear();
+        worldCorners.push_back(xpcf::utils::make_shared<Point3Df>(-m_size.width/2.0f, -m_size.height/2.0f, 0.0f));
+        worldCorners.push_back(xpcf::utils::make_shared<Point3Df>(m_size.width/2.0f, -m_size.height/2.0f, 0.0f));
+        worldCorners.push_back(xpcf::utils::make_shared<Point3Df>(m_size.width/2.0f, m_size.height/2.0f, 0.0f));
+        worldCorners.push_back(xpcf::utils::make_shared<Point3Df>(-m_size.width/2.0f, m_size.height/2.0f, 0.0f));
+
+        return FrameworkReturnCode::_SUCCESS;
+    }
+
 }
 }
 }  // end of namespace Solar
