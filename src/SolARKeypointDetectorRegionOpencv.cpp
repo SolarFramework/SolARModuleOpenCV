@@ -164,11 +164,6 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> &image, const s
     }
 }
 
-void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> &image, const SRef<Contour2Df> contours, std::vector<SRef<Keypoint>> &keypoints)
-{
-
-}
-
 }
 }
 }  // end of namespace SolAR
