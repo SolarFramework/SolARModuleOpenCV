@@ -44,6 +44,24 @@ SolARProjectOpencv::~SolARProjectOpencv(){
 
 FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<Point3Df>> & inputPoints, const Transform3Df& pose, std::vector<SRef<Point2Df>> & imagePoints)
 {
+    std::vector<cv::Point3f> cvWorldPoints;
+    std::vector<cv::Point2f> cvImagePoints;
+
+    cv::Mat rvec;
+    cv::Mat_<float> tvec;
+
+    int type = inferOpenCVType<float>(); // typeid ??
+    rvec = cv::Mat(3,3,type,(void *)pose.rotation().data());
+    tvec = cv::Mat(3,1,type,(void *)pose.translation().data());
+
+    for (auto point : inputPoints)
+        cvWorldPoints.push_back(cv::Point3f(point->getX(), point->getY(), point->getZ()));
+
+    cv::projectPoints(cvWorldPoints, rvec, tvec, m_camMatrix, m_camDistorsion, cvImagePoints);
+
+    imagePoints.clear();
+    for (auto cvPoint : cvImagePoints)
+        imagePoints.push_back(xpcf::utils::make_shared<Point2Df>((float)cvPoint.x, (float)cvPoint.y));
 
     return FrameworkReturnCode::_SUCCESS;
 }
