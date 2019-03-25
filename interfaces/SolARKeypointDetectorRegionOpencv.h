@@ -62,12 +62,6 @@ public:
     /// @param[out] keypoints The keypoints detected from the given region of the image passed as first argument.
     void detect (const SRef<Image> &image, const std::vector<SRef<Point2Df>>& contours, std::vector<SRef<Keypoint>> &keypoints) override;
 
-    /// @brief This method detects keypoints in an input Image
-    /// @param[in] image input image on which we are extracting keypoints.
-    /// /// @param[in] contours the contour of the region where keypoints will be detected
-    /// @param[out] keypoints The keypoints detected from the given region of the image passed as first argument.
-    void detect (const SRef<Image> &image, const SRef<Contour2Df> contours, std::vector<SRef<Keypoint>> &keypoints) override;
-
     void unloadComponent () override final;
 
 private:
