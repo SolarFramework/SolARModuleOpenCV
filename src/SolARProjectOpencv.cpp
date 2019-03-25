@@ -42,7 +42,7 @@ SolARProjectOpencv::~SolARProjectOpencv(){
 
 }
 
-FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<Point3Df>> & inputPoints, const Transform3Df& pose, std::vector<SRef<Point2Df>> & imagePoints)
+FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<Point3Df>> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose)
 {
     std::vector<cv::Point3f> cvWorldPoints;
     std::vector<cv::Point2f> cvImagePoints;

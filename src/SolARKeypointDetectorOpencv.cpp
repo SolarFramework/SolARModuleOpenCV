@@ -109,6 +109,7 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
         break;
 
 
+
     default :
         LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
         m_detector=AKAZE::create();

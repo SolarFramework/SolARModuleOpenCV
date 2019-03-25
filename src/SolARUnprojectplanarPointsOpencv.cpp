@@ -43,12 +43,33 @@ SolARUnprojectPlanarPointsOpencv::~SolARUnprojectPlanarPointsOpencv(){
 
 }
 
-FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vector<SRef<Point2Df>> & imagePoints,
-                                                                  const Transform3Df& pose,
-                                                                  std::vector<SRef<Point3Df>> & worldPoints)
+FrameworkReturnCode unprojectOCV(const std::vector<cv::Point2f>& imagePoints, std::vector<SRef<Point3Df>>& worldPoints, const Transform3Df& pose)
 {
+    // TODO
 
     return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vector<SRef<Point2Df>> & imagePoints,
+                                                                std::vector<SRef<Point3Df>> & worldPoints,
+                                                                const Transform3Df& pose)
+{
+    std::vector<cv::Point2f> cvPoints;
+    for (auto point : imagePoints)
+        cvPoints.push_back(cv::Point2f(point->getX(), point->getY()));
+
+    return unprojectOCV(cvPoints, worldPoints, pose);
+}
+
+FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vector<SRef<Keypoint>> & imageKeypoints,
+                                                                std::vector<SRef<Point3Df>> & worldPoints,
+                                                                const Transform3Df& pose)
+{
+    std::vector<cv::Point2f> cvPoints;
+    for (auto point : imageKeypoints)
+        cvPoints.push_back(cv::Point2f(point->getX(), point->getY()));
+
+    return unprojectOCV(cvPoints, worldPoints, pose);
 }
 
 void SolARUnprojectPlanarPointsOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
