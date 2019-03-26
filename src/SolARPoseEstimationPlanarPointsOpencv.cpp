@@ -102,14 +102,18 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
     double norm = sqrt(oHw.at<double>(0, 0) * oHw.at<double>(0, 0) + oHw.at<double>(1, 0) * oHw.at<double>(1, 0) + oHw.at<double>(2, 0) * oHw.at<double>(2, 0));
     oHw /= norm;
 
-    // 3rd column = cross product between first and second columns
-    oHw.col(2)= oHw.col(0).cross(oHw.col(1));
-
     for (int row = 0; row<3; row++){
-        for (int col = 0; col<3; col++){
+        for (int col = 0; col<2; col++){
             pose(row,col) = (float)(oHw.at<double>(row, col));
         }
         pose(row,3) = (float)(oHw.at<double>(row,2));
+    }
+
+    // 3rd column of pose matrix = cross product between first and second columns of homography
+    oHw.col(2)= oHw.col(0).cross(oHw.col(1));
+
+    for (int row = 0; row<3; row++){
+        pose(row,2) = (float)(oHw.at<double>(row, 2));
     }
 
     pose(3,0)  = 0.0;
