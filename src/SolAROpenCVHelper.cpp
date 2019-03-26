@@ -79,7 +79,7 @@ std::vector<cv::Point2i> SolAROpenCVHelper::convertToOpenCV (const Contour2Di &c
     std::vector<cv::Point2i> output;
     for (int i = 0; i < contour.size(); i++)
     {
-        output.push_back(cv::Point2i(contour[i][0], contour[i][1]));
+        output.push_back(cv::Point2i(contour[i]->getX(), contour[i]->getY()));
     }
     return output;
 }
@@ -89,7 +89,7 @@ std::vector<cv::Point2f> SolAROpenCVHelper::convertToOpenCV (const Contour2Df &c
     std::vector<cv::Point2f> output;
     for (int i = 0; i < contour.size(); i++)
     {
-        output.push_back(cv::Point2f(contour[i][0], contour[i][1]));
+        output.push_back(cv::Point2f(contour[i]->getX(), contour[i]->getY()));
     }
     return output;
 }
