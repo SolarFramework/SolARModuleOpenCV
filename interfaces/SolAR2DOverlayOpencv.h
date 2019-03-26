@@ -35,16 +35,39 @@ class SOLAROPENCV_EXPORT_API SolAR2DOverlayOpencv : public org::bcom::xpcf::Conf
 public:
     SolAR2DOverlayOpencv();
 
+    /// @brief Draw one Circle.
+    /// Draw a circle on the image displayImage center on the point with specified radius and thickness.
+    /// @param[in] point The position of the circle to draw
+    /// @param[in,out] displayImage The image on which the the circles will be drawn.
     void drawCircle(const SRef<Point2Df> point, SRef<Image> displayImage) override;
 
+    /// @brief Draw Circles.
+    /// Draw all the circles stored in the vector std::vector <SRef<Point2Df>> & points on image displayImage with specified radius, thickness and colors (defined in the configuration file).
+    /// @param[in] point The positions of the circles to draw
+    /// @param[in,out] displayImage The image on which the circles will be drawn.
     void drawCircles(const std::vector<SRef<Point2Df>>& points, SRef<Image> displayImage) override;
 
     /// @brief Draw Circles.
-    /// Draw all the circles stored in the vector std::vector <SRef<Keypoint>> & keypoints on image displayImage with specified radius and thickness.
+    /// Draw all the circles stored in the vector std::vector <SRef<Keypoint>> & keypoints on image displayImage with specified radius, thickness and colors (defined in the configuration file).
+    /// @param[in] keypoint The positions of the circles to draw
+    /// @param[in,out] displayImage The image on which the circles will be drawn.
     void drawCircles(const std::vector<SRef<Keypoint>>& keypoints, SRef<Image> displayImage) override;
 
+    /// @brief Draw a Contour.
+    /// Draw a contour on image displayImage
+    /// @param[in] contour The contour in 2D to draw with specified radius, thickness and colors (defined in the configuration file).
+    /// @param[in,out] displayImage The image on which the contours will be drawn.
+    void drawContour (const Contour2Df& contour, SRef<Image> displayImage);
+
+    /// @brief Draw Contours.
+    /// Draw all the contours stored in the vector  std::vector <SRef<Contour2Df>> & contours on image displayImage
+    /// @param[in] contours The vector of contours in 2D to draw with specified radius, thickness and colors (defined in the configuration file).
+    /// @param[in,out] displayImage The image on which the contours will be drawn.
     void drawContours (const std::vector <SRef<Contour2Df>> & contours, SRef<Image> displayImage) override;
 
+    /// @brief Draw a Squared Binary Pattern.
+    /// @param[in] pattern The squared binary pattern to display.
+    /// @param[in,out] displayImage The image on which the squared binary pattern will be drawn (on the whole image).
     void drawSBPattern (const SRef<SquaredBinaryPattern> pattern, SRef<Image> displayImage) override;
 
     void unloadComponent () override final;
