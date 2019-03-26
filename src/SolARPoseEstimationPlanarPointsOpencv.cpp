@@ -110,10 +110,10 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
     }
 
     // 3rd column of pose matrix = cross product between first and second columns of homography
-    oHw.col(2)= oHw.col(0).cross(oHw.col(1));
+    cv::Mat c3 = oHw.col(0).cross(oHw.col(1));
 
     for (int row = 0; row<3; row++){
-        pose(row,2) = (float)(oHw.at<double>(row, 2));
+        pose(row,2) = (float)(c3.at<double>(row, 0));
     }
 
     pose(3,0)  = 0.0;
