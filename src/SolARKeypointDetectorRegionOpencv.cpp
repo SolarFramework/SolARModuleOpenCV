@@ -156,11 +156,33 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> &image, const s
     if (m_nbDescriptors >= 0)
         kptsFilter.retainBest(kpts,m_nbDescriptors);
 
-    for(std::vector<cv::KeyPoint>::iterator itr=kpts.begin();itr!=kpts.end();++itr){
-       SRef<Keypoint> kpa = xpcf::utils::make_shared<Keypoint>();
+	auto getAngle = [](cv::Point2f &A, cv::Point2f &B, cv::Point2f &C) {
+		float c = cv::norm(A - B);
+		float a = cv::norm(A - C);
+		float b = cv::norm(B - C);
+		float tmp = (a*a + b * b - c * c) / (2.f * a * b);
+		return acosf(tmp);
+	};
 
-        kpa->init((*itr).pt.x*ratioInv,(*itr).pt.y*ratioInv,(*itr).size,(*itr).angle,(*itr).response,(*itr).octave,(*itr).class_id) ;
-        keypoints.push_back(kpa);
+	auto checkInside = [getAngle](const std::vector<SRef<Point2Df>>& contours, Point2f &ptToCheck) {
+		float sumAngles(0.f);
+		for (int i = 0; i < contours.size(); ++i) {
+			cv::Point2f pt1(contours[i]->getX(), contours[i]->getY());
+			cv::Point2f pt2(contours[(i + 1) % contours.size()]->getX(), contours[(i + 1) % contours.size()]->getY());
+			sumAngles += getAngle(pt1, pt2, ptToCheck);
+		}
+		if (std::fabsf(sumAngles - 2 * CV_PI) < 1e-4)
+			return true;
+		else
+			return false;
+	};
+
+    for(std::vector<cv::KeyPoint>::iterator itr=kpts.begin();itr!=kpts.end();++itr){
+		if (checkInside(contours, (*itr).pt)) {
+			SRef<Keypoint> kpa = xpcf::utils::make_shared<Keypoint>();
+			kpa->init((*itr).pt.x*ratioInv, (*itr).pt.y*ratioInv, (*itr).size, (*itr).angle, (*itr).response, (*itr).octave, (*itr).class_id);
+			keypoints.push_back(kpa);
+		}
     }
 }
 
