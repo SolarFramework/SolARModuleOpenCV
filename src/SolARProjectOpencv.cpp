@@ -47,12 +47,15 @@ FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<Point3Df>
     std::vector<cv::Point3f> cvWorldPoints;
     std::vector<cv::Point2f> cvImagePoints;
 
-    cv::Mat rvec;
-    cv::Mat_<float> tvec;
+	Transform3Df poseInv = pose.inverse();
 
-    int type = inferOpenCVType<float>(); // typeid ??
-    rvec = cv::Mat(3,3,type,(void *)pose.rotation().data());
-    tvec = cv::Mat(3,1,type,(void *)pose.translation().data());
+	cv::Mat rotMat, rvec;
+	rotMat = cv::Mat(3, 3, CV_32F, (void *)poseInv.rotation().data());
+	cv::Mat tvec(3, 1, CV_32F);
+	tvec.at<float>(0, 0) = poseInv(0, 3);
+	tvec.at<float>(1, 0) = poseInv(1, 3);
+	tvec.at<float>(2, 0) = poseInv(2, 3);
+	cv::Rodrigues(rotMat, rvec);
 
     for (auto point : inputPoints)
         cvWorldPoints.push_back(cv::Point3f(point->getX(), point->getY(), point->getZ()));
