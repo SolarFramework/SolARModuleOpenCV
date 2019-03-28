@@ -18,6 +18,7 @@
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARUnprojectPlanarPointsOpencv);
 
@@ -43,9 +44,26 @@ SolARUnprojectPlanarPointsOpencv::~SolARUnprojectPlanarPointsOpencv(){
 
 }
 
-FrameworkReturnCode unprojectOCV(const std::vector<cv::Point2f>& imagePoints, std::vector<SRef<Point3Df>>& worldPoints, const Transform3Df& pose)
-{
-    // TODO
+FrameworkReturnCode unprojectOCV(const std::vector<cv::Point2f>& imagePoints, std::vector<SRef<Point3Df>>& worldPoints, const Transform3Df& pose, const cv::Mat &m_camMatrix, const cv::Mat &m_camDistorsion)
+{	
+	// undistort 2D points	
+	std::vector<cv::Point2f> correctedImagePoints;
+	cv::undistortPoints(imagePoints, correctedImagePoints, m_camMatrix, m_camDistorsion);
+
+	// get unproject transformation matrix
+	Transform3Df poseInv = pose.inverse();
+	cv::Mat ext = (cv::Mat_<float>(3, 3) <<
+		poseInv(0, 0), poseInv(0, 1), poseInv(0, 3),
+		poseInv(1, 0), poseInv(1, 1), poseInv(1, 3),
+		poseInv(2, 0), poseInv(2, 1), poseInv(2, 3));	
+	cv::Mat unProj = ext.inv();
+
+	// unproject points
+	for (auto it : correctedImagePoints) {
+		cv::Mat pt2D = (cv::Mat_<float>(3, 1) << it.x, it.y, 1.f);
+		cv::Mat pt3D = unProj * pt2D;
+		worldPoints.push_back(xpcf::utils::make_shared<Point3Df>(pt3D.at<float>(0, 0) / pt3D.at<float>(2, 0), pt3D.at<float>(1, 0) / pt3D.at<float>(2, 0), 0.f));
+	}
 
     return FrameworkReturnCode::_SUCCESS;
 }
@@ -58,7 +76,7 @@ FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vecto
     for (auto point : imagePoints)
         cvPoints.push_back(cv::Point2f(point->getX(), point->getY()));
 
-    return unprojectOCV(cvPoints, worldPoints, pose);
+    return unprojectOCV(cvPoints, worldPoints, pose, m_camMatrix, m_camDistorsion);
 }
 
 FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vector<SRef<Keypoint>> & imageKeypoints,
@@ -69,7 +87,7 @@ FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vecto
     for (auto point : imageKeypoints)
         cvPoints.push_back(cv::Point2f(point->getX(), point->getY()));
 
-    return unprojectOCV(cvPoints, worldPoints, pose);
+    return unprojectOCV(cvPoints, worldPoints, pose, m_camMatrix, m_camDistorsion);
 }
 
 void SolARUnprojectPlanarPointsOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
