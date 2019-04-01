@@ -171,7 +171,8 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> &image, const s
 			cv::Point2f pt2(contours[(i + 1) % contours.size()]->getX(), contours[(i + 1) % contours.size()]->getY());
 			sumAngles += getAngle(pt1, pt2, ptToCheck);
 		}
-		if (std::fabsf(sumAngles - 2 * CV_PI) < 1e-4)
+		
+		if (std::fabs(sumAngles - 2 * CV_PI) < 1e-4)
 			return true;
 		else
 			return false;

@@ -58,13 +58,13 @@ public:
 
     static void drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Point2f& p2, cv::Scalar color, int thickness);
 
-private:
-    template <class T> inline static constexpr int inferOpenCVType();
+	template <class T> inline static constexpr int inferOpenCVType();
+ 
     static int deduceOpenCVType(SRef<Image> img);
 
 };
 
-template <class T> constexpr int inferOpenCVType()
+template <class T> constexpr int SolAROpenCVHelper::inferOpenCVType()
 {
     static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, int32_t>::value
                    || std::is_same<T, int16_t>::value || std::is_same<T, unsigned char>::value || std::is_same<T, char>::value,

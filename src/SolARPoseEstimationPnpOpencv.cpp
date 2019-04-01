@@ -77,7 +77,7 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
     // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
     if (!initialPoseInverse.isApprox(Transform3Df::Identity())){
 
-        int type = inferOpenCVType<float>(); // typeid ??
+        int type = SolAROpenCVHelper::inferOpenCVType<float>();
         raux = cv::Mat(3,3,type,(void *)initialPoseInverse.rotation().data());
         taux = cv::Mat(3,1,type,(void *)initialPoseInverse.translation().data());
         
