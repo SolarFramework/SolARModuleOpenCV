@@ -32,12 +32,14 @@ namespace OPENCV {
 static std::map<std::string,KeypointDetectorType> stringToType = {{"AKAZE",KeypointDetectorType::AKAZE},
                                                                   {"AKAZE2",KeypointDetectorType::AKAZE2},
                                                                   {"ORB",KeypointDetectorType::ORB},
-                                                                  {"BRISK",KeypointDetectorType::BRISK}};
+                                                                  {"BRISK",KeypointDetectorType::BRISK},
+                                                                  {"FEATURE_TO_TRACK", KeypointDetectorType::FEATURE_TO_TRACK}};
 
 static std::map<KeypointDetectorType,std::string> typeToString = {{KeypointDetectorType::AKAZE, "AKAZE"},
                                                                   {KeypointDetectorType::AKAZE2,"AKAZE2"},
                                                                   {KeypointDetectorType::ORB,"ORB"},
-                                                                  {KeypointDetectorType::BRISK,"BRISK"}};
+                                                                  {KeypointDetectorType::BRISK,"BRISK"},
+                                                                  {KeypointDetectorType::FEATURE_TO_TRACK,"FEATURE_TO_TRACK"}};
 
 SolARKeypointDetectorRegionOpencv::SolARKeypointDetectorRegionOpencv():ConfigurableBase(xpcf::toUUID<SolARKeypointDetectorRegionOpencv>())
 {
@@ -59,9 +61,16 @@ SolARKeypointDetectorRegionOpencv::~SolARKeypointDetectorRegionOpencv()
 xpcf::XPCFErrorCode SolARKeypointDetectorRegionOpencv::onConfigured()
 {
     LOG_DEBUG(" SolARKeypointDetectorRegionOpencv onConfigured");
-	if (stringToType.find(m_type) != stringToType.end())
-		setType(stringToType.at(m_type));
-    return xpcf::_SUCCESS;
+    if (stringToType.find(m_type) != stringToType.end())
+    {
+        setType(stringToType.at(m_type));
+        return xpcf::_SUCCESS;
+    }
+    else
+    {
+        LOG_WARNING("Keypoint detector of type {} defined in your configuration file does not exist", m_type);
+        return xpcf::_ERROR_NOT_IMPLEMENTED;
+    }
 }
 
 void SolARKeypointDetectorRegionOpencv::setType(KeypointDetectorType type)
