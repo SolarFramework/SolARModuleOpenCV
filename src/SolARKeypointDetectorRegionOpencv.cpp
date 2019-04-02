@@ -59,7 +59,8 @@ SolARKeypointDetectorRegionOpencv::~SolARKeypointDetectorRegionOpencv()
 xpcf::XPCFErrorCode SolARKeypointDetectorRegionOpencv::onConfigured()
 {
     LOG_DEBUG(" SolARKeypointDetectorRegionOpencv onConfigured");
-    setType(stringToType.at(m_type));
+	if (stringToType.find(m_type) != stringToType.end())
+		setType(stringToType.at(m_type));
     return xpcf::_SUCCESS;
 }
 
@@ -121,6 +122,15 @@ KeypointDetectorType SolARKeypointDetectorRegionOpencv::getType()
     return stringToType.at(m_type);
 }
 
+void goodFeaturesToTrackDetection(cv::Mat &img, int &nbDescriptors, std::vector<cv::KeyPoint> &kpts) {
+	std::vector<cv::Point2f> corners;
+	cv::goodFeaturesToTrack(img, corners, nbDescriptors, 0.008, 3, cv::Mat(), 3);
+	cornerSubPix(img, corners, cv::Size(7, 7), Size(-1, -1), cv::TermCriteria(TermCriteria::COUNT | TermCriteria::EPS, 20, 0.03));
+	for (auto it : corners) {
+		kpts.push_back(cv::KeyPoint(it, 0.f));
+	}
+}
+
 void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> &image, const std::vector<SRef<Point2Df>>& contours, std::vector<SRef<Keypoint>> &keypoints)
 {
     std::vector<cv::KeyPoint> kpts;
@@ -137,24 +147,28 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> &image, const s
     cv::Mat img_1;
     cvtColor( opencvImage, img_1, CV_BGR2GRAY );
     cv::resize(img_1, img_1, Size(img_1.cols*m_imageRatio,img_1.rows*m_imageRatio), 0, 0);
-
+	
     try
     {
-        if(!m_detector){
-            LOG_DEBUG(" detector is initialized with default value : {}", this->m_type)
-            setType(stringToType.at(this->m_type));
-        }
-        m_detector->detect(img_1, kpts, Mat());
+		if (m_type == "FEATURE_TO_TRACK") {
+			goodFeaturesToTrackDetection(img_1, m_nbDescriptors, kpts);
+		}
+		else {
+			if (!m_detector) {
+				LOG_DEBUG(" detector is initialized with default value : {}", this->m_type)
+					setType(stringToType.at(this->m_type));
+			}
+			m_detector->detect(img_1, kpts, Mat());
+			if (m_nbDescriptors >= 0)
+				kptsFilter.retainBest(kpts, m_nbDescriptors);
+		}
     }
     catch (Exception& e)
     {
         LOG_ERROR("Feature : {}", m_detector->getDefaultName())
         LOG_ERROR("{}",e.msg)
         return;
-    }
-
-    if (m_nbDescriptors >= 0)
-        kptsFilter.retainBest(kpts,m_nbDescriptors);
+    }    
 
 	auto getAngle = [](cv::Point2f &A, cv::Point2f &B, cv::Point2f &C) {
 		float c = cv::norm(A - B);
