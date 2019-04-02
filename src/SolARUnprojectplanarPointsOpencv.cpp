@@ -72,6 +72,8 @@ FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vecto
                                                                 std::vector<SRef<Point3Df>> & worldPoints,
                                                                 const Transform3Df& pose)
 {
+    if (imagePoints.empty())
+        return FrameworkReturnCode::_ERROR_;
     std::vector<cv::Point2f> cvPoints;
     for (auto point : imagePoints)
         cvPoints.push_back(cv::Point2f(point->getX(), point->getY()));
@@ -83,6 +85,8 @@ FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vecto
                                                                 std::vector<SRef<Point3Df>> & worldPoints,
                                                                 const Transform3Df& pose)
 {
+    if (imageKeypoints.empty())
+        return FrameworkReturnCode::_ERROR_;
     std::vector<cv::Point2f> cvPoints;
     for (auto point : imageKeypoints)
         cvPoints.push_back(cv::Point2f(point->getX(), point->getY()));
