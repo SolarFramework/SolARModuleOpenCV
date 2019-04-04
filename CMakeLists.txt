@@ -18,7 +18,7 @@ set (SOURCES
     src/SolARContoursExtractorOpencv.cpp
     src/SolARPerspectiveControllerOpencv.cpp
     src/SolARProjectOpencv.cpp
-    src/SolARUnprojectPlanarPointsOpencv.cpp
+    src/SolARUnprojectplanarPointsOpencv.cpp
     src/SolARMarker2DSquaredBinaryOpencv.cpp
     src/SolARContoursFilterBinaryMarkerOpencv.cpp
     src/SolARDescriptorsExtractorSBPatternOpencv.cpp
