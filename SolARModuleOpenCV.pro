@@ -6,7 +6,7 @@ CONFIG -= qt
 TARGET = SolARModuleOpenCV
 INSTALLSUBDIR = bcomBuild
 FRAMEWORK = $$TARGET
-VERSION=0.5.1
+VERSION=0.5.2
 
 DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
@@ -48,12 +48,15 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageLoaderOpencv.h \
     interfaces/SolARImageViewerOpencv.h \
     interfaces/SolARKeypointDetectorOpencv.h \
+    interfaces/SolARKeypointDetectorRegionOpencv.h \
     interfaces/SolAROpenCVHelper.h \
     interfaces/SolAROpencvAPI.h \
     interfaces/SolARCameraCalibrationOpencv.h \
     interfaces/SolARMarker2DNaturalImageOpencv.h \
     interfaces/SolARContoursExtractorOpencv.h \
     interfaces/SolARPerspectiveControllerOpencv.h \
+    interfaces/SolARProjectOpencv.h \
+    interfaces/SolARUnprojectPlanarPointsOpencv.h \
     interfaces/SolARMarker2DSquaredBinaryOpencv.h \
     interfaces/SolARContoursFilterBinaryMarkerOpencv.h \
     interfaces/SolARDescriptorsExtractorSBPatternOpencv.h \
@@ -66,12 +69,14 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARDescriptorMatcherRadiusOpencv.h \
     interfaces/SolARFundamentalMatrixEstimationOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
+    interfaces/SolARPoseEstimationPlanarPointsOpencv.h \
     interfaces/SolARPoseEstimationPnpEPFL.h \
     interfaces/SolARPoseEstimationPnpOpencv.h \
     interfaces/SolARPoseEstimationSACPnpOpencv.h \
     interfaces/SolARGeometricMatchesFilterOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolARSVDTriangulationOpencv.h \
+    interfaces/SolAROpticalFlowPyrLKOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
     src/AKAZE2/AKAZEFeatures.h \
     src/AKAZE2/fed.h \
@@ -95,6 +100,7 @@ HEADERS += interfaces/SolARCameraOpencv.h \
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
+    src/SolARKeypointDetectorRegionOpencv.cpp \
     src/SolARImageLoaderOpencv.cpp \
     src/SolARImageConvertorOpencv.cpp \
     src/SolARImageConvertorUnity.cpp \
@@ -105,6 +111,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARMarker2DNaturalImageOpencv.cpp \
     src/SolARContoursExtractorOpencv.cpp \
     src/SolARPerspectiveControllerOpencv.cpp \
+    src/SolARProjectOpencv.cpp \
+    src/SolARUnprojectplanarPointsOpencv.cpp \
     src/SolARMarker2DSquaredBinaryOpencv.cpp \
     src/SolARContoursFilterBinaryMarkerOpencv.cpp \
     src/SolARDescriptorsExtractorSBPatternOpencv.cpp \
@@ -116,6 +124,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
+    src/SolARPoseEstimationPlanarPointsOpencv.cpp \
     src/SolARPoseEstimationPnpEPFL.cpp \
     src/SolARPoseEstimationPnpOpencv.cpp \
     src/SolARPoseEstimationSACPnpOpencv.cpp \
@@ -125,6 +134,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/AKAZE2/fed.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
+    src/SolAROpticalFlowPyrLKOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
     src/SolARImageFilterBinaryOpencv.cpp \
@@ -139,7 +149,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARHomographyMatrixDecomposerOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
     src/SolARMatchesOverlayOpencv.cpp \
-	src/SolARUndistortPointsOpencv.cpp
+    src/SolARUndistortPointsOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers

@@ -1,4 +1,4 @@
-TARGET = SolARFundamentalMatrixDecomposerOpencvTest
+TARGET = SolARopticalFlowOpenCVTest
 VERSION=0.5.2
 
 CONFIG += c++11
@@ -20,15 +20,14 @@ win32:CONFIG -= static
 win32:CONFIG += shared
 
 DEPENDENCIESCONFIG = sharedlib
-#NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
+#NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib MUST BE DEFINED BEFORE templateappconfig.pri inclusion
 include ($$(BCOMDEVROOT)/builddefs/qmake/templateappconfig.pri)
-
-HEADERS += \
 
 SOURCES += \
     main.cpp
 
 unix {
+LIBS += -ldl
 }
 
 macx {
@@ -46,4 +45,3 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 
 }
-

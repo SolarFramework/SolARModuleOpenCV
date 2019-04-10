@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef SOLARKEYPOINTDETECTOROPENCV_H
-#define SOLARKEYPOINTDETECTOROPENCV_H
+#ifndef SOLARKEYPOINTDETECTORREGIONOPENCV_H
+#define SOLARKEYPOINTDETECTORREGIONOPENCV_H
 
-#include "api/features/IKeypointDetector.h"
+#include "api/features/IKeypointDetectorRegion.h"
 
 // Definition of SolARKeypointDetectorOpencv Class //
 // part of SolAR namespace //
@@ -36,20 +36,33 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARKeypointDetectorOpencv : public org::bcom::xpcf::ConfigurableBase,
-        public IKeypointDetector {
+class SOLAROPENCV_EXPORT_API SolARKeypointDetectorRegionOpencv : public org::bcom::xpcf::ConfigurableBase,
+        public IKeypointDetectorRegion {
 public:
 
-    SolARKeypointDetectorOpencv();
-    ~SolARKeypointDetectorOpencv();
-    void unloadComponent () override final;
+    /// @brief SolARKeypointDetectorRegionOpencv default constructor
+    SolARKeypointDetectorRegionOpencv();
+
+    /// @brief SolARKeypointDetectorRegionOpencv default destructor
+    ~SolARKeypointDetectorRegionOpencv();
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
+    /// @brief Set the type of method used to detect keypoints in the image
+    /// @param[in] type The type of method used to detect keypoints.
     void setType(KeypointDetectorType type) override;
-    KeypointDetectorType  getType();
+
+    /// @brief Get the type of method used to detect keypoints in the image
+    /// @return The type of method used to detect keypoints.
+    KeypointDetectorType  getType() override;
  
-    void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints) override;
+    /// @brief This method detects keypoints in an input Image
+    /// @param[in] image input image on which we are extracting keypoints.
+    /// @param[in] contours a set of 2D points defining the contour of the region where keypoints will be detected
+    /// @param[out] keypoints The keypoints detected from the given region of the image passed as first argument.
+    void detect (const SRef<Image> &image, const std::vector<SRef<Point2Df>>& contours, std::vector<SRef<Keypoint>> &keypoints) override;
+
+    void unloadComponent () override final;
 
 private:
     /// @brief the type of descriptor used for the extraction (AKAZE, AKAZE2, ORB, BRISK)
@@ -79,4 +92,4 @@ extern int deduceOpenCVType(SRef<Image> img);
 
 
 
-#endif // SOLARKEYPOINTDETECTOROPENCV_H
+#endif // SOLARKEYPOINTDETECTORREGIONOPENCV_H

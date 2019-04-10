@@ -50,10 +50,15 @@ class SolARImageLoaderOpencv;
 class SolARImageViewerOpencv;
 class SolARImagesAsCameraOpencv;
 class SolARKeypointDetectorOpencv;
+class SolARKeypointDetectorRegionOpencv;
 class SolARMarker2DNaturalImageOpencv;
 class SolARMarker2DSquaredBinaryOpencv;
 class SolARMatchesOverlayOpencv;
+class SolAROpticalFlowPyrLKOpencv;
 class SolARPerspectiveControllerOpencv;
+class SolARProjectOpencv;
+class SolARUnprojectPlanarPointsOpencv;
+class SolARPoseEstimationPlanarPointsOpencv;
 class SolARPoseEstimationPnpEPFL;
 class SolARPoseEstimationPnpOpencv;
 class SolARPoseEstimationSACPnpOpencv;
@@ -207,6 +212,16 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv
                              "SolARKeypointDetectorOpencv",
                              "SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv component")
 
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARKeypointDetectorRegionOpencv,
+                             "22c2ca9f-e43b-4a88-8337-4a166a789971",
+                             "SolARKeypointDetectorRegionOpencv",
+                             "SolAR::MODULES::OPENCV::SolARKeypointDetectorRegionOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAROpticalFlowPyrLKOpencv,
+                             "b513e9ff-d2e7-4dcf-9a29-4ed95c512158",
+                             "SolAROpticalFlowPyrLKOpencv",
+                             "A component to estimate the optical flow between two images based on pyramidal Lucas-Kanade approach")
+
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv,
                              "efcdb590-c570-11e7-abc4-cec278b6b50a",
                              "SolARMarker2DNaturalImageOpencv",
@@ -222,11 +237,25 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPerspectiveControllerO
                              "SolARPerspectiveControllerOpencv",
                              "SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv component")
 
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARProjectOpencv,
+                             "741fc298-0149-4322-a7a9-ccb971e857ba",
+                             "SolARProjectOpencv",
+                             "SolAR::MODULES::OPENCV::SolARProjectOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARUnprojectPlanarPointsOpencv,
+                             "9938354d-6476-437e-8325-97e82666a46e",
+                             "SolARUnprojectPlanarPointsOpencv",
+                             "SolAR::MODULES::OPENCV::SolARUnprojectPlanarPointsOpencv component")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPlanarPointsOpencv,
+                             "9fbadf80-251f-4160-94f8-a64dc3d40a2f",
+                             "SolARPoseEstimationPlanarPointsEPFL",
+                             "Estimates the camera pose from 2D-3D planar points correspodances")
+
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL,
                              "a38edf79-f0dc-45ca-92fc-2b336fceedf9",
                              "SolARPoseEstimationPnpEPFL",
                              "SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL component")
-
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv,
                              "0753ade1-7932-4e29-a71c-66155e309a53",
