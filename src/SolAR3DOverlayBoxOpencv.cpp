@@ -121,7 +121,7 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displ
     Tvec.at<float>(2,0) = poseInverse(2,3);
 
     cv::Mat rodrig;
-    cv::Rodrigues(Rvec,rodrig);
+     cv::Rodrigues(Rvec,rodrig);
 
     //compute the projection of the points of the cube
     cv::projectPoints(m_parallelepiped, rodrig, Tvec, m_camMatrix, m_camDistorsion, imagePoints);

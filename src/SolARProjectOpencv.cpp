@@ -42,31 +42,47 @@ SolARProjectOpencv::~SolARProjectOpencv(){
 
 }
 
-FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<Point3Df>> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose)
+FrameworkReturnCode projectCV(const std::vector<cv::Point3f> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose, const cv::Mat & intrinsicParams, const cv::Mat & distorsionParams )
 {
-    std::vector<cv::Point3f> cvWorldPoints;
     std::vector<cv::Point2f> cvImagePoints;
 
-	Transform3Df poseInv = pose.inverse();
+    Transform3Df poseInv = pose.inverse();
 
-	cv::Mat rotMat, rvec;
-	rotMat = cv::Mat(3, 3, SolAROpenCVHelper::inferOpenCVType<float>(), (void *)poseInv.rotation().data());
-	cv::Mat tvec(3, 1, SolAROpenCVHelper::inferOpenCVType<float>());
-	tvec.at<float>(0, 0) = poseInv(0, 3);
-	tvec.at<float>(1, 0) = poseInv(1, 3);
-	tvec.at<float>(2, 0) = poseInv(2, 3);
-	cv::Rodrigues(rotMat, rvec);
+    cv::Mat rotMat, rvec;
+    rotMat = cv::Mat(3, 3, SolAROpenCVHelper::inferOpenCVType<float>(), (void *)poseInv.rotation().data());
+    cv::Mat tvec(3, 1, SolAROpenCVHelper::inferOpenCVType<float>());
+    tvec.at<float>(0, 0) = poseInv(0, 3);
+    tvec.at<float>(1, 0) = poseInv(1, 3);
+    tvec.at<float>(2, 0) = poseInv(2, 3);
+    cv::Rodrigues(rotMat, rvec);
 
-    for (auto point : inputPoints)
-        cvWorldPoints.push_back(cv::Point3f(point->getX(), point->getY(), point->getZ()));
-
-    cv::projectPoints(cvWorldPoints, rvec, tvec, m_camMatrix, m_camDistorsion, cvImagePoints);
+    cv::projectPoints(inputPoints, rvec, tvec, intrinsicParams, distorsionParams, cvImagePoints);
 
     imagePoints.clear();
     for (auto cvPoint : cvImagePoints)
         imagePoints.push_back(xpcf::utils::make_shared<Point2Df>((float)cvPoint.x, (float)cvPoint.y));
 
     return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<Point3Df>> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose)
+{
+    std::vector<cv::Point3f> cvWorldPoints;
+
+    for (auto point : inputPoints)
+        cvWorldPoints.push_back(cv::Point3f(point->getX(), point->getY(), point->getZ()));
+
+      return projectCV(cvWorldPoints, imagePoints, pose, m_camMatrix, m_camDistorsion);
+}
+
+FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<CloudPoint>> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose)
+{
+    std::vector<cv::Point3f> cvWorldPoints;
+
+    for (auto point : inputPoints)
+        cvWorldPoints.push_back(cv::Point3f(point->getX(), point->getY(), point->getZ()));
+
+      return projectCV(cvWorldPoints, imagePoints, pose, m_camMatrix, m_camDistorsion);
 }
 
 void SolARProjectOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
