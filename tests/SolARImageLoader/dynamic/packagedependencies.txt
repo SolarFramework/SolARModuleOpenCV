@@ -1,5 +1,5 @@
-SolARFramework|0.5.2|SolARFramework|bcomBuild|url_repo_artifactory
-SolARModuleOpenCV|0.5.2|SolARModuleOpenCV|bcomBuild|url_repo_artifactory
+SolARFramework|0.5.3|SolARFramework|bcomBuild|url_repo_artifactory
+SolARModuleOpenCV|0.5.3|SolARModuleOpenCV|bcomBuild|url_repo_artifactory
 xpcf|2.1.0|xpcf|thirdParties|http://repository.b-com.com/
 boost|1.68.0|boost|thirdParties|http://repository.b-com.com/
 spdlog|0.14.0|spdlog|thirdParties|http://repository.b-com.com/

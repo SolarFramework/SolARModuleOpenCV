@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.7.2)
 
 ##################################################
-set (VERSION_NUMBER "0.5.2")
+set (VERSION_NUMBER "0.5.3")
 project("SolARModuleOpenCV")
 set (SOURCES 
     src/SolARModuleOpencv.cpp
