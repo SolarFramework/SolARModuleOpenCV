@@ -27,12 +27,17 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @brief The SolARDescriptorsExtractorSBPatternOpencv class
+ */
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorSBPatternOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorsExtractorSBPattern {
 public:
     SolARDescriptorsExtractorSBPatternOpencv();
     ~SolARDescriptorsExtractorSBPatternOpencv() = default;
-
+    /// @brief Extracts a set of descriptors from a given images based on a marker pattern
+    /// [in] : set of keypoints.
+    /// [out] decsriptors: se of computed descriptors.
     FrameworkReturnCode extract(const std::vector<SRef<Image>>& inputImages, const std::vector<SRef<Contour2Df>>& contours, SRef<DescriptorBuffer> & pattern_descriptors, std::vector<SRef<Contour2Df>> & recognized_contours) override;
     FrameworkReturnCode extract(const SRef<SquaredBinaryPattern> pattern, SRef<DescriptorBuffer> & descriptor) override;
 
