@@ -34,7 +34,10 @@ namespace SolAR {
                                          std::vector<SRef<Point2Df>>&shared_2dpoint,
                                          std::vector<DescriptorMatch> & found_matches,
                                          std::vector<DescriptorMatch> & remaining_matches) override;
-
+                /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on opencv Perspective from N Points algorithm
+                /// @param[in] Set of 2d_points seen in view_1.
+                /// @param[in] Set of 3d_points corresponding to view_1.
+                /// @param[out] Camera pose in the world coordinates system of the view_1.
 				FrameworkReturnCode find(	const SRef<Frame> lastFrame,
 											const SRef<Frame> currentFrame,
 											const std::vector<DescriptorMatch>&current_matches,

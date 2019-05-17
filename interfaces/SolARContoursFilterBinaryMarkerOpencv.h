@@ -26,15 +26,18 @@ namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
-
+/**
+ * @brief The SolARContoursFilterBinaryMarkerOpencv class
+ */
 class SOLAROPENCV_EXPORT_API SolARContoursFilterBinaryMarkerOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IContoursFilter {
 public:
     SolARContoursFilterBinaryMarkerOpencv();
     ~SolARContoursFilterBinaryMarkerOpencv() = default;
-
-    FrameworkReturnCode filter(const std::vector<SRef<Contour2Df>> & input_contours, std::vector<SRef<Contour2Df>> & filtered_contours) override;
-
+    /// @brief Filters an ensemble of contours according to a given parameters (minimum of contour length,  minimum contours corners..).
+    /// [in] input_contours: original extracted contours.
+    ///[out] output_contours: final filtred contours.
+    FrameworkReturnCode filter(const std::vector<SRef<Contour2Df>> & input_contours, std::vector<SRef<Contour2Df>> & output_contours) override;
     void unloadComponent () override final; 
 
 private:    

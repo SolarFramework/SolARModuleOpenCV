@@ -27,12 +27,17 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @brief The SolARContoursExtractorOpencv class
+ */*/
 class SOLAROPENCV_EXPORT_API SolARContoursExtractorOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IContoursExtractor {
 public:
     SolARContoursExtractorOpencv();
     ~SolARContoursExtractorOpencv() = default;
-
+    /// @brief Extracts an ensemble of contours from a given image.
+    /// [in] inputImg: source image from which the contour will be extracted.
+    ///[out] contours: ensemble of contours extracted.
     FrameworkReturnCode extract(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours) override;
 
     void unloadComponent () override final;

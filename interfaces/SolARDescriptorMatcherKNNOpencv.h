@@ -39,6 +39,9 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @brief The SolARDescriptorMatcherKNNOpencv class
+ */
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorMatcher {
 public:
@@ -46,11 +49,20 @@ public:
     ~SolARDescriptorMatcherKNNOpencv();
     void unloadComponent () override final;
 
+    /// @brief Matches two descriptors desc1 and desc2 respectively based on KNN search strategy.
+    /// [in] desc1: source descriptor.
+    /// [in] desc2: target descriptor.
+    /// [out] matches: ensemble of detected matches, a pair of source/target indices.
+    ///@return DescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
   DescriptorMatcher::RetCode match(
             SRef<DescriptorBuffer> desc1,
             SRef<DescriptorBuffer> desc2,
             std::vector<DescriptorMatch>& matches);
-
+  /// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on KNN search strategy.
+  /// [in] desc1: source descriptor.
+  /// [in] desc2: target descriptors.
+  /// [out] matches: ensemble of detected matches, a pair of source/target indices.
+  ///@return DescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
     DescriptorMatcher::RetCode match(
            SRef<DescriptorBuffer> descriptors1,
            std::vector<SRef<DescriptorBuffer>>& descriptors2,
