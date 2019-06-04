@@ -41,7 +41,7 @@ namespace OPENCV {
 
 /**
  * @class SolARDescriptorMatcherHammingBruteForceOpencv
- * @brief <B>Matches descriptors based on a Hamming distance and select the best matches of each descriptor.</B>
+ * @brief <B>Matches descriptors based on a Hamming distance and selects the best matches of each descriptor.</B>
  * <TT>UUID: d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9</TT>
  *
  */

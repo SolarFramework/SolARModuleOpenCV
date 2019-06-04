@@ -30,7 +30,7 @@ namespace OPENCV {
 
 /**
  * @class SolARPoseEstimationPlanarPointsOpencv
- * @brief <B>Finds the camera pose of 2D-3D planar points correspondances based on opencv homography.</B>
+ * @brief <B>Finds the camera pose of 2D-3D planar points correspondences based on opencv homography.</B>
  * <TT>UUID: 9fbadf80-251f-4160-94f8-a64dc3d40a2f</TT>
  *
  */

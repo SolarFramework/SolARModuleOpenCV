@@ -38,7 +38,7 @@ namespace OPENCV {
 
 /**
  * @class SolAROpticalFlowPyrLKOpencv
- * @brief <B>Estimates the optical flow beteen two images based on a pyramidal Lucas Kanade approach.</B>
+ * @brief <B>Estimates the optical flow between two images based on a pyramidal Lucas Kanade approach.</B>
  * <TT>UUID: e95302be-3fe1-44e0-97bf-a98380464af9</TT>
  *
  */

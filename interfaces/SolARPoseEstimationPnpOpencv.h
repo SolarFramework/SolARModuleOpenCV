@@ -30,7 +30,7 @@ namespace OPENCV {
 
 /**
 * @class SolARPoseEstimationPnpOpencv
-* @brief <B>Finds the camera pose of 2D-3D points correspondaces based on opencv pnp algorithm.</B>
+* @brief <B>Finds the camera pose of 2D-3D points correspondences based on opencv Perspective-n-Points algorithm.</B>
 * <TT>UUID: 0753ade1-7932-4e29-a71c-66155e309a53</TT>
 *
 */

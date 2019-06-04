@@ -31,7 +31,7 @@ namespace OPENCV {
 
 /**
 * @class SolARPoseFinderFrom2D2DOpencv
-* @brief <B>Finds the camera pose based on a 2D-2D points correspondances between two images.</B>
+* @brief <B>Finds the camera pose based on a 2D-2D points correspondences between two images.</B>
 * <TT>UUID: 4d369049-809c-4e99-9994-5e8167bab808</TT>
 *
 * This component first compute the essential Matrix between the two images, and then estimate the pose of the second camera (position and orientation of the camera defined in the world coordinate system)

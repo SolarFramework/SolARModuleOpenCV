@@ -35,7 +35,7 @@ namespace OPENCV {
 
 /**
 * @class SolARSVDTriangulationOpencv
-* @brief <B>Triangulates set of corresponding 2D-2D points correspondances with known respective camera poses based on opencv SVD.</B>
+* @brief <B>Triangulates a set of corresponding 2D-2D points correspondences with known respective camera poses based on opencv SVD.</B>
 * <TT>UUID: 85274ecd-2914-4f12-96de-37c6040633a4</TT>
 *
 */

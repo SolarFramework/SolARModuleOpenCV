@@ -28,7 +28,7 @@ namespace OPENCV {
 
 /**
  * @class SolARPerspectiveControllerOpencv
- * @brief <B>Extracts an unwrapped image from a specific region defined with 4 points.</B>
+ * @brief <B>Extracts an unwrapped image from a specific region of an input image defined with four 2D points.</B>
  * <TT>UUID: 9c960f2a-cd6e-11e7-abc4-cec278b6b50a</TT>
  *
  */

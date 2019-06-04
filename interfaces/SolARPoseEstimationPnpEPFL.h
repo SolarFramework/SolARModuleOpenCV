@@ -32,7 +32,7 @@ namespace OPENCV {
 
 /**
  * @class SolARPoseEstimationPnpEPFL
- * @brief <B>Finds the camera pose of 2D-3D points correspondaces based on EPFL pnp algorithm.</B>
+ * @brief <B>Finds the camera pose of 2D-3D points correspondences based on EPFL Perspective-n-Points algorithm.</B>
  * <TT>UUID: a38edf79-f0dc-45ca-92fc-2b336fceedf9</TT>
  *
  */
