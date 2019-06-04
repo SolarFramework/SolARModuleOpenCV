@@ -33,9 +33,12 @@ namespace MODULES {
 namespace OPENCV {
 
 /**
- * @brief The SolARCameraOpencv class
+ * @class SolARCameraOpencv
+ * @brief <B>Grabs current image captured by a RGB camera.</B>
+ * <TT>UUID: 5b7396f4-a804-4f3c-a0eb-fb1d56042bb4</TT>
  *
  */
+
 class SOLAROPENCV_EXPORT_API SolARCameraOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::devices::ICamera {
 public:

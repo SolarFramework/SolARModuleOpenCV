@@ -37,7 +37,10 @@ namespace MODULES {
 namespace OPENCV {
 
 /**
- * @brief The SolARDescriptorMatcherRadiusOpencv class
+ * @class SolARDescriptorMatcherRadiusOpencv
+ * @brief <B>Matches descriptors and selects all matches not farther than a specified distance.</B>
+ * <TT>UUID: 549f7873-96e4-4eae-b4a0-ae8d80664ce5</TT>
+ *
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherRadiusOpencv : public org::bcom::xpcf::ConfigurableBase,

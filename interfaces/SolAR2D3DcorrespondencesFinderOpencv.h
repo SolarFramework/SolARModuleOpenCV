@@ -12,7 +12,10 @@ namespace SolAR {
     namespace MODULES {
         namespace OPENCV {
         /**
-         * @class SolAR2D3DCorrespondencesFinder
+         * @class SolAR2D3DCorrespondencesFinderOpencv
+         * @brief <B>Finds the 3D correspondents of 2D keypoints.</B>
+         * <TT>UUID: cedd8c47-e7b0-47bf-abb1-7fb54d198117</TT>
+         *
          */
             class SOLAROPENCV_EXPORT_API SolAR2D3DCorrespondencesFinderOpencv : public org::bcom::xpcf::ComponentBase,
                 public api::solver::pose::I2D3DCorrespondencesFinder

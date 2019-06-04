@@ -32,7 +32,10 @@ namespace MODULES {
 namespace OPENCV {
 
 /**
- * @class SolAR2D3DCorrespondencesFinder
+ * @class SolAR3DOverlayBoxOpencv
+ * @brief <B>Draws a 3D box on an image.</B>
+ * <TT>UUID: 2db01f59-9793-4cd5-8e13-b25d0ed5735</TT>
+ *
  */
 
 class SOLAROPENCV_EXPORT_API SolAR3DOverlayBoxOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -46,6 +49,7 @@ public:
     /// @param[in] pose: 3D camera pose expressed in the world coordinate.
     /// @param[in,out] displayImage The image on which the projection of a 3D box will be drawn.
     void draw(const Transform3Df & pose, SRef<Image> displayImage) override;
+
     /// @brief this method is used to set intrinsic parameters and distorsion of the camera
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distorsion parameters.

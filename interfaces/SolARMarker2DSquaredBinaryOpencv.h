@@ -33,6 +33,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARMarker2DSquaredBinaryOpencv
+ * @brief <B>Loads a 2D squared binary marker from a file.</B>
+ * <TT>UUID: 5d2b8da9-528e-4e5e-96c1-f883edcf3b1c</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARMarker2DSquaredBinaryOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::files::IMarker2DSquaredBinary{
 public:

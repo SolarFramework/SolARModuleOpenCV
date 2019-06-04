@@ -28,8 +28,12 @@ namespace MODULES {
 namespace OPENCV {
 
 /**
- * @brief The SolARDescriptorsExtractorSBPatternOpencv class
+ * @class SolARDescriptorsExtractorSBPatternOpencv
+ * @brief <B>Extracts the descriptor corresponding to a squared binary marker pattern.</B>
+ * <TT>UUID: d25625ba-ce3a-11e7-abc4-cec278b6b50a</TT>
+ *
  */
+
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorSBPatternOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorsExtractorSBPattern {
 public:

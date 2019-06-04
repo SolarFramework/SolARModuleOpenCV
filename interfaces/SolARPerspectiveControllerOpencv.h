@@ -26,6 +26,14 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARPerspectiveControllerOpencv
+ * @brief <B>Extracts an unwrapped image from a specific region defined with 4 points.</B>
+ * <TT>UUID: 9c960f2a-cd6e-11e7-abc4-cec278b6b50a</TT>
+ *
+ */
+
+
 class SOLAROPENCV_EXPORT_API SolARPerspectiveControllerOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::image::IPerspectiveController {
 public:

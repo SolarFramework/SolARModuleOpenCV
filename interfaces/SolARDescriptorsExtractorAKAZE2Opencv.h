@@ -37,8 +37,12 @@ namespace MODULES {
 namespace OPENCV {
 
 /**
- * @brief The SolARDescriptorsExtractorAKAZE2Opencv class
+ * @class SolARDescriptorsExtractorAKAZE2Opencv
+ * @brief <B>Extracts the AKAZE descriptors for a set of keypoints (optimized version).</B>
+ * <TT>UUID: 21238c00-26dd-11e8-b467-0ed5f89f718b</TT>
+ *
  */
+
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorAKAZE2Opencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorsExtractor {
 public:

@@ -26,9 +26,14 @@ namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
+
 /**
- * @brief The SolARContoursFilterBinaryMarkerOpencv class
+ * @class SolARContoursFilterBinaryMarkerOpencv
+ * @brief <B>Filters contours to select only the contours of squared binary markers.</B>
+ * <TT>UUID: 4309dcc6-cc73-11e7-abc4-cec278b6b50a</TT>
+ *
  */
+
 class SOLAROPENCV_EXPORT_API SolARContoursFilterBinaryMarkerOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IContoursFilter {
 public:

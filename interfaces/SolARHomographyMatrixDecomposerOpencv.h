@@ -30,6 +30,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARHomographyMatrixDecomposerOpencv
+ * @brief <B>Decomposes a homography matrix to extract four possible 3D poses.</B>
+ * <TT>UUID: b5fab395-2184-4123-b0d5-4af74d0a2d79</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARHomographyMatrixDecomposerOpencv : public org::bcom::xpcf::ComponentBase,
    public api::solver::pose::I2Dto3DTransformDecomposer {
 

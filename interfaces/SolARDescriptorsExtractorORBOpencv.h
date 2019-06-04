@@ -34,9 +34,14 @@ namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
+
 /**
- * @brief The SolARDescriptorsExtractorORBOpencv class
+ * @class SolARDescriptorsExtractorORBOpencv
+ * @brief <B>Extracts the ORB descriptors for a set of keypoints.</B>
+ * <TT>UUID: 0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a</TT>
+ *
  */
+
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorORBOpencv : public org::bcom::xpcf::ComponentBase,
         public api::features::IDescriptorsExtractor {
 public:

@@ -36,6 +36,14 @@ using namespace api::tracking;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolAROpticalFlowPyrLKOpencv
+ * @brief <B>Estimates the optical flow beteen two images based on a pyramidal Lucas Kanade approach.</B>
+ * <TT>UUID: e95302be-3fe1-44e0-97bf-a98380464af9</TT>
+ *
+ */
+
+
 class SOLAROPENCV_EXPORT_API SolAROpticalFlowPyrLKOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::tracking::IOpticalFlowEstimator {
 public:

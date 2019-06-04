@@ -19,8 +19,11 @@ namespace OPENCV {
 
 /**
  * @class SolARGeometricMatchesFilterOpencv
- * @brief Filters matches based on geometric assumptions.
+ * @brief <B>Filters a set of matches based on geometric constraints.</B>
+ * <TT>UUID: 3731691e-2c4c-4d37-a2ce-06d1918f8d41</TT>
+ *
  */
+
 class SOLAROPENCV_EXPORT_API SolARGeometricMatchesFilterOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IMatchesFilter {
 

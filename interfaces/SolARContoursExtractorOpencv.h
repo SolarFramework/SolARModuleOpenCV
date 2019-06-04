@@ -28,8 +28,12 @@ namespace MODULES {
 namespace OPENCV {
 
 /**
- * @brief The SolARContoursExtractorOpencv class
- */*/
+ * @class SolARContoursExtractorOpencv
+ * @brief <B>Extracts the contours of a given image.</B>
+ * <TT>UUID: 6acf8de2-cc63-11e7-abc4-cec278b6b50a</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARContoursExtractorOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IContoursExtractor {
 public:

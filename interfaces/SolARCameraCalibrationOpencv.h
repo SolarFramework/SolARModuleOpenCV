@@ -29,6 +29,13 @@ namespace SolAR {
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARCameraCalibrationOpencv
+ * @brief <B>Calibrates a camera based on a chessboard.</B>
+ * <TT>UUID: 702a7f53-e5ec-45d2-887d-daa99a34a33c</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARCameraCalibrationOpencv :
 	public org::bcom::xpcf::ComponentBase,
 	public api::input::devices::ICameraCalibration
@@ -42,9 +49,6 @@ public:
 	};
 
 public:
-    /**
-     * @class SolARCameraCalibrationOpencv
-     */
 	SolARCameraCalibrationOpencv();
 	virtual ~SolARCameraCalibrationOpencv();
     /// @brief this method calibrates and fixes an unkonwn camera intrinsic parameters from a offline video stream,

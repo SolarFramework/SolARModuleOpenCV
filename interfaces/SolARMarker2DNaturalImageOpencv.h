@@ -28,6 +28,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARMarker2DNaturalImageOpencv
+ * @brief <B>Loads a 2D natural image marker from a file.</B>
+ * <TT>UUID: efcdb590-c570-11e7-abc4-cec278b6b50a</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARMarker2DNaturalImageOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::files::IMarker2DNaturalImage {
 public:

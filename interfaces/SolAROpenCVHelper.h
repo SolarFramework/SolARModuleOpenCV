@@ -33,6 +33,12 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolAROpenCVHelper
+ * @brief A toolbox to convert OpenCV structures to SolAR structures and respectively.
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolAROpenCVHelper {
 public:
     template <class T,int Rows, int Cols>

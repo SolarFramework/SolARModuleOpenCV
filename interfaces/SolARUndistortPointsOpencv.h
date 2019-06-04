@@ -31,6 +31,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+* @class SolARUndistortPointsOpencv
+* @brief <B>Undistorts a set of points according to the distortion matrix of a camera.</B>
+* <TT>UUID: d926e249-8b7f-46e0-8cbd-f981ceb8f921</TT>
+*
+*/
+
 class SOLAROPENCV_EXPORT_API SolARUndistortPointsOpencv : public org::bcom::xpcf::ComponentBase,
     public api::geom::IUndistortPoints
 {

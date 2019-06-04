@@ -40,8 +40,12 @@ namespace MODULES {
 namespace OPENCV {
 
 /**
- * @brief The SolARDescriptorMatcherHammingBruteForceOpencv class
+ * @class SolARDescriptorMatcherHammingBruteForceOpencv
+ * @brief <B>Matches descriptors based on a Hamming distance and select the best matches of each descriptor.</B>
+ * <TT>UUID: d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9</TT>
+ *
  */
+
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherHammingBruteForceOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorMatcher {
 public:

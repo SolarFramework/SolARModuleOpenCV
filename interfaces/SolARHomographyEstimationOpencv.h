@@ -31,8 +31,12 @@ namespace MODULES {
 namespace OPENCV {
 
 /**
- * @brief The SolARHomographyEstimationOpencv class
+ * @class SolARHomographyEstimationOpencv
+ * @brief <B>Estimates the homography between two images from their matching keypoints.</B>
+ * <TT>UUID: fb9dac20-2a44-44b2-aa42-2871eec31427</TT>
+ *
  */
+
 class SOLAROPENCV_EXPORT_API SolARHomographyEstimationOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::solver::pose::I2DTransformFinder {
 

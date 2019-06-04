@@ -23,49 +23,54 @@
 #include "xpcf/component/ConfigurableBase.h"
 
 namespace SolAR {
-    using namespace datastructure;
-    namespace MODULES {
-        namespace OPENCV {
-        /**
-         * @class SolARProjectOpencv
-         * @brief a component to project 3D points on the 2D image plane
-         */
-            class SOLAROPENCV_EXPORT_API SolARProjectOpencv : public org::bcom::xpcf::ConfigurableBase,
-                public api::geom::IProject
-            {
-            public:
-                ///@brief SolARProjectOpencv constructor;
-                SolARProjectOpencv();
-                ///@brief SolARProjectOpencv destructor;
-                ~SolARProjectOpencv();
+using namespace datastructure;
+namespace MODULES {
+namespace OPENCV {
 
-                /// @brief this method is used to set intrinsic parameters and distorsion of the camera
-                /// @param[in] Camera calibration matrix parameters.
-                /// @param[in] Camera distorsion parameters.
-                void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) override;
+/**
+* @class SolARProjectOpencv
+* @brief <B>Projects a set of 3D points on a 2D image plane.</B>
+* <TT>UUID: 741fc298-0149-4322-a7a9-ccb971e857ba</TT>
+*
+*/
 
-                /// @brief This method project a set of 3D points in the image plane
-                /// @param[in] inputPoints the set of 3D points to project
-                /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
-                /// @param[out] outputPoints the resulting set of 2D points define in the image coordinate systemn
-                /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
-                FrameworkReturnCode project(const std::vector<SRef<Point3Df>> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose = Transform3Df::Identity()) override;
+class SOLAROPENCV_EXPORT_API SolARProjectOpencv : public org::bcom::xpcf::ConfigurableBase,
+    public api::geom::IProject
+{
+public:
+    ///@brief SolARProjectOpencv constructor;
+    SolARProjectOpencv();
+    ///@brief SolARProjectOpencv destructor;
+    ~SolARProjectOpencv();
 
-                /// @brief This method project a set of 3D cloud points in the image plane
-                /// @param[in] inputPoints the set of 3D cloud points to project
-                /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
-                /// @param[out] outputPoints the resulting set of 2D points define in the image coordinate systemn
-                /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
-                FrameworkReturnCode project(const std::vector<SRef<CloudPoint>> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose = Transform3Df::Identity()) override;
+    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
+    /// @param[in] Camera calibration matrix parameters.
+    /// @param[in] Camera distorsion parameters.
+    void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) override;
+
+    /// @brief This method project a set of 3D points in the image plane
+    /// @param[in] inputPoints the set of 3D points to project
+    /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
+    /// @param[out] outputPoints the resulting set of 2D points define in the image coordinate systemn
+    /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
+    FrameworkReturnCode project(const std::vector<SRef<Point3Df>> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose = Transform3Df::Identity()) override;
+
+    /// @brief This method project a set of 3D cloud points in the image plane
+    /// @param[in] inputPoints the set of 3D cloud points to project
+    /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
+    /// @param[out] outputPoints the resulting set of 2D points define in the image coordinate systemn
+    /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
+    FrameworkReturnCode project(const std::vector<SRef<CloudPoint>> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose = Transform3Df::Identity()) override;
 
 
-                void unloadComponent () override final;
+    void unloadComponent () override final;
 
 
-            private:
-                cv::Mat m_camMatrix;
-                cv::Mat m_camDistorsion;
-            };
+private:
+    cv::Mat m_camMatrix;
+    cv::Mat m_camDistorsion;
+};
+
 }
 }
 }

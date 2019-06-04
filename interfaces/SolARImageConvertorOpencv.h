@@ -34,6 +34,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARImageConvertorOpencv
+ * @brief <B>Converts an image according to a given expected layout.</B>
+ * <TT>UUID: fd7fb607-144f-418c-bcf2-f7cf71532c22</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARImageConvertorOpencv : public org::bcom::xpcf::ComponentBase,
         public api::image::IImageConvertor {
 public:

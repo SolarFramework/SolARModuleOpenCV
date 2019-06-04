@@ -30,6 +30,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARFundamentalMatrixEstimationOpencv
+ * @brief <B>Estimates the fundamental matrix from two set of keypoints that match together.</B>
+ * <TT>UUID: 79b29b50-cf4d-441e-b5de-1de829b91c41</TT>
+ *
+ */
+
 /// @class SolARFundamentalMatrixEstimationOpencv
 class SOLAROPENCV_EXPORT_API SolARFundamentalMatrixEstimationOpencv : public org::bcom::xpcf::ConfigurableBase,
   public api::solver::pose::I2DTransformFinder {
