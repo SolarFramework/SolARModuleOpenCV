@@ -32,6 +32,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+* @class SolARVideoAsCameraOpencv
+* @brief <B>Grabs the images from a video file.</B>
+* <TT>UUID: fa4a780a-9720-11e8-9eb6-529269fb1459</TT>
+*
+*/
+
 class SOLAROPENCV_EXPORT_API SolARVideoAsCameraOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::devices::ICamera {
 public:

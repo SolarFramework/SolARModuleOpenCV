@@ -29,6 +29,13 @@ namespace SolAR {
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARCameraCalibrationOpencv
+ * @brief <B>Calibrates a camera based on a chessboard.</B>
+ * <TT>UUID: 702a7f53-e5ec-45d2-887d-daa99a34a33c</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARCameraCalibrationOpencv :
 	public org::bcom::xpcf::ComponentBase,
 	public api::input::devices::ICameraCalibration
@@ -44,9 +51,19 @@ public:
 public:
 	SolARCameraCalibrationOpencv();
 	virtual ~SolARCameraCalibrationOpencv();
-
+    /// @brief this method calibrates and fixes an unkonwn camera intrinsic parameters from a offline video stream,
+    /// it saves the result calibration file inside output folder.
+    /// @param[in] inputVideo: path of the video stream captured by the unkown camera.
+    /// @param[out] output: path of the folder where a result calibration file will be written.
 	bool calibrate(std::string&inputVideo, std::string&output);
+    /// @brief this method calibrates and fixes an unkonwn camera intrinsic parameters from a online video stream,
+    /// it saves the result calibration file inside output folder.
+    /// @param[in] camera_id: id of the unkown camera from which the video stream is grabbed.
+    /// @param[out] output: path of the folder where a result calibration file will be written.
 	bool calibrate(int camera_id, std::string&output);
+    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
+    /// @param[in] Camera calibration matrix parameters.
+    /// @param[in] Camera distorsion parameters.
 	bool setParameters(std::string&config_file);
 	virtual void unloadComponent() override;
 

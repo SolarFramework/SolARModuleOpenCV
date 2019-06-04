@@ -36,6 +36,13 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARKeypointDetectorOpencv
+ * @brief <B>Detects keypoints in an image.</B>
+ * <TT>UUID: e81c7e4e-7da6-476a-8eba-078b43071272</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARKeypointDetectorOpencv : public org::bcom::xpcf::ConfigurableBase,
         public IKeypointDetector {
 public:

@@ -32,6 +32,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARImagesAsCameraOpencv
+ * @brief <B>Loads an image sequence stored in a dedicated folder.</B>
+ * <TT>UUID: b8a8b963-ba55-4ea4-b045-d9e7e8f6db02</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARImagesAsCameraOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::devices::ICamera {
 public:

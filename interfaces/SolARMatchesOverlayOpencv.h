@@ -30,6 +30,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARMatchesOverlayOpencv
+ * @brief <B>Displays matching keypoints between two images.</B>
+ * <TT>UUID: e95302be-3fe1-44e0-97bf-a98380464af9</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARMatchesOverlayOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::display::IMatchesOverlay
 {
