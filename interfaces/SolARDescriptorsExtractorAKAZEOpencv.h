@@ -51,12 +51,12 @@ public:
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
     void unloadComponent () override final;
     inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE") ;};
+
     /// @brief Extracts a set of descriptors from a given image around a set of keypoints based on AKAZE algorithm
     /// "Fast explicit diffusion for acceleratedfeatures in nonlinear scale space"
     /// [in] image: source image.
     /// [in] keypoints: set of keypoints.
     /// [out] decsriptors: se of computed descriptors.
-
     void extract (const SRef<Image> image, const std::vector<SRef<Keypoint>> &keypoints, SRef<DescriptorBuffer>& descriptors) override;
 
 private:
