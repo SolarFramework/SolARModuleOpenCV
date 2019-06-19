@@ -61,7 +61,8 @@ public:
     void setResolution(Sizei resolution) override;
     void setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
     void setDistorsionParameters(const CamDistortion & distorsion_parameters) override;
-
+    void setParameters(const CameraParameters & parameters) override;
+    const CameraParameters & getParameters() override;
     Sizei getResolution () override;
     CamCalibration getIntrinsicsParameters() override;
     CamDistortion getDistorsionParameters() override;
@@ -79,11 +80,12 @@ public:
 
      cv::VideoCapture m_capture;
      bool m_is_resolution_set;
-     Sizei m_resolution;
      std::vector<std::string> imagePaths;           //will contained the path of the images to use
 
+     CameraParameters m_parameters;
+/*          Sizei m_resolution;
      CamCalibration m_intrinsic_parameters;
-     CamDistortion m_distorsion_parameters;
+     CamDistortion m_distorsion_parameters;*/
 
 };
 

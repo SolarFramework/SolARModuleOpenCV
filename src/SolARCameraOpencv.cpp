@@ -33,11 +33,13 @@ namespace OPENCV {
         params->wrapString("calibrationFile", m_calibrationFile);
         params->wrapUnsignedInteger("deviceID", m_deviceID);
         m_is_resolution_set = false;
+        m_parameters.distorsion = CamDistortion::Zero();
+        m_parameters.intrinsic = CamCalibration::Identity();
     }
 
     SolARCameraOpencv::~SolARCameraOpencv()
     {
-        if(m_capture.isOpened())
+        if (m_capture.isOpened())
         {
             m_capture.release();
         }
@@ -63,8 +65,8 @@ namespace OPENCV {
             fs["camera_matrix"] >> intrinsic_parameters;
             fs["distortion_coefficients"] >> distortion_parameters;
 
-            m_resolution.width = width;
-            m_resolution.height = height;
+            m_parameters.resolution.width = width;
+            m_parameters.resolution.height = height;
             m_is_resolution_set = true;
 
             if (intrinsic_parameters.empty())
@@ -73,10 +75,10 @@ namespace OPENCV {
                 return xpcf::_FAIL;
             }
 
-            if (intrinsic_parameters.rows == m_intrinsic_parameters.rows() && intrinsic_parameters.cols == m_intrinsic_parameters.cols())
+            if (intrinsic_parameters.rows == m_parameters.intrinsic.rows() && intrinsic_parameters.cols == m_parameters.intrinsic.cols())
                 for (int i = 0; i < intrinsic_parameters.rows; i++)
                     for (int j = 0; j < intrinsic_parameters.cols; j++)
-                        m_intrinsic_parameters(i,j) = (float)intrinsic_parameters.at<double>(i,j);
+                        m_parameters.intrinsic(i,j) = (float)intrinsic_parameters.at<double>(i,j);
             else
             {
                 LOG_ERROR("SolARCameraOpencv::loadCameraParameters: Camera Calibration should be a 3x3 Matrix")
@@ -89,10 +91,10 @@ namespace OPENCV {
                 return xpcf::_FAIL;
             }
 
-            if (distortion_parameters.rows == m_distorsion_parameters.rows() && distortion_parameters.cols == m_distorsion_parameters.cols())
+            if (distortion_parameters.rows == m_parameters.distorsion.rows() && distortion_parameters.cols == m_parameters.distorsion.cols())
                 for (int i = 0; i < distortion_parameters.rows; i++)
                     for (int j = 0; j < distortion_parameters.cols; j++)
-                        m_distorsion_parameters(i,j) = distortion_parameters.at<double>(i,j);
+                        m_parameters.distorsion(i,j) = distortion_parameters.at<double>(i,j);
             else
             {
                 LOG_ERROR("SolARCameraOpencv::loadCameraParameters: Camera distortion matrix should be a 5x1 Matrix")
@@ -109,7 +111,7 @@ namespace OPENCV {
 
     void SolARCameraOpencv::setResolution(Sizei resolution)
     {
-        m_resolution = resolution;
+        m_parameters.resolution = resolution;
         m_is_resolution_set = true;
     }
 
@@ -136,8 +138,11 @@ namespace OPENCV {
             LOG_INFO("Camera with id {} has started", m_deviceID);
             if (m_is_resolution_set)
             {
-                m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_resolution.width );
-                m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_resolution.height );
+                m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_parameters.resolution.width );
+                m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_parameters.resolution.height );
+            }
+            else {
+                // set default resolution : get camera resolution ? or force camera resolution from default resolution values ?
             }
             return FrameworkReturnCode::_SUCCESS;
         }
@@ -158,24 +163,35 @@ namespace OPENCV {
     }
 
     void SolARCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){
-//        m_intrinsic_parameters = intrinsic_parameters;
+//        m_parameters.intrinsic = intrinsic_parameters;
     }
 
      void SolARCameraOpencv::setDistorsionParameters(const CamDistortion & distorsion_parameters){
-//           m_distorsion_parameters = distorsion_parameters;
+//           m_parameters.distorsion = distorsion_parameters;
+     }
+
+
+     void SolARCameraOpencv::setParameters(const CameraParameters & parameters)
+     {
+        m_parameters = parameters;
+     }
+
+     const CameraParameters & SolARCameraOpencv::getParameters()
+     {
+        return m_parameters;
      }
 
      Sizei SolARCameraOpencv::getResolution()
      {
-         return m_resolution;
+         return m_parameters.resolution;
      }
 
     CamCalibration SolARCameraOpencv::getIntrinsicsParameters(){
-        return m_intrinsic_parameters;
+        return m_parameters.intrinsic;
     }
 
     CamDistortion SolARCameraOpencv::getDistorsionParameters(){
-        return m_distorsion_parameters;
+        return m_parameters.distorsion;
     }
 
 }

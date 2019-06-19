@@ -4,14 +4,12 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARModuleOpenCV
-INSTALLSUBDIR = bcomBuild
 FRAMEWORK = $$TARGET
 VERSION=0.5.2
 
 DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
-CONFIG += Cpp11
-CONFIG += c++11
+CONFIG += c++1z
 
 
 CONFIG(debug,debug|release) {
@@ -25,10 +23,9 @@ CONFIG(release,debug|release) {
 }
 
 
-PROJECTDEPLOYDIR = $$(BCOMDEVROOT)/$${INSTALLSUBDIR}/$${FRAMEWORK}/$${VERSION}
-DEPENDENCIESCONFIG = shared
+DEPENDENCIESCONFIG = shared recurse
 
-include ($$(BCOMDEVROOT)/builddefs/qmake/templatelibconfig.pri)
+include (../builddefs/qmake/templatelibconfig.pri)
 
 ## DEFINES FOR MSVC/INTEL C++ compilers
 msvc {
@@ -176,7 +173,7 @@ win32 {
 header_files.path = $${PROJECTDEPLOYDIR}/interfaces
 header_files.files = $$files($${PWD}/interfaces/*.h*)
 
-xpcf_xml_files.path = $$(BCOMDEVROOT)/.xpcf/SolAR
+xpcf_xml_files.path = $$(HOME)/.xpcf/SolAR
 xpcf_xml_files.files=$$files($${PWD}/xpcf*.xml)
 
 INSTALLS += header_files

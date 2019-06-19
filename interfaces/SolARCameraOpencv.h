@@ -68,6 +68,10 @@ public:
     /// @brief Set the camera distorsion parameters from a distorsion matrix.
     ///[in] distorsion_parameters: Distorsion matrix containing the five camera distorsion parameters.
     void setDistorsionParameters(const CamDistortion & distorsion_parameters) override;
+    /// @brief Set the camera parameters
+    void setParameters(const CameraParameters & parameters) override;
+    /// @return Return the camera parameters
+    const CameraParameters & getParameters() override;
     /// @brief Get the current resolutio nof the camera.
     ///[out]  width and height of the images grabbed from the camera.
     Sizei getResolution () override;
@@ -90,10 +94,10 @@ public:
 
      cv::VideoCapture m_capture;
      bool m_is_resolution_set;
-     Sizei m_resolution;
-
+     CameraParameters m_parameters;
+     /*Sizei m_resolution;
      CamCalibration m_intrinsic_parameters;
-     CamDistortion m_distorsion_parameters;
+     CamDistortion m_distorsion_parameters;*/
 
 };
 
