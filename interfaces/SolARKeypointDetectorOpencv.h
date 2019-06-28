@@ -53,9 +53,17 @@ public:
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
+    /// @brief Set the type of method used to detect keypoints in the image
+    /// @param[in] type The type of method used to detect keypoints.
     void setType(KeypointDetectorType type) override;
-    KeypointDetectorType  getType();
+
+    /// @brief Get the type of method used to detect keypoints in the image
+    /// @return The type of method used to detect keypoints.
+    KeypointDetectorType  getType() override;
  
+    /// @brief This method detects keypoints in an input Image
+    /// @param[in] image input image on which we are extracting keypoints.
+    /// @param[out] keypoints The keypoints detected from the image passed as first argument.
     void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints) override;
 
 private:
