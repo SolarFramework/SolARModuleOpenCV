@@ -39,7 +39,7 @@ namespace OPENCV {
 
     SolARMarker2DSquaredBinaryOpencv::~SolARMarker2DSquaredBinaryOpencv()
     {
-    LOG_DEBUG(" SolARMarker2DSquaredBinaryOpencv")
+        LOG_DEBUG(" SolARMarker2DSquaredBinaryOpencv Destructor")
     }
 
     FrameworkReturnCode SolARMarker2DSquaredBinaryOpencv::loadMarker()

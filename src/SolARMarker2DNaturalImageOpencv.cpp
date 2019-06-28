@@ -31,13 +31,13 @@ namespace OPENCV {
     SolARMarker2DNaturalImageOpencv::SolARMarker2DNaturalImageOpencv():ConfigurableBase(xpcf::toUUID<SolARMarker2DNaturalImageOpencv>())
     {        
         addInterface<api::input::files::IMarker2DNaturalImage>(this);
+        LOG_DEBUG("SolARMarker2DSquaredBinaryOpencv constructor")
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
         params->wrapString("filePath", m_filePath);
 
         m_size.width = 0;
         m_size.height = 0;
 
-        LOG_DEBUG("SolARMarker2DNaturalImageOpencv constructor")
     }
 
     FrameworkReturnCode SolARMarker2DNaturalImageOpencv::loadMarker()
@@ -52,7 +52,7 @@ namespace OPENCV {
 
         if (imagePath.empty())
         {
-            LOG_ERROR("Marker file doesn not define an image path under markup ImagePath")
+            LOG_ERROR("Marker file does not define an image path under markup ImagePath")
             return FrameworkReturnCode::_ERROR_;
         }
 

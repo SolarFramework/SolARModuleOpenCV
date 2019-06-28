@@ -65,3 +65,7 @@ doc/
 *.tmp
 
 
+build/
+interfaces/SolARModuleOpencv_traits.h.bak
+interfaces/SolAROpticalFlowPyrLKOpencv.h.bak
+interfaces/SolARPoseFinderFrom2D2DOpencv.h.bak

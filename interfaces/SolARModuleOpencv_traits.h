@@ -238,7 +238,7 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMatchesOverlayOpencv,
                              "Displays matching keypoints between two images.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolAROpticalFlowPyrLKOpencv,
-                             "e95302be-3fe1-44e0-97bf-a98380464af9",
+                             "b513e9ff-d2e7-4dcf-9a29-4ed95c512158",
                              "SolAROpticalFlowPyrLKOpencv",
                              "Estimates the optical flow beteen two images based on a pyramidal Lucas Kanade approach.")
 
@@ -268,7 +268,7 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationSACPnpOp
                              "Finds the camera pose of 2D-3D points correspondaces based on opencv pnp algorithm using Ransac method.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv,
-                             "4d369049-809c-4e99-9994-5e8167bab808",
+                             "52babb5e-9d33-11e8-98d0-529269fb1459",
                              "SolARPoseFinderFrom2D2DOpencv",
                              "Finds the camera pose based on a 2D-2D points correspondances between two images.")
 
