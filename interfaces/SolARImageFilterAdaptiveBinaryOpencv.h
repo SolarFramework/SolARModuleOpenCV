@@ -51,9 +51,9 @@ public:
     void unloadComponent () override final;
 
  private:
-    int m_max;
-    int m_blockSize;
-    int m_C;
+    int m_max = 255;
+    int m_blockSize = 11;
+    int m_C = 2;
 };
 
 }
