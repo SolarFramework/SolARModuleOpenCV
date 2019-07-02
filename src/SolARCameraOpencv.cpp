@@ -136,6 +136,7 @@ namespace OPENCV {
         if (m_capture.isOpened())
         {
             LOG_INFO("Camera with id {} has started", m_deviceID);
+            LOG_INFO("Camera using {}  *  {} resolution", m_parameters.resolution.width ,m_parameters.resolution.height)
             if (m_is_resolution_set)
             {
                 m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_parameters.resolution.width );

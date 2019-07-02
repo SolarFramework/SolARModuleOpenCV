@@ -299,7 +299,7 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARUnprojectPlanarPointsO
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv,
                              "fa4a780a-9720-11e8-9eb6-529269fb1459",
-                             "SolARCameraOpencv",
+                             "SolARVideoAsCameraOpencv",
                              "Grabs the images from a video file.")
 
 #endif // SOLARMODULEOPENCV_TRAITS_H
