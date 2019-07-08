@@ -27,7 +27,7 @@ namespace SolAR {
         namespace OPENCV {
             SolAR2D3DCorrespondencesFinderOpencv::SolAR2D3DCorrespondencesFinderOpencv():ComponentBase(xpcf::toUUID<SolAR2D3DCorrespondencesFinderOpencv>())
             {
-                addInterface<api::solver::pose::I2D3DCorrespondencesFinder>(this);
+                declareInterface<api::solver::pose::I2D3DCorrespondencesFinder>(this);
 
                 LOG_DEBUG("SolAR2D3DCorrespondencesFinder constructor");
             }

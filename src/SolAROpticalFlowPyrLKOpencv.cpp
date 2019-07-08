@@ -30,7 +30,7 @@ namespace OPENCV {
 
 SolAROpticalFlowPyrLKOpencv::SolAROpticalFlowPyrLKOpencv():ConfigurableBase(xpcf::toUUID<SolAROpticalFlowPyrLKOpencv>())
 {
-    addInterface<IOpticalFlowEstimator>(this);
+    declareInterface<IOpticalFlowEstimator>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapInteger("searchWinWidth", m_searchWinWidth);
     params->wrapInteger("searchWinHeight", m_searchWinHeight);

@@ -33,7 +33,7 @@ namespace OPENCV {
 
 SolAR3DOverlayBoxOpencv::SolAR3DOverlayBoxOpencv():ConfigurableBase(xpcf::toUUID<SolAR3DOverlayBoxOpencv>())
 {
-    addInterface<api::display::I3DOverlay>(this);
+    declareInterface<api::display::I3DOverlay>(this);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);

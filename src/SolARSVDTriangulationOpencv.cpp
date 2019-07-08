@@ -35,7 +35,7 @@ namespace OPENCV {
 
 SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ComponentBase(xpcf::toUUID<SolARSVDTriangulationOpencv>())
 {
-   addInterface<api::solver::map::ITriangulator>(this);
+   declareInterface<api::solver::map::ITriangulator>(this);
    LOG_DEBUG(" SolARSVDTriangulationOpencv constructor");
    m_camMatrix.create(3, 3);
    m_camDistorsion.create(5, 1);

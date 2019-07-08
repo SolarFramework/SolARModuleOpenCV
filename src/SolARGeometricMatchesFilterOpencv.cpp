@@ -29,7 +29,7 @@ namespace OPENCV {
 SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv():ConfigurableBase(xpcf::toUUID<SolARGeometricMatchesFilterOpencv>())
 { 
     LOG_DEBUG("SolARGeometricMatchesFilterOpencv constructor")
-    addInterface<api::features::IMatchesFilter>(this);
+    declareInterface<api::features::IMatchesFilter>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapFloat("confidence", m_confidence);
     params->wrapFloat("outlierDistanceRatio", m_outlierDistanceRatio);

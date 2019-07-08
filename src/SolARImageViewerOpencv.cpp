@@ -44,7 +44,7 @@ inline int deduceOpenCVType(SRef<Image> img)
 
 SolARImageViewerOpencv::SolARImageViewerOpencv():ConfigurableBase(xpcf::toUUID<SolARImageViewerOpencv>())
 {
-    addInterface<api::display::IImageViewer>(this);
+    declareInterface<api::display::IImageViewer>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapString("title", m_title);
     params->wrapInteger("width", m_width);

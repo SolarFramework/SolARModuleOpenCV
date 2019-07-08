@@ -30,7 +30,7 @@ namespace OPENCV {
 
 SolARImageConvertorUnity::SolARImageConvertorUnity():ComponentBase(xpcf::toUUID<SolARImageConvertorUnity>())
 {  
-    addInterface<api::image::IImageConvertor>(this);
+    declareInterface<api::image::IImageConvertor>(this);
 }
 
 

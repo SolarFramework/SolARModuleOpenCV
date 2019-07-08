@@ -31,7 +31,7 @@ namespace OPENCV {
 
 SolARPoseEstimationPlanarPointsOpencv::SolARPoseEstimationPlanarPointsOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPlanarPointsOpencv>())
 {
-    addInterface<api::solver::pose::I3DTransformSACFinderFrom2D3D>(this);
+    declareInterface<api::solver::pose::I3DTransformSACFinderFrom2D3D>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapInteger("minNbInliers", m_minNbInliers);
     params->wrapFloat("reprojErrorThreshold", m_reprojErrorThreshold);

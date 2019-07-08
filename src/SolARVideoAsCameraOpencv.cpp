@@ -28,7 +28,7 @@ namespace OPENCV {
 
     SolARVideoAsCameraOpencv::SolARVideoAsCameraOpencv():ConfigurableBase(xpcf::toUUID<SolARVideoAsCameraOpencv>())
     {
-        addInterface<api::input::devices::ICamera>(this);
+        declareInterface<api::input::devices::ICamera>(this);
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
         params->wrapString("calibrationFile", m_calibrationFile);
         params->wrapString("videoPath", m_videoPath);

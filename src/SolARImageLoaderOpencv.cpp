@@ -30,7 +30,7 @@ namespace OPENCV {
 
 SolARImageLoaderOpencv::SolARImageLoaderOpencv():ConfigurableBase(xpcf::toUUID<SolARImageLoaderOpencv>())
 { 
-    addInterface<api::image::IImageLoader>(this);
+    declareInterface<api::image::IImageLoader>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapString("filePath", m_filePath);
     LOG_DEBUG(" SolARImageLoaderOpencv constructor")

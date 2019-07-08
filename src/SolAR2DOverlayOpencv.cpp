@@ -32,7 +32,7 @@ namespace OPENCV {
 
 SolAR2DOverlayOpencv::SolAR2DOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolAR2DOverlayOpencv>())
 {
-   addInterface<api::display::I2DOverlay>(this);
+   declareInterface<api::display::I2DOverlay>(this);
    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
 
    params->wrapUnsignedInteger("thickness", m_thickness);

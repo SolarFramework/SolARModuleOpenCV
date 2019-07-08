@@ -29,7 +29,10 @@ namespace OPENCV {
 
 SolARImageFilterBinaryOpencv::SolARImageFilterBinaryOpencv():ConfigurableBase(xpcf::toUUID<SolARImageFilterBinaryOpencv>())
 {
-    addInterface<api::image::IImageFilter>(this);
+    // initialize max default value for the component
+    m_max = 255;
+
+    declareInterface<api::image::IImageFilter>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     //SRef<xpcf::IPropertyMap> params = xpcf::getPropertyMapInstance();
     params->wrapInteger("min", m_min);

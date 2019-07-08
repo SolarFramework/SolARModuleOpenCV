@@ -28,7 +28,7 @@ namespace OPENCV {
 
     SolARMarker2DSquaredBinaryOpencv::SolARMarker2DSquaredBinaryOpencv():ConfigurableBase(xpcf::toUUID<SolARMarker2DSquaredBinaryOpencv>())
     {
-        addInterface<api::input::files::IMarker2DSquaredBinary>(this);
+        declareInterface<api::input::files::IMarker2DSquaredBinary>(this);
         LOG_DEBUG("SolARMarker2DSquaredBinaryOpencv constructor")
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
         params->wrapString("filePath", m_filePath);

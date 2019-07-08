@@ -43,7 +43,7 @@ static std::map<KeypointDetectorType,std::string> typeToString = {{KeypointDetec
 
 SolARKeypointDetectorRegionOpencv::SolARKeypointDetectorRegionOpencv():ConfigurableBase(xpcf::toUUID<SolARKeypointDetectorRegionOpencv>())
 {
-    addInterface<api::features::IKeypointDetectorRegion>(this);
+    declareInterface<api::features::IKeypointDetectorRegion>(this);
 
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapFloat("imageRatio", m_imageRatio);

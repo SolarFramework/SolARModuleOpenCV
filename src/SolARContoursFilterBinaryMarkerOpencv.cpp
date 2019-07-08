@@ -30,7 +30,7 @@ namespace OPENCV {
 
     SolARContoursFilterBinaryMarkerOpencv::SolARContoursFilterBinaryMarkerOpencv():ConfigurableBase(xpcf::toUUID<SolARContoursFilterBinaryMarkerOpencv>())
     {
-        addInterface<api::features::IContoursFilter>(this);
+        declareInterface<api::features::IContoursFilter>(this);
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
         params->wrapFloat("minContourLength",m_minContourLength);
         params->wrapFloat("espilon",m_epsilon);

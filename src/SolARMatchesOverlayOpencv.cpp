@@ -31,7 +31,7 @@ namespace OPENCV {
 
 SolARMatchesOverlayOpencv::SolARMatchesOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolARMatchesOverlayOpencv>())
 {
-    addInterface<api::display::IMatchesOverlay>(this);
+    declareInterface<api::display::IMatchesOverlay>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     m_color.resize(3);
 

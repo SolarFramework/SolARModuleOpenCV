@@ -31,7 +31,7 @@ namespace OPENCV {
 SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv():ConfigurableBase(xpcf::toUUID<SolARHomographyEstimationOpencv>())
 {
     LOG_DEBUG("SolARHomographyEstimationOpencv constructor")
-    addInterface<api::solver::pose::I2DTransformFinder>(this);
+    declareInterface<api::solver::pose::I2DTransformFinder>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapDouble("ransacReprojThreshold", m_ransacReprojThreshold);
 }

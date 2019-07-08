@@ -31,7 +31,7 @@ namespace OPENCV {
 
 SolARDescriptorsExtractorORBOpencv::SolARDescriptorsExtractorORBOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorsExtractorORBOpencv>())
 {
-    addInterface<api::features::IDescriptorsExtractor>(this);
+    declareInterface<api::features::IDescriptorsExtractor>(this);
     m_extractor=cv::ORB::create();
     LOG_DEBUG(" SolARDescriptorsExtractorORBOpencv constructor")
 }

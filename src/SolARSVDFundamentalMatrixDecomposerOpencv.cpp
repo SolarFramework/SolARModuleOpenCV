@@ -29,7 +29,7 @@ namespace MODULES {
 namespace OPENCV {
 
 SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOpencv():ComponentBase(xpcf::toUUID<SolARSVDFundamentalMatrixDecomposerOpencv>()){
-    addInterface<api::solver::pose::I2Dto3DTransformDecomposer>(this);
+    declareInterface<api::solver::pose::I2Dto3DTransformDecomposer>(this);
     LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
 
     m_camMatrix.create(3, 3);

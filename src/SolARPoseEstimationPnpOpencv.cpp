@@ -29,7 +29,7 @@ namespace OPENCV {
 
 SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
-    addInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
+    declareInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapInteger("iterationsCount", m_iterationsCount);
     params->wrapFloat("reprojError", m_reprojError);

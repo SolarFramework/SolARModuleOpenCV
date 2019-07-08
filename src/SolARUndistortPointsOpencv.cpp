@@ -29,7 +29,7 @@ namespace OPENCV {
 
     SolARUndistortPointsOpencv::SolARUndistortPointsOpencv():ComponentBase(xpcf::toUUID<SolARUndistortPointsOpencv>())
     {
-        addInterface<api::geom::IUndistortPoints>(this);
+        declareInterface<api::geom::IUndistortPoints>(this);
 
         //internal data for matrix
         m_camMatrix.create(3, 3, CV_32FC1);

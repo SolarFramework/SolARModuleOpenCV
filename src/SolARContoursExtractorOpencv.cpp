@@ -31,7 +31,7 @@ namespace OPENCV {
 
     SolARContoursExtractorOpencv::SolARContoursExtractorOpencv():ConfigurableBase(xpcf::toUUID<SolARContoursExtractorOpencv>())
     {
-        addInterface<api::features::IContoursExtractor>(this);
+        declareInterface<api::features::IContoursExtractor>(this);
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
         params->wrapInteger("minContourEdges",m_minContourEdges);
     }

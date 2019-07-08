@@ -30,7 +30,7 @@ namespace OPENCV {
 
 SolARProjectOpencv::SolARProjectOpencv():ConfigurableBase(xpcf::toUUID<SolARProjectOpencv>())
 {
-    addInterface<api::geom::IProject>(this);
+    declareInterface<api::geom::IProject>(this);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);

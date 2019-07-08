@@ -30,7 +30,7 @@ namespace OPENCV {
 
 SolARPoseFinderFrom2D2DOpencv::SolARPoseFinderFrom2D2DOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseFinderFrom2D2DOpencv>())
 {
-    addInterface<api::solver::pose::I3DTransformFinderFrom2D2D>(this);
+    declareInterface<api::solver::pose::I3DTransformFinderFrom2D2D>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapFloat("outlierDistanceRatio", m_outlierDistanceRatio);
     params->wrapFloat("confidence", m_confidence);

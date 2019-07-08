@@ -30,7 +30,7 @@ namespace OPENCV {
 
     SolARMarker2DNaturalImageOpencv::SolARMarker2DNaturalImageOpencv():ConfigurableBase(xpcf::toUUID<SolARMarker2DNaturalImageOpencv>())
     {        
-        addInterface<api::input::files::IMarker2DNaturalImage>(this);
+        declareInterface<api::input::files::IMarker2DNaturalImage>(this);
         LOG_DEBUG("SolARMarker2DSquaredBinaryOpencv constructor")
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
         params->wrapString("filePath", m_filePath);

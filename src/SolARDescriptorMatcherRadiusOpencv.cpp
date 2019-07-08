@@ -30,7 +30,7 @@ namespace OPENCV {
 
 SolARDescriptorMatcherRadiusOpencv::SolARDescriptorMatcherRadiusOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorMatcherRadiusOpencv>())
 {
-    addInterface<IDescriptorMatcher>(this);
+    declareInterface<IDescriptorMatcher>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapFloat("maxDistance", m_maxDistance);
     LOG_DEBUG(" SolARDescriptorMatcherRadiusOpencv constructor")

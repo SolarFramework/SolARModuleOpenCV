@@ -33,7 +33,7 @@ namespace OPENCV {
 
 SolARDescriptorsExtractorAKAZE2Opencv::SolARDescriptorsExtractorAKAZE2Opencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorsExtractorAKAZE2Opencv>())
 {
-    addInterface<api::features::IDescriptorsExtractor>(this);
+    declareInterface<api::features::IDescriptorsExtractor>(this);
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZE2Opencv constructor")
     // m_extractor must have a default implementation : initialize default extractor type
     m_extractor=AKAZE2::create();

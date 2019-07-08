@@ -30,7 +30,7 @@ namespace OPENCV {
 
 SolARFundamentalMatrixEstimationOpencv::SolARFundamentalMatrixEstimationOpencv():ConfigurableBase(xpcf::toUUID<SolARFundamentalMatrixEstimationOpencv>())
 {
-    addInterface<api::solver::pose::I2DTransformFinder>(this);
+    declareInterface<api::solver::pose::I2DTransformFinder>(this);
     LOG_DEBUG("SolARFundamentalMatrixEstimationOpencv constructor");
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapFloat("confidenceLevel", m_confidenceLevel);
