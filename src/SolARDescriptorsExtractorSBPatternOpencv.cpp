@@ -33,9 +33,9 @@ namespace OPENCV {
         params->wrapInteger("patternSize", m_patternSize);
     }
 
-    FrameworkReturnCode SolARDescriptorsExtractorSBPatternOpencv::extract(const SRef<SquaredBinaryPattern> pattern, SRef<DescriptorBuffer> & descriptor)
+    FrameworkReturnCode SolARDescriptorsExtractorSBPatternOpencv::extract(const SquaredBinaryPattern & pattern, SRef<DescriptorBuffer> & descriptor)
     {
-        SquaredBinaryPatternMatrix matrix = pattern->getPatternMatrix();
+        SquaredBinaryPatternMatrix matrix = pattern.getPatternMatrix();
 
         descriptor = xpcf::utils::make_shared<DescriptorBuffer>(DescriptorBuffer::SBPATTERN, DescriptorBuffer::TYPE_8U, matrix.rows() * matrix.cols(), 1);
         unsigned char* descriptorData = (unsigned char*)descriptor->data();
@@ -50,7 +50,10 @@ namespace OPENCV {
     }
 
 
-    FrameworkReturnCode SolARDescriptorsExtractorSBPatternOpencv::extract(const std::vector<SRef<Image>>& inputImages, const std::vector<SRef<Contour2Df>>& contours, SRef<DescriptorBuffer> & pattern_descriptors, std::vector<SRef<Contour2Df>> & recognized_contours)
+    FrameworkReturnCode SolARDescriptorsExtractorSBPatternOpencv::extract(const std::vector<SRef<Image>> & inputImages,
+                                                                          const std::vector<Contour2Df> & contours,
+                                                                          SRef<DescriptorBuffer> & pattern_descriptors,
+                                                                          std::vector<Contour2Df> & recognized_contours)
     {
         recognized_contours.clear();
         std::vector<size_t> recognizedPatterns;
@@ -74,10 +77,10 @@ namespace OPENCV {
             unsigned char* data = (unsigned char*)pattern_descriptors->data() + (i*4*descriptor_size);
             if (getPatternDescriptorFromImage(inputImages[recognizedPatterns[i]], data) == FrameworkReturnCode::_SUCCESS)
             {
-                SRef<Contour2Df> recognizedContour = contours[recognizedPatterns[i]];
+                Contour2Df recognizedContour = contours[recognizedPatterns[i]];
                 recognized_contours.push_back(recognizedContour);
                 unsigned char* descriptorDataTemp = data;
-                SRef<Contour2Df> rotatedContourTemp = recognizedContour;
+                Contour2Df rotatedContourTemp = recognizedContour;
                 //check all possible rotations
                 for (int j = 0; j < 3; j++)
                 {
@@ -91,9 +94,9 @@ namespace OPENCV {
                              descriptorData[row * m_patternSize + col] = descriptorDataTemp[(col*m_patternSize) + m_patternSize - row - 1];
                          }
                      // Rotate the curent contour counter-clockwise to set the new rotated contour
-                    SRef<Contour2Df> rotatedContour = xpcf::utils::make_shared<Contour2Df>();
+                    Contour2Df rotatedContour;
                     for (int num_point = 0; num_point <4; num_point++)
-                        rotatedContour->push_back((*rotatedContourTemp)[(num_point+1)%4]);
+                        rotatedContour.push_back(rotatedContourTemp[(num_point+1)%4]);
 
                     recognized_contours.push_back(rotatedContour);
 

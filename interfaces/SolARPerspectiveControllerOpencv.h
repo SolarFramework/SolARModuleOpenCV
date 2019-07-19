@@ -40,8 +40,8 @@ public:
     SolARPerspectiveControllerOpencv();
     ~SolARPerspectiveControllerOpencv() = default;
 
-    FrameworkReturnCode correct(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours, std::vector<SRef<Image>> & patches) override;
-    FrameworkReturnCode correct(const SRef<Image> inputImg, SRef<Contour2Df> & contour, SRef<Image> & patch) override;
+    FrameworkReturnCode correct(const SRef<Image> inputImg, const std::vector<Contour2Df> & contours, std::vector<SRef<Image>> & patches) override;
+    FrameworkReturnCode correct(const SRef<Image> inputImg, const Contour2Df & contour, SRef<Image> & patch) override;
 
     void unloadComponent () override final;
 

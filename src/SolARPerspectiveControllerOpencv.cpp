@@ -36,7 +36,7 @@ namespace OPENCV {
         params->wrapInteger("outputImageHeight", m_outputImageHeight);
     }
 
-    FrameworkReturnCode SolARPerspectiveControllerOpencv::correct(const SRef<Image> inputImg, SRef<Contour2Df> & contour, SRef<Image> & outputImage)
+    FrameworkReturnCode SolARPerspectiveControllerOpencv::correct(const SRef<Image> inputImg, const Contour2Df & contour, SRef<Image> & outputImage)
     {
         std::vector<cv::Point2f> points;
         cv::Size patches_size(m_outputImageWidth, m_outputImageHeight);
@@ -48,12 +48,12 @@ namespace OPENCV {
 
         cv::Mat cv_inputImg = SolAROpenCVHelper::mapToOpenCV(inputImg);
           // For each contour, extract the patch
-        if (contour->size()>=4)
+        if (contour.size()>=4)
 
         {
             for(unsigned int j =0; j < 4; ++j)
             {
-               points.push_back(cv::Point2f((*contour)[j]->getX(),(*contour)[j]->getY()));
+               points.push_back(cv::Point2f(contour[j]->getX(),contour[j]->getY()));
             }
                 // Find the perspective transformation that brings current marker to rectangular form
             cv::Mat markerTransform = cv::getPerspectiveTransform(points, markerCorners2D);
@@ -71,7 +71,7 @@ namespace OPENCV {
         }
     }
 
-    FrameworkReturnCode SolARPerspectiveControllerOpencv::correct(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours, std::vector<SRef<Image>> & patches)
+    FrameworkReturnCode SolARPerspectiveControllerOpencv::correct(const SRef<Image> inputImg, const std::vector<Contour2Df> & contours, std::vector<SRef<Image>> & patches)
     {
         if (inputImg == nullptr)
         {
@@ -98,11 +98,11 @@ namespace OPENCV {
         {
             points.clear();
             // If the contour contains at least 4 points
-            if (contours[i]->size() >= 4)
+            if (contours[i].size() >= 4)
             {
                 for(unsigned int j =0; j < 4; ++j)
                 {
-                   points.push_back(cv::Point2f((*(contours[i]))[j]->getX(),(*(contours[i]))[j]->getY()));
+                   points.push_back(cv::Point2f((contours[i])[j]->getX(),(contours[i])[j]->getY()));
                 }
                     // Find the perspective transformation that brings current marker to rectangular form
                 cv::Mat markerTransform = cv::getPerspectiveTransform(points, markerCorners2D);

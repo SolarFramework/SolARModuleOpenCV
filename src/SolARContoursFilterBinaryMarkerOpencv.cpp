@@ -38,7 +38,7 @@ namespace OPENCV {
     }
 
     // Compute the perimeter of a contour
-    float computePerimeter(const Contour2Df& contour)
+    float computePerimeter(const Contour2Df & contour)
     {
         float sum = 0;
         for (size_t i = 0; i<contour.size(); i++)
@@ -49,16 +49,16 @@ namespace OPENCV {
         return sum;
     }
 
-    FrameworkReturnCode SolARContoursFilterBinaryMarkerOpencv::filter(const std::vector<SRef<Contour2Df>> & input_contours, std::vector<SRef<Contour2Df>> & filtered_contours)
+    FrameworkReturnCode SolARContoursFilterBinaryMarkerOpencv::filter(const std::vector<Contour2Df> & input_contours, std::vector<Contour2Df> & filtered_contours)
     {
         std::vector<cv::Point2i> approxCurve;
-        std::vector<SRef<Contour2Df>> possibleMarkers;
+        std::vector<Contour2Df> possibleMarkers;
         // For each contour, analyze if it is a parallelepiped likely to be the marker
         for (size_t i = 0; i<input_contours.size(); i++)
         {
             // Approximate to a polygon
-            double eps = input_contours[i]->size() * m_epsilon;
-            cv::approxPolyDP(SolAROpenCVHelper::convertToOpenCV(*(input_contours[i])), approxCurve, eps, true);
+            double eps = input_contours[i].size() * m_epsilon;
+            cv::approxPolyDP(SolAROpenCVHelper::convertToOpenCV(input_contours[i]), approxCurve, eps, true);
             // We interested only in polygons that contains only four points and that are convex
             if ((approxCurve.size() == 4) && (cv::isContourConvex(approxCurve)))
             {
@@ -72,19 +72,19 @@ namespace OPENCV {
                 // Check that distance is not very small
                 if (minDist > m_minContourLength)
                 {
-                    SRef<Contour2Df> contour = xpcf::utils::make_shared<Contour2Df>();
+                    Contour2Df contour;
                     for (int i = 0; i<4; i++)
                     {
-                        contour->push_back(xpcf::utils::make_shared<Point2Df>(approxCurve[i].x, approxCurve[i].y));
+                        contour.push_back(xpcf::utils::make_shared<Point2Df>(approxCurve[i].x, approxCurve[i].y));
                      }
-                    Point2Df v1 = (*((*contour)[1])) - (*((*contour)[0]));
-                    Point2Df v2 = (*((*contour)[2])) - (*((*contour)[0]));
+                    Point2Df v1 = (*(contour[1])) - (*(contour[0]));
+                    Point2Df v2 = (*(contour[2])) - (*(contour[0]));
 
                     double o = (v1[0] * v2[1]) - (v1[1] * v2[0]);
                     if (o < 0.0){		 //if the third point is in the left side, then sort in anti-clockwise order
-                        SRef<Point2Df> temp_point = (*contour)[3];
-                        (*contour)[3] = (*contour)[1];
-                        (*contour)[1] = temp_point;
+                        SRef<Point2Df> temp_point = contour[3];
+                        contour[3] = contour[1];
+                        contour[1] = temp_point;
                     }
                     possibleMarkers.push_back(contour);
                 }
@@ -102,7 +102,7 @@ namespace OPENCV {
                 float distSquared = 0;
                 for (int c = 0; c < 4; c++)
                 {
-                    Point2Df v = (*(*(possibleMarkers[i]))[c]) - (*(*(possibleMarkers[j]))[c]);
+                    Point2Df v = (*(possibleMarkers[i])[c]) - (*(possibleMarkers[j])[c]);
                     distSquared += v.dot(v);
                 }
                 distSquared /= 4;
@@ -117,8 +117,8 @@ namespace OPENCV {
         std::vector<bool> removalMask(possibleMarkers.size(), false);
         for (size_t i = 0; i<tooNearCandidates.size(); i++)
         {
-            float p1 = computePerimeter(*possibleMarkers[tooNearCandidates[i].first]);
-            float p2 = computePerimeter(*possibleMarkers[tooNearCandidates[i].second]);
+            float p1 = computePerimeter(possibleMarkers[tooNearCandidates[i].first]);
+            float p2 = computePerimeter(possibleMarkers[tooNearCandidates[i].second]);
             size_t removalIndex;
             if (p1 > p2)
                 removalIndex = tooNearCandidates[i].second;

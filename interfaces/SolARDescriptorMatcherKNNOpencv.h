@@ -50,28 +50,27 @@ class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public org::bcom:
         public api::features::IDescriptorMatcher {
 public:
     SolARDescriptorMatcherKNNOpencv();
-    ~SolARDescriptorMatcherKNNOpencv();
+    ~SolARDescriptorMatcherKNNOpencv() override;
     void unloadComponent () override final;
 
     /// @brief Matches two descriptors desc1 and desc2 respectively based on KNN search strategy.
     /// [in] desc1: source descriptor.
     /// [in] desc2: target descriptor.
     /// [out] matches: ensemble of detected matches, a pair of source/target indices.
-    ///@return DescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
-  DescriptorMatcher::RetCode match(
-            SRef<DescriptorBuffer> desc1,
-            SRef<DescriptorBuffer> desc2,
-            std::vector<DescriptorMatch>& matches);
+    ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
+  IDescriptorMatcher::RetCode match(
+            const SRef<DescriptorBuffer> desc1,
+            const SRef<DescriptorBuffer> desc2,
+            std::vector<DescriptorMatch> & matches) override;
   /// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on KNN search strategy.
   /// [in] desc1: source descriptor.
   /// [in] desc2: target descriptors.
   /// [out] matches: ensemble of detected matches, a pair of source/target indices.
-  ///@return DescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
-    DescriptorMatcher::RetCode match(
-           SRef<DescriptorBuffer> descriptors1,
-           std::vector<SRef<DescriptorBuffer>>& descriptors2,
-           std::vector<DescriptorMatch>& matches
-        );
+  ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
+    IDescriptorMatcher::RetCode match(
+           const SRef<DescriptorBuffer> descriptors1,
+           const std::vector<SRef<DescriptorBuffer>> & descriptors2,
+           std::vector<DescriptorMatch> & matches) override;
 
 
 private:
@@ -85,7 +84,7 @@ private:
     int m_id;
     cv::FlannBasedMatcher m_matcher;
 
-    DescriptorMatcher::RetCode match(
+    IDescriptorMatcher::RetCode match(
             SRef<DescriptorBuffer>& descriptors1,
             SRef<DescriptorBuffer>& descriptors2,
             std::vector<std::vector< cv::DMatch >>& matches,int nbOfMatches);

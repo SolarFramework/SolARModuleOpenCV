@@ -50,21 +50,21 @@ public:
 
 public:
 	SolARCameraCalibrationOpencv();
-	virtual ~SolARCameraCalibrationOpencv();
+    virtual ~SolARCameraCalibrationOpencv() override;
     /// @brief this method calibrates and fixes an unkonwn camera intrinsic parameters from a offline video stream,
     /// it saves the result calibration file inside output folder.
     /// @param[in] inputVideo: path of the video stream captured by the unkown camera.
     /// @param[out] output: path of the folder where a result calibration file will be written.
-	bool calibrate(std::string&inputVideo, std::string&output);
+    bool calibrate(const std::string & inputVideo, const std::string & output) override;
     /// @brief this method calibrates and fixes an unkonwn camera intrinsic parameters from a online video stream,
     /// it saves the result calibration file inside output folder.
     /// @param[in] camera_id: id of the unkown camera from which the video stream is grabbed.
     /// @param[out] output: path of the folder where a result calibration file will be written.
-	bool calibrate(int camera_id, std::string&output);
+    bool calibrate(int camera_id, const std::string & output) override;
     /// @brief this method is used to set intrinsic parameters and distorsion of the camera
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distorsion parameters.
-	bool setParameters(std::string&config_file);
+    bool setParameters(const std::string & config_file) override;
 	virtual void unloadComponent() override;
 
 
@@ -82,7 +82,7 @@ protected:
 	int m_flags;
 	int m_delay;
 
-	virtual bool process(cv::VideoCapture&, std::string&);
+    virtual bool process(cv::VideoCapture &, const std::string &);
 	
 	static double computeReprojectionErrors(const std::vector<std::vector<cv::Point3f> >& objectPoints,
 		const std::vector<std::vector<cv::Point2f> >& imagePoints,
@@ -92,7 +92,7 @@ protected:
 
 	static void calcChessboardCorners(cv::Size boardSize, float squareSize, std::vector<cv::Point3f>& corners);
 
-	static bool runCalibration(std::vector<std::vector<cv::Point2f>>imagePoints,
+    static bool runCalibration(const std::vector<std::vector<cv::Point2f>> & imagePoints,
 		cv::Size imageSize,
 		cv::Size boardSize,
 		float squareSize,

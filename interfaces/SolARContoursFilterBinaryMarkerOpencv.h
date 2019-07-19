@@ -42,7 +42,7 @@ public:
     /// @brief Filters an ensemble of contours according to a given parameters (minimum of contour length,  minimum contours corners..).
     /// [in] input_contours: original extracted contours.
     ///[out] output_contours: final filtred contours.
-    FrameworkReturnCode filter(const std::vector<SRef<Contour2Df>> & input_contours, std::vector<SRef<Contour2Df>> & output_contours) override;
+    FrameworkReturnCode filter(const std::vector<Contour2Df> & input_contours, std::vector<Contour2Df> & output_contours) override;
     void unloadComponent () override final; 
 
 private:    

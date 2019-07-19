@@ -48,7 +48,7 @@ class SOLAROPENCV_EXPORT_API SolARKeypointDetectorOpencv : public org::bcom::xpc
 public:
 
     SolARKeypointDetectorOpencv();
-    ~SolARKeypointDetectorOpencv();
+    ~SolARKeypointDetectorOpencv() override;
     void unloadComponent () override final;
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
@@ -64,7 +64,7 @@ public:
     /// @brief This method detects keypoints in an input Image
     /// @param[in] image input image on which we are extracting keypoints.
     /// @param[out] keypoints The keypoints detected from the image passed as first argument.
-    void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints) override;
+    void detect (const SRef<Image> image, std::vector<Keypoint> & keypoints) override;
 
 private:
     /// @brief the type of descriptor used for the extraction (AKAZE, AKAZE2, ORB, BRISK)

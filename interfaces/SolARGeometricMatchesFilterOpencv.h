@@ -37,10 +37,10 @@ public:
         /// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
         /// @param[in] Original keypoints associated to desc_1.
         /// @param[in] Original keypoints associated to desc_2.
-        void filter(const std::vector<DescriptorMatch>&inputMatches,
-                    std::vector<DescriptorMatch>&outputMatches,
-                    const std::vector<SRef<Keypoint>>&inputKeyPointsA,
-                    const std::vector<SRef<Keypoint>>&inputKeyPointsB);
+        void filter(const std::vector<DescriptorMatch> & inputMatches,
+                    std::vector<DescriptorMatch> & outputMatches,
+                    const std::vector<Keypoint> & inputKeyPointsA,
+                    const std::vector<Keypoint> & inputKeyPointsB) override;
         void unloadComponent () override final;
 
      private:

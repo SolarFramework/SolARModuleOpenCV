@@ -36,7 +36,7 @@ namespace OPENCV {
         params->wrapInteger("minContourEdges",m_minContourEdges);
     }
 
-    FrameworkReturnCode SolARContoursExtractorOpencv::extract(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours)
+    FrameworkReturnCode SolARContoursExtractorOpencv::extract(const SRef<Image> inputImg, std::vector<Contour2Df> & contours)
     {
         if (inputImg->getImageLayout() != Image::LAYOUT_GREY)
         {
@@ -56,10 +56,10 @@ namespace OPENCV {
                 size_t contourSize = ocv_contours[i].size();
                 if (contourSize > m_minContourEdges)
                 {
-                    SRef<Contour2Df> contour = xpcf::utils::make_shared<Contour2Df>();
+                    Contour2Df contour;
                     for (size_t j = 0; j < contourSize; j++)
                     {
-                        contour->push_back(xpcf::utils::make_shared<Point2Df>(ocv_contours[i][j].x, ocv_contours[i][j].y));
+                        contour.push_back(xpcf::utils::make_shared<Point2Df>(ocv_contours[i][j].x, ocv_contours[i][j].y));
                     }
                     contours.push_back(contour);
                 }

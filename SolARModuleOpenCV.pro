@@ -40,6 +40,7 @@ INCLUDEPATH += interfaces/
 #LIBS += "D:/AmineLib/SSBA/build/Release"
 
 HEADERS += interfaces/SolARCameraOpencv.h \
+    interfaces/SolARBaseCameraOpencv.h \
     interfaces/SolARImageConvertorOpencv.h \
     interfaces/SolARImageConvertorUnity.h \
     interfaces/SolARImageLoaderOpencv.h \
@@ -96,6 +97,7 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARUndistortPointsOpencv.h 
 
 SOURCES += src/SolARModuleOpencv.cpp \
+    src/SolARBaseCameraOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
     src/SolARKeypointDetectorRegionOpencv.cpp \
     src/SolARImageLoaderOpencv.cpp \

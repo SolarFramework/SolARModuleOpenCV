@@ -51,8 +51,8 @@ public:
     /// @param[in]  worldPoints, set of 3d_points corresponding to view_1.
     /// @param[out] pose, camera pose (pose of the world in the coordinate system of the camera) expressed as a Transform3D.
     /// @param[in] initialPose (Optional), a tranfsform3D to initialize the pose (reducing the convergence time and improving its success).
-    FrameworkReturnCode estimate( const std::vector<SRef<Point2Df>> & imagePoints,
-                                  const std::vector<SRef<Point3Df>> & worldPoints,
+    FrameworkReturnCode estimate( const std::vector<Point2Df> & imagePoints,
+                                  const std::vector<Point3Df> & worldPoints,
                                   Transform3Df & pose,
                                   const Transform3Df initialPose = Transform3Df::Identity()) override;
 

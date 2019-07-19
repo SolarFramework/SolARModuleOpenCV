@@ -79,7 +79,7 @@ void SolARCameraCalibrationOpencv::calcChessboardCorners(cv::Size boardSize, flo
                 float(i*squareSize), 0));
 }
 
-bool SolARCameraCalibrationOpencv::runCalibration(std::vector<std::vector<cv::Point2f>>imagePoints,
+bool SolARCameraCalibrationOpencv::runCalibration(const std::vector<std::vector<cv::Point2f>> & imagePoints,
 												cv::Size imageSize,
 												cv::Size boardSize,
 												float squareSize,
@@ -162,7 +162,7 @@ void SolARCameraCalibrationOpencv::saveCameraParams(const std::string& filename,
 }
 
 
-bool SolARCameraCalibrationOpencv::runAndSave(const std::string& outputFilename,
+bool SolARCameraCalibrationOpencv::runAndSave(const std::string & outputFilename,
 											const std::vector<std::vector<cv::Point2f> >& imagePoints,
 											cv::Size imageSize,
 											cv::Size boardSize,
@@ -189,7 +189,7 @@ bool SolARCameraCalibrationOpencv::runAndSave(const std::string& outputFilename,
     return ok;
 }
 
-bool SolARCameraCalibrationOpencv::calibrate(std::string& inputVideo, std::string&output)
+bool SolARCameraCalibrationOpencv::calibrate(const std::string & inputVideo, const std::string & output)
 {
 	cv::VideoCapture capture;
 
@@ -202,7 +202,7 @@ bool SolARCameraCalibrationOpencv::calibrate(std::string& inputVideo, std::strin
 	return process(capture, output);
 }
 
-bool SolARCameraCalibrationOpencv::calibrate(int camera_id, std::string&output)
+bool SolARCameraCalibrationOpencv::calibrate(int camera_id, const std::string & output)
 {
 	cv::VideoCapture capture;
 
@@ -216,7 +216,7 @@ bool SolARCameraCalibrationOpencv::calibrate(int camera_id, std::string&output)
 }
 
 
-bool SolARCameraCalibrationOpencv::process(cv::VideoCapture& capture, std::string&output)
+bool SolARCameraCalibrationOpencv::process(cv::VideoCapture & capture, const std::string & output)
 {
 	cv::Size imageSize;
 	int i;
@@ -379,7 +379,7 @@ bool SolARCameraCalibrationOpencv::process(cv::VideoCapture& capture, std::strin
 //	return true;
 //}
 
-bool SolARCameraCalibrationOpencv::setParameters(std::string &config_file)
+bool SolARCameraCalibrationOpencv::setParameters(const std::string & config_file)
 {
     cv::FileStorage fs(config_file, cv::FileStorage::READ);
     m_camMatrix.create(3, 3, CV_32FC1);
