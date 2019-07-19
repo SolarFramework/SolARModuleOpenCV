@@ -46,7 +46,7 @@ public:
     ~SolARUndistortPointsOpencv() = default;
 
     void unloadComponent () override final;
-    FrameworkReturnCode undistort(const std::vector<SRef<Point2Df>> & inputPoints, std::vector<SRef<Point2Df>> & outputPoints) override;
+    FrameworkReturnCode undistort(const std::vector<Point2Df> & inputPoints, std::vector<Point2Df> & outputPoints) override;
 
     /// @brief Set the distorsion intrinsic camera parameters
     void setDistorsionParameters(const CamDistortion & distorsion_parameters) override;

@@ -24,7 +24,7 @@ namespace SolAR {
                 ///@brief SolARPoseEstimationPnpOpencv constructor;
                 SolAR2D3DCorrespondencesFinderOpencv();
                 ///@brief SolARPoseEstimationPnpOpencv destructor;
-                ~SolAR2D3DCorrespondencesFinderOpencv() = default;
+                ~SolAR2D3DCorrespondencesFinderOpencv()  override = default;
                 /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on opencv Perspective from N Points algorithm
                 /// @param[in] Set of 2d_points seen in view_1.
                 /// @param[in] Set of 3d_points corresponding to view_1.
@@ -32,9 +32,9 @@ namespace SolAR {
                 FrameworkReturnCode find(const SRef<Keyframe> referenceKeyframe,
                                          const SRef<Frame> currentFrame,
                                          const std::vector<DescriptorMatch>&current_matches,
-                                         std::vector<SRef<CloudPoint>>&shared_mapPoint,
-                                         std::vector<SRef<Point3Df>>&shared_3dpoint,
-                                         std::vector<SRef<Point2Df>>&shared_2dpoint,
+                                         std::vector<CloudPoint>&shared_mapPoint,
+                                         std::vector<Point3Df>&shared_3dpoint,
+                                         std::vector<Point2Df>&shared_2dpoint,
                                          std::vector<DescriptorMatch> & found_matches,
                                          std::vector<DescriptorMatch> & remaining_matches) override;
                 /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points. The estimation is based on opencv Perspective from N Points algorithm
@@ -44,9 +44,9 @@ namespace SolAR {
 				FrameworkReturnCode find(	const SRef<Frame> lastFrame,
 											const SRef<Frame> currentFrame,
 											const std::vector<DescriptorMatch>&current_matches,
-											std::vector<SRef<CloudPoint>>&shared_mapPoint,
-											std::vector<SRef<Point3Df>>&shared_3dpoint,
-											std::vector<SRef<Point2Df>>&shared_2dpoint,
+                                            std::vector<CloudPoint>&shared_mapPoint,
+                                            std::vector<Point3Df>&shared_3dpoint,
+                                            std::vector<Point2Df>&shared_2dpoint,
 											std::vector<DescriptorMatch> & found_matches,
 											std::vector<DescriptorMatch> & remaining_matches) override;
 

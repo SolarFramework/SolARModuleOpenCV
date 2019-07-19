@@ -46,10 +46,10 @@ SolARPoseEstimationSACPnpOpencv::~SolARPoseEstimationSACPnpOpencv(){
 
 }
 
-FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector<SRef<Point2Df>> & imagePoints,
-                                                            const std::vector<SRef<Point3Df>> & worldPoints,
-                                                            std::vector<SRef<Point2Df>>&imagePoints_inlier,
-                                                            std::vector<SRef<Point3Df>>&worldPoints_inlier,
+FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector<Point2Df> & imagePoints,
+                                                            const std::vector<Point3Df> & worldPoints,
+                                                            std::vector<Point2Df>&imagePoints_inlier,
+                                                            std::vector<Point3Df>&worldPoints_inlier,
                                                             Transform3Df & pose,
                                                             const Transform3Df initialPose) {
 
@@ -65,8 +65,8 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector
     }
 
     for (int i=0;i<imagePoints.size();++i) {
-        Point2Df point2D = *(imagePoints.at(i));
-        Point3Df point3D = *(worldPoints.at(i));
+        Point2Df point2D = imagePoints.at(i);
+        Point3Df point3D =worldPoints.at(i);
         imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
         worldCVPoints.push_back(cv::Point3f(point3D.getX(), point3D.getY(),point3D.getZ()));
     }
@@ -100,8 +100,8 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector
              worldPoints_inlier.push_back(worldPoints[i]);
              imagePoints_inlier.push_back(imagePoints[i]);
 
-             in2d.push_back(cv::Point2f(imagePoints[i]->getX(),imagePoints[i]->getY()));
-             in3d.push_back(cv::Point3f(worldPoints[i]->getX(),worldPoints[i]->getY(),worldPoints[i]->getZ()));
+             in2d.push_back(cv::Point2f(imagePoints[i].getX(),imagePoints[i].getY()));
+             in3d.push_back(cv::Point3f(worldPoints[i].getX(),worldPoints[i].getY(),worldPoints[i].getZ()));
          }
      }
 	 

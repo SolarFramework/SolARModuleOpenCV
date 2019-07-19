@@ -46,10 +46,10 @@ SolARPoseEstimationPlanarPointsOpencv::~SolARPoseEstimationPlanarPointsOpencv(){
 
 }
 
-FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::vector<SRef<Point2Df>> & imagePoints,
-                                                                    const std::vector<SRef<Point3Df>> & worldPoints,
-                                                                    std::vector<SRef<Point2Df>> &imagePoints_inlier,
-                                                                    std::vector<SRef<Point3Df>> &worldPoints_inlier,
+FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::vector<Point2Df> & imagePoints,
+                                                                    const std::vector<Point3Df> & worldPoints,
+                                                                    std::vector<Point2Df> &imagePoints_inlier,
+                                                                    std::vector<Point3Df> &worldPoints_inlier,
                                                                     Transform3Df & pose,
                                                                     const Transform3Df initialPose) {
 
@@ -64,8 +64,8 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
 
     for (int i=0;i<imagePoints.size();++i) {
 
-        Point2Df point2D = *(imagePoints.at(i));
-        Point3Df point3D = *(worldPoints.at(i));
+        Point2Df point2D = imagePoints.at(i);
+        Point3Df point3D = worldPoints.at(i);
         imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
         worldCVPoints.push_back(cv::Point2f(point3D.getX(), point3D.getY()));
     }

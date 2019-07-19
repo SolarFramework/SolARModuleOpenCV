@@ -48,7 +48,7 @@ public:
     ///@brief SolARPoseFinderFrom2D2DOpencv constructor;
     SolARPoseFinderFrom2D2DOpencv();
     ///@brief SolARPoseFinderFrom2D2DOpencv destructor;
-    ~SolARPoseFinderFrom2D2DOpencv();
+    ~SolARPoseFinderFrom2D2DOpencv() override;
 
     /// @brief this method is used to set intrinsic parameters and distorsion of the camera
     /// @param[in] Camera calibration matrix parameters.
@@ -61,8 +61,8 @@ public:
     /// @param[in] poseView1, Camera pose (3D transform of the camera of the view1 defined in world corrdinate system).
     /// @param[out] poseView2, Camera pose (3D transform of the camera of the view2 defined in world corrdinate system).
     /// @param[in|out] inlierMatches, a vector of matches that will be used for the pose estimation. This vector wll be updates as some input matches will be considered as outliers. If this vector is empty, we consider that the ith point of pointsView1 matches with the ith point of pointsView2.
-    FrameworkReturnCode estimate(const std::vector<SRef<Point2Df>> & matchedPointsView1,
-                                 const std::vector<SRef<Point2Df>> & matchedPointsView2,
+    FrameworkReturnCode estimate(const std::vector<Point2Df> & matchedPointsView1,
+                                 const std::vector<Point2Df> & matchedPointsView2,
                                  const Transform3Df& poseView1,
                                  Transform3Df & poseView2,
                                  std::vector<DescriptorMatch>& inlierMatches) override;
@@ -73,8 +73,8 @@ public:
     /// @param[in] poseView1, Camera pose (3D transform of the camera of the view1 defined in world corrdinate system).
     /// @param[out] poseView2, Camera pose (3D transform of the camera of the view2 defined in world corrdinate system).
     /// @param[in|out] inlierMatches, a vector of matches that will be used for the pose estimation. This vector wll be updates as some input matches will be considered as outliers. If this vector is empty, we consider that the ith point of pointsView1 matches with the ith point of pointsView2.
-    FrameworkReturnCode estimate(const std::vector<SRef<Keypoint>> & matchedPointsView1,
-                                 const std::vector<SRef<Keypoint>> & matchedPointsView2,
+    FrameworkReturnCode estimate(const std::vector<Keypoint> & matchedPointsView1,
+                                 const std::vector<Keypoint> & matchedPointsView2,
                                  const Transform3Df& poseView1,
                                  Transform3Df & poseView2,
                                  std::vector<DescriptorMatch>& inlierMatches) override;

@@ -36,8 +36,8 @@ SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv():ConfigurableB
     params->wrapDouble("ransacReprojThreshold", m_ransacReprojThreshold);
 }
 
-api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::find(const std::vector< SRef<Point2Df> >& srcPoints,
-                                          const std::vector< SRef<Point2Df> >& dstPoints,
+api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::find(const std::vector<Point2Df> & srcPoints,
+                                          const std::vector<Point2Df> & dstPoints,
                                           Transform2Df & homography)
 {
 
@@ -48,12 +48,12 @@ api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::f
 
 
     for( int i = 0; i < srcPoints.size(); i++ ){
-        point.x=srcPoints.at(i)->getX();
-        point.y=srcPoints.at(i)->getY();
+        point.x=srcPoints.at(i).getX();
+        point.y=srcPoints.at(i).getY();
         obj.push_back( point );
 
-        point.x=dstPoints.at(i)->getX();
-        point.y=dstPoints.at(i)->getY();
+        point.x=dstPoints.at(i).getX();
+        point.y=dstPoints.at(i).getY();
         scene.push_back( point);
     }
 

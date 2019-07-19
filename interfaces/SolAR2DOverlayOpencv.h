@@ -46,19 +46,19 @@ public:
     /// Draws a circle on the image displayImage center on the point with specified radius and thickness.
     /// @param[in] point The position of the circle to draw
     /// @param[in,out] displayImage The image on which the the circles will be drawn.
-    void drawCircle(const SRef<Point2Df> point, SRef<Image> displayImage) override;
+    void drawCircle(const Point2Df & point, SRef<Image> displayImage) override;
 
     /// @brief Draw Circles.
-    /// Draws all the circles stored in the vector std::vector <SRef<Point2Df>> & points on image displayImage with specified radius, thickness and colors (defined in the configuration file).
+    /// Draws all the circles stored in the vector std::vector <Point2Df> & points on image displayImage with specified radius, thickness and colors (defined in the configuration file).
     /// @param[in] point The positions of the circles to draw
     /// @param[in,out] displayImage The image on which the circles will be drawn.
-    void drawCircles(const std::vector<SRef<Point2Df>>& points, SRef<Image> displayImage) override;
+    void drawCircles(const std::vector<Point2Df>& points, SRef<Image> displayImage) override;
 
     /// @brief Draw Circles.
-    /// Draws all the circles stored in the vector std::vector <SRef<Keypoint>> & keypoints on image displayImage with specified radius, thickness and colors (defined in the configuration file).
+    /// Draws all the circles stored in the vector std::vector <Keypoint> & keypoints on image displayImage with specified radius, thickness and colors (defined in the configuration file).
     /// @param[in] keypoint The positions of the circles to draw
     /// @param[in,out] displayImage The image on which the circles will be drawn.
-    void drawCircles(const std::vector<SRef<Keypoint>>& keypoints, SRef<Image> displayImage) override;
+    void drawCircles(const std::vector<Keypoint>& keypoints, SRef<Image> displayImage) override;
 
     /// @brief Draw a Contour.
     /// Draws a contour on image displayImage
@@ -67,15 +67,15 @@ public:
     void drawContour (const Contour2Df& contour, SRef<Image> displayImage);
 
     /// @brief Draw Contours.
-    /// Draws all the contours stored in the vector  std::vector <SRef<Contour2Df>> & contours on image displayImage
+    /// Draws all the contours stored in the vector  std::vector <Contour2Df> & contours on image displayImage
     /// @param[in] contours The vector of contours in 2D to draw with specified radius, thickness and colors (defined in the configuration file).
     /// @param[in,out] displayImage The image on which the contours will be drawn.
-    void drawContours (const std::vector <SRef<Contour2Df>> & contours, SRef<Image> displayImage) override;
+    void drawContours (const std::vector <Contour2Df> & contours, SRef<Image> displayImage) override;
 
     /// @brief Draws a Squared Binary Pattern.
     /// @param[in] pattern The squared binary pattern to display.
     /// @param[in,out] displayImage The image on which the squared binary pattern will be drawn (on the whole image).
-    void drawSBPattern (const SRef<SquaredBinaryPattern> pattern, SRef<Image> displayImage) override;
+    void drawSBPattern (const SquaredBinaryPattern & pattern, SRef<Image> displayImage) override;
 
     void unloadComponent () override final;
 

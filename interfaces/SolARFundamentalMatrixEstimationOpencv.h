@@ -46,15 +46,15 @@ public:
     SolARFundamentalMatrixEstimationOpencv();
 
     /// @brief SolARFundamentalMatrixEstimationOpencv destructor.
-    ~SolARFundamentalMatrixEstimationOpencv();
+    ~SolARFundamentalMatrixEstimationOpencv() override;
 
     /// @brief Find fundamental matrix from 2 sets of 2d_points. Th estimation is based on the opencv findFundamental algorithm.
     /// @param[in] srcPoints: set of source 2d points.
     /// @param[in] targetPoints set of target 2d points.
     /// @param[out] Estimated Fundamental transform matrix.
     /// @return Transform2DFinder::RetCode::TRANSFORM2D_ESTIMATION_OK if succeed.
-    api::solver::pose::Transform2DFinder::RetCode find(const std::vector< SRef<Point2Df> >& srcPoints,
-                                                   const std::vector< SRef<Point2Df> >& dstPoints,
+    api::solver::pose::Transform2DFinder::RetCode find(const std::vector< Point2Df >& srcPoints,
+                                                   const std::vector< Point2Df >& dstPoints,
                                                    Transform2Df & fundamental) override;
 
     void unloadComponent () override final;

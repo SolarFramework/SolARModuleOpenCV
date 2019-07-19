@@ -48,7 +48,7 @@ class SOLAROPENCV_EXPORT_API SolAROpticalFlowPyrLKOpencv : public org::bcom::xpc
         public api::tracking::IOpticalFlowEstimator {
 public:
     SolAROpticalFlowPyrLKOpencv();
-    ~SolAROpticalFlowPyrLKOpencv();
+    ~SolAROpticalFlowPyrLKOpencv() override;
     void unloadComponent () override final;
 
     /// @brief estimate the optical flow between two images
@@ -60,10 +60,10 @@ public:
     /// @param[out] error Specify for each point the tracking error
     FrameworkReturnCode estimate(const SRef<Image> previousImage,
                                  const SRef<Image> currentImage,
-                                 const std::vector<SRef<Keypoint>> & pointsToTrack,
-                                 std::vector<SRef<Point2Df>> & trackedPoints,
+                                 const std::vector<Keypoint> & pointsToTrack,
+                                 std::vector<Point2Df> & trackedPoints,
                                  std::vector<unsigned char> & status,
-                                 std::vector<float> & error);
+                                 std::vector<float> & error) override;
 
     /// @brief estimate the optical flow between two images
     /// @param[in] previousImage The previous image
@@ -74,10 +74,10 @@ public:
     /// @param[out] error Specify for each point the tracking error
     FrameworkReturnCode estimate(const SRef<Image> previousImage,
                                  const SRef<Image> currentImage,
-                                 const std::vector<SRef<Point2Df>> & pointsToTrack,
-                                 std::vector<SRef<Point2Df>> & trackedPoints,
+                                 const std::vector<Point2Df> & pointsToTrack,
+                                 std::vector<Point2Df> & trackedPoints,
                                  std::vector<unsigned char> & status,
-                                 std::vector<float> & error);
+                                 std::vector<float> & error) override;
 
 private:
 
@@ -107,7 +107,7 @@ private:
     FrameworkReturnCode estimate(const SRef<Image> previousImage,
                                  const SRef<Image> currentImage,
                                  const std::vector<cv::Point2f> & pointsToTrack,
-                                 std::vector<SRef<Point2Df>> & trackedPoints,
+                                 std::vector<Point2Df> & trackedPoints,
                                  std::vector<unsigned char> & status,
                                  std::vector<float> & error);
 };
