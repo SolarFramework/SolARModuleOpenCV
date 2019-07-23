@@ -53,8 +53,8 @@ public:
     /// @param[in] targetPoints set of target 2d points.
     /// @param[out] Estimated Fundamental transform matrix.
     /// @return Transform2DFinder::RetCode::TRANSFORM2D_ESTIMATION_OK if succeed.
-    api::solver::pose::Transform2DFinder::RetCode find(const std::vector< Point2Df >& srcPoints,
-                                                   const std::vector< Point2Df >& dstPoints,
+    api::solver::pose::Transform2DFinder::RetCode find(const std::vector<Point2Df> & srcPoints,
+                                                   const std::vector<Point2Df> & dstPoints,
                                                    Transform2Df & fundamental) override;
 
     void unloadComponent () override final;

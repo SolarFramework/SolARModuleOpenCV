@@ -44,9 +44,9 @@ SolARPoseFinderFrom2D2DOpencv::~SolARPoseFinderFrom2D2DOpencv(){
 
 FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Point2Df> & matchedPointsView1,
                                                             const std::vector<Point2Df> & matchedPointsView2,
-                                                            const Transform3Df& poseView1,
+                                                            const Transform3Df & poseView1,
                                                             Transform3Df & poseView2,
-                                                            std::vector<DescriptorMatch>& inlierMatches){
+                                                            std::vector<DescriptorMatch> & inlierMatches){
     double minVal, maxVal;
 
     Transform3Df poseView1Inverse = poseView1.inverse();
@@ -132,9 +132,9 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Po
 
 FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Keypoint> & matchedPointsView1,
                                                             const std::vector<Keypoint> & matchedPointsView2,
-                                                            const Transform3Df& poseView1,
+                                                            const Transform3Df & poseView1,
                                                             Transform3Df & poseView2,
-                                                            std::vector<DescriptorMatch>& inlierMatches){
+                                                            std::vector<DescriptorMatch> & inlierMatches){
     double minVal, maxVal;
 
     std::vector<cv::Point2f> points_view1;

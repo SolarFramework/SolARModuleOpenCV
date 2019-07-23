@@ -35,7 +35,7 @@ SolARHomographyMatrixDecomposerOpencv::SolARHomographyMatrixDecomposerOpencv():C
     m_camDistorsion.create(5, 1);
 }
 
-bool SolARHomographyMatrixDecomposerOpencv::decompose(const Transform2Df& H, std::vector<Transform3Df>& decomposedPoses){
+bool SolARHomographyMatrixDecomposerOpencv::decompose(const Transform2Df & H, std::vector<Transform3Df> & decomposedPoses){
    //Using HZ E decomposition
     cv::Mat svd_u, svd_vt, svd_w;
     cv::Mat _H(3,3,CV_64FC1);

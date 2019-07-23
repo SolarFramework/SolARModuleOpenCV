@@ -140,16 +140,16 @@ void SolAR2DOverlayOpencv::drawContour (const Contour2Df & contour, SRef<Image> 
     {
         if (i != contour.size() - 1)
         {
-            cv::Point2f pt_a(contour[i]->getX(), contour[i]->getY());
-            cv::Point2f pt_b(contour[i+1]->getX(),contour[i+1]->getY());
+            cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
+            cv::Point2f pt_b(contour[i+1].getX(),contour[i+1].getY());
 
             SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
         }
         else
         {
             //the contours loops to the first point
-            cv::Point2f pt_a(contour[i]->getX(), contour[i]->getY());
-            cv::Point2f pt_b(contour[0]->getX(),contour[0]->getY());
+            cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
+            cv::Point2f pt_b(contour[0].getX(), contour[0].getY());
 
             SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
         }
@@ -180,16 +180,16 @@ void SolAR2DOverlayOpencv::drawContours (const std::vector<Contour2Df> & contour
         {
             if (i != contour.size() - 1)
             {
-                cv::Point2f pt_a(contour[i]->getX(), contour[i]->getY());
-                cv::Point2f pt_b(contour[i+1]->getX(),contour[i+1]->getY());
+                cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
+                cv::Point2f pt_b(contour[i+1].getX(),contour[i+1].getY());
 
                 SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
             }
             else
             {
                 //the contours loops to the first point
-                cv::Point2f pt_a(contour[i]->getX(), contour[i]->getY());
-                cv::Point2f pt_b(contour[0]->getX(),contour[0]->getY());
+                cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
+                cv::Point2f pt_b(contour[0].getX(), contour[0].getY());
 
                 SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
             }

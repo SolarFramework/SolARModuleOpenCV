@@ -46,10 +46,10 @@ SolARSVDTriangulationOpencv::~SolARSVDTriangulationOpencv(){
 }
 
 
-cv::Mat_<double> SolARSVDTriangulationOpencv::iterativeLinearTriangulation(cv::Point3d &u,
-                                                                           cv::Matx34d&P,
-                                                                           cv::Point3d&u1,
-                                                                           cv::Matx34d&P1){
+cv::Mat_<double> SolARSVDTriangulationOpencv::iterativeLinearTriangulation(const cv::Point3d & u,
+                                                                           const cv::Matx34d & P,
+                                                                           const cv::Point3d & u1,
+                                                                           const cv::Matx34d & P1){
 
     double wi = 1, wi1 = 1;
     cv::Mat_<double> X(4, 1);
@@ -91,10 +91,10 @@ cv::Mat_<double> SolARSVDTriangulationOpencv::iterativeLinearTriangulation(cv::P
 
 }
 
-cv::Mat_<double> SolARSVDTriangulationOpencv::linearTriangulation(cv::Point3d &u,
-                                                                  cv::Matx34d&P,
-                                                                  cv::Point3d&u1,
-                                                                  cv::Matx34d&P1){
+cv::Mat_<double> SolARSVDTriangulationOpencv::linearTriangulation(const cv::Point3d & u,
+                                                                  const cv::Matx34d & P,
+                                                                  const cv::Point3d & u1,
+                                                                  const cv::Matx34d & P1){
 
     cv::Matx43d A(u.x*P(2, 0) - P(0, 0), u.x*P(2, 1) - P(0, 1), u.x*P(2, 2) - P(0, 2),
                   u.y*P(2, 0) - P(1, 0), u.y*P(2, 1) - P(1, 1), u.y*P(2, 2) - P(1, 2),
@@ -114,11 +114,11 @@ cv::Mat_<double> SolARSVDTriangulationOpencv::linearTriangulation(cv::Point3d &u
 /**
 From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997
 */
-cv::Mat_<double> SolARSVDTriangulationOpencv::LinearLSTriangulation(cv::Point2d &u,       //homogenous image point (u,v,1)
-                                                                    cv::Matx34d &P,       //camera 1 matrix
-                                                                    cv::Point2d &u1,      //homogenous image point in 2nd camera
-                                                                    cv::Matx34d &P1,       //camera 2 matrix
-                                                                    double		&error){
+cv::Mat_<double> SolARSVDTriangulationOpencv::LinearLSTriangulation(const cv::Point2d & u,       //homogenous image point (u,v,1)
+                                                                    const cv::Matx34d & P,       //camera 1 matrix
+                                                                    const cv::Point2d & u1,      //homogenous image point in 2nd camera
+                                                                    const cv::Matx34d & P1,       //camera 2 matrix
+                                                                    double & error){
     cv::Matx<double, 4, 4> matrA;
     cv::Matx<double, 4, 4> matrU;
     cv::Matx<double, 4, 1> matrW;
@@ -169,13 +169,13 @@ double SolARSVDTriangulationOpencv::getReprojectionErrorCloud(const std::vector<
 }
 
 
-double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df>& pointsView1,
-                                                const std::vector<Point2Df>& pointsView2,
-                                                const std::vector<DescriptorMatch> &matches,
-                                                const std::pair<unsigned int,unsigned int>&working_views,
-                                                const Transform3Df& poseView1,
-                                                const Transform3Df& poseView2,
-                                                std::vector<CloudPoint>& pcloud){
+double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & pointsView1,
+                                                const std::vector<Point2Df> & pointsView2,
+                                                const std::vector<DescriptorMatch> & matches,
+                                                const std::pair<unsigned int,unsigned int> & working_views,
+                                                const Transform3Df & poseView1,
+                                                const Transform3Df & poseView2,
+                                                std::vector<CloudPoint> & pcloud){
 
     Transform3Df poseView1Inverse = poseView1.inverse();
     Transform3Df poseView2Inverse = poseView2.inverse();
@@ -252,13 +252,13 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df>& poi
     return mse[0];
 }
 
-double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& pointsView1,
-                                                const std::vector<Keypoint>& pointsView2,
-                                                const std::vector<DescriptorMatch> &matches,
-                                                const std::pair<unsigned int,unsigned int>&working_views,
-                                                const Transform3Df& poseView1,
-                                                const Transform3Df& poseView2,
-                                                std::vector<CloudPoint>& pcloud){
+double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & pointsView1,
+                                                const std::vector<Keypoint> & pointsView2,
+                                                const std::vector<DescriptorMatch> & matches,
+                                                const std::pair<unsigned int,unsigned int> & working_views,
+                                                const Transform3Df & poseView1,
+                                                const Transform3Df & poseView2,
+                                                std::vector<CloudPoint> & pcloud){
 
     Transform3Df poseView1Inverse = poseView1.inverse();
     Transform3Df poseView2Inverse = poseView2.inverse();
@@ -334,9 +334,9 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& poi
     return mse[0];
 }
 
-double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> &curKeyframe,
-                                                const std::vector<DescriptorMatch>&matches,
-                                                std::vector<CloudPoint>& pcloud) {
+double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> & curKeyframe,
+                                                const std::vector<DescriptorMatch> & matches,
+                                                std::vector<CloudPoint> & pcloud) {
 
     SRef<Keyframe> refKeyframe = curKeyframe->getReferenceKeyframe();
 

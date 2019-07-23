@@ -43,7 +43,7 @@ SolARFundamentalMatrixEstimationOpencv::~SolARFundamentalMatrixEstimationOpencv(
 
 api::solver::pose::Transform2DFinder::RetCode SolARFundamentalMatrixEstimationOpencv::find(const std::vector<Point2Df> & srcPoints,
                                           const std::vector<Point2Df> & dstPoints,
-                                          Transform2Df &fundamental){
+                                          Transform2Df & fundamental){
 
     cv::Mat F;
     std::vector<cv::Point2f> points_view1;

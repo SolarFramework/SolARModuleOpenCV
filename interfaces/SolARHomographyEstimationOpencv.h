@@ -49,8 +49,8 @@ public:
     /// [in] targetPints: set of target points.
     /// [out] homography: 3x3  homography matrice transformation.
     /// @return Transform2DFinder::RetCode::TRANSFORM2D_ESTIMATION_OK if succed.
-    api::solver::pose::Transform2DFinder::RetCode find(const std::vector< Point2Df >& srcPoints,
-                                                      const std::vector< Point2Df >& targetPoints,
+    api::solver::pose::Transform2DFinder::RetCode find(const std::vector<Point2Df> & srcPoints,
+                                                      const std::vector<Point2Df> & targetPoints,
                                                       Transform2Df & homography) override;
 
     void unloadComponent () override final;

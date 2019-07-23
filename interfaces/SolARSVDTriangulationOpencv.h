@@ -62,29 +62,30 @@ public:
     /// @param[in] First homogeneous 2d_point.
     /// @param[in] Second homogeneous 2d_point.
     /// @return Triangulated homogeneous 3d_point.
-    cv::Mat_<double> iterativeLinearTriangulation(cv::Point3d & u,
-                                                  cv::Matx34d & P,
-                                                  cv::Point3d & u1,
-                                                  cv::Matx34d & P1);
+    cv::Mat_<double> iterativeLinearTriangulation(const cv::Point3d & u,
+                                                  const cv::Matx34d & P,
+                                                  const cv::Point3d & u1,
+                                                  const cv::Matx34d & P1);
 
     /// @brief Triangulates two homogeneous 2d_points {u,v,1.0} based on SVD linear system solving (AX=B).
     /// @param[in] First homogeneous 2d_point.
     /// @param[in] Second homogeneous 2d_point.
     /// @return Triangulated homogeneous 3d_point.
-    cv::Mat_<double> linearTriangulation(cv::Point3d & u,
-                                         cv::Matx34d & P,
-                                         cv::Point3d & u1,
-                                         cv::Matx34d & P1);
+    cv::Mat_<double> linearTriangulation(const cv::Point3d & u,
+                                         const cv::Matx34d & P,
+                                         const cv::Point3d & u1,
+                                         const cv::Matx34d & P1);
 
     /// @brief Triangulates two homogeneous 2d_points {u,v,1.0} based on SVD linear system solving (AX=0).
     /// @param[in] First homogeneous 2d_point.
     /// @param[in] Second homogeneous 2d_point.
+    /// @param [in,out] error Triangulation
     /// @return Triangulated homogeneous 3d_point.
-    cv::Mat_<double> LinearLSTriangulation(cv::Point2d & u,       //homogenous image point (u,v,1)
-                                           cv::Matx34d & P,       //camera 1 matrix
-                                           cv::Point2d & u1,      //homogenous image point in 2nd camera
-                                           cv::Matx34d & P1,       //camera 2 matrix
-                                           double	   & error);
+    cv::Mat_<double> LinearLSTriangulation(const cv::Point2d & u,       //homogenous image point (u,v,1)
+                                           const cv::Matx34d & P,       //camera 1 matrix
+                                           const cv::Point2d & u1,      //homogenous image point in 2nd camera
+                                           const cv::Matx34d & P1,       //camera 2 matrix
+                                           double & error);
 
     /// @brief triangulate pairs of points 2d captured from two views with differents poses (with respect to the camera instrinsic parameters).
     /// @param[in] pointsView1, set of 2D points seen in view_1.

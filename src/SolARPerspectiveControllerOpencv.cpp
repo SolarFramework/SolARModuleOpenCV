@@ -53,7 +53,7 @@ namespace OPENCV {
         {
             for(unsigned int j =0; j < 4; ++j)
             {
-               points.push_back(cv::Point2f(contour[j]->getX(),contour[j]->getY()));
+               points.push_back(cv::Point2f(contour[j].getX(),contour[j].getY()));
             }
                 // Find the perspective transformation that brings current marker to rectangular form
             cv::Mat markerTransform = cv::getPerspectiveTransform(points, markerCorners2D);
@@ -102,7 +102,7 @@ namespace OPENCV {
             {
                 for(unsigned int j =0; j < 4; ++j)
                 {
-                   points.push_back(cv::Point2f((contours[i])[j]->getX(),(contours[i])[j]->getY()));
+                   points.push_back(cv::Point2f((contours[i])[j].getX(),(contours[i])[j].getY()));
                 }
                     // Find the perspective transformation that brings current marker to rectangular form
                 cv::Mat markerTransform = cv::getPerspectiveTransform(points, markerCorners2D);

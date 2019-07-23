@@ -59,7 +59,7 @@ namespace OPENCV {
                     Contour2Df contour;
                     for (size_t j = 0; j < contourSize; j++)
                     {
-                        contour.push_back(xpcf::utils::make_shared<Point2Df>(ocv_contours[i][j].x, ocv_contours[i][j].y));
+                        contour.push_back(Point2Df(ocv_contours[i][j].x, ocv_contours[i][j].y));
                     }
                     contours.push_back(contour);
                 }
