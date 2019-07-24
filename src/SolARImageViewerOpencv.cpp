@@ -45,12 +45,11 @@ inline int deduceOpenCVType(SRef<Image> img)
 SolARImageViewerOpencv::SolARImageViewerOpencv():ConfigurableBase(xpcf::toUUID<SolARImageViewerOpencv>())
 {
     declareInterface<api::display::IImageViewer>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapString("title", m_title);
-    params->wrapInteger("width", m_width);
-    params->wrapInteger("height", m_height);
-    params->wrapInteger("exitKey", m_exitKey);
-    params->wrapUnsignedInteger("duration", m_duration);
+    declareProperty("title", m_title);
+    declareProperty("width", m_width);
+    declareProperty("height", m_height);
+    declareProperty("exitKey", m_exitKey);
+    declareProperty("duration", m_duration);
     LOG_DEBUG(" SolARImageViewerOpencv constructor")
 }
 

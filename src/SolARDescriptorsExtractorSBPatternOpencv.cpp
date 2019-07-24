@@ -29,8 +29,7 @@ namespace OPENCV {
     {
         declareInterface<api::features::IDescriptorsExtractorSBPattern>(this);
 
-        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-        params->wrapInteger("patternSize", m_patternSize);
+        declareProperty("patternSize", m_patternSize);
     }
 
     FrameworkReturnCode SolARDescriptorsExtractorSBPatternOpencv::extract(const SquaredBinaryPattern & pattern, SRef<DescriptorBuffer> & descriptor)

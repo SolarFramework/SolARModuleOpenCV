@@ -32,8 +32,7 @@ SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv():ConfigurableB
 {
     LOG_DEBUG("SolARHomographyEstimationOpencv constructor")
     declareInterface<api::solver::pose::I2DTransformFinder>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapDouble("ransacReprojThreshold", m_ransacReprojThreshold);
+    declareProperty("ransacReprojThreshold", m_ransacReprojThreshold);
 }
 
 api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::find(const std::vector<Point2Df> & srcPoints,

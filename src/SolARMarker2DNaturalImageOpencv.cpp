@@ -32,8 +32,7 @@ namespace OPENCV {
     {        
         declareInterface<api::input::files::IMarker2DNaturalImage>(this);
         LOG_DEBUG("SolARMarker2DSquaredBinaryOpencv constructor")
-        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-        params->wrapString("filePath", m_filePath);
+        declareProperty("filePath", m_filePath);
 
         m_size.width = 0;
         m_size.height = 0;

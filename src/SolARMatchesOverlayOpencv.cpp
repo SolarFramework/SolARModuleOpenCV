@@ -32,15 +32,14 @@ namespace OPENCV {
 SolARMatchesOverlayOpencv::SolARMatchesOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolARMatchesOverlayOpencv>())
 {
     declareInterface<api::display::IMatchesOverlay>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     m_color.resize(3);
 
-    params->wrapUnsignedInteger("thickness", m_thickness);
-    params->wrapUnsignedIntegerVector("color", m_color);
-    params->wrapString("mode", m_mode); // COLOR, RANDOM, FADING
-    params->wrapInteger("maxMatches", m_maxMatches);
-    LOG_DEBUG(" SolARMatchesOverlayOpencv constructor");
+    declareProperty("thickness", m_thickness);
+    declarePropertySequence("color", m_color);
+    declareProperty("mode", m_mode); // COLOR, RANDOM, FADING
+    declareProperty("maxMatches", m_maxMatches);
 
+    LOG_DEBUG(" SolARMatchesOverlayOpencv constructor");
 }
 
 

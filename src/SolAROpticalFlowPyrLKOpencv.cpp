@@ -31,13 +31,12 @@ namespace OPENCV {
 SolAROpticalFlowPyrLKOpencv::SolAROpticalFlowPyrLKOpencv():ConfigurableBase(xpcf::toUUID<SolAROpticalFlowPyrLKOpencv>())
 {
     declareInterface<IOpticalFlowEstimator>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("searchWinWidth", m_searchWinWidth);
-    params->wrapInteger("searchWinHeight", m_searchWinHeight);
-    params->wrapInteger("maxLevel", m_maxLevel);
-    params->wrapDouble("minEigenThreshold", m_minEigenThreshold);
-    params->wrapInteger("maxSearchIterations", m_maxSearchIterations);
-    params->wrapFloat("searchWindowAccuracy",m_searchWindowAccuracy);
+    declareProperty("searchWinWidth", m_searchWinWidth);
+    declareProperty("searchWinHeight", m_searchWinHeight);
+    declareProperty("maxLevel", m_maxLevel);
+    declareProperty("minEigenThreshold", m_minEigenThreshold);
+    declareProperty("maxSearchIterations", m_maxSearchIterations);
+    declareProperty("searchWindowAccuracy",m_searchWindowAccuracy);
 
     LOG_DEBUG(" SolAROpticalFlowPyrLKOpencv constructor")
 }

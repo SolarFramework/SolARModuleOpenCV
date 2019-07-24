@@ -30,9 +30,8 @@ SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv():Configura
 { 
     LOG_DEBUG("SolARGeometricMatchesFilterOpencv constructor")
     declareInterface<api::features::IMatchesFilter>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapFloat("confidence", m_confidence);
-    params->wrapFloat("outlierDistanceRatio", m_outlierDistanceRatio);
+    declareProperty("confidence", m_confidence);
+    declareProperty("outlierDistanceRatio", m_outlierDistanceRatio);
 }
 
 

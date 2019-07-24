@@ -31,9 +31,8 @@ namespace OPENCV {
     SolARPerspectiveControllerOpencv::SolARPerspectiveControllerOpencv():ConfigurableBase(xpcf::toUUID<SolARPerspectiveControllerOpencv>())
     {
         declareInterface<api::image::IPerspectiveController>(this);
-        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-        params->wrapInteger("outputImageWidth", m_outputImageWidth);
-        params->wrapInteger("outputImageHeight", m_outputImageHeight);
+        declareProperty("outputImageWidth", m_outputImageWidth);
+        declareProperty("outputImageHeight", m_outputImageHeight);
     }
 
     FrameworkReturnCode SolARPerspectiveControllerOpencv::correct(const SRef<Image> inputImg, const Contour2Df & contour, SRef<Image> & outputImage)

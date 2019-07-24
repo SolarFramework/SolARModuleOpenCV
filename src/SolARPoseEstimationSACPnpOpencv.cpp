@@ -30,11 +30,10 @@ namespace OPENCV {
 SolARPoseEstimationSACPnpOpencv::SolARPoseEstimationSACPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationSACPnpOpencv>())
 {
     declareInterface<api::solver::pose::I3DTransformSACFinderFrom2D3D>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("iterationsCount", m_iterationsCount);
-    params->wrapFloat("reprojError", m_reprojError);
-    params->wrapFloat("confidence", m_confidence);
-	params->wrapInteger("minNbInliers", m_NbInliersToValidPose);
+    declareProperty("iterationsCount", m_iterationsCount);
+    declareProperty("reprojError", m_reprojError);
+    declareProperty("confidence", m_confidence);
+    declareProperty("minNbInliers", m_NbInliersToValidPose);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);

@@ -37,8 +37,7 @@ SolARDescriptorsExtractorAKAZE2Opencv::SolARDescriptorsExtractorAKAZE2Opencv():C
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZE2Opencv constructor")
     // m_extractor must have a default implementation : initialize default extractor type
     m_extractor=AKAZE2::create();
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapDouble("threshold", m_threshold);
+    declareProperty("threshold", m_threshold);
 }
 
 SolARDescriptorsExtractorAKAZE2Opencv::~SolARDescriptorsExtractorAKAZE2Opencv()

@@ -32,8 +32,6 @@ namespace OPENCV {
 SolARUnprojectPlanarPointsOpencv::SolARUnprojectPlanarPointsOpencv():ConfigurableBase(xpcf::toUUID<SolARUnprojectPlanarPointsOpencv>())
 {
     declareInterface<api::geom::IUnproject>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
 

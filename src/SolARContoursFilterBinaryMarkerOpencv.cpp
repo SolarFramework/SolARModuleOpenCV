@@ -31,10 +31,9 @@ namespace OPENCV {
     SolARContoursFilterBinaryMarkerOpencv::SolARContoursFilterBinaryMarkerOpencv():ConfigurableBase(xpcf::toUUID<SolARContoursFilterBinaryMarkerOpencv>())
     {
         declareInterface<api::features::IContoursFilter>(this);
-        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-        params->wrapFloat("minContourLength",m_minContourLength);
-        params->wrapFloat("espilon",m_epsilon);
-        params->wrapFloat("minDistanceBetweenContourCorners",m_minDistanceBetweenContourCorners);
+        declareProperty("minContourLength",m_minContourLength);
+        declareProperty("espilon",m_epsilon);
+        declareProperty("minDistanceBetweenContourCorners",m_minDistanceBetweenContourCorners);
     }
 
     // Compute the perimeter of a contour

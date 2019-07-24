@@ -31,8 +31,7 @@ namespace OPENCV {
 SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpEPFL>())
 {
     declareInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("maxNumberCorrespondences", m_maxNumberCorrespondences);
+    declareProperty("maxNumberCorrespondences", m_maxNumberCorrespondences);
 
 
     m_camMatrix.create(3, 3, CV_32FC1);

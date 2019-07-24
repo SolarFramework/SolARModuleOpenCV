@@ -32,8 +32,7 @@ SolARDescriptorMatcherHammingBruteForceOpencv::SolARDescriptorMatcherHammingBrut
 {
 
     declareInterface<IDescriptorMatcher>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapFloat("distanceRatio", m_distanceRatio);
+    declareProperty("distanceRatio", m_distanceRatio);
     LOG_DEBUG(" SolARDescriptorMatcherHammingBruteForceOpencv constructor")
 }
 

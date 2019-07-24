@@ -33,10 +33,8 @@ SolARImageFilterBinaryOpencv::SolARImageFilterBinaryOpencv():ConfigurableBase(xp
     m_max = 255;
 
     declareInterface<api::image::IImageFilter>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    //SRef<xpcf::IPropertyMap> params = xpcf::getPropertyMapInstance();
-    params->wrapInteger("min", m_min);
-    params->wrapInteger("max", m_max);
+    declareProperty("min", m_min);
+    declareProperty("max", m_max);
 }
 
 

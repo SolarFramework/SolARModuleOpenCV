@@ -29,9 +29,8 @@ namespace OPENCV {
 SolARImageFilterDilateOpencv::SolARImageFilterDilateOpencv():ConfigurableBase(xpcf::toUUID<SolARImageFilterDilateOpencv>())
 {
     declareInterface<api::image::IImageFilter>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("dilate_elem", dilate_elem);
-    params->wrapInteger("dilate_size", dilate_size);
+    declareProperty("dilate_elem", dilate_elem);
+    declareProperty("dilate_size", dilate_size);
 }
 
 

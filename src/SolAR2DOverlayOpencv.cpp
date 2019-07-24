@@ -33,12 +33,11 @@ namespace OPENCV {
 SolAR2DOverlayOpencv::SolAR2DOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolAR2DOverlayOpencv>())
 {
    declareInterface<api::display::I2DOverlay>(this);
-   SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+   declareProperty("thickness", m_thickness);
+   declareProperty("radius", m_radius);
+   declarePropertySequence("color", m_color);
+   declareProperty("randomColor", m_randomColor);
 
-   params->wrapUnsignedInteger("thickness", m_thickness);
-   params->wrapUnsignedInteger("radius", m_radius);
-   params->wrapUnsignedIntegerVector("color", m_color);
-   params->wrapUnsignedInteger("randomColor", m_randomColor);
    LOG_DEBUG(" SolAR2DOverlayOpencv constructor");
 
 }
