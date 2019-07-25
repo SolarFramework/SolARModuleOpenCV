@@ -25,7 +25,7 @@
 #include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
-#include "opencv2/video/tracking.hpp""
+#include "opencv2/video/tracking.hpp"
 
 #include "datastructure/Image.h"
 #include "datastructure/Keypoint.h"
