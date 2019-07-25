@@ -92,7 +92,7 @@ namespace OPENCV {
         if (!m_ocvImage.data)
         {
             LOG_DEBUG("Marker image has not been loaded");
-            FrameworkReturnCode::_ERROR_;
+            return FrameworkReturnCode::_ERROR_;
         }
         imageCorners.push_back(xpcf::utils::make_shared<Point2Df>(0.0f, 0.0f));
         imageCorners.push_back(xpcf::utils::make_shared<Point2Df>(m_ocvImage.size().width, 0.0f));
