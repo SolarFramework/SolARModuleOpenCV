@@ -18,6 +18,7 @@
 
 #include "SolARSVDTriangulationOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
 
 namespace xpcf  = org::bcom::xpcf;
@@ -34,7 +35,7 @@ namespace OPENCV {
 
 SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ComponentBase(xpcf::toUUID<SolARSVDTriangulationOpencv>())
 {
-   addInterface<api::solver::map::ITriangulator>(this);
+   declareInterface<api::solver::map::ITriangulator>(this);
    LOG_DEBUG(" SolARSVDTriangulationOpencv constructor");
    m_camMatrix.create(3, 3);
    m_camDistorsion.create(5, 1);
@@ -175,8 +176,22 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
                                                 const Transform3Df& poseView1,
                                                 const Transform3Df& poseView2,
                                                 std::vector<SRef<CloudPoint>>& pcloud){
+                                                    
     Transform3Df poseView1Inverse = poseView1.inverse();
     Transform3Df poseView2Inverse = poseView2.inverse();
+  
+  cv::Matx34d Pose1(   poseView1Inverse(0, 0),poseView1Inverse(1, 0),poseView1Inverse(2, 0), poseView1Inverse(3, 0),
+                       poseView1Inverse(0, 1),poseView1Inverse(1, 1),poseView1Inverse(2, 1), poseView1Inverse(3, 1),
+                       poseView1Inverse(0, 2),poseView1Inverse(1, 2),poseView1Inverse(2, 2), poseView1Inverse(3, 2));
+
+
+
+    cv::Matx34d Pose2(poseView2Inverse(0, 0),poseView2Inverse(1, 0),poseView2Inverse(2, 0), poseView2Inverse(3, 0),
+                      poseView2Inverse(0, 1),poseView2Inverse(1, 1),poseView2Inverse(2, 1), poseView2Inverse(3, 1),
+                      poseView2Inverse(0, 2),poseView2Inverse(1, 2),poseView2Inverse(2, 2), poseView2Inverse(3, 2));
+
+
+  /*
     cv::Matx34d Pose1( poseView1Inverse(0, 0),poseView1Inverse(0, 1),poseView1Inverse(0, 2), poseView1Inverse(0, 3),
                        poseView1Inverse(1, 0),poseView1Inverse(1, 1),poseView1Inverse(1, 2), poseView1Inverse(1, 3),
                        poseView1Inverse(2, 0),poseView1Inverse(2, 1),poseView1Inverse(2, 2), poseView1Inverse(2, 3));
@@ -186,7 +201,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<SRef<Point2Df>
     cv::Matx34d Pose2(poseView2Inverse(0, 0),poseView2Inverse(0, 1),poseView2Inverse(0, 2), poseView2Inverse(0, 3),
                       poseView2Inverse(1, 0),poseView2Inverse(1, 1),poseView2Inverse(1, 2), poseView2Inverse(1, 3),
                       poseView2Inverse(2, 0),poseView2Inverse(2, 1),poseView2Inverse(2, 2), poseView2Inverse(2, 3));
-
+*/
     cv::Mat_<double> Kinv;
 
     cv::invert(m_camMatrix,Kinv);
@@ -332,79 +347,13 @@ double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> &curKeyfram
 	Transform3Df poseView1 = refKeyframe->getPose();
 	Transform3Df poseView2 = curKeyframe->getPose();
 
-	Transform3Df poseView1Inverse = poseView1.inverse();
-	Transform3Df poseView2Inverse = poseView2.inverse();
-	cv::Matx34d Pose1(poseView1Inverse(0, 0), poseView1Inverse(0, 1), poseView1Inverse(0, 2), poseView1Inverse(0, 3),
-		poseView1Inverse(1, 0), poseView1Inverse(1, 1), poseView1Inverse(1, 2), poseView1Inverse(1, 3),
-		poseView1Inverse(2, 0), poseView1Inverse(2, 1), poseView1Inverse(2, 2), poseView1Inverse(2, 3));
-
-
-
-	cv::Matx34d Pose2(poseView2Inverse(0, 0), poseView2Inverse(0, 1), poseView2Inverse(0, 2), poseView2Inverse(0, 3),
-		poseView2Inverse(1, 0), poseView2Inverse(1, 1), poseView2Inverse(1, 2), poseView2Inverse(1, 3),
-		poseView2Inverse(2, 0), poseView2Inverse(2, 1), poseView2Inverse(2, 2), poseView2Inverse(2, 3));
-
-	cv::Mat_<double> Kinv;
-
-	cv::invert(m_camMatrix, Kinv);
-	//std::cout<<"KInv :" << Kinv <<std::endl;
-	double t = cv::getTickCount();
-	// Create a vector to store the reprojection error of each triangulated 3D points
-	std::vector<double> reproj_error;
-	// unsigned int pts_size = pt2d_1.size();
-	unsigned int pts_size = matches.size();
-
-	// KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
-	cv::Mat_<double> KPose1;
-	KPose1 = m_camMatrix * cv::Mat(Pose1);
-
-	for (int i = 0; i < pts_size; i++) {
-		cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()]->getX(), pointsView1[matches[i].getIndexInDescriptorA()]->getY());
-		cv::Point3d u1(kp1.x, kp1.y, 1.0);
-		// um1 represents an homogenous point in 3D camera space positionned on the image plan
-		cv::Mat_<double> um1 = Kinv * cv::Mat_<double>(u1);
-		u1.x = um1(0); u1.y = um1(1); u1.z = um1(2);
-
-		cv::Point2f kp2 = cv::Point2f(pointsView2[matches[i].getIndexInDescriptorB()]->getX(), pointsView2[matches[i].getIndexInDescriptorB()]->getY());
-		cv::Point3d u2(kp2.x, kp2.y, 1.0);
-		// um1 represents an homogenous point in 3D camera space positionned on the image plan
-		cv::Mat_<double> um2 = Kinv * cv::Mat_<double>(u2);
-		u2.x = um2(0); u2.y = um2(1); u2.z = um2(2);
-
-		//std::cout<<"point1: "<< kp1 <<", u1: "<<u1<<std::endl;
-		//std::cout<<"P1: "<<Pose1<<std::endl;
-
-		 //std::cout<<"point2: "<< kp2 <<", u2: "<<u2<<std::endl;
-		 //std::cout<<"P2: "<<Pose2<<std::endl;
-
-		// Compute the position of the 3D point projected in u1 for the camera1 with Pose1 and projected in u2 for the camera 2 with Pose 2
-
-		cv::Mat_<double> X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
-		//double error;
-
-
-		//std::cout<<"X: "<<X<<std::endl;
-
-		// Reproject this point on the image plane of the second camera
-		cv::Mat_<double> xPt_img1 = KPose1 * X;				//reproject
-		cv::Point2f xPt_img_1(xPt_img1(0) / xPt_img1(2), xPt_img1(1) / xPt_img1(2));
-
-		double reprj_err = norm(xPt_img_1 - kp1);
-
-		reproj_error.push_back(reprj_err);
-
-		xpcf::utils::shared_ptr<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>();
-		std::map<unsigned int, unsigned int> visibility;
-
-		visibility[refKeyframe->m_idx] = matches[i].getIndexInDescriptorA();
-		visibility[curKeyframe->m_idx] = matches[i].getIndexInDescriptorB();
-
-		cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2), 0.0, 0.0, 0.0, reprj_err, visibility);
-		pcloud.push_back(cp);
-	}
-	cv::Scalar mse = cv::mean(reproj_error);
-	t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-	return mse[0];
+    return triangulate(pointsView1,
+                       pointsView2,
+                       matches,
+                       std::make_pair(refKeyframe->m_idx,curKeyframe->m_idx),
+                       poseView1,
+                       poseView2,
+                       pcloud);
 }
 
 void SolARSVDTriangulationOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {

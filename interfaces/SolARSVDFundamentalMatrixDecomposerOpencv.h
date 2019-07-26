@@ -28,10 +28,14 @@ namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
+
 /**
- * @class SolARSVDFundamentalMatrixDecomposerOpencv
- * @brief Decomposes Fundamental matrix on a set of camera poses based on opencv SVD solving.
- */
+* @class SolARSVDFundamentalMatrixDecomposerOpencv
+* @brief <B>Decomposes Fundamental matrix on a set of camera poses based on opencv SVD solver.</B>
+* <TT>UUID: 31188e79-6bd5-43df-9633-6d6c5d7afb5c</TT>
+*
+*/
+
 class SOLAROPENCV_EXPORT_API SolARSVDFundamentalMatrixDecomposerOpencv : public org::bcom::xpcf::ComponentBase,
     public api::solver::pose::I2Dto3DTransformDecomposer{
 public:

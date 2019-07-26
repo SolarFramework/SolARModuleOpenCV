@@ -16,6 +16,7 @@
 
 #include "SolARImageFilterAdaptiveBinaryOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -28,11 +29,11 @@ namespace OPENCV {
 
 SolARImageFilterAdaptiveBinaryOpencv::SolARImageFilterAdaptiveBinaryOpencv():ConfigurableBase(xpcf::toUUID<SolARImageFilterAdaptiveBinaryOpencv>())
 {
-    addInterface<api::image::IImageFilter>(this);
+    declareInterface<api::image::IImageFilter>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("max", max);
-    params->wrapInteger("blockSize", blockSize);
-    params->wrapInteger("C", C);
+    params->wrapInteger("max", m_max);
+    params->wrapInteger("blockSize", m_blockSize);
+    params->wrapInteger("C", m_C);
 
 }
 
@@ -58,7 +59,7 @@ FrameworkReturnCode SolARImageFilterAdaptiveBinaryOpencv::filter(const SRef<Imag
     SolAROpenCVHelper::mapToOpenCV(input,imgSource);
     SolAROpenCVHelper::mapToOpenCV(output,imgFiltred);
 
-    cv::adaptiveThreshold(imgSource, imgFiltred, max, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, blockSize, C);
+    cv::adaptiveThreshold(imgSource, imgFiltred, m_max, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, m_blockSize, m_C);
 
     return FrameworkReturnCode::_SUCCESS;
 }

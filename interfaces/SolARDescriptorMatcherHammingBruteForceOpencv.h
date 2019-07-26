@@ -39,6 +39,13 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARDescriptorMatcherHammingBruteForceOpencv
+ * @brief <B>Matches descriptors based on a Hamming distance and selects the best matches of each descriptor.</B>
+ * <TT>UUID: d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherHammingBruteForceOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorMatcher {
 public:
@@ -46,11 +53,20 @@ public:
     ~SolARDescriptorMatcherHammingBruteForceOpencv();
     void unloadComponent () override final;
 
+    /// @brief Matches two descriptors desc1 and desc2 respectively based on hamming distance
+    /// [in] desc1: source descriptor.
+    /// [in] desc2: target descriptor.
+    /// [out] matches: ensemble of detected matches, a pair of source/target indices.
+    ///@return DescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
   DescriptorMatcher::RetCode match(
             SRef<DescriptorBuffer> desc1,
             SRef<DescriptorBuffer> desc2,
             std::vector<DescriptorMatch>& matches);
-
+  /// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on hamming distance
+  /// [in] desc1: source descriptor.
+  /// [in] desc2: target descriptors.
+  /// [out] matches: ensemble of detected matches, a pair of source/target indices.
+  ///@return DescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
     DescriptorMatcher::RetCode match(
            SRef<DescriptorBuffer> descriptors1,
            std::vector<SRef<DescriptorBuffer>>& descriptors2,
@@ -67,12 +83,6 @@ private:
     int m_id;
     cv::BFMatcher m_matcher;
 
-    /*
-    DescriptorMatcher::RetCode match(
-            SRef<DescriptorBuffer>& descriptors1,
-            SRef<DescriptorBuffer>& descriptors2,
-            std::vector<std::vector< cv::DMatch >>& matches,int nbOfMatches);
-    */
 };
 
 }

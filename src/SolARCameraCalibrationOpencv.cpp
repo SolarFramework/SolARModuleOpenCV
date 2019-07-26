@@ -35,7 +35,7 @@ namespace OPENCV {
 
 SolARCameraCalibrationOpencv::SolARCameraCalibrationOpencv():ComponentBase(xpcf::toUUID<SolARCameraCalibrationOpencv>())
 {
-    addInterface<api::input::devices::ICameraCalibration>(this);
+    declareInterface<api::input::devices::ICameraCalibration>(this);
 }
 
 

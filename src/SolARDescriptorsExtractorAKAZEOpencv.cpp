@@ -17,6 +17,7 @@
 #include "SolARDescriptorsExtractorAKAZEOpencv.h"
 #include "SolARImageConvertorOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv)
 
@@ -31,7 +32,7 @@ namespace OPENCV {
 
 SolARDescriptorsExtractorAKAZEOpencv::SolARDescriptorsExtractorAKAZEOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorsExtractorAKAZEOpencv>())
 {
-    addInterface<api::features::IDescriptorsExtractor>(this);
+    declareInterface<api::features::IDescriptorsExtractor>(this);
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZEOpencv constructor")
     // m_extractor must have a default implementation : initialize default extractor type
     m_extractor=AKAZE::create();

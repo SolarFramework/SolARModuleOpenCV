@@ -33,6 +33,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARMarker2DSquaredBinaryOpencv
+ * @brief <B>Loads a 2D squared binary marker from a file.</B>
+ * <TT>UUID: 5d2b8da9-528e-4e5e-96c1-f883edcf3b1c</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARMarker2DSquaredBinaryOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::files::IMarker2DSquaredBinary{
 public:
@@ -41,6 +48,16 @@ public:
    ~SolARMarker2DSquaredBinaryOpencv();
 
     FrameworkReturnCode loadMarker() override;
+
+    /// @brief Provide the position of 2D corners in image coordinate system
+    /// @param[out] imageCorners the 2D corners of the marker in image coordinate system
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
+    FrameworkReturnCode getImageCorners(std::vector<SRef<Point2Df>>& imageCorners) const override;
+
+    /// @brief Provide the position of 3D corners in world coordinate system
+    /// @param[out] worldCorners the 3D corners of the marker in world coordinate system
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
+    FrameworkReturnCode getWorldCorners(std::vector<SRef<Point3Df>>& worldCorners) const override;
 
     void unloadComponent () override final;
 

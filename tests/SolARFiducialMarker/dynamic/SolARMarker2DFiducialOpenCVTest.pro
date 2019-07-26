@@ -1,5 +1,5 @@
 TARGET = SolARMarker2DFiducialOpenCVTest
-VERSION=1.0.0
+VERSION=0.5.2
 
 CONFIG += c++11
 CONFIG -= qt

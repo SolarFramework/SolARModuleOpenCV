@@ -17,6 +17,7 @@
 #include "SolARPerspectiveControllerOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/opencv.hpp"
+#include "core/Log.h"
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -29,7 +30,7 @@ namespace OPENCV {
 
     SolARPerspectiveControllerOpencv::SolARPerspectiveControllerOpencv():ConfigurableBase(xpcf::toUUID<SolARPerspectiveControllerOpencv>())
     {
-        addInterface<api::image::IPerspectiveController>(this);
+        declareInterface<api::image::IPerspectiveController>(this);
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
         params->wrapInteger("outputImageWidth", m_outputImageWidth);
         params->wrapInteger("outputImageHeight", m_outputImageHeight);
@@ -52,7 +53,7 @@ namespace OPENCV {
         {
             for(unsigned int j =0; j < 4; ++j)
             {
-               points.push_back(cv::Point2f((*contour)[j][0],(*contour)[j][1]));
+               points.push_back(cv::Point2f((*contour)[j]->getX(),(*contour)[j]->getY()));
             }
                 // Find the perspective transformation that brings current marker to rectangular form
             cv::Mat markerTransform = cv::getPerspectiveTransform(points, markerCorners2D);
@@ -101,7 +102,7 @@ namespace OPENCV {
             {
                 for(unsigned int j =0; j < 4; ++j)
                 {
-                   points.push_back(cv::Point2f((*(contours[i]))[j][0],(*(contours[i]))[j][1]));
+                   points.push_back(cv::Point2f((*(contours[i]))[j]->getX(),(*(contours[i]))[j]->getY()));
                 }
                     // Find the perspective transformation that brings current marker to rectangular form
                 cv::Mat markerTransform = cv::getPerspectiveTransform(points, markerCorners2D);

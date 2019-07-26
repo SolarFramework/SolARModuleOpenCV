@@ -33,10 +33,16 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolAROpenCVHelper
+ * @brief A toolbox to convert OpenCV structures to SolAR structures and respectively.
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolAROpenCVHelper {
 public:
     template <class T,int Rows, int Cols>
-    static FrameworkReturnCode convertCVMatToSolar(const cv::Mat& openCVMat, Matrix<T, Rows , Cols > & solarMat);
+    static FrameworkReturnCode convertCVMatToSolar(const cv::Mat& openCVMat, Matrix<T, Rows , Cols, 1 > & solarMat);
     template <class T,int Dim>
     static FrameworkReturnCode convertCVMatToSolar(const cv::Mat& openCVMat, Transform<T,Dim> & solarTransform);
 
@@ -58,13 +64,13 @@ public:
 
     static void drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Point2f& p2, cv::Scalar color, int thickness);
 
-private:
-    template <class T> inline static constexpr int inferOpenCVType();
+	template <class T> inline static constexpr int inferOpenCVType();
+ 
     static int deduceOpenCVType(SRef<Image> img);
 
 };
 
-template <class T> constexpr int inferOpenCVType()
+template <class T> constexpr int SolAROpenCVHelper::inferOpenCVType()
 {
     static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, int32_t>::value
                    || std::is_same<T, int16_t>::value || std::is_same<T, unsigned char>::value || std::is_same<T, char>::value,
@@ -127,7 +133,7 @@ FrameworkReturnCode SolAROpenCVHelper::convertCVMatToSolar(const cv::Mat& openCV
 }
 
 template <class T, int Rows, int Cols>
-cv::Mat SolAROpenCVHelper::mapToOpenCV (const Matrix<T, Rows , Cols >&  solarMat)
+cv::Mat SolAROpenCVHelper::mapToOpenCV (const Matrix<T, Rows , Cols>&  solarMat)
 {
     int type = inferOpenCVType<T>(); // typeid ??
     cv::Mat mat(solarMat.rows(),solarMat.cols(),type,(void *)solarMat.data());

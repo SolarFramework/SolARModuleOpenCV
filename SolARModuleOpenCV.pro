@@ -4,14 +4,12 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARModuleOpenCV
-INSTALLSUBDIR = bcomBuild
 FRAMEWORK = $$TARGET
-VERSION=0.5.0
+VERSION=0.6.0
 
 DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
-CONFIG += Cpp11
-CONFIG += c++11
+CONFIG += c++1z
 
 
 CONFIG(debug,debug|release) {
@@ -25,10 +23,9 @@ CONFIG(release,debug|release) {
 }
 
 
-PROJECTDEPLOYDIR = $$(BCOMDEVROOT)/$${INSTALLSUBDIR}/$${FRAMEWORK}/$${VERSION}
-DEPENDENCIESCONFIG = shared
+DEPENDENCIESCONFIG = shared recurse
 
-include ($$(BCOMDEVROOT)/builddefs/qmake/templatelibconfig.pri)
+include (../builddefs/qmake/templatelibconfig.pri)
 
 ## DEFINES FOR MSVC/INTEL C++ compilers
 msvc {
@@ -44,15 +41,19 @@ INCLUDEPATH += interfaces/
 
 HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageConvertorOpencv.h \
+    interfaces/SolARImageConvertorUnity.h \
     interfaces/SolARImageLoaderOpencv.h \
     interfaces/SolARImageViewerOpencv.h \
     interfaces/SolARKeypointDetectorOpencv.h \
+    interfaces/SolARKeypointDetectorRegionOpencv.h \
     interfaces/SolAROpenCVHelper.h \
     interfaces/SolAROpencvAPI.h \
     interfaces/SolARCameraCalibrationOpencv.h \
     interfaces/SolARMarker2DNaturalImageOpencv.h \
     interfaces/SolARContoursExtractorOpencv.h \
     interfaces/SolARPerspectiveControllerOpencv.h \
+    interfaces/SolARProjectOpencv.h \
+    interfaces/SolARUnprojectPlanarPointsOpencv.h \
     interfaces/SolARMarker2DSquaredBinaryOpencv.h \
     interfaces/SolARContoursFilterBinaryMarkerOpencv.h \
     interfaces/SolARDescriptorsExtractorSBPatternOpencv.h \
@@ -65,11 +66,14 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARDescriptorMatcherRadiusOpencv.h \
     interfaces/SolARFundamentalMatrixEstimationOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
+    interfaces/SolARPoseEstimationPlanarPointsOpencv.h \
     interfaces/SolARPoseEstimationPnpEPFL.h \
     interfaces/SolARPoseEstimationPnpOpencv.h \
+    interfaces/SolARPoseEstimationSACPnpOpencv.h \
     interfaces/SolARGeometricMatchesFilterOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolARSVDTriangulationOpencv.h \
+    interfaces/SolAROpticalFlowPyrLKOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
     src/AKAZE2/AKAZEFeatures.h \
     src/AKAZE2/fed.h \
@@ -88,12 +92,15 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolAR3DOverlayBoxOpencv.h \
     interfaces/SolARHomographyMatrixDecomposerOpencv.h \
     interfaces/SolARPoseFinderFrom2D2DOpencv.h \
-    interfaces/SolARMatchesOverlayOpencv.h
+    interfaces/SolARMatchesOverlayOpencv.h \
+    interfaces/SolARUndistortPointsOpencv.h 
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
+    src/SolARKeypointDetectorRegionOpencv.cpp \
     src/SolARImageLoaderOpencv.cpp \
     src/SolARImageConvertorOpencv.cpp \
+    src/SolARImageConvertorUnity.cpp \
     src/SolARImageViewerOpencv.cpp \
     src/SolARCameraOpencv.cpp \
     src/SolAROpenCVHelper.cpp \
@@ -101,6 +108,8 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARMarker2DNaturalImageOpencv.cpp \
     src/SolARContoursExtractorOpencv.cpp \
     src/SolARPerspectiveControllerOpencv.cpp \
+    src/SolARProjectOpencv.cpp \
+    src/SolARUnprojectplanarPointsOpencv.cpp \
     src/SolARMarker2DSquaredBinaryOpencv.cpp \
     src/SolARContoursFilterBinaryMarkerOpencv.cpp \
     src/SolARDescriptorsExtractorSBPatternOpencv.cpp \
@@ -112,14 +121,17 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
+    src/SolARPoseEstimationPlanarPointsOpencv.cpp \
     src/SolARPoseEstimationPnpEPFL.cpp \
     src/SolARPoseEstimationPnpOpencv.cpp \
+    src/SolARPoseEstimationSACPnpOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZE2Opencv.cpp \
     src/AKAZE2/akaze.cpp \
     src/AKAZE2/AKAZEFeatures.cpp \
     src/AKAZE2/fed.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
+    src/SolAROpticalFlowPyrLKOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
     src/SolARImageFilterBinaryOpencv.cpp \
@@ -133,10 +145,13 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolAR3DOverlayBoxOpencv.cpp \
     src/SolARHomographyMatrixDecomposerOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
-    src/SolARMatchesOverlayOpencv.cpp
+    src/SolARMatchesOverlayOpencv.cpp \
+    src/SolARUndistortPointsOpencv.cpp
 
 unix {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
+    QMAKE_LINK=clang++
+    QMAKE_CXX = clang++	
 }
 
 macx {
@@ -152,13 +167,13 @@ win32 {
 
     DEFINES += WIN64 UNICODE _UNICODE
     QMAKE_COMPILER_DEFINES += _WIN64
-    QMAKE_CXXFLAGS += -wd4250 -wd4251 -wd4244 -wd4275
+    QMAKE_CXXFLAGS += -wd4250 -wd4251 -wd4244 -wd4275 /Od
 }
 
 header_files.path = $${PROJECTDEPLOYDIR}/interfaces
 header_files.files = $$files($${PWD}/interfaces/*.h*)
 
-xpcf_xml_files.path = $$(BCOMDEVROOT)/.xpcf/SolAR
+xpcf_xml_files.path = $$(HOME)/.xpcf/SolAR
 xpcf_xml_files.files=$$files($${PWD}/xpcf*.xml)
 
 INSTALLS += header_files

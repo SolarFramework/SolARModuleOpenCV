@@ -16,6 +16,7 @@
 
 #include "SolARMatchesOverlayOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/video/video.hpp"
 #include <random>
 
@@ -30,7 +31,7 @@ namespace OPENCV {
 
 SolARMatchesOverlayOpencv::SolARMatchesOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolARMatchesOverlayOpencv>())
 {
-    addInterface<api::display::IMatchesOverlay>(this);
+    declareInterface<api::display::IMatchesOverlay>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     m_color.resize(3);
 

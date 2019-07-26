@@ -16,6 +16,7 @@
 
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv);
@@ -28,7 +29,7 @@ namespace MODULES {
 namespace OPENCV {
 
 SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOpencv():ComponentBase(xpcf::toUUID<SolARSVDFundamentalMatrixDecomposerOpencv>()){
-    addInterface<api::solver::pose::I2Dto3DTransformDecomposer>(this);
+    declareInterface<api::solver::pose::I2Dto3DTransformDecomposer>(this);
     LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
 
     m_camMatrix.create(3, 3);

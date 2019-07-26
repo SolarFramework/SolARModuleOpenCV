@@ -16,6 +16,7 @@
 
 #include "SolARKeypointDetectorOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv)
 
@@ -31,16 +32,18 @@ namespace OPENCV {
 static std::map<std::string,KeypointDetectorType> stringToType = {{"AKAZE",KeypointDetectorType::AKAZE},
                                                                   {"AKAZE2",KeypointDetectorType::AKAZE2},
                                                                   {"ORB",KeypointDetectorType::ORB},
-                                                                  {"BRISK",KeypointDetectorType::BRISK}};
+                                                                  {"BRISK",KeypointDetectorType::BRISK},
+                                                                  {"FEATURE_TO_TRACK", KeypointDetectorType::FEATURE_TO_TRACK}};
 
 static std::map<KeypointDetectorType,std::string> typeToString = {{KeypointDetectorType::AKAZE, "AKAZE"},
                                                                   {KeypointDetectorType::AKAZE2,"AKAZE2"},
                                                                   {KeypointDetectorType::ORB,"ORB"},
-                                                                  {KeypointDetectorType::BRISK,"BRISK"}};
+                                                                  {KeypointDetectorType::BRISK,"BRISK"},
+                                                                  {KeypointDetectorType::FEATURE_TO_TRACK,"FEATURE_TO_TRACK"}};
 
 SolARKeypointDetectorOpencv::SolARKeypointDetectorOpencv():ConfigurableBase(xpcf::toUUID<SolARKeypointDetectorOpencv>())
 {
-    addInterface<api::features::IKeypointDetector>(this);
+    declareInterface<api::features::IKeypointDetector>(this);
 
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapFloat("imageRatio", m_imageRatio);
@@ -58,8 +61,16 @@ SolARKeypointDetectorOpencv::~SolARKeypointDetectorOpencv()
 xpcf::XPCFErrorCode SolARKeypointDetectorOpencv::onConfigured()
 {
     LOG_DEBUG(" SolARKeypointDetectorOpencv onConfigured");
-    setType(stringToType.at(m_type));
-    return xpcf::_SUCCESS;
+    if (stringToType.find(m_type) != stringToType.end())
+    {
+        setType(stringToType.at(m_type));
+         return xpcf::_SUCCESS;
+    }
+    else
+    {
+        LOG_WARNING("Keypoint detector of type {} defined in your configuration file does not exist", m_type);
+        return xpcf::_ERROR_NOT_IMPLEMENTED;
+    }
 }
 
 void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
@@ -75,6 +86,7 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
         AKAZEUP,
         BRISK,
         BRIEF,
+        FEATURE_TO_TRACK
         */
     m_type=typeToString.at(type);
     switch (type) {
@@ -108,6 +120,7 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
         break;
 
 
+
     default :
         LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
         m_detector=AKAZE::create();
@@ -139,11 +152,22 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<S
 
     try
     {
-        if(!m_detector){
-            LOG_DEBUG(" detector is initialized with default value : {}", this->m_type)
-            setType(stringToType.at(this->m_type));
+        if (m_type == "FEATURE_TO_TRACK") {
+            std::vector<cv::Point2f> corners;
+            cv::goodFeaturesToTrack(img_1, corners, m_nbDescriptors, 0.008, 3, cv::Mat(), 3);
+            cornerSubPix(img_1, corners, cv::Size(7, 7), Size(-1, -1), cv::TermCriteria(TermCriteria::COUNT | TermCriteria::EPS, 20, 0.03));
+            for (auto it : corners)
+                kpts.push_back(cv::KeyPoint(it, 0.f));
         }
-        m_detector->detect(img_1, kpts, Mat());
+        else {
+            if(!m_detector){
+                LOG_DEBUG(" detector is initialized with default value : {}", this->m_type)
+                setType(stringToType.at(this->m_type));
+            }
+            m_detector->detect(img_1, kpts, Mat());
+            if (m_nbDescriptors >= 0)
+                kptsFilter.retainBest(kpts,m_nbDescriptors);
+        }
     }
     catch (Exception& e)
     {
@@ -151,9 +175,6 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<S
         LOG_ERROR("{}",e.msg)
         return;
     }
-
-    if (m_nbDescriptors >= 0)
-        kptsFilter.retainBest(kpts,m_nbDescriptors);
 
     for(std::vector<cv::KeyPoint>::iterator itr=kpts.begin();itr!=kpts.end();++itr){
        SRef<Keypoint> kpa = xpcf::utils::make_shared<Keypoint>();

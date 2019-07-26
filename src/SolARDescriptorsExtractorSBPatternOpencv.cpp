@@ -27,7 +27,7 @@ namespace OPENCV {
 
     SolARDescriptorsExtractorSBPatternOpencv::SolARDescriptorsExtractorSBPatternOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorsExtractorSBPatternOpencv>())
     {
-        addInterface<api::features::IDescriptorsExtractorSBPattern>(this);
+        declareInterface<api::features::IDescriptorsExtractorSBPattern>(this);
 
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
         params->wrapInteger("patternSize", m_patternSize);

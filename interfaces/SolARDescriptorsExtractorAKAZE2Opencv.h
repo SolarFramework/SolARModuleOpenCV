@@ -18,6 +18,7 @@
 #define SOLARDESCRIPTORSEXTRACTORAKAZE2OPENCV_H
 
 #include "api/features/IDescriptorsExtractor.h"
+#include "SolARImageConvertorOpencv.h"
 
 // Definition of SolARDescriptorExtractorOpencv Class //
 // part of SolAR namespace //
@@ -35,6 +36,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARDescriptorsExtractorAKAZE2Opencv
+ * @brief <B>Extracts the AKAZE descriptors for a set of keypoints (optimized version).</B>
+ * <TT>UUID: 21238c00-26dd-11e8-b467-0ed5f89f718b</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorAKAZE2Opencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorsExtractor {
 public:
@@ -44,11 +52,17 @@ public:
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
     void unloadComponent () override final;
     inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE2") ;};
-
+    /// @brief Extracts a set of descriptors from a given image around a set of keypoints based on AKAZE 2 algorithm
+    /// "Fast explicit diffusion for acceleratedfeatures in nonlinear scale space"
+    /// [in] image: source image.
+    /// [in] keypoints: set of keypoints.
+    /// [out] decsriptors: se of computed descriptors.
     void extract (const SRef<Image> image, const std::vector<SRef<Keypoint>> &keypoints, SRef<DescriptorBuffer>& descriptors) override;
 
 private:
     cv::Ptr<cv::AKAZE2> m_extractor;
+    SolARImageConvertorOpencv m_convertor;
+
     double m_threshold = 3e-4;
 };
 

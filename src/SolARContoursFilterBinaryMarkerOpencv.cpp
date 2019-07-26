@@ -30,7 +30,7 @@ namespace OPENCV {
 
     SolARContoursFilterBinaryMarkerOpencv::SolARContoursFilterBinaryMarkerOpencv():ConfigurableBase(xpcf::toUUID<SolARContoursFilterBinaryMarkerOpencv>())
     {
-        addInterface<api::features::IContoursFilter>(this);
+        declareInterface<api::features::IContoursFilter>(this);
         SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
         params->wrapFloat("minContourLength",m_minContourLength);
         params->wrapFloat("espilon",m_epsilon);
@@ -44,7 +44,7 @@ namespace OPENCV {
         for (size_t i = 0; i<contour.size(); i++)
         {
             size_t i2 = (i + 1) % contour.size();
-            sum += (contour[i]-contour[i2]).norm();
+            sum += ((*(contour[i]))-(*(contour[i2]))).norm();
         }
         return sum;
     }
@@ -75,17 +75,14 @@ namespace OPENCV {
                     SRef<Contour2Df> contour = xpcf::utils::make_shared<Contour2Df>();
                     for (int i = 0; i<4; i++)
                     {
-                        Point2Df pt;
-                        pt[0] = approxCurve[i].x;
-                        pt[1] = approxCurve[i].y;
-                        contour->push_back(pt);
+                        contour->push_back(xpcf::utils::make_shared<Point2Df>(approxCurve[i].x, approxCurve[i].y));
                      }
-                    Point2Df v1 = (*contour)[1] - (*contour)[0];
-                    Point2Df v2 = (*contour)[2] - (*contour)[0];
+                    Point2Df v1 = (*((*contour)[1])) - (*((*contour)[0]));
+                    Point2Df v2 = (*((*contour)[2])) - (*((*contour)[0]));
 
                     double o = (v1[0] * v2[1]) - (v1[1] * v2[0]);
                     if (o < 0.0){		 //if the third point is in the left side, then sort in anti-clockwise order
-                        Point2Df temp_point = (*contour)[3];
+                        SRef<Point2Df> temp_point = (*contour)[3];
                         (*contour)[3] = (*contour)[1];
                         (*contour)[1] = temp_point;
                     }
@@ -105,7 +102,7 @@ namespace OPENCV {
                 float distSquared = 0;
                 for (int c = 0; c < 4; c++)
                 {
-                    Point2Df v = (*(possibleMarkers[i]))[c] - (*(possibleMarkers[j]))[c];
+                    Point2Df v = (*(*(possibleMarkers[i]))[c]) - (*(*(possibleMarkers[j]))[c]);
                     distSquared += v.dot(v);
                 }
                 distSquared /= 4;

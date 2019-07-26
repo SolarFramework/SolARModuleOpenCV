@@ -32,6 +32,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARImageFilterBinaryOpencv
+ * @brief <B>Filters an image to a binary image based on a unique threshold.</B>
+ * <TT>UUID: e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARImageFilterBinaryOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::image::IImageFilter {
 public:

@@ -16,6 +16,7 @@
 
 #include "SolARDescriptorMatcherKNNOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -29,7 +30,7 @@ namespace OPENCV {
 
 SolARDescriptorMatcherKNNOpencv::SolARDescriptorMatcherKNNOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorMatcherKNNOpencv>())
 {
-    addInterface<IDescriptorMatcher>(this);
+    declareInterface<IDescriptorMatcher>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapFloat("distanceRatio", m_distanceRatio);
     LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv constructor")

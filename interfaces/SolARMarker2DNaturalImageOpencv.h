@@ -28,6 +28,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARMarker2DNaturalImageOpencv
+ * @brief <B>Loads a 2D natural image marker from a file.</B>
+ * <TT>UUID: efcdb590-c570-11e7-abc4-cec278b6b50a</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARMarker2DNaturalImageOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::files::IMarker2DNaturalImage {
 public:
@@ -38,6 +45,16 @@ public:
 
     FrameworkReturnCode loadMarker() override;
     FrameworkReturnCode getImage(SRef<Image> & img) override;
+
+    /// @brief Provide the position of 2D corners in image coordinate system
+    /// @param[out] imageCorners the 2D corners of the marker in image coordinate system
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
+    FrameworkReturnCode getImageCorners(std::vector<SRef<Point2Df>>& imageCorners) const override;
+
+    /// @brief Provide the position of 3D corners in world coordinate system
+    /// @param[out] worldCorners the 3D corners of the marker in world coordinate system
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
+    FrameworkReturnCode getWorldCorners(std::vector<SRef<Point3Df>>& worldCorners) const override;
 
  private:
      cv::Mat m_ocvImage;

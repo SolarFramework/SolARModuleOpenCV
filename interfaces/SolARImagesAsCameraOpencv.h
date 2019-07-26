@@ -32,6 +32,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARImagesAsCameraOpencv
+ * @brief <B>Loads an image sequence stored in a dedicated folder.</B>
+ * <TT>UUID: b8a8b963-ba55-4ea4-b045-d9e7e8f6db02</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARImagesAsCameraOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::devices::ICamera {
 public:
@@ -41,14 +48,21 @@ public:
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
+    /// @brief Start the Images acquisition
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
     FrameworkReturnCode start() override;
+
+    /// @brief Stop the Images acquisition
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
+    FrameworkReturnCode stop() override;
 
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
 
     void setResolution(Sizei resolution) override;
     void setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
     void setDistorsionParameters(const CamDistortion & distorsion_parameters) override;
-
+    void setParameters(const CameraParameters & parameters) override;
+    const CameraParameters & getParameters() override;
     Sizei getResolution () override;
     CamCalibration getIntrinsicsParameters() override;
     CamDistortion getDistorsionParameters() override;
@@ -66,11 +80,12 @@ public:
 
      cv::VideoCapture m_capture;
      bool m_is_resolution_set;
-     Sizei m_resolution;
      std::vector<std::string> imagePaths;           //will contained the path of the images to use
 
+     CameraParameters m_parameters;
+/*          Sizei m_resolution;
      CamCalibration m_intrinsic_parameters;
-     CamDistortion m_distorsion_parameters;
+     CamDistortion m_distorsion_parameters;*/
 
 };
 

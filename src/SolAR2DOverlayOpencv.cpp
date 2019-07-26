@@ -16,6 +16,7 @@
 
 #include "SolAR2DOverlayOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/core.hpp"
 #include "opencv2/video/video.hpp"
 #include <random>
@@ -31,7 +32,7 @@ namespace OPENCV {
 
 SolAR2DOverlayOpencv::SolAR2DOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolAR2DOverlayOpencv>())
 {
-   addInterface<api::display::I2DOverlay>(this);
+   declareInterface<api::display::I2DOverlay>(this);
    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
 
    params->wrapUnsignedInteger("thickness", m_thickness);
@@ -117,32 +118,79 @@ void SolAR2DOverlayOpencv::drawCircles(const std::vector<SRef<Keypoint>>& keypoi
 
 }
 
-void SolAR2DOverlayOpencv::drawContours (const std::vector <SRef<Contour2Df>> & contours, SRef<Image> displayImage)
+void SolAR2DOverlayOpencv::drawContour (const Contour2Df& contour, SRef<Image> displayImage)
+{
+    // image where contours will be displayed
+    cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
+    cv::Scalar color;
+
+    if (!m_randomColor)
+        color = cv::Scalar(m_color[0], m_color[1], m_color[2]);
+    else
+    {
+        std::random_device rd;     // only used once to initialise (seed) engine
+        std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+        std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
+
+        color = cv::Scalar(uni(rng), uni(rng), uni(rng));
+    }
+
+
+    for (int i = 0; i < contour.size(); i++)
+    {
+        if (i != contour.size() - 1)
+        {
+            cv::Point2f pt_a(contour[i]->getX(), contour[i]->getY());
+            cv::Point2f pt_b(contour[i+1]->getX(),contour[i+1]->getY());
+
+            SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
+        }
+        else
+        {
+            //the contours loops to the first point
+            cv::Point2f pt_a(contour[i]->getX(), contour[i]->getY());
+            cv::Point2f pt_b(contour[0]->getX(),contour[0]->getY());
+
+            SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
+        }
+    }
+}
+
+void SolAR2DOverlayOpencv::drawContours (const std::vector<SRef<Contour2Df>> & contours, SRef<Image> displayImage)
 {
     // image where contours will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 
-    std::vector<unsigned int> color = m_color;
-    if (m_randomColor)
-        color = {128, 128, 128};
+    cv::Scalar color;
 
     for (std::vector<SRef<Contour2Df>>::const_iterator itr = contours.begin(); itr != contours.end(); itr++)
     {
+        if (!m_randomColor)
+            color = cv::Scalar(m_color[0], m_color[1], m_color[2]);
+        else
+        {
+            std::random_device rd;     // only used once to initialise (seed) engine
+            std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+            std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
+
+            color = cv::Scalar(uni(rng), uni(rng), uni(rng));
+        }
+
         const SRef<const Contour2Df> contour = *itr;
         for (int i = 0; i < contour->size(); i++)
         {
             if (i != contour->size() - 1)
             {
-                cv::Point2f pt_a((*contour)[i][0], (*contour)[i][1]);
-                cv::Point2f pt_b((*contour)[i+1][0],(*contour)[i+1][1]);
+                cv::Point2f pt_a((*contour)[i]->getX(), (*contour)[i]->getY());
+                cv::Point2f pt_b((*contour)[i+1]->getX(),(*contour)[i+1]->getY());
 
                 SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
             }
             else
             {
                 //the contours loops to the first point
-                cv::Point2f pt_a((*contour)[i][0], (*contour)[i][1]);
-                cv::Point2f pt_b((*contour)[0][0],(*contour)[0][1]);
+                cv::Point2f pt_a((*contour)[i]->getX(), (*contour)[i]->getY());
+                cv::Point2f pt_b((*contour)[0]->getX(),(*contour)[0]->getY());
 
                 SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
             }

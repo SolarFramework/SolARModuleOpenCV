@@ -16,6 +16,7 @@
 
 #include "SolARDescriptorMatcherHammingBruteForceOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -30,7 +31,7 @@ namespace OPENCV {
 SolARDescriptorMatcherHammingBruteForceOpencv::SolARDescriptorMatcherHammingBruteForceOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorMatcherHammingBruteForceOpencv>())
 {
 
-    addInterface<IDescriptorMatcher>(this);
+    declareInterface<IDescriptorMatcher>(this);
     SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
     params->wrapFloat("distanceRatio", m_distanceRatio);
     LOG_DEBUG(" SolARDescriptorMatcherHammingBruteForceOpencv constructor")
