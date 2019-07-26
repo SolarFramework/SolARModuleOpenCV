@@ -5,7 +5,7 @@ CONFIG -= qt
 ## global defintions : target lib name, version
 TARGET = SolARModuleOpenCV
 FRAMEWORK = $$TARGET
-VERSION=0.5.2
+VERSION=0.6.0
 
 DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
