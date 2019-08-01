@@ -48,16 +48,16 @@ namespace OPENCV {
         return sum;
     }
 
-    FrameworkReturnCode SolARContoursFilterBinaryMarkerOpencv::filter(const std::vector<Contour2Df> & input_contours, std::vector<Contour2Df> & filtered_contours)
+    FrameworkReturnCode SolARContoursFilterBinaryMarkerOpencv::filter(const std::vector<Contour2Df> & input_contours, std::vector<Contour2Df> & output_contours)
     {
         std::vector<cv::Point2i> approxCurve;
         std::vector<Contour2Df> possibleMarkers;
         // For each contour, analyze if it is a parallelepiped likely to be the marker
-        for (size_t i = 0; i<input_contours.size(); i++)
+        for (const Contour2Df &input_contour: input_contours)
         {
             // Approximate to a polygon
-            double eps = input_contours[i].size() * m_epsilon;
-            cv::approxPolyDP(SolAROpenCVHelper::convertToOpenCV(input_contours[i]), approxCurve, eps, true);
+            double eps = input_contour.size() * m_epsilon;
+            cv::approxPolyDP(SolAROpenCVHelper::convertToOpenCV(input_contour), approxCurve, eps, true);
             // We interested only in polygons that contains only four points and that are convex
             if ((approxCurve.size() == 4) && (cv::isContourConvex(approxCurve)))
             {
@@ -114,25 +114,25 @@ namespace OPENCV {
 
         // If two contours have the same corners that are too close, keep the contour with the bigger perimeter
         std::vector<bool> removalMask(possibleMarkers.size(), false);
-        for (size_t i = 0; i<tooNearCandidates.size(); i++)
+        for (const std::pair<int, int> &tooNearCandidate: tooNearCandidates)
         {
-            float p1 = computePerimeter(possibleMarkers[tooNearCandidates[i].first]);
-            float p2 = computePerimeter(possibleMarkers[tooNearCandidates[i].second]);
+            float p1 = computePerimeter(possibleMarkers[tooNearCandidate.first]);
+            float p2 = computePerimeter(possibleMarkers[tooNearCandidate.second]);
             size_t removalIndex;
             if (p1 > p2)
-                removalIndex = tooNearCandidates[i].second;
+                removalIndex = tooNearCandidate.second;
             else
-                removalIndex = tooNearCandidates[i].first;
+                removalIndex = tooNearCandidate.first;
 
             removalMask[removalIndex] = true;
         }
 
         // Return candidates
-        filtered_contours.clear();
+        output_contours.clear();
         for (size_t i = 0; i<possibleMarkers.size(); i++)
         {
             if (!removalMask[i])
-                filtered_contours.push_back(possibleMarkers[i]);
+                output_contours.push_back(possibleMarkers[i]);
         }
         return FrameworkReturnCode::_SUCCESS;
     }

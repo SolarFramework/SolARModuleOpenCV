@@ -50,15 +50,15 @@ namespace OPENCV {
             std::vector<std::vector<cv::Point>> ocv_contours;
             cv::findContours(thresholdImg, ocv_contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
             contours.clear();
-            for (size_t i = 0; i<ocv_contours.size(); i++)
+            for (auto & ocv_contour : ocv_contours)
             {
-                size_t contourSize = ocv_contours[i].size();
+                size_t contourSize = ocv_contour.size();
                 if (contourSize > m_minContourEdges)
                 {
                     Contour2Df contour;
                     for (size_t j = 0; j < contourSize; j++)
                     {
-                        contour.push_back(Point2Df(ocv_contours[i][j].x, ocv_contours[i][j].y));
+                        contour.push_back(Point2Df(ocv_contour[j].x, ocv_contour[j].y));
                     }
                     contours.push_back(contour);
                 }

@@ -47,10 +47,10 @@ class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorAKAZE2Opencv : public org:
         public api::features::IDescriptorsExtractor {
 public:
     SolARDescriptorsExtractorAKAZE2Opencv();
-    ~SolARDescriptorsExtractorAKAZE2Opencv();
+    ~SolARDescriptorsExtractorAKAZE2Opencv() override;
 
-    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
-    void unloadComponent () override final;
+    org::bcom::xpcf::XPCFErrorCode onConfigured() final;
+    void unloadComponent () final;
     inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE2") ;};
     /// @brief Extracts a set of descriptors from a given image around a set of keypoints based on AKAZE 2 algorithm
     /// "Fast explicit diffusion for acceleratedfeatures in nonlinear scale space"

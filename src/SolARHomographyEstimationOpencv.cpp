@@ -36,7 +36,7 @@ SolARHomographyEstimationOpencv::SolARHomographyEstimationOpencv():ConfigurableB
 }
 
 api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::find(const std::vector<Point2Df> & srcPoints,
-                                          const std::vector<Point2Df> & dstPoints,
+                                          const std::vector<Point2Df> & targetPoints,
                                           Transform2Df & homography)
 {
 
@@ -51,8 +51,8 @@ api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::f
         point.y=srcPoints.at(i).getY();
         obj.push_back( point );
 
-        point.x=dstPoints.at(i).getX();
-        point.y=dstPoints.at(i).getY();
+        point.x=targetPoints.at(i).getX();
+        point.y=targetPoints.at(i).getY();
         scene.push_back( point);
     }
 

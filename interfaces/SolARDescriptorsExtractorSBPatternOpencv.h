@@ -50,11 +50,11 @@ public:
     FrameworkReturnCode extract(const SquaredBinaryPattern & pattern,
                                            SRef<DescriptorBuffer> & descriptor) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
-    FrameworkReturnCode getPatternDescriptorFromImage (SRef<Image> image, unsigned char* data);
-    bool isPattern(SRef<Image> image);
+    FrameworkReturnCode getPatternDescriptorFromImage (const SRef<Image>& image, unsigned char* data);
+    bool isPattern(const SRef<Image>& image);
 
 private:
     // Define the internal size of the pattern (without the black border)

@@ -16,48 +16,27 @@ namespace cv
 /// AKAZE configuration options structure
 struct AKAZEOptionsV2 {
 
-    AKAZEOptionsV2()
-        : omax(4)
-        , nsublevels(4)
-        , img_width(0)
-        , img_height(0)
-        , soffset(1.6f)
-        , derivative_factor(1.5f)
-        , sderivatives(1.0)
-        , diffusivity(KAZE::DIFF_PM_G2)
+    AKAZEOptionsV2() = default;
 
-        , dthreshold(0.001f)
-        , min_dthreshold(0.00001f)
+    int omax{4};                       ///< Maximum octave evolution of the image 2^sigma (coarsest scale sigma units)
+    int nsublevels{4};                 ///< Default number of sublevels per scale level
+    int img_width{0};                  ///< Width of the input image
+    int img_height{0};                 ///< Height of the input image
+    float soffset{1.6f};                  ///< Base scale offset (sigma units)
+    float derivative_factor{1.5f};        ///< Factor for the multiscale derivatives
+    float sderivatives{1.0};             ///< Smoothing factor for the derivatives
+    int diffusivity{KAZE::DIFF_PM_G2};   ///< Diffusivity type
 
-        , descriptor(AKAZE::DESCRIPTOR_MLDB)
-        , descriptor_size(0)
-        , descriptor_channels(3)
-        , descriptor_pattern_size(10)
+    float dthreshold{0.001f};               ///< Detector response threshold to accept point
+    float min_dthreshold{0.00001f};           ///< Minimum detector threshold to accept a point
 
-        , kcontrast_percentile(0.7f)
-        , kcontrast_nbins(300)
-    {
-    }
+    int descriptor{AKAZE::DESCRIPTOR_MLDB};     ///< Type of descriptor
+    int descriptor_size{0};            ///< Size of the descriptor in bits. 0->Full size
+    int descriptor_channels{3};        ///< Number of channels in the descriptor (1, 2, 3)
+    int descriptor_pattern_size{10};    ///< Actual patch size is 2*pattern_size*point.scale
 
-    int omax;                       ///< Maximum octave evolution of the image 2^sigma (coarsest scale sigma units)
-    int nsublevels;                 ///< Default number of sublevels per scale level
-    int img_width;                  ///< Width of the input image
-    int img_height;                 ///< Height of the input image
-    float soffset;                  ///< Base scale offset (sigma units)
-    float derivative_factor;        ///< Factor for the multiscale derivatives
-    float sderivatives;             ///< Smoothing factor for the derivatives
-    int diffusivity;   ///< Diffusivity type
-
-    float dthreshold;               ///< Detector response threshold to accept point
-    float min_dthreshold;           ///< Minimum detector threshold to accept a point
-
-    int descriptor;     ///< Type of descriptor
-    int descriptor_size;            ///< Size of the descriptor in bits. 0->Full size
-    int descriptor_channels;        ///< Number of channels in the descriptor (1, 2, 3)
-    int descriptor_pattern_size;    ///< Actual patch size is 2*pattern_size*point.scale
-
-    float kcontrast_percentile;     ///< Percentile level for the contrast factor
-    int kcontrast_nbins;            ///< Number of bins for the contrast factor histogram
+    float kcontrast_percentile{0.7f};     ///< Percentile level for the contrast factor
+    int kcontrast_nbins{300};            ///< Number of bins for the contrast factor histogram
 };
 
 }

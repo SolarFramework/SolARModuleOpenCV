@@ -446,7 +446,7 @@ bool check_maximum_neighbourhoodV2(const cv::Mat& img, int dsize, float value, i
     for (int i = row - dsize; i <= row + dsize; i++) {
         for (int j = col - dsize; j <= col + dsize; j++) {
             if (i >= 0 && i < img.rows && j >= 0 && j < img.cols) {
-                if (same_img == true) {
+                if (same_img) {
                     if (i != row || j != col) {
                         if ((*(img.ptr<float>(i)+j)) > value) {
                             response = false;

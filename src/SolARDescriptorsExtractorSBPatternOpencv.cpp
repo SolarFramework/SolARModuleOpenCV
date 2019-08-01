@@ -43,7 +43,7 @@ namespace OPENCV {
         for (int i = 0; i < matrix.rows(); i++)
             for (int j = 0; j < nbCols; j++)
             {
-              descriptorData[i * nbCols + j] = matrix(i,j);
+              descriptorData[i * nbCols + j] = static_cast<unsigned char>(matrix(i,j));
             }
         return FrameworkReturnCode::_SUCCESS;
     }
@@ -62,7 +62,7 @@ namespace OPENCV {
             if (isPattern(inputImages[i]))
                 recognizedPatterns.push_back(i);
         }
-        if (recognizedPatterns.size()== 0)
+        if (recognizedPatterns.empty())
         {
             pattern_descriptors = xpcf::utils::make_shared<DescriptorBuffer>(DescriptorBuffer::SBPATTERN, DescriptorBuffer::TYPE_8U, m_patternSize*m_patternSize, 0);
             return FrameworkReturnCode::_SUCCESS;
@@ -108,7 +108,7 @@ namespace OPENCV {
         return FrameworkReturnCode::_SUCCESS;
     }
 
-    bool SolARDescriptorsExtractorSBPatternOpencv::isPattern(const SRef<Image> image)
+    bool SolARDescriptorsExtractorSBPatternOpencv::isPattern(const SRef<Image>& image)
     {
         cv::Mat cv_image = SolAROpenCVHelper::mapToOpenCV(image);
 
@@ -141,7 +141,7 @@ namespace OPENCV {
         return true;
     }
 
-    FrameworkReturnCode SolARDescriptorsExtractorSBPatternOpencv::getPatternDescriptorFromImage (SRef<Image> image, unsigned char* data)
+    FrameworkReturnCode SolARDescriptorsExtractorSBPatternOpencv::getPatternDescriptorFromImage (const SRef<Image>& image, unsigned char* data)
     {
         cv::Mat cv_image = SolAROpenCVHelper::mapToOpenCV(image);
         //cv::imshow("Recognized Pattern", grey);

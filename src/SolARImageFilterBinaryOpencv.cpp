@@ -38,9 +38,7 @@ SolARImageFilterBinaryOpencv::SolARImageFilterBinaryOpencv():ConfigurableBase(xp
 }
 
 
-SolARImageFilterBinaryOpencv::~SolARImageFilterBinaryOpencv(){
-
-}
+SolARImageFilterBinaryOpencv::~SolARImageFilterBinaryOpencv() = default;
 
 
 FrameworkReturnCode SolARImageFilterBinaryOpencv::filter(const SRef<Image>input, SRef<Image>& output){

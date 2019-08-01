@@ -49,9 +49,9 @@ public:
 
     SolARKeypointDetectorOpencv();
     ~SolARKeypointDetectorOpencv() override;
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
-    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
+    org::bcom::xpcf::XPCFErrorCode onConfigured() final;
 
     /// @brief Set the type of method used to detect keypoints in the image
     /// @param[in] type The type of method used to detect keypoints.
@@ -80,7 +80,7 @@ private:
 	/// @brief the threshold of detector to accept a keypoint
 	float m_threshold = 1e-3;
 
-    int m_id;
+    int m_id{};
     cv::Ptr<cv::Feature2D> m_detector;
     cv::KeyPointsFilter kptsFilter;
 

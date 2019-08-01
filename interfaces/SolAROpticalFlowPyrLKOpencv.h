@@ -25,7 +25,7 @@
 #include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
-#include "opencv2/video/tracking.hpp""
+#include "opencv2/video/tracking.hpp"
 
 #include "datastructure/Image.h"
 #include "datastructure/Keypoint.h"
@@ -49,7 +49,7 @@ class SOLAROPENCV_EXPORT_API SolAROpticalFlowPyrLKOpencv : public org::bcom::xpc
 public:
     SolAROpticalFlowPyrLKOpencv();
     ~SolAROpticalFlowPyrLKOpencv() override;
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
     /// @brief estimate the optical flow between two images
     /// @param[in] previousImage The previous image
@@ -106,8 +106,8 @@ private:
     float m_searchWindowAccuracy = 0.03;
 
 
-    FrameworkReturnCode estimate(const SRef<Image> previousImage,
-                                 const SRef<Image> currentImage,
+    FrameworkReturnCode estimate(const SRef<Image>& previousImage,
+                                 const SRef<Image>& currentImage,
                                  const std::vector<cv::Point2f> & pointsToTrack,
                                  std::vector<Point2Df> & trackedPoints,
                                  std::vector<unsigned char> & status,

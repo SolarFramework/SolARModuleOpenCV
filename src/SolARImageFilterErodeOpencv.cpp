@@ -34,9 +34,7 @@ SolARImageFilterErodeOpencv::SolARImageFilterErodeOpencv():ConfigurableBase(xpcf
 }
 
 
-SolARImageFilterErodeOpencv::~SolARImageFilterErodeOpencv(){
-
-}
+SolARImageFilterErodeOpencv::~SolARImageFilterErodeOpencv() = default;
 
 
 FrameworkReturnCode SolARImageFilterErodeOpencv::filter(const SRef<Image>input, SRef<Image>& output){

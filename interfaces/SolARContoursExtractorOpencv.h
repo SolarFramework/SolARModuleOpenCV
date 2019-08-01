@@ -38,13 +38,13 @@ class SOLAROPENCV_EXPORT_API SolARContoursExtractorOpencv : public org::bcom::xp
         public api::features::IContoursExtractor {
 public:
     SolARContoursExtractorOpencv();
-    ~SolARContoursExtractorOpencv() = default;
+    ~SolARContoursExtractorOpencv() override = default;
     /// @brief Extracts an ensemble of contours from a given image.
     /// [in] inputImg: source image from which the contour will be extracted.
     ///[out] contours: ensemble of contours extracted.
     FrameworkReturnCode extract(const SRef<Image> inputImg, std::vector<Contour2Df> & contours) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
     /// @brief The minimum number of edges of a contour to extract. If negative value, extract all contours.

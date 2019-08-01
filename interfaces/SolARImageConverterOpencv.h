@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#ifndef SolARImageConvertorUnity_H
-#define SolARImageConvertorUnity_H
+#ifndef SolARImageConverterOpencv_H
+#define SolARImageConverterOpencv_H
 
-#include "api/image/IImageConvertor.h"
+#include "api/image/IImageConverter.h"
 
-// Definition of SolARImageConvertorUnity Class //
+// Definition of SolARImageConverterOpencv Class //
 // part of Solar namespace //
 
 #include "xpcf/component/ComponentBase.h"
@@ -35,22 +35,22 @@ namespace MODULES {
 namespace OPENCV {
 
 /**
- * @class SolARImageConvertorUnity
- * @brief <B>Converts an image to be compliant with Unity image format and layout.</B>
- * <TT>UUID: 65282fb3-6651-4e73-b532-5a64ade0ead0</TT>
+ * @class SolARImageConverterOpencv
+ * @brief <B>Converts an image according to a given expected layout.</B>
+ * <TT>UUID: fd7fb607-144f-418c-bcf2-f7cf71532c22</TT>
  *
  */
 
-class SOLAROPENCV_EXPORT_API SolARImageConvertorUnity : public org::bcom::xpcf::ComponentBase,
-        public api::image::IImageConvertor {
+class SOLAROPENCV_EXPORT_API SolARImageConverterOpencv : public org::bcom::xpcf::ComponentBase,
+        public api::image::IImageConverter {
 public:
-    SolARImageConvertorUnity();
-    ~SolARImageConvertorUnity() override;
+    SolARImageConverterOpencv();
+    ~SolARImageConverterOpencv();
 
     FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst) override;
     FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
 
-    void unloadComponent () final;
+    void unloadComponent () override final;
 
 private:
 };
@@ -61,4 +61,4 @@ private:
 
 
 
-#endif // SolARImageConvertorOpencv_H
+#endif // SolARImageConverterOpencv_H

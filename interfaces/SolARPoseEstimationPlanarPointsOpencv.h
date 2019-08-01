@@ -64,7 +64,7 @@ public:
     void setCameraParameters(const CamCalibration & intrinsicParams,
                              const CamDistortion & distorsionParams)  override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 
 private:

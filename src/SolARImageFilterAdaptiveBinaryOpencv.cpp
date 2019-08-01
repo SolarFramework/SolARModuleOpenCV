@@ -37,9 +37,7 @@ SolARImageFilterAdaptiveBinaryOpencv::SolARImageFilterAdaptiveBinaryOpencv():Con
 }
 
 
-SolARImageFilterAdaptiveBinaryOpencv::~SolARImageFilterAdaptiveBinaryOpencv(){
-
-}
+SolARImageFilterAdaptiveBinaryOpencv::~SolARImageFilterAdaptiveBinaryOpencv() = default;
 
 
 FrameworkReturnCode SolARImageFilterAdaptiveBinaryOpencv::filter(const SRef<Image>input, SRef<Image>& output){

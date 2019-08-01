@@ -68,7 +68,7 @@ AKAZEFeaturesV2::AKAZEFeaturesV2(const AKAZEOptionsV2& options) : options_(optio
 /**
  * @brief This method allocates the memory for the nonlinear diffusion evolution
  */
-void AKAZEFeaturesV2::Allocate_Memory_Evolution(void) {
+void AKAZEFeaturesV2::Allocate_Memory_Evolution() {
 
   CV_Assert(options_.img_height > 2 && options_.img_width > 2);  // The size of modgs_ must be positive
 
@@ -242,7 +242,7 @@ float AKAZEFeaturesV2::Compute_Base_Evolution_Level(const cv::Mat& img)
  */
 int AKAZEFeaturesV2::Create_Nonlinear_Scale_Space(const Mat& img)
 {
-  CV_Assert(evolution_.size() > 0);
+  CV_Assert(!evolution_.empty());
 
   // Setup the gray-scale image
   const Mat * gray = &img;
@@ -335,10 +335,9 @@ int AKAZEFeaturesV2::Create_Nonlinear_Scale_Space(const Mat& img)
     float * lstep = Lstep.ptr<float>(0);
     std::vector<float> & tsteps = tsteps_[i - 1];
 
-    for (int j = 0; j < tsteps.size(); j++) {
+    for (float step_size : tsteps) {
       nld_step_scalarV2(evolution_[i].Lt, Lflow, Lstep);
 
-      const float step_size = tsteps[j];
       for (int k = 0; k < total; k++)
         lt[k] += lstep[k] * 0.5f * step_size;
     }
@@ -527,8 +526,8 @@ inline
 void AKAZEFeaturesV2::Find_Scale_Space_Extrema_Single(std::vector<vector<KeyPoint>>& kpts_aux)
 {
   // Clear the workspace to hold the keypoint candidates
-  for (size_t i = 0; i < kpts_aux_.size(); i++)
-    kpts_aux_[i].clear();
+  for (auto & i : kpts_aux_)
+    i.clear();
 
   for (int i = 0; i < (int)evolution_.size(); i++) {
     const TEvolutionV2 &step = evolution_[i];
@@ -741,9 +740,7 @@ void AKAZEFeaturesV2::Do_Subpixel_Refinement(std::vector<std::vector<KeyPoint>>&
     const float ratio = evolution_[i].octave_ratio;
     const int cols = evolution_[i].Ldet.cols;
 
-    for (int j = 0; j < (int)kpts_aux[i].size(); j++) {
-
-      KeyPoint & kp = kpts_aux[i][j];
+    for (auto & kp : kpts_aux[i]) {
 
       if (kp.class_id == -1)
         continue; // Skip a deleted keypoint
@@ -799,7 +796,7 @@ public:
   {
   }
 
-  void operator() (const Range& range) const
+  void operator() (const Range& range) const override
   {
     for (int i = range.start; i < range.end; i++)
     {
@@ -825,7 +822,7 @@ public:
   {
   }
 
-  void operator()(const Range& range) const
+  void operator()(const Range& range) const override
   {
     for (int i = range.start; i < range.end; i++)
     {
@@ -853,7 +850,7 @@ public:
   {
   }
 
-  void operator()(const Range& range) const
+  void operator()(const Range& range) const override
   {
     for (int i = range.start; i < range.end; i++)
     {
@@ -879,7 +876,7 @@ public:
   {
   }
 
-  void operator() (const Range& range) const
+  void operator() (const Range& range) const override
   {
     for (int i = range.start; i < range.end; i++)
     {
@@ -910,7 +907,7 @@ public:
   {
   }
 
-  void operator() (const Range& range) const
+  void operator() (const Range& range) const override
   {
     for (int i = range.start; i < range.end; i++)
     {
@@ -945,7 +942,7 @@ public:
   {
   }
 
-  void operator() (const Range& range) const
+  void operator() (const Range& range) const override
   {
     for (int i = range.start; i < range.end; i++)
     {
@@ -979,7 +976,7 @@ public:
   {
   }
 
-  void operator() (const Range& range) const
+  void operator() (const Range& range) const override
   {
     for (int i = range.start; i < range.end; i++)
     {
@@ -1020,7 +1017,7 @@ public:
   {
   }
 
-  void operator() (const Range& range) const
+  void operator() (const Range& range) const override
   {
     for (int i = range.start; i < range.end; i++)
     {
@@ -1049,9 +1046,9 @@ private:
  */
 void AKAZEFeaturesV2::Compute_Descriptors(std::vector<KeyPoint>& kpts, Mat& desc)
 {
-  for(size_t i = 0; i < kpts.size(); i++)
+  for(auto & kpt : kpts)
   {
-      CV_Assert(0 <= kpts[i].class_id && kpts[i].class_id < static_cast<int>(evolution_.size()));
+      CV_Assert(0 <= kpt.class_id && kpt.class_id < static_cast<int>(evolution_.size()));
   }
 
   // Allocate memory for the descriptor matrix
@@ -1136,11 +1133,11 @@ void Sample_Derivative_Response_Radius6(const Mat &Lx, const Mat &Ly,
     static const int id[] = { 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6 };
     static const struct gtable
     {
-      float weight[109];
-      int8_t xidx[109];
-      int8_t yidx[109];
+      float weight[109]{};
+      int8_t xidx[109]{};
+      int8_t yidx[109]{};
 
-      explicit gtable(void)
+      explicit gtable()
       {
         // Generate the weight and indices by one-time initialization
         int k = 0;

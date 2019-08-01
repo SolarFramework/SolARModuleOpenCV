@@ -51,7 +51,7 @@ class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherHammingBruteForceOpencv : pub
 public:
     SolARDescriptorMatcherHammingBruteForceOpencv();
     ~SolARDescriptorMatcherHammingBruteForceOpencv() override;
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
     /// @brief Matches two descriptors desc1 and desc2 respectively based on hamming distance
     /// [in] desc1: source descriptor.
@@ -79,7 +79,7 @@ private:
     float m_distanceRatio = 0.75f;
 
 
-    int m_id;
+    int m_id{};
     cv::BFMatcher m_matcher;
 
 };

@@ -41,9 +41,7 @@ SolARPoseEstimationSACPnpOpencv::SolARPoseEstimationSACPnpOpencv():ConfigurableB
     LOG_DEBUG(" SolARPoseEstimationOpencv constructor");
 }
 
-SolARPoseEstimationSACPnpOpencv::~SolARPoseEstimationSACPnpOpencv(){
-
-}
+SolARPoseEstimationSACPnpOpencv::~SolARPoseEstimationSACPnpOpencv() = default;
 
 FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector<Point2Df> & imagePoints,
                                                             const std::vector<Point3Df> & worldPoints,
@@ -64,8 +62,8 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector
     }
 
     for (int i=0;i<imagePoints.size();++i) {
-        Point2Df point2D = imagePoints.at(i);
-        Point3Df point3D =worldPoints.at(i);
+        const Point2Df& point2D = imagePoints.at(i);
+        const Point3Df& point3D =worldPoints.at(i);
         imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
         worldCVPoints.push_back(cv::Point3f(point3D.getX(), point3D.getY(),point3D.getZ()));
     }

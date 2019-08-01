@@ -57,7 +57,7 @@ public:
                                                    const std::vector<Point2Df> & dstPoints,
                                                    Transform2Df & fundamental) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
     bool isFValid(const Transform2Df & F);

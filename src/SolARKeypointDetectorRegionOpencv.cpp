@@ -134,7 +134,7 @@ void goodFeaturesToTrackDetection(cv::Mat &img, int &nbDescriptors, std::vector<
 	std::vector<cv::Point2f> corners;
 	cv::goodFeaturesToTrack(img, corners, nbDescriptors, 0.008, 3, cv::Mat(), 3);
 	cornerSubPix(img, corners, cv::Size(7, 7), Size(-1, -1), cv::TermCriteria(TermCriteria::COUNT | TermCriteria::EPS, 20, 0.03));
-	for (auto it : corners) {
+	for (const auto& it : corners) {
 		kpts.push_back(cv::KeyPoint(it, 0.f));
 	}
 }
@@ -168,7 +168,7 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const st
 			}
 			m_detector->detect(img_1, kpts, Mat());
 			if (m_nbDescriptors >= 0)
-				kptsFilter.retainBest(kpts, m_nbDescriptors);
+				cv::KeyPointsFilter::retainBest(kpts, m_nbDescriptors);
 		}
     }
     catch (Exception& e)
@@ -194,13 +194,10 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const st
 			sumAngles += getAngle(pt1, pt2, ptToCheck);
 		}
 		
-		if (std::fabs(sumAngles - 2 * CV_PI) < 1e-4)
-			return true;
-		else
-			return false;
+		return std::fabs(sumAngles - 2 * CV_PI) < 1e-4;
 	};
 
-    for(std::vector<cv::KeyPoint>::iterator itr=kpts.begin();itr!=kpts.end();++itr){
+    for(auto itr=kpts.begin();itr!=kpts.end();++itr){
         Point2f ptToCheck = (*itr).pt * ratioInv;
         if (checkInside(contours, ptToCheck)) {
             Keypoint kpa;

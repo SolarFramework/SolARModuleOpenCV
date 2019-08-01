@@ -78,34 +78,31 @@ namespace cv
        //   cout << "AKAZE_Impl2 constructor called" << endl;
         }
 
-        virtual ~AKAZE_Impl2()
-        {
+        ~AKAZE_Impl2() override = default;
 
-        }
+        void setDescriptorType(int dtype_) override { descriptor = dtype_; impl.release(); }
+        int getDescriptorType() const override { return descriptor; }
 
-        void setDescriptorType(int dtype_) { descriptor = dtype_; impl.release(); }
-        int getDescriptorType() const { return descriptor; }
+        void setDescriptorSize(int dsize_) override { descriptor_size = dsize_; impl.release(); }
+        int getDescriptorSize() const override { return descriptor_size; }
 
-        void setDescriptorSize(int dsize_) { descriptor_size = dsize_; impl.release(); }
-        int getDescriptorSize() const { return descriptor_size; }
+        void setDescriptorChannels(int dch_) override { descriptor_channels = dch_; impl.release(); }
+        int getDescriptorChannels() const override { return descriptor_channels; }
 
-        void setDescriptorChannels(int dch_) { descriptor_channels = dch_; impl.release(); }
-        int getDescriptorChannels() const { return descriptor_channels; }
+        void setThreshold(double th_) override { threshold = (float)th_; if (!impl.empty()) impl->setThreshold(th_); }
+        double getThreshold() const override { return threshold; }
 
-        void setThreshold(double th_) { threshold = (float)th_; if (!impl.empty()) impl->setThreshold(th_); }
-        double getThreshold() const { return threshold; }
+        void setNOctaves(int octaves_) override { octaves = octaves_; impl.release(); }
+        int getNOctaves() const override { return octaves; }
 
-        void setNOctaves(int octaves_) { octaves = octaves_; impl.release(); }
-        int getNOctaves() const { return octaves; }
+        void setNOctaveLayers(int octaveLayers_) override { sublevels = octaveLayers_; impl.release(); }
+        int getNOctaveLayers() const override { return sublevels; }
 
-        void setNOctaveLayers(int octaveLayers_) { sublevels = octaveLayers_; impl.release(); }
-        int getNOctaveLayers() const { return sublevels; }
-
-        void setDiffusivity(int diff_) { diffusivity = diff_; if (!impl.empty()) impl->setDiffusivity(diff_); }
-        int getDiffusivity() const { return diffusivity; }
+        void setDiffusivity(int diff_) override { diffusivity = diff_; if (!impl.empty()) impl->setDiffusivity(diff_); }
+        int getDiffusivity() const override { return diffusivity; }
 
         // returns the descriptor size in bytes
-        int descriptorSize() const
+        int descriptorSize() const override
         {
             switch (descriptor)
             {
@@ -133,7 +130,7 @@ namespace cv
         }
 
         // returns the descriptor type
-        int descriptorType() const
+        int descriptorType() const override
         {
             switch (descriptor)
             {
@@ -151,7 +148,7 @@ namespace cv
         }
 
         // returns the default norm type
-        int defaultNorm() const
+        int defaultNorm() const override
         {
             switch (descriptor)
             {
@@ -171,7 +168,7 @@ namespace cv
         void detectAndCompute(InputArray image, InputArray mask,
                               std::vector<KeyPoint>& keypoints,
                               OutputArray descriptors,
-                              bool useProvidedKeypoints)
+                              bool useProvidedKeypoints) override
         {
             Mat img = image.getMat();
 
@@ -299,7 +296,7 @@ namespace cv
 			
 		}
 
-        void write(FileStorage& fs) const
+        void write(FileStorage& fs) const override
         {
             fs << "descriptor" << descriptor;
             fs << "descriptor_channels" << descriptor_channels;
@@ -310,7 +307,7 @@ namespace cv
             fs << "diffusivity" << diffusivity;
         }
 
-        void read(const FileNode& fn)
+        void read(const FileNode& fn) override
         {
             descriptor = (int)fn["descriptor"];
             descriptor_channels = (int)fn["descriptor_channels"];
@@ -334,11 +331,11 @@ namespace cv
     };
 
     Ptr<AKAZE2> AKAZE2::create(int descriptor_type,
-                             int descriptor_size, int descriptor_channels,
-                             float threshold, int octaves,
-                             int sublevels, int diffusivity)
+                               int descriptor_size, int descriptor_channels,
+                               float threshold, int nOctaves,
+                               int nOctaveLayers, int diffusivity)
     {
         return makePtr<AKAZE_Impl2>(descriptor_type, descriptor_size, descriptor_channels,
-                                   threshold, octaves, sublevels, diffusivity);
+                                   threshold, nOctaves, nOctaveLayers, diffusivity);
     }
 }

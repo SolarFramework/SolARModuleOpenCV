@@ -40,9 +40,7 @@ SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL():ConfigurableBase(xpcf::
     LOG_DEBUG(" SolARPoseEstimationOpencv constructor");
 }
 
-SolARPoseEstimationPnpEPFL::~SolARPoseEstimationPnpEPFL(){
-
-}
+SolARPoseEstimationPnpEPFL::~SolARPoseEstimationPnpEPFL()= default;
 
 FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<Point2Df> & imagePoints,
                                                          const std::vector<Point3Df> & worldPoints,
@@ -108,10 +106,10 @@ void SolARPoseEstimationPnpEPFL::setCameraParameters(const CamCalibration & intr
                                                          intrinsicParams(1,1));
     SolARPoseEstimationPnpEPFL::maximum_number_of_correspondences = 0;
     SolARPoseEstimationPnpEPFL::number_of_correspondences = 0;
-    SolARPoseEstimationPnpEPFL::pws = 0;
-    SolARPoseEstimationPnpEPFL::us = 0;
-    SolARPoseEstimationPnpEPFL::alphas = 0;
-    SolARPoseEstimationPnpEPFL::pcs = 0;
+    SolARPoseEstimationPnpEPFL::pws = nullptr;
+    SolARPoseEstimationPnpEPFL::us = nullptr;
+    SolARPoseEstimationPnpEPFL::alphas = nullptr;
+    SolARPoseEstimationPnpEPFL::pcs = nullptr;
 }
 
 
@@ -126,10 +124,10 @@ void SolARPoseEstimationPnpEPFL::set_internal_parameters(double uc, double vc, d
 void SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(int n)
 {
     if (maximum_number_of_correspondences < n) {
-        if (pws != 0) delete[] pws;
-        if (us != 0) delete[] us;
-        if (alphas != 0) delete[] alphas;
-        if (pcs != 0) delete[] pcs;
+        delete[] pws;
+        delete[] us;
+        delete[] alphas;
+        delete[] pcs;
 
         maximum_number_of_correspondences = n;
         pws = new double[3 * maximum_number_of_correspondences];
@@ -139,7 +137,7 @@ void SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(int n)
     }
 }
 
-void SolARPoseEstimationPnpEPFL::reset_correspondences(void)
+void SolARPoseEstimationPnpEPFL::reset_correspondences()
 {
     number_of_correspondences = 0;
 }
@@ -156,7 +154,7 @@ void SolARPoseEstimationPnpEPFL::add_correspondence(double X, double Y, double Z
     number_of_correspondences++;
 }
 
-void SolARPoseEstimationPnpEPFL::choose_control_points(void)
+void SolARPoseEstimationPnpEPFL::choose_control_points()
 {
     // Take C0 as the reference points centroid:
     cws[0][0] = cws[0][1] = cws[0][2] = 0;
@@ -181,7 +179,7 @@ void SolARPoseEstimationPnpEPFL::choose_control_points(void)
             PW0->data.db[3 * i + j] = pws[3 * i + j] - cws[0][j];
 
     cvMulTransposed(PW0, &PW0tPW0, 1);
-    cvSVD(&PW0tPW0, &DC, &UCt, 0, CV_SVD_MODIFY_A | CV_SVD_U_T);
+    cvSVD(&PW0tPW0, &DC, &UCt, nullptr, CV_SVD_MODIFY_A | CV_SVD_U_T);
 
     cvReleaseMat(&PW0);
 
@@ -192,7 +190,7 @@ void SolARPoseEstimationPnpEPFL::choose_control_points(void)
     }
 }
 
-void SolARPoseEstimationPnpEPFL::compute_barycentric_coordinates(void)
+void SolARPoseEstimationPnpEPFL::compute_barycentric_coordinates()
 {
     double cc[3 * 3], cc_inv[3 * 3];
     CvMat CC = cvMat(3, 3, CV_64F, cc);
@@ -236,8 +234,8 @@ void SolARPoseEstimationPnpEPFL::fill_M(CvMat * M,
 
 void SolARPoseEstimationPnpEPFL::compute_ccs(const double * betas, const double * ut)
 {
-    for (int i = 0; i < 4; i++)
-        ccs[i][0] = ccs[i][1] = ccs[i][2] = 0.0f;
+    for (auto & cc : ccs)
+        cc[0] = cc[1] = cc[2] = 0.0f;
 
     for (int i = 0; i < 4; i++) {
         const double * v = ut + 12 * (11 - i);
@@ -247,7 +245,7 @@ void SolARPoseEstimationPnpEPFL::compute_ccs(const double * betas, const double 
     }
 }
 
-void SolARPoseEstimationPnpEPFL::compute_pcs(void)
+void SolARPoseEstimationPnpEPFL::compute_pcs()
 {
     for (int i = 0; i < number_of_correspondences; i++) {
         double * a = alphas + 4 * i;
@@ -274,7 +272,7 @@ double SolARPoseEstimationPnpEPFL::compute_pose(double R[3][3], double t[3])
     CvMat Ut = cvMat(12, 12, CV_64F, ut);
 
     cvMulTransposed(M, &MtM, 1);
-    cvSVD(&MtM, &D, &Ut, 0, CV_SVD_MODIFY_A | CV_SVD_U_T);
+    cvSVD(&MtM, &D, &Ut, nullptr, CV_SVD_MODIFY_A | CV_SVD_U_T);
     cvReleaseMat(&M);
 
     double l_6x10[6 * 10], rho[6];
@@ -413,9 +411,9 @@ void SolARPoseEstimationPnpEPFL::estimate_R_and_t(double R[3][3], double t[3])
 void SolARPoseEstimationPnpEPFL::solve_for_sign(void)
 {
     if (pcs[2] < 0.0) {
-        for (int i = 0; i < 4; i++)
+        for (auto & cc : ccs)
             for (int j = 0; j < 3; j++)
-                ccs[i][j] = -ccs[i][j];
+                cc[j] = -cc[j];
 
         for (int i = 0; i < number_of_correspondences; i++) {
             pcs[3 * i] = -pcs[3 * i];
@@ -590,7 +588,7 @@ void SolARPoseEstimationPnpEPFL::compute_rho(double * rho)
 }
 
 void SolARPoseEstimationPnpEPFL::compute_A_and_b_gauss_newton(const double * l_6x10, const double * rho,
-    double betas[4], CvMat * A, CvMat * b)
+    const double betas[4], CvMat * A, CvMat * b)
 {
     for (int i = 0; i < 6; i++) {
         const double * rowL = l_6x10 + i * 10;

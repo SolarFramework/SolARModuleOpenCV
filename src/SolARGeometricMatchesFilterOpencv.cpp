@@ -35,9 +35,7 @@ SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv():Configura
 }
 
 
-SolARGeometricMatchesFilterOpencv::~SolARGeometricMatchesFilterOpencv(){
-
-}
+SolARGeometricMatchesFilterOpencv::~SolARGeometricMatchesFilterOpencv()= default;
 
 
 
@@ -51,17 +49,17 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
     std::vector<uchar> status(inputKeyPointsA.size());
     std::vector<cv::Point2f> pts1, pts2;
 
-    if(inputMatches.size()){
+    if(!inputMatches.empty() != 0u){
 
         // get Align matches
-        for (unsigned int i = 0; i<inputMatches.size(); i++) {
-            assert(inputMatches[i].getIndexInDescriptorA() < inputKeyPointsA.size());
-            pts1.push_back(cv::Point2f(inputKeyPointsA[inputMatches[i].getIndexInDescriptorA()].getX(),
-                                       inputKeyPointsA[inputMatches[i].getIndexInDescriptorA()].getY()));
+        for (const auto & inputMatche : inputMatches) {
+            assert(inputMatche.getIndexInDescriptorA() < inputKeyPointsA.size());
+            pts1.push_back(cv::Point2f(inputKeyPointsA[inputMatche.getIndexInDescriptorA()].getX(),
+                                       inputKeyPointsA[inputMatche.getIndexInDescriptorA()].getY()));
 
-            assert(inputMatches[i].getIndexInDescriptorB() < inputKeyPointsB.size());
-            pts2.push_back(cv::Point2f(inputKeyPointsB[inputMatches[i].getIndexInDescriptorB()].getX(),
-                                       inputKeyPointsB[inputMatches[i].getIndexInDescriptorB()].getY()));
+            assert(inputMatche.getIndexInDescriptorB() < inputKeyPointsB.size());
+            pts2.push_back(cv::Point2f(inputKeyPointsB[inputMatche.getIndexInDescriptorB()].getX(),
+                                       inputKeyPointsB[inputMatche.getIndexInDescriptorB()].getY()));
 
         }
 
@@ -74,13 +72,12 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
         }
 
         for (unsigned int i = 0; i<status.size(); i++) {
-            if (status[i]) {
+            if (status[i] != 0u) {
                    tempMatches.push_back(inputMatches[i]);
             }
         }
     }
     outputMatches = tempMatches;
-    return;
 }
 
 }

@@ -75,7 +75,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
-        if (m_mode.compare("COLOR") == 0)
+        if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
                 point1 = points_image1.at(i);
@@ -83,7 +83,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
-        else if (m_mode.compare("RANDOM") == 0)
+        else if (m_mode == "RANDOM")
         {
             std::random_device rd;     // only used once to initialise (seed) engine
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
@@ -94,7 +94,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
             }
         }
-        else if (m_mode.compare("FADING") == 0)
+        else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
@@ -130,7 +130,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
-        if (m_mode.compare("COLOR") == 0)
+        if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
                 point1 = points_image1.at(matches[i].getIndexInDescriptorA());
@@ -138,7 +138,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
-        else if (m_mode.compare("RANDOM") == 0)
+        else if (m_mode == "RANDOM")
         {
             std::random_device rd;     // only used once to initialise (seed) engine
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
@@ -149,7 +149,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
              }
         }
-        else if (m_mode.compare("FADING") == 0)
+        else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
@@ -213,7 +213,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
-        if (m_mode.compare("COLOR") == 0)
+        if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
                 point1 = points_image1.at(i);
@@ -221,7 +221,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
-        else if (m_mode.compare("RANDOM") == 0)
+        else if (m_mode == "RANDOM")
         {
             std::random_device rd;     // only used once to initialise (seed) engine
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
@@ -232,7 +232,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
             }
         }
-        else if (m_mode.compare("FADING") == 0)
+        else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
@@ -268,7 +268,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
-        if (m_mode.compare("COLOR") == 0)
+        if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
                 point1 = points_image1.at(matches[i].getIndexInDescriptorA());
@@ -276,7 +276,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
-        else if (m_mode.compare("RANDOM") == 0)
+        else if (m_mode == "RANDOM")
         {
             std::random_device rd;     // only used once to initialise (seed) engine
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
@@ -287,7 +287,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
              }
         }
-        else if (m_mode.compare("FADING") == 0)
+        else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
@@ -348,7 +348,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
-        if (m_mode.compare("COLOR") == 0)
+        if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
                 point1 = points1.at(i);
@@ -356,7 +356,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
-        else if (m_mode.compare("RANDOM") == 0)
+        else if (m_mode == "RANDOM")
         {
             std::random_device rd;     // only used once to initialise (seed) engine
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
@@ -367,7 +367,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
             }
         }
-        else if (m_mode.compare("FADING") == 0)
+        else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
@@ -404,7 +404,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
-        if (m_mode.compare("COLOR") == 0)
+        if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
                 point1 = points1.at(matches[i].getIndexInDescriptorA());
@@ -412,7 +412,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
-        else if (m_mode.compare("RANDOM") == 0)
+        else if (m_mode == "RANDOM")
         {
             std::random_device rd;     // only used once to initialise (seed) engine
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
@@ -423,7 +423,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
              }
         }
-        else if (m_mode.compare("FADING") == 0)
+        else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
@@ -484,7 +484,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
-        if (m_mode.compare("COLOR") == 0)
+        if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
                 point1 = points1.at(i);
@@ -492,7 +492,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
-        else if (m_mode.compare("RANDOM") == 0)
+        else if (m_mode == "RANDOM")
         {
             std::random_device rd;     // only used once to initialise (seed) engine
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
@@ -503,7 +503,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
             }
         }
-        else if (m_mode.compare("FADING") == 0)
+        else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
@@ -540,7 +540,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
-        if (m_mode.compare("COLOR") == 0)
+        if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
                 point1 = points1.at(matches[i].getIndexInDescriptorA());
@@ -548,7 +548,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
-        else if (m_mode.compare("RANDOM") == 0)
+        else if (m_mode == "RANDOM")
         {
             std::random_device rd;     // only used once to initialise (seed) engine
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
@@ -559,7 +559,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                 cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
              }
         }
-        else if (m_mode.compare("FADING") == 0)
+        else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){

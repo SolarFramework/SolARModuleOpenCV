@@ -32,9 +32,7 @@ namespace OPENCV {
         declareProperty<uint32_t>("deviceID", m_deviceID);
     }
 
-    SolARCameraOpencv::~SolARCameraOpencv()
-    {
-    }
+    SolARCameraOpencv::~SolARCameraOpencv() = default;
 
 
     FrameworkReturnCode SolARCameraOpencv::getNextImage(SRef<Image> & img)
@@ -43,7 +41,7 @@ namespace OPENCV {
             return FrameworkReturnCode::_ERROR_ACCESS_IMAGE;
         cv::Mat cvFrame;
         m_capture >> cvFrame;
-        if(!cvFrame.data)
+        if(cvFrame.data == nullptr)
             return FrameworkReturnCode::_ERROR_LOAD_IMAGE;
 
         return SolAROpenCVHelper::convertToSolar(cvFrame,img);

@@ -41,7 +41,7 @@ public:
     SolARMarker2DNaturalImageOpencv();
 
     ~SolARMarker2DNaturalImageOpencv() override = default;
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
     FrameworkReturnCode loadMarker() override;
     FrameworkReturnCode getImage(SRef<Image> & img) override;
@@ -62,7 +62,7 @@ public:
     const Sizef & getSize() const override { return m_size; }
 
 private:
-    Sizef m_size;
+    Sizef m_size{};
     cv::Mat m_ocvImage;
 
     /// @brief the path to the file describing the 2D Squared binary marker

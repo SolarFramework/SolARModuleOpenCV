@@ -41,9 +41,7 @@ SolARSVDTriangulationOpencv::SolARSVDTriangulationOpencv():ComponentBase(xpcf::t
     m_camDistorsion.create(5, 1);
 }
 
-SolARSVDTriangulationOpencv::~SolARSVDTriangulationOpencv(){
-
-}
+SolARSVDTriangulationOpencv::~SolARSVDTriangulationOpencv()= default;
 
 
 cv::Mat_<double> SolARSVDTriangulationOpencv::iterativeLinearTriangulation(const cv::Point3d & u,

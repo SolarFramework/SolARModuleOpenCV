@@ -43,21 +43,21 @@ uint32_t SolAROpenCVHelper::deduceOpenDescriptorCVType(DescriptorBuffer::DataTyp
 }
 
 
-int SolAROpenCVHelper::deduceOpenCVType(SRef<Image> img)
+int SolAROpenCVHelper::deduceOpenCVType(const SRef<Image>& img)
 {
     // TODO : handle safe mode if missing map entry
     // is it ok when destLayout != img->ImageLayout ?
     return solar2cvTypeConvertMap.at(std::forward_as_tuple(img->getNbBitsPerComponent(),1,img->getNbChannels()));
 }
 
-void SolAROpenCVHelper::mapToOpenCV (SRef<Image> imgSrc, cv::Mat& imgDest)
+void SolAROpenCVHelper::mapToOpenCV (const SRef<Image>& imgSrc, cv::Mat& imgDest)
 {
     cv::Mat imgCV(imgSrc->getHeight(),imgSrc->getWidth(),deduceOpenCVType(imgSrc), imgSrc->data()); 
     imgDest = imgCV;
 }
 
 
-cv::Mat SolAROpenCVHelper::mapToOpenCV (SRef<Image> imgSrc)
+cv::Mat SolAROpenCVHelper::mapToOpenCV (const SRef<Image>& imgSrc)
 {
     cv::Mat imgCV(imgSrc->getHeight(),imgSrc->getWidth(),deduceOpenCVType(imgSrc), imgSrc->data());
     return imgCV;
@@ -77,9 +77,10 @@ FrameworkReturnCode SolAROpenCVHelper::convertToSolar (cv::Mat&  imgSrc, SRef<Im
 std::vector<cv::Point2i> SolAROpenCVHelper::convertToOpenCV (const Contour2Di &contour)
 {
     std::vector<cv::Point2i> output;
-    for (int i = 0; i < contour.size(); i++)
+    output.reserve(contour.size());
+for (const auto & i : contour)
     {
-        output.push_back(cv::Point2i(contour[i]->getX(), contour[i]->getY()));
+        output.push_back(cv::Point2i(i.getX(), i.getY()));
     }
     return output;
 }
@@ -87,9 +88,10 @@ std::vector<cv::Point2i> SolAROpenCVHelper::convertToOpenCV (const Contour2Di &c
 std::vector<cv::Point2f> SolAROpenCVHelper::convertToOpenCV (const Contour2Df &contour)
 {
     std::vector<cv::Point2f> output;
-    for (int i = 0; i < contour.size(); i++)
+    output.reserve(contour.size());
+    for (const auto & i : contour)
     {
-        output.push_back(cv::Point2f(contour[i].getX(), contour[i].getY()));
+        output.push_back(cv::Point2f(i.getX(), i.getY()));
     }
     return output;
 }
@@ -199,7 +201,7 @@ bool Liang_Barsky (cv::Point2f& p1, cv::Point2f& p2, Rectanglei& rect, cv::Point
     return false;
 }
 
-void SolAROpenCVHelper::drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Point2f& p2, cv::Scalar color, int thickness)
+void SolAROpenCVHelper::drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Point2f& p2, const cv::Scalar& color, int thickness)
 {
     Rectanglei rect = {0, 0, Sizei{(uint32_t)inputImage.cols, (uint32_t)inputImage.rows}};
     float x1, x2, y1, y2;

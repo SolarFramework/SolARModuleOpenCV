@@ -64,7 +64,7 @@ public:
     /// Draws a contour on image displayImage
     /// @param[in] contour The contour in 2D to draw with specified radius, thickness and colors (defined in the configuration file).
     /// @param[in,out] displayImage The image on which the contours will be drawn.
-    void drawContour (const Contour2Df& contour, SRef<Image> displayImage);
+    void drawContour (const Contour2Df& contour, SRef<Image> displayImage) override;
 
     /// @brief Draw Contours.
     /// Draws all the contours stored in the vector  std::vector <Contour2Df> & contours on image displayImage
@@ -77,7 +77,7 @@ public:
     /// @param[in,out] displayImage The image on which the squared binary pattern will be drawn (on the whole image).
     void drawSBPattern (const SquaredBinaryPattern & pattern, SRef<Image> displayImage) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
     /// @brief The thickness of the displayed features (not used for SBPattern)

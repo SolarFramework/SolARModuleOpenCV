@@ -48,8 +48,8 @@ using namespace std;
  * @param reordering Reordering flag
  * @param tau The vector with the dynamic step sizes
  */
-int fed_tau_by_process_timeV2(const float& T, const int& M, const float& tau_max,
-                            const bool& reordering, std::vector<float>& tau) {
+int fed_tau_by_process_timeV2(float T, int M, float tau_max,
+                            bool reordering, std::vector<float>& tau) {
   // All cycles have the same fraction of the stopping time
   return fed_tau_by_cycle_timeV2(T/(float)M,tau_max,reordering,tau);
 }
@@ -68,8 +68,8 @@ int fed_tau_by_process_timeV2(const float& T, const int& M, const float& tau_max
  * @param tau The vector with the dynamic step sizes
  */
 inline
-int fed_tau_by_cycle_timeV2(const float& t, const float& tau_max,
-                          const bool& reordering, std::vector<float> &tau) {
+int fed_tau_by_cycle_timeV2(float t, float tau_max,
+                          bool reordering, std::vector<float> &tau) {
   int n = 0;          // Number of time steps
   float scale = 0.0;  // Ratio of t we search to maximal t
 
@@ -95,8 +95,8 @@ int fed_tau_by_cycle_timeV2(const float& t, const float& tau_max,
  * @param tau The vector with the dynamic step sizes
  */
 inline
-int fed_tau_internalV2(const int& n, const float& scale, const float& tau_max,
-                       const bool& reordering, std::vector<float> &tau)
+int fed_tau_internalV2(int n, float scale, float tau_max,
+                       bool reordering, std::vector<float> &tau)
 {
   if (n <= 0) {
     return 0;
@@ -155,7 +155,7 @@ int fed_tau_internalV2(const int& n, const float& scale, const float& tau_max,
  * @return true if the number is prime
  */
 inline
-bool fed_is_prime_internalV2(const int& number) {
+bool fed_is_prime_internalV2(int number) {
   bool is_prime = false;
 
   if (number <= 1) {

@@ -73,17 +73,17 @@ void SolARDescriptorsExtractorAKAZE2Opencv::extract(const SRef<Image> image, con
 
     std::vector<cv::KeyPoint> transform_to_data;
 
-    for(unsigned int k =0; k < keypoints.size(); ++k)
+    for(const auto & keypoint : keypoints)
     {
         transform_to_data.push_back(
                     //instantiate keypoint
-                     cv::KeyPoint(keypoints[k].getX(),
-                                  keypoints[k].getY(),
-                                  keypoints[k].getSize(),
-                                  keypoints[k].getAngle(),
-                                  keypoints[k].getResponse(),
-                                  keypoints[k].getOctave(),
-                                  keypoints[k].getClassId())
+                     cv::KeyPoint(keypoint.getX(),
+                                  keypoint.getY(),
+                                  keypoint.getSize(),
+                                  keypoint.getAngle(),
+                                  keypoint.getResponse(),
+                                  keypoint.getOctave(),
+                                  keypoint.getClassId())
                     );
     }
 

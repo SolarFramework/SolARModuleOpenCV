@@ -31,7 +31,7 @@ public:
     ///@brief SolARGeometricMatchesFilterOpencv constructor.
         SolARGeometricMatchesFilterOpencv();
     ///@brief SolARGeometricMatchesFilterOpencv destructor.
-       ~SolARGeometricMatchesFilterOpencv();
+       ~SolARGeometricMatchesFilterOpencv() override;
         /// @brief filter matches based fundamental matrix assumptions. This filter removes all outliers matches which give high reprojection error.
         /// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".
         /// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
@@ -41,7 +41,7 @@ public:
                     std::vector<DescriptorMatch> & outputMatches,
                     const std::vector<Keypoint> & inputKeyPointsA,
                     const std::vector<Keypoint> & inputKeyPointsB) override;
-        void unloadComponent () override final;
+        void unloadComponent () final;
 
      private:
 

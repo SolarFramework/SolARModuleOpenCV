@@ -35,7 +35,7 @@ namespace OPENCV {
         declareProperty("outputImageHeight", m_outputImageHeight);
     }
 
-    FrameworkReturnCode SolARPerspectiveControllerOpencv::correct(const SRef<Image> inputImg, const Contour2Df & contour, SRef<Image> & outputImage)
+    FrameworkReturnCode SolARPerspectiveControllerOpencv::correct(const SRef<Image> inputImg, const Contour2Df & contour, SRef<Image> & patch)
     {
         std::vector<cv::Point2f> points;
         cv::Size patches_size(m_outputImageWidth, m_outputImageHeight);
@@ -59,13 +59,13 @@ namespace OPENCV {
                 // Transform image to get a canonical marker image
             cv::Mat cv_patch;
             cv::warpPerspective(cv_inputImg, cv_patch, markerTransform, patches_size);
-            SolAROpenCVHelper::convertToSolar(cv_patch, outputImage);
+            SolAROpenCVHelper::convertToSolar(cv_patch, patch);
 
             return FrameworkReturnCode::_SUCCESS;
         }
         else
         {
-            outputImage = nullptr;
+            patch = nullptr;
             return FrameworkReturnCode::_ERROR_;
         }
     }

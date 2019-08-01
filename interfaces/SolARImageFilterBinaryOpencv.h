@@ -44,12 +44,12 @@ class SOLAROPENCV_EXPORT_API SolARImageFilterBinaryOpencv : public org::bcom::xp
 public:
 
     SolARImageFilterBinaryOpencv();
-   ~SolARImageFilterBinaryOpencv();
+   ~SolARImageFilterBinaryOpencv() override;
 
     FrameworkReturnCode filter(const SRef<Image>input,
                   SRef<Image>& output) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
  private:
     int m_min = 0;

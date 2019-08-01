@@ -35,7 +35,7 @@ static std::map<int,std::pair<Image::ImageLayout,Image::DataType>> cv2solarTypeC
 
 static std::map<std::tuple<uint32_t,std::size_t,uint32_t>,int> solar2cvTypeConvertMap {{std::make_tuple(8,1,3),CV_8UC3},{std::make_tuple(8,1,1),CV_8UC1}};
 
-inline int deduceOpenCVType(SRef<Image> img)
+inline int deduceOpenCVType(const SRef<Image>& img)
 {
     // TODO : handle safe mode if missing map entry
     // is it ok when destLayout != img->ImageLayout ?

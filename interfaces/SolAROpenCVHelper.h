@@ -57,16 +57,16 @@ public:
 
     static FrameworkReturnCode convertToSolar(cv::Mat&  imgSrc, SRef<Image>& imgDest);
 
-    static void mapToOpenCV (SRef<Image> imgSrc, cv::Mat& imgDest);
+    static void mapToOpenCV (const SRef<Image>& imgSrc, cv::Mat& imgDest);
 
-    static cv::Mat mapToOpenCV (SRef<Image> imgSrc);
+    static cv::Mat mapToOpenCV (const SRef<Image>& imgSrc);
     static uint32_t deduceOpenDescriptorCVType(DescriptorBuffer::DataType querytype);
 
-    static void drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Point2f& p2, cv::Scalar color, int thickness);
+    static void drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Point2f& p2, const cv::Scalar& color, int thickness);
 
 	template <class T> inline static constexpr int inferOpenCVType();
  
-    static int deduceOpenCVType(SRef<Image> img);
+    static int deduceOpenCVType(const SRef<Image>& img);
 
 };
 

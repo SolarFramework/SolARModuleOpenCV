@@ -62,7 +62,7 @@ private:
 public:
 
   /// Constructor with input arguments
-  AKAZEFeaturesV2(const AKAZEOptionsV2& options);
+  explicit AKAZEFeaturesV2(const AKAZEOptionsV2& options);
 
   /// Getters and Setters
   void setThreshold(double threshold_) { options_.dthreshold = std::max((float)threshold_, options_.min_dthreshold); };

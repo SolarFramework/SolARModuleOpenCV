@@ -37,7 +37,7 @@ namespace OPENCV {
 
         cv::Mat cvFrame;
         m_capture >> cvFrame;
-        if(!cvFrame.data)
+        if(cvFrame.data == nullptr)
             return FrameworkReturnCode::_ERROR_LOAD_IMAGE;
 
         return SolAROpenCVHelper::convertToSolar(cvFrame,img);

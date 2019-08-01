@@ -40,14 +40,14 @@ class SOLAROPENCV_EXPORT_API SolARImageLoaderOpencv : public org::bcom::xpcf::Co
     public api::image::IImageLoader {
 public:
     SolARImageLoaderOpencv();
-    ~SolARImageLoaderOpencv();
-    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
+    ~SolARImageLoaderOpencv() override;
+    org::bcom::xpcf::XPCFErrorCode onConfigured() final;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
     ///
     /// \brief getImage method returns the image previously loaded when its configuration parameter path has been set
     ///
-    FrameworkReturnCode getImage(SRef<Image> & img);
+    FrameworkReturnCode getImage(SRef<Image> & img) override;
 
     ///
     /// \brief reloadImage method load a image if as instance its path (set as a configuration parameter of the implemented component) has changed

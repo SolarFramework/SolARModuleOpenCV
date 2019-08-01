@@ -38,12 +38,12 @@ class SOLAROPENCV_EXPORT_API SolARPerspectiveControllerOpencv : public org::bcom
         public api::image::IPerspectiveController {
 public:
     SolARPerspectiveControllerOpencv();
-    ~SolARPerspectiveControllerOpencv() = default;
+    ~SolARPerspectiveControllerOpencv() override = default;
 
     FrameworkReturnCode correct(const SRef<Image> inputImg, const std::vector<Contour2Df> & contours, std::vector<SRef<Image>> & patches) override;
     FrameworkReturnCode correct(const SRef<Image> inputImg, const Contour2Df & contour, SRef<Image> & patch) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
     /// @brief The width in pixels of the output image

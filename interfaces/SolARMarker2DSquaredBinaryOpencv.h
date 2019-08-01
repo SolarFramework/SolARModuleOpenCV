@@ -67,10 +67,10 @@ public:
     const SquaredBinaryPattern & getPattern() const override { return m_pattern; }
 
 protected:
-    Sizef m_size; ///<define the size of the 2D Marker according to the user-defined unit (the same used for the camera calibration)
+    Sizef m_size{}; ///<define the size of the 2D Marker according to the user-defined unit (the same used for the camera calibration)
     SquaredBinaryPattern m_pattern;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
  private:
     /// @brief the path to the file describing the 2D Squared binary marker

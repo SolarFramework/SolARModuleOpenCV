@@ -44,7 +44,7 @@ public:
     ///@brief SolARPoseEstimationPnpEPFL constructor.
     SolARPoseEstimationPnpEPFL();
     ///@brief SolARPoseEstimationPnpEPFL destructor.
-    ~SolARPoseEstimationPnpEPFL();
+    ~SolARPoseEstimationPnpEPFL() override;
 
     /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
     /// @param[in] imagePoints, set of 2d_points seen in view_1.
@@ -63,7 +63,7 @@ public:
     void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams)  override;
 
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 
 private:
@@ -83,7 +83,7 @@ private:
     /// @param[in] Number of 2D-3D correspondances.
     void set_maximum_number_of_correspondences(const int n);
     /// @brief Resets the number of 2D-3D correspondaces.
-    void reset_correspondences(void);
+    void reset_correspondences();
     /// @brief Adds a 2D-3D correspondace.
     /// @param[in] 3D point x.
     /// @param[in] 3D point y.
@@ -116,12 +116,12 @@ private:
 private:
     cv::Mat m_camMatrix;
     cv::Mat m_camDistorsion;
-    void choose_control_points(void);
-    void compute_barycentric_coordinates(void);
+    void choose_control_points();
+    void compute_barycentric_coordinates();
     void fill_M(CvMat * M, const int row, const double * alphas, const double u, const double v);
     void compute_ccs(const double * betas, const double * ut);
-    void compute_pcs(void);
-    void solve_for_sign(void);
+    void compute_pcs();
+    void solve_for_sign();
     void find_betas_approx_1(const CvMat * L_6x10, const CvMat * Rho, double * betas);
     void find_betas_approx_2(const CvMat * L_6x10, const CvMat * Rho, double * betas);
     void find_betas_approx_3(const CvMat * L_6x10, const CvMat * Rho, double * betas);
@@ -134,20 +134,20 @@ private:
     void compute_L_6x10(const double * ut, double * l_6x10);
 
     void gauss_newton(const CvMat * L_6x10, const CvMat * Rho, double current_betas[4]);
-    void compute_A_and_b_gauss_newton(const double * l_6x10, const double * rho,double cb[4], CvMat * A, CvMat * b);
+    void compute_A_and_b_gauss_newton(const double * l_6x10, const double * rho,const double cb[4], CvMat * A, CvMat * b);
     double compute_R_and_t(const double * ut, const double * betas,double R[3][3], double t[3]);
     void estimate_R_and_t(double R[3][3], double t[3]);
     void copy_R_and_t(const double R_dst[3][3], const double t_dst[3],double R_src[3][3], double t_src[3]);
     void mat_to_quat(const double R[3][3], double q[4]);
 
 
-    double uc, vc, fu, fv;
-    double * pws, *us, *alphas, *pcs;
-    int maximum_number_of_correspondences;
-    int number_of_correspondences;
+    double uc{}, vc{}, fu{}, fv{};
+    double * pws{}, *us{}, *alphas{}, *pcs{};
+    int maximum_number_of_correspondences{};
+    int number_of_correspondences{};
 
-    double cws[4][3], ccs[4][3];
-    double cws_determinant;
+    double cws[4][3]{}, ccs[4][3]{};
+    double cws_determinant{};
 };
 
 }

@@ -47,8 +47,8 @@ class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherRadiusOpencv : public org::bc
         public api::features::IDescriptorMatcher {
 public:
     SolARDescriptorMatcherRadiusOpencv();
-    ~SolARDescriptorMatcherRadiusOpencv();
-    void unloadComponent () override final;
+    ~SolARDescriptorMatcherRadiusOpencv() override;
+    void unloadComponent () final;
 
     /// @brief Matches two descriptors desc1 and desc2 respectively based on radius search strategy.
     /// [in] desc1: source descriptor.

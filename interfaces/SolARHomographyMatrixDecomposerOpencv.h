@@ -54,7 +54,7 @@ public:
     bool decompose(const Transform2Df & F,
                    std::vector<Transform3Df> & decomposedPoses) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
     cv::Mat_<double> m_camMatrix;

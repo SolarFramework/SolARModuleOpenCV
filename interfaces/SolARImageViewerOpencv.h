@@ -39,8 +39,8 @@ class SOLAROPENCV_EXPORT_API SolARImageViewerOpencv : public org::bcom::xpcf::Co
     public api::display::IImageViewer {
 public:
     SolARImageViewerOpencv();
-    ~SolARImageViewerOpencv();
-    void unloadComponent () override final;
+    ~SolARImageViewerOpencv() override;
+    void unloadComponent () final;
 
     /// \brief this method displays an image contained in a Image object in a window
     /// @param[in] img The image to display in the window

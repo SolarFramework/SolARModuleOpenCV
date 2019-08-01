@@ -44,11 +44,11 @@ class SOLAROPENCV_EXPORT_API SolARImageFilterAdaptiveBinaryOpencv : public org::
 public:
 
     SolARImageFilterAdaptiveBinaryOpencv();
-   ~SolARImageFilterAdaptiveBinaryOpencv();
+   ~SolARImageFilterAdaptiveBinaryOpencv() override;
 
     FrameworkReturnCode filter(const SRef<Image>input, SRef<Image>& output) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
  private:
     int m_max = 255;

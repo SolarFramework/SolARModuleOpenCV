@@ -51,7 +51,7 @@ void SolAR2DOverlayOpencv::drawCircle(const Point2Df & point, SRef<Image> displa
 
     // image where circle will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
-    if (!m_randomColor)
+    if (m_randomColor == 0u)
         cv::circle(displayedImage,cv::Point2f(point.getX(), point.getY()) ,m_radius,cv::Scalar(m_color[0],m_color[1], m_color[2]),m_thickness);
     else
         cv::circle(displayedImage,cv::Point2f(point.getX(), point.getY()) ,m_radius,cv::Scalar(128,128,128),m_thickness);
@@ -63,7 +63,7 @@ void SolAR2DOverlayOpencv::drawCircles(const std::vector<Point2Df>& points, SRef
     // image where circle will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 
-    if (!m_randomColor)
+    if (m_randomColor == 0u)
     {
         for (auto point : points)
         {
@@ -92,7 +92,7 @@ void SolAR2DOverlayOpencv::drawCircles(const std::vector<Keypoint>& keypoints, S
     // image where circle will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 
-    if (!m_randomColor)
+    if (m_randomColor == 0u)
     {
         for (auto keypoint : keypoints)
         {
@@ -123,7 +123,7 @@ void SolAR2DOverlayOpencv::drawContour (const Contour2Df & contour, SRef<Image> 
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
     cv::Scalar color;
 
-    if (!m_randomColor)
+    if (m_randomColor == 0u)
         color = cv::Scalar(m_color[0], m_color[1], m_color[2]);
     else
     {
@@ -164,7 +164,7 @@ void SolAR2DOverlayOpencv::drawContours (const std::vector<Contour2Df> & contour
 
     for (auto contour : contours)
     {
-        if (!m_randomColor)
+        if (m_randomColor == 0u)
             color = cv::Scalar(m_color[0], m_color[1], m_color[2]);
         else
         {

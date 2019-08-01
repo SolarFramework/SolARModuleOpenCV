@@ -37,9 +37,7 @@ SolARImageFilterBlurOpencv::SolARImageFilterBlurOpencv():ConfigurableBase(xpcf::
 }
 
 
-SolARImageFilterBlurOpencv::~SolARImageFilterBlurOpencv(){
-
-}
+SolARImageFilterBlurOpencv::~SolARImageFilterBlurOpencv() = default;
 
 
 FrameworkReturnCode SolARImageFilterBlurOpencv::filter(const SRef<Image>input, SRef<Image>& output){

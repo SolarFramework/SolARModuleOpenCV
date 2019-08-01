@@ -79,7 +79,7 @@ public:
                                  Transform3Df & poseView2,
                                  std::vector<DescriptorMatch>& inlierMatches) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 
 private:

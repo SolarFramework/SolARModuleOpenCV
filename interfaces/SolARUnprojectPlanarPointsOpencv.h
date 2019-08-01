@@ -63,7 +63,7 @@ public:
     /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
     FrameworkReturnCode unproject(const std::vector<Keypoint> & imageKeypoints, std::vector<Point3Df> & worldPoints, const Transform3Df & pose = Transform3Df::Identity()) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 
 private:

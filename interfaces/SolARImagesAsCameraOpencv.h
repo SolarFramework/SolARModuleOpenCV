@@ -48,7 +48,7 @@ public:
 
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
     /// @brief Path to the images which will be used as a camera capture

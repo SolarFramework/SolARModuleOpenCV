@@ -45,7 +45,7 @@ public:
 
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
     /// @brief Path to the video file which will be streamed as a camera capture

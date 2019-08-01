@@ -82,7 +82,7 @@ public:
     void draw(const SRef<Image> image, SRef<Image> & outImage, const std::vector <Keypoint> & keypoints_image1, const std::vector <Keypoint> & keypoints_image2, const std::vector<DescriptorMatch> matches = std::vector<DescriptorMatch>())override;
 
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
     /// @brief The color of the linse displaying the matches between the two images

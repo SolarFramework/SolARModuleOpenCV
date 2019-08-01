@@ -44,15 +44,15 @@ class SOLAROPENCV_EXPORT_API SolARImageFilterErodeOpencv : public org::bcom::xpc
 public:
 
     SolARImageFilterErodeOpencv();
-   ~SolARImageFilterErodeOpencv();
+   ~SolARImageFilterErodeOpencv() override;
 
     FrameworkReturnCode filter(const SRef<Image>input,
                   SRef<Image>& output) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
  private:
-    int erosion_elem, erosion_size;
+    int erosion_elem{}, erosion_size{};
 };
 
 }

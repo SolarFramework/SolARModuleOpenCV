@@ -45,15 +45,15 @@ class SOLAROPENCV_EXPORT_API SolARImageFilterDilateOpencv : public org::bcom::xp
 public:
 
     SolARImageFilterDilateOpencv();
-   ~SolARImageFilterDilateOpencv();
+   ~SolARImageFilterDilateOpencv() override;
 
     FrameworkReturnCode filter(const SRef<Image>input,
                   SRef<Image>& output) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
  private:
-    int dilate_elem, dilate_size;
+    int dilate_elem{}, dilate_size{};
 };
 
 }

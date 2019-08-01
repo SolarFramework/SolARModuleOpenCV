@@ -41,9 +41,7 @@ SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xp
     LOG_DEBUG(" SolARPoseEstimationOpencv constructor");
 }
 
-SolARPoseEstimationPnpOpencv::~SolARPoseEstimationPnpOpencv(){
-
-}
+SolARPoseEstimationPnpOpencv::~SolARPoseEstimationPnpOpencv() = default;
 
 FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Point2Df> & imagePoints,
                                                             const std::vector<Point3Df> & worldPoints,
@@ -62,8 +60,8 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
 
     for (int i=0;i<imagePoints.size();++i) {
 
-        Point2Df point2D = imagePoints.at(i);
-        Point3Df point3D = worldPoints.at(i);
+        const Point2Df& point2D = imagePoints.at(i);
+        const Point3Df& point3D = worldPoints.at(i);
         imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
         worldCVPoints.push_back(cv::Point3f(point3D.getX(), point3D.getY(),point3D.getZ()));
     }
@@ -80,10 +78,10 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
         raux = cv::Mat(3,3,type,(void *)initialPoseInverse.rotation().data());
         taux = cv::Mat(3,1,type,(void *)initialPoseInverse.translation().data());
         
-        cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1, cv::SOLVEPNP_ITERATIVE);
+        cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, true, cv::SOLVEPNP_ITERATIVE);
     }
     else{
-        cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 0, cv::SOLVEPNP_ITERATIVE);
+        cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, false, cv::SOLVEPNP_ITERATIVE);
     }
     
     raux.convertTo(Rvec, CV_32F);

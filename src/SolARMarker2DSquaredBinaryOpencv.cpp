@@ -87,7 +87,7 @@ namespace OPENCV {
     FrameworkReturnCode SolARMarker2DSquaredBinaryOpencv::getImageCorners(std::vector<Point2Df> & imageCorners) const
     {
         imageCorners.clear();
-        float patternSize = (float)m_pattern.getSize();
+        auto patternSize = (float)m_pattern.getSize();
 
         imageCorners.push_back(Point2Df(-patternSize/2.0f, -patternSize/2.0f));
         imageCorners.push_back(Point2Df(patternSize/2.0f, -patternSize/2.0f));

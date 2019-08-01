@@ -37,8 +37,7 @@ SolARFundamentalMatrixEstimationOpencv::SolARFundamentalMatrixEstimationOpencv()
 
 }
 
-SolARFundamentalMatrixEstimationOpencv::~SolARFundamentalMatrixEstimationOpencv(){
-}
+SolARFundamentalMatrixEstimationOpencv::~SolARFundamentalMatrixEstimationOpencv() = default;
 
 api::solver::pose::Transform2DFinder::RetCode SolARFundamentalMatrixEstimationOpencv::find(const std::vector<Point2Df> & srcPoints,
                                           const std::vector<Point2Df> & dstPoints,
@@ -65,7 +64,7 @@ api::solver::pose::Transform2DFinder::RetCode SolARFundamentalMatrixEstimationOp
     }
     cv::minMaxIdx(points_view1, &minVal, &maxVal);
     F = cv::findFundamentalMat(points_view1, points_view2, cv::FM_RANSAC, m_outlierDistanceRatio * maxVal, m_confidenceLevel, status);
-    if(!F.data){
+    if(F.data == nullptr){
         LOG_DEBUG("Fundamental matrix is empty")
         return api::solver::pose::Transform2DFinder::TRANSFORM2D_EMPTY;
 	}

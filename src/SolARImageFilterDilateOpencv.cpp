@@ -34,9 +34,7 @@ SolARImageFilterDilateOpencv::SolARImageFilterDilateOpencv():ConfigurableBase(xp
 }
 
 
-SolARImageFilterDilateOpencv::~SolARImageFilterDilateOpencv(){
-
-}
+SolARImageFilterDilateOpencv::~SolARImageFilterDilateOpencv() = default;
 
 
 FrameworkReturnCode SolARImageFilterDilateOpencv::filter(const SRef<Image>input,

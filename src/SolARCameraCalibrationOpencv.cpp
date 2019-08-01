@@ -93,7 +93,7 @@ bool SolARCameraCalibrationOpencv::runCalibration(const std::vector<std::vector<
 												double& totalAvgErr)
 {
     cameraMatrix = cv::Mat::eye(3, 3, CV_64F);
-    if (flags & cv::CALIB_FIX_ASPECT_RATIO)
+    if ((flags & cv::CALIB_FIX_ASPECT_RATIO) != 0)
         cameraMatrix.at<double>(0, 0) = aspectRatio;
 
     distCoeffs = cv::Mat::zeros(8, 1, CV_64F);

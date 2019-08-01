@@ -96,12 +96,12 @@ bool SolARHomographyMatrixDecomposerOpencv::decompose(const Transform2Df & H, st
       pose_temp[15](i,3) = _T[3].at<double>(i,0);
     }
 
-    for(int p = 0; p < 16; ++p){
-      pose_temp[p](3,0) = 0.0;
-      pose_temp[p](3,1) = 0.0;
-      pose_temp[p](3,2) = 0.0;
-      pose_temp[p](3,3) = 1.0;
-      decomposedPoses.push_back(pose_temp[p].inverse());
+    for(auto & p : pose_temp){
+      p(3,0) = 0.0;
+      p(3,1) = 0.0;
+      p(3,2) = 0.0;
+      p(3,3) = 1.0;
+      decomposedPoses.push_back(p.inverse());
     }
     return true;
 }

@@ -51,7 +51,7 @@ class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public org::bcom:
 public:
     SolARDescriptorMatcherKNNOpencv();
     ~SolARDescriptorMatcherKNNOpencv() override;
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
     /// @brief Matches two descriptors desc1 and desc2 respectively based on KNN search strategy.
     /// [in] desc1: source descriptor.
@@ -81,7 +81,7 @@ private:
     float m_distanceRatio = 0.75f;
 
 
-    int m_id;
+    int m_id{};
     cv::FlannBasedMatcher m_matcher;
 
     IDescriptorMatcher::RetCode match(

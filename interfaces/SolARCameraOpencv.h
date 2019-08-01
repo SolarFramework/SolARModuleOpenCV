@@ -48,12 +48,12 @@ public:
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
  private:
 
      /// @brief The ID of the camera to capture with
-     uint32_t m_deviceID;
+     uint32_t m_deviceID{};
 };
 
 }

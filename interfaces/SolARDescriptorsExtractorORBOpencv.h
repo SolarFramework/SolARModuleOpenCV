@@ -47,7 +47,7 @@ class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorORBOpencv : public org::bc
 public:
     SolARDescriptorsExtractorORBOpencv();
     ~SolARDescriptorsExtractorORBOpencv() override;
-    void unloadComponent () override final;
+    void unloadComponent () final;
     std::string getTypeString() override { return std::string("DescriptorsExtractorType::ORB"); }
     /// @brief Extracts a set of descriptors from a given image around a set of keypoints based on ORB algorithm
     /// "ORB: an efficient alternative to SIFT or SURF"

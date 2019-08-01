@@ -50,7 +50,7 @@ public:
 
 public:
 	SolARCameraCalibrationOpencv();
-    virtual ~SolARCameraCalibrationOpencv() override;
+    ~SolARCameraCalibrationOpencv() override;
     /// @brief this method calibrates and fixes an unkonwn camera intrinsic parameters from a offline video stream,
     /// it saves the result calibration file inside output folder.
     /// @param[in] inputVideo: path of the video stream captured by the unkown camera.
@@ -65,7 +65,7 @@ public:
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distorsion parameters.
     bool setParameters(const std::string & config_file) override;
-	virtual void unloadComponent() override;
+	void unloadComponent() override;
 
 
 private:
@@ -75,14 +75,14 @@ protected:
 	cv::Mat m_camMatrix;
 	cv::Mat m_camDistorsion;
 
-	float m_squareSize;
-	float m_aspectRatio;
+	float m_squareSize{};
+	float m_aspectRatio{};
 
-	int m_nframes;
-	int m_flags;
-	int m_delay;
+	int m_nframes{};
+	int m_flags{};
+	int m_delay{};
 
-    virtual bool process(cv::VideoCapture &, const std::string &);
+    virtual bool process(cv::VideoCapture & capture, const std::string & output);
 	
 	static double computeReprojectionErrors(const std::vector<std::vector<cv::Point3f> >& objectPoints,
 		const std::vector<std::vector<cv::Point2f> >& imagePoints,

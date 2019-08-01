@@ -42,7 +42,7 @@ public:
     ///@brief SolARSVDFundamentalMatrixDecomposerOpencv constructor.
     SolARSVDFundamentalMatrixDecomposerOpencv();
     ///@brief SolARSVDFundamentalMatrixDecomposerOpencv destructor.
-    ~SolARSVDFundamentalMatrixDecomposerOpencv();
+    ~SolARSVDFundamentalMatrixDecomposerOpencv() override;
 
     /// @brief this method is used to set intrinsic parameters and distorsion of the camera
     /// @param[in] Camera calibration matrix parameters.
@@ -57,7 +57,7 @@ public:
     bool decompose(const Transform2Df & F,
                    std::vector<Transform3Df> & decomposedPoses) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 
 private:

@@ -38,9 +38,7 @@ SolARProjectOpencv::SolARProjectOpencv():ConfigurableBase(xpcf::toUUID<SolARProj
     LOG_DEBUG(" SolARProjectOpencv constructor");
 }
 
-SolARProjectOpencv::~SolARProjectOpencv(){
-
-}
+SolARProjectOpencv::~SolARProjectOpencv() = default;
 
 FrameworkReturnCode projectCV(const std::vector<cv::Point3f> & inputPoints, std::vector<Point2Df> & imagePoints, const Transform3Df& pose, const cv::Mat & intrinsicParams, const cv::Mat & distorsionParams )
 {
@@ -59,7 +57,7 @@ FrameworkReturnCode projectCV(const std::vector<cv::Point3f> & inputPoints, std:
     cv::projectPoints(inputPoints, rvec, tvec, intrinsicParams, distorsionParams, cvImagePoints);
 
     imagePoints.clear();
-    for (auto cvPoint : cvImagePoints)
+    for (const auto& cvPoint : cvImagePoints)
         imagePoints.push_back(Point2Df((float)cvPoint.x, (float)cvPoint.y));
 
     return FrameworkReturnCode::_SUCCESS;
@@ -69,7 +67,8 @@ FrameworkReturnCode SolARProjectOpencv::project(const std::vector<Point3Df> & in
 {
     std::vector<cv::Point3f> cvWorldPoints;
 
-    for (auto point : inputPoints)
+    cvWorldPoints.reserve(inputPoints.size());
+    for (const auto& point : inputPoints)
         cvWorldPoints.push_back(cv::Point3f(point.getX(), point.getY(), point.getZ()));
 
       return projectCV(cvWorldPoints, imagePoints, pose, m_camMatrix, m_camDistorsion);
@@ -79,7 +78,8 @@ FrameworkReturnCode SolARProjectOpencv::project(const std::vector<CloudPoint> & 
 {
     std::vector<cv::Point3f> cvWorldPoints;
 
-    for (auto point : inputPoints)
+    cvWorldPoints.reserve(inputPoints.size());
+    for (const auto& point : inputPoints)
         cvWorldPoints.push_back(cv::Point3f(point.getX(), point.getY(), point.getZ()));
 
       return projectCV(cvWorldPoints, imagePoints, pose, m_camMatrix, m_camDistorsion);

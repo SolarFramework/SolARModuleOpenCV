@@ -130,7 +130,7 @@ public:
                         const std::vector<DescriptorMatch> & matches,
                         std::vector<CloudPoint> & pcloud) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
  private:
     // Camera calibration matrix

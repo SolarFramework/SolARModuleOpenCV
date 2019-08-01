@@ -43,9 +43,9 @@ class SOLAROPENCV_EXPORT_API SolARUndistortPointsOpencv : public org::bcom::xpcf
 {
 public:
     SolARUndistortPointsOpencv();
-    ~SolARUndistortPointsOpencv() = default;
+    ~SolARUndistortPointsOpencv() override = default;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
     FrameworkReturnCode undistort(const std::vector<Point2Df> & inputPoints, std::vector<Point2Df> & outputPoints) override;
 
     /// @brief Set the distorsion intrinsic camera parameters

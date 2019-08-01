@@ -63,7 +63,7 @@ public:
     FrameworkReturnCode project(const std::vector<CloudPoint> & inputPoints, std::vector<Point2Df> & imagePoints, const Transform3Df & pose = Transform3Df::Identity()) override;
 
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 
 private:

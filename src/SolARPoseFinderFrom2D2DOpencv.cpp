@@ -37,9 +37,7 @@ SolARPoseFinderFrom2D2DOpencv::SolARPoseFinderFrom2D2DOpencv():ConfigurableBase(
     LOG_DEBUG(" SolARPoseFinderFrom2D2DOpencv constructor");
 }
 
-SolARPoseFinderFrom2D2DOpencv::~SolARPoseFinderFrom2D2DOpencv(){
-
-}
+SolARPoseFinderFrom2D2DOpencv::~SolARPoseFinderFrom2D2DOpencv() = default;
 
 FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Point2Df> & matchedPointsView1,
                                                             const std::vector<Point2Df> & matchedPointsView2,

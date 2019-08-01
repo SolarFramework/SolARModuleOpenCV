@@ -45,12 +45,12 @@ class SOLAROPENCV_EXPORT_API SolARImageConvertorOpencv : public org::bcom::xpcf:
         public api::image::IImageConvertor {
 public:
     SolARImageConvertorOpencv();
-    ~SolARImageConvertorOpencv();
+    ~SolARImageConvertorOpencv() override;
 
     FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst) override;
     FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
 };

@@ -36,8 +36,7 @@ SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOp
     m_camDistorsion.create(5, 1);
 }
 
-SolARSVDFundamentalMatrixDecomposerOpencv::~SolARSVDFundamentalMatrixDecomposerOpencv(){
-}
+SolARSVDFundamentalMatrixDecomposerOpencv::~SolARSVDFundamentalMatrixDecomposerOpencv() = default;
 
 void SolARSVDFundamentalMatrixDecomposerOpencv::takeSVDOfE(cv::Mat_<double> & E,
                                                            cv::Mat & svd_u,

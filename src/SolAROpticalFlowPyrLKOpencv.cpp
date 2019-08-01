@@ -56,7 +56,8 @@ inline std::vector<cv::Point2f> fillcvpoints(const std::vector<Point2Df> & point
 {
 
     std::vector<cv::Point2f> cv_points;
-    for (auto point : points)
+    cv_points.reserve(points.size());
+for (const auto& point : points)
         cv_points.push_back(cv::Point2f(point.getX(), point.getY()));
     return cv_points;
 }
@@ -65,7 +66,8 @@ template <>
 inline std::vector<cv::Point2f> fillcvpoints(const std::vector<Keypoint> & points)
 {
     std::vector<cv::Point2f> cv_points;
-    for (auto point : points)
+    cv_points.reserve(points.size());
+for (const auto& point : points)
         cv_points.push_back(cv::Point2f(point.getX(), point.getY()));
     return cv_points;
 }
@@ -94,8 +96,8 @@ FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(
     return estimate (previousImage, currentImage, cv_points, trackedPoints, status, error);
 }
 
-FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(const SRef<Image> previousImage,
-                                                          const SRef<Image> currentImage,
+FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(const SRef<Image>& previousImage,
+                                                          const SRef<Image>& currentImage,
                                                           const std::vector<cv::Point2f> & pointsToTrack,
                                                           std::vector<Point2Df> & trackedPoints,
                                                           std::vector<unsigned char> & status,
@@ -123,8 +125,8 @@ FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(const SRef<Image> prev
     cv::calcOpticalFlowPyrLK(previousFrame, currentFrame, pointsToTrack, cv_trackedPoints, status, error, cv::Size(m_searchWinWidth, m_searchWinHeight), m_maxLevel, termcrit, flags, m_minEigenThreshold);
 
     trackedPoints.clear();
-    for (int i = 0; i < cv_trackedPoints.size(); i++)
-        trackedPoints.push_back(Point2Df(cv_trackedPoints[i].x, cv_trackedPoints[i].y));
+    for (auto & cv_trackedPoint : cv_trackedPoints)
+        trackedPoints.push_back(Point2Df(cv_trackedPoint.x, cv_trackedPoint.y));
 
     return FrameworkReturnCode::_SUCCESS;
 }

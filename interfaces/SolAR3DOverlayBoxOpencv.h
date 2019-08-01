@@ -53,10 +53,10 @@ public:
     /// @brief this method is used to set intrinsic parameters and distorsion of the camera
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const CamCalibration & intrinsic_parameters, const CamDistortion & distorsion_parameters);
+    void setCameraParameters(const CamCalibration & intrinsic_parameters, const CamDistortion & distorsion_parameters) override;
 
-    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
-    void unloadComponent () override final;
+    org::bcom::xpcf::XPCFErrorCode onConfigured() final;
+    void unloadComponent () final;
 
 private:
     /// @brief position of the center of the bottom face of the Box defined in world unit

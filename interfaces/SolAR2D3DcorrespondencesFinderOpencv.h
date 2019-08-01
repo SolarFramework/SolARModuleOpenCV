@@ -50,7 +50,7 @@ namespace SolAR {
 											std::vector<DescriptorMatch> & found_matches,
 											std::vector<DescriptorMatch> & remaining_matches) override;
 
-                void unloadComponent () override final;
+                void unloadComponent () final;
             private:
             };
         }

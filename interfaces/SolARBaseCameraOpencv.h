@@ -42,11 +42,11 @@ namespace OPENCV {
 class SOLAROPENCV_EXPORT_API SolARBaseCameraOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::devices::ICamera {
 public:
-    SolARBaseCameraOpencv(const org::bcom::xpcf::uuids::uuid & uuid); // to replace with ISolARDeviceInfo ! should be set later with init method ? default behavior on devices with facefront/rear embedded cams ?
+    explicit SolARBaseCameraOpencv(const org::bcom::xpcf::uuids::uuid & uuid); // to replace with ISolARDeviceInfo ! should be set later with init method ? default behavior on devices with facefront/rear embedded cams ?
 
     ~SolARBaseCameraOpencv() override;
 
-    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
+    org::bcom::xpcf::XPCFErrorCode onConfigured() final;
 
     /// @brief Stop the acquisition device
     /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.

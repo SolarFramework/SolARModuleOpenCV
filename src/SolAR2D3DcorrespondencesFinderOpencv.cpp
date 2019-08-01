@@ -47,20 +47,20 @@ namespace SolAR {
 
                  const std::map<unsigned int, CloudPoint> keyframeVisibility = referenceKeyframe->getVisibleMapPoints();
                  const std::vector<Keypoint> current_kpoints =  currentFrame->getKeypoints();
-                 for (int j = 0; j < current_matches.size(); ++j)
+                 for (const auto & current_matche : current_matches)
                  {
-                    std::map<unsigned int, CloudPoint>::const_iterator it= keyframeVisibility.find(current_matches[j].getIndexInDescriptorA());
+                    auto it= keyframeVisibility.find(current_matche.getIndexInDescriptorA());
                     if (it != keyframeVisibility.end())
                     {
                             shared_mapPoint.push_back(it->second) ;
                             shared_3dpoint.push_back(Point3Df(it->second.getX(),it->second.getY(),it->second.getZ()));
-                            shared_2dpoint.push_back(Point2Df(current_kpoints[current_matches[j].getIndexInDescriptorB()].getX(),
-                                                                              current_kpoints[current_matches[j].getIndexInDescriptorB()].getY()));
-                            found_matches.push_back(current_matches[j]);
+                            shared_2dpoint.push_back(Point2Df(current_kpoints[current_matche.getIndexInDescriptorB()].getX(),
+                                                                              current_kpoints[current_matche.getIndexInDescriptorB()].getY()));
+                            found_matches.push_back(current_matche);
                     }
                     else
                     {
-                        remaining_matches.push_back(current_matches[j]);
+                        remaining_matches.push_back(current_matche);
                     }
                 }
 
@@ -81,23 +81,23 @@ namespace SolAR {
                 const std::map<unsigned int, CloudPoint> frameVisibility = lastFrame->getReferenceKeyframe()->getVisibleMapPoints();
                 const std::vector<Keypoint> current_kpoints = currentFrame->getKeypoints();
 				std::map<unsigned int, unsigned int> newKpKeyframeVisibility;
-				for (int j = 0; j < current_matches.size(); ++j)
+				for (const auto & current_matche : current_matches)
 				{
-					std::map<unsigned int, unsigned int>::const_iterator it_kp = kpKeyframeVisibility.find(current_matches[j].getIndexInDescriptorA());
+					auto it_kp = kpKeyframeVisibility.find(current_matche.getIndexInDescriptorA());
 					if (it_kp != kpKeyframeVisibility.end()) {
-						newKpKeyframeVisibility[current_matches[j].getIndexInDescriptorB()] = it_kp->second;
-                        std::map<unsigned int, CloudPoint>::const_iterator it_pcl = frameVisibility.find(it_kp->second);
+						newKpKeyframeVisibility[current_matche.getIndexInDescriptorB()] = it_kp->second;
+                        auto it_pcl = frameVisibility.find(it_kp->second);
 						if (it_pcl != frameVisibility.end())
 						{
 							shared_mapPoint.push_back(it_pcl->second);
                             shared_3dpoint.push_back(Point3Df(it_pcl->second.getX(), it_pcl->second.getY(), it_pcl->second.getZ()));
-                            shared_2dpoint.push_back(Point2Df(current_kpoints[current_matches[j].getIndexInDescriptorB()].getX(),
-                                current_kpoints[current_matches[j].getIndexInDescriptorB()].getY()));
-							found_matches.push_back(DescriptorMatch(it_kp->second, current_matches[j].getIndexInDescriptorB(), current_matches[j].getMatchingScore()));							
+                            shared_2dpoint.push_back(Point2Df(current_kpoints[current_matche.getIndexInDescriptorB()].getX(),
+                                current_kpoints[current_matche.getIndexInDescriptorB()].getY()));
+							found_matches.push_back(DescriptorMatch(it_kp->second, current_matche.getIndexInDescriptorB(), current_matche.getMatchingScore()));							
 						}
 						else
 						{
-							remaining_matches.push_back(DescriptorMatch(it_kp->second, current_matches[j].getIndexInDescriptorB(), current_matches[j].getMatchingScore()));
+							remaining_matches.push_back(DescriptorMatch(it_kp->second, current_matche.getIndexInDescriptorB(), current_matche.getMatchingScore()));
 						}
 					}
 				}

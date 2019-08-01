@@ -80,9 +80,9 @@ namespace SolAR {
         std::vector< std::vector<cv::DMatch> > nn_matches;
         m_matcher.knnMatch(cvDescriptor1, cvDescriptor2, nn_matches,2);
 
-        for(unsigned i = 0; i < nn_matches.size(); i++) {
-            if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
-                matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
+        for(auto & nn_matche : nn_matches) {
+            if(nn_matche[0].distance < m_distanceRatio * nn_matche[1].distance) {
+                matches.push_back(DescriptorMatch(nn_matche[0].queryIdx, nn_matche[0].trainIdx,nn_matche[0].distance ));
             }
         }
         return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;
@@ -98,7 +98,7 @@ namespace SolAR {
 
         matches.clear();
 
-        if (descriptors1->getNbDescriptors() ==0 || descriptors2.size()== 0)
+        if (descriptors1->getNbDescriptors() ==0 || descriptors2.empty())
             return IDescriptorMatcher::RetCode::DESCRIPTOR_EMPTY;
 
         uint32_t type_conversion= SolAROpenCVHelper::deduceOpenDescriptorCVType(descriptors1->getDescriptorDataType());
@@ -110,14 +110,14 @@ namespace SolAR {
             cvDescriptors1.convertTo(cvDescriptors1, CV_32F);
 
         std::vector<cv::Mat> cvDescriptors;
-        for(unsigned k=0;k<descriptors2.size();k++){
+        for(const auto & k : descriptors2){
 
-            uint32_t type_conversion= SolAROpenCVHelper::deduceOpenDescriptorCVType(descriptors2[k]->getDescriptorDataType());
+            uint32_t type_conversion= SolAROpenCVHelper::deduceOpenDescriptorCVType(k->getDescriptorDataType());
 
-            cv::Mat cvDescriptor(descriptors2[k]->getNbDescriptors(), descriptors2[k]->getNbElements(), type_conversion);
-            cvDescriptor.data=(uchar*)(descriptors2[k]->data());
+            cv::Mat cvDescriptor(k->getNbDescriptors(), k->getNbElements(), type_conversion);
+            cvDescriptor.data=(uchar*)(k->data());
 
-            if (descriptors2[k]->getDescriptorDataType() != DescriptorBuffer::TYPE_32F)
+            if (k->getDescriptorDataType() != DescriptorBuffer::TYPE_32F)
                 cvDescriptor.convertTo(cvDescriptor, CV_32F);
 
             cvDescriptors.push_back(cvDescriptor);
@@ -139,9 +139,9 @@ namespace SolAR {
         std::vector< std::vector<cv::DMatch> > nn_matches;
         m_matcher.knnMatch(cvDescriptors1, cvDescriptors2, initial_matches,nbOfMatches);
 
-        for(unsigned i = 0; i < nn_matches.size(); i++) {
-            if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
-                matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
+        for(auto & nn_matche : nn_matches) {
+            if(nn_matche[0].distance < m_distanceRatio * nn_matche[1].distance) {
+                matches.push_back(DescriptorMatch(nn_matche[0].queryIdx, nn_matche[0].trainIdx,nn_matche[0].distance ));
             }
         }
 

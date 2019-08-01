@@ -53,7 +53,7 @@ public:
                                                       const std::vector<Point2Df> & targetPoints,
                                                       Transform2Df & homography) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
 private:
     bool isHValid(const Transform2Df & H);
@@ -63,8 +63,8 @@ private:
     std::vector<cv::Point2f> obj_corners;
     std::vector<cv::Point2f> scene_corners;
 
-    int refWidth;
-    int refHeight;
+    int refWidth{};
+    int refHeight{};
 
     /// @brief The maximum allowed reprojection error to treat a point pair as an inlier
     /// Here we are using the RANSAC to remove outlier. That is if:

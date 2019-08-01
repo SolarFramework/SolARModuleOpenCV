@@ -43,17 +43,17 @@ class SOLAROPENCV_EXPORT_API SolARImageFilterBlurOpencv : public org::bcom::xpcf
 public:
 
     SolARImageFilterBlurOpencv();
-   ~SolARImageFilterBlurOpencv();
+   ~SolARImageFilterBlurOpencv() override;
 
     FrameworkReturnCode filter(const SRef<Image>input,SRef<Image>& output) override;
 
-    void unloadComponent () override final;
+    void unloadComponent () final;
 
  private:
-    int kernel_id;
-    int kernel_width;
-    int kernel_height;
-    int direction;
+    int kernel_id{};
+    int kernel_width{};
+    int kernel_height{};
+    int direction{};
 
 };
 }
