@@ -57,8 +57,8 @@ inline std::vector<cv::Point2f> fillcvpoints(const std::vector<Point2Df> & point
 
     std::vector<cv::Point2f> cv_points;
     cv_points.reserve(points.size());
-for (const auto& point : points)
-        cv_points.push_back(cv::Point2f(point.getX(), point.getY()));
+    for (const auto& point : points)
+        cv_points.emplace_back(point.x(), point.y());
     return cv_points;
 }
 
@@ -67,8 +67,8 @@ inline std::vector<cv::Point2f> fillcvpoints(const std::vector<Keypoint> & point
 {
     std::vector<cv::Point2f> cv_points;
     cv_points.reserve(points.size());
-for (const auto& point : points)
-        cv_points.push_back(cv::Point2f(point.getX(), point.getY()));
+    for (const auto& point : points)
+        cv_points.emplace_back(point.x(), point.y());
     return cv_points;
 }
 
@@ -125,8 +125,9 @@ FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(const SRef<Image>& pre
     cv::calcOpticalFlowPyrLK(previousFrame, currentFrame, pointsToTrack, cv_trackedPoints, status, error, cv::Size(m_searchWinWidth, m_searchWinHeight), m_maxLevel, termcrit, flags, m_minEigenThreshold);
 
     trackedPoints.clear();
+    trackedPoints.reserve(cv_trackedPoints.size());
     for (auto & cv_trackedPoint : cv_trackedPoints)
-        trackedPoints.push_back(Point2Df(cv_trackedPoint.x, cv_trackedPoint.y));
+        trackedPoints.emplace_back(cv_trackedPoint.x, cv_trackedPoint.y);
 
     return FrameworkReturnCode::_SUCCESS;
 }

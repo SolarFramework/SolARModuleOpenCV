@@ -86,7 +86,7 @@ namespace SolAR {
         for (auto itr=cv_matches.begin();itr!=cv_matches.end();++itr){
             for (auto jtr = itr->begin(); jtr != itr->end(); ++jtr){
 
-                matches.push_back(DescriptorMatch(jtr->queryIdx, jtr->trainIdx,jtr->distance ));
+                matches.emplace_back(jtr->queryIdx, jtr->trainIdx,jtr->distance);
 
             }
         }
@@ -129,7 +129,7 @@ namespace SolAR {
                 cvDescriptor.convertTo(cvDescriptor, CV_32F);
             }
 
-            cvDescriptors.push_back(cvDescriptor);
+            cvDescriptors.emplace_back(cvDescriptor);
         }
 
 
@@ -150,7 +150,7 @@ namespace SolAR {
         {
             for (auto jtr = itr->begin(); jtr != itr->end(); ++jtr)
             {
-                matches.push_back(DescriptorMatch(jtr->queryIdx, jtr->trainIdx,jtr->distance ));
+                matches.emplace_back(jtr->queryIdx, jtr->trainIdx,jtr->distance);
             }
         }
 

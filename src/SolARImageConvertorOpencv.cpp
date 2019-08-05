@@ -42,7 +42,7 @@ static std::map<std::pair<Image::ImageLayout,Image::ImageLayout>,int> convertMap
 inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, SRef<Image> imgDst)
 {
     // TODO : handle safe mode if missing map entry
-    return convertMapInfos.at(std::make_pair<Image::ImageLayout,Image::ImageLayout>(imgSrc->getImageLayout(),imgDst->getImageLayout()));
+    return convertMapInfos.at(std::make_pair(imgSrc->getImageLayout(),imgDst->getImageLayout()));
 }
 
 inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, Image::ImageLayout dstLayout)

@@ -45,15 +45,16 @@ api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::f
     std::vector<cv::Point2f> scene;
     cv::Point2f point;
 
-
+    obj.reserve(srcPoints.size());
+    scene.reserve(srcPoints.size());
     for( int i = 0; i < srcPoints.size(); i++ ){
-        point.x=srcPoints.at(i).getX();
-        point.y=srcPoints.at(i).getY();
-        obj.push_back( point );
+        point.x=srcPoints[i].x();
+        point.y=srcPoints[i].y();
+        obj.emplace_back(point);
 
-        point.x=targetPoints.at(i).getX();
-        point.y=targetPoints.at(i).getY();
-        scene.push_back( point);
+        point.x=targetPoints[i].x();
+        point.y=targetPoints[i].y();
+        scene.emplace_back(point);
     }
 
     H = cv::findHomography( obj, scene, CV_RANSAC, m_ransacReprojThreshold );

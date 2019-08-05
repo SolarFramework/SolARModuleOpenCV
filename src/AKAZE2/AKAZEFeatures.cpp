@@ -114,7 +114,7 @@ void AKAZEFeaturesV2::Allocate_Memory_Evolution() {
       compute_scharr_derivative_kernelsV2(step.DxKx, step.DxKy, 1, 0, step.sigma_size);
       compute_scharr_derivative_kernelsV2(step.DyKx, step.DyKy, 0, 1, step.sigma_size);
 
-      evolution_.push_back(step);
+      evolution_.emplace_back(step);
     }
 
     power <<= 1;
@@ -572,12 +572,12 @@ void AKAZEFeaturesV2::Find_Scale_Space_Extrema_Single(std::vector<vector<KeyPoin
         if (i > 0 && find_neighbor_point(point, kpts_aux[i - 1], 0, idx)) {
           if (point.response > kpts_aux[i - 1][idx].response) {
             kpts_aux[i - 1][idx].class_id = -1;  // Mark it as deleted
-            kpts_aux[i].push_back(point);  // Insert the new point to the right layer
+            kpts_aux[i].emplace_back(point);  // Insert the new point to the right layer
           }
           continue;
         }
 
-        kpts_aux[i].push_back(point);  // A good keypoint candidate is found
+        kpts_aux[i].emplace_back(point);  // A good keypoint candidate is found
       }
       prev = curr;
       curr = next;
@@ -666,7 +666,7 @@ void AKAZEFeaturesV2::Find_Scale_Space_Extrema(std::vector<vector<KeyPoint>>& kp
             continue;
           }
 
-          kpts.push_back(point);
+          kpts.emplace_back(point);
         }
 
         prev = curr;
@@ -779,7 +779,7 @@ void AKAZEFeaturesV2::Do_Subpixel_Refinement(std::vector<std::vector<KeyPoint>>&
       kp.size *= 2.0f; // In OpenCV the size of a keypoint is the diameter
 
       // Push the refined keypoint to the final storage
-      kpts.push_back(kp);
+      kpts.emplace_back(kp);
     }
   }
 }

@@ -54,12 +54,12 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<Point
 
     for (int i = 0; i < worldPoints.size(); i++) {
          double Xw, Yw, Zw, u, v;
-         Xw = worldPoints[i].getX();
-         Yw = worldPoints[i].getY();
-         Zw = worldPoints[i].getZ();
+         Xw = worldPoints[i].x();
+         Yw = worldPoints[i].y();
+         Zw = worldPoints[i].z();
 
-         u = imagePoints[i].getX();
-         v = imagePoints[i].getY();
+         u = imagePoints[i].x();
+         v = imagePoints[i].y();
 
          SolARPoseEstimationPnpEPFL::add_correspondence(Xw, Yw, Zw, u, v);
       }
@@ -86,21 +86,21 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<Point
 }
 void SolARPoseEstimationPnpEPFL::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
     //TODO.. check to inverse
-    this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
-    this->m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
-    this->m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
-    this->m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
-    this->m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
+    m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
+    m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
+    m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
+    m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
+    m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
 
-    this->m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
-    this->m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
-    this->m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
-    this->m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
-    this->m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
-    this->m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
-    this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
-    this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
-    this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
+    m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
+    m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
+    m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
+    m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
+    m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
+    m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
+    m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
+    m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
+    m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
 
     SolARPoseEstimationPnpEPFL::set_internal_parameters(intrinsicParams(0,2),intrinsicParams(1,2),intrinsicParams(0,0),
                                                          intrinsicParams(1,1));

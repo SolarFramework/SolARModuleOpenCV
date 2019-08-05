@@ -61,11 +61,11 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Po
         points_view2.resize(matchedPointsView1.size());
 
         for( int i = 0; i < matchedPointsView1.size(); i++ ){
-            points_view1[i].x=matchedPointsView1.at(i).getX();
-            points_view1[i].y=matchedPointsView1.at(i).getY();
+            points_view1[i].x=matchedPointsView1[i].x();
+            points_view1[i].y=matchedPointsView1[i].y();
 
-            points_view2[i].x=matchedPointsView2.at(i).getX();
-            points_view2[i].y=matchedPointsView2.at(i).getY();
+            points_view2[i].x=matchedPointsView2[i].x();
+            points_view2[i].y=matchedPointsView2[i].y();
         }
     }
     else // Inliers are defined, take only them
@@ -74,11 +74,11 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Po
         points_view2.resize(inlierMatches.size());
 
         for( int i = 0; i < inlierMatches.size(); i++ ){
-            points_view1[i].x=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA()).getX();
-            points_view1[i].y=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA()).getY();
+            points_view1[i].x=matchedPointsView1[inlierMatches[i].getIndexInDescriptorA()].x();
+            points_view1[i].y=matchedPointsView1[inlierMatches[i].getIndexInDescriptorA()].y();
 
-            points_view2[i].x=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB()).getX();
-            points_view2[i].y=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB()).getY();
+            points_view2[i].x=matchedPointsView2[inlierMatches[i].getIndexInDescriptorB()].x();
+            points_view2[i].y=matchedPointsView2[inlierMatches[i].getIndexInDescriptorB()].y();
         }
     }
 
@@ -108,7 +108,7 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Po
     {
         for (int i = 0; i < inliers.rows; i++)
             if (inliers.at<bool>(i))
-                inlierMatches_output.push_back(DescriptorMatch(i, i, 1.0f));
+                inlierMatches_output.emplace_back(i, i, 1.0f);
 
         LOG_DEBUG("Nbinliers : {} (// {})", inlierMatches.size(), matchedPointsView1.size());
     }
@@ -116,7 +116,7 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Po
     {
         for (int i = 0; i < inliers.rows; i++)
             if (inliers.at<bool>(i))
-                inlierMatches_output.push_back(inlierMatches[i]);
+                inlierMatches_output.emplace_back(inlierMatches[i]);
 
         LOG_DEBUG("Nbinliers : {} (// {})", inlierMatches.size(), inlierMatches.size());
     }
@@ -146,11 +146,11 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Ke
         points_view2.resize(matchedPointsView1.size());
 
         for( int i = 0; i < matchedPointsView1.size(); i++ ){
-            points_view1[i].x=matchedPointsView1.at(i).getX();
-            points_view1[i].y=matchedPointsView1.at(i).getY();
+            points_view1[i].x=matchedPointsView1[i].x();
+            points_view1[i].y=matchedPointsView1[i].y();
 
-            points_view2[i].x=matchedPointsView2.at(i).getX();
-            points_view2[i].y=matchedPointsView2.at(i).getY();
+            points_view2[i].x=matchedPointsView2[i].x();
+            points_view2[i].y=matchedPointsView2[i].y();
         }
     }
     else // Inliers are defined, take only them
@@ -159,11 +159,11 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Ke
         points_view2.resize(inlierMatches.size());
 
         for( int i = 0; i < inlierMatches.size(); i++ ){
-            points_view1[i].x=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA()).getX();
-            points_view1[i].y=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA()).getY();
+            points_view1[i].x=matchedPointsView1[inlierMatches[i].getIndexInDescriptorA()].x();
+            points_view1[i].y=matchedPointsView1[inlierMatches[i].getIndexInDescriptorA()].y();
 
-            points_view2[i].x=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB()).getX();
-            points_view2[i].y=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB()).getY();
+            points_view2[i].x=matchedPointsView2[inlierMatches[i].getIndexInDescriptorB()].x();
+            points_view2[i].y=matchedPointsView2[inlierMatches[i].getIndexInDescriptorB()].y();
         }
     }
     cv::minMaxIdx(points_view1, &minVal, &maxVal);
@@ -188,7 +188,7 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Ke
     {
         for (int i = 0; i < inliers.rows; i++)
             if (inliers.at<bool>(i))
-                inlierMatches_output.push_back(DescriptorMatch(i, i, 1.0f));
+                inlierMatches_output.emplace_back(i, i, 1.0f);
 
         LOG_DEBUG("Nbinliers : {} (// {})", inlierMatches.size(), matchedPointsView1.size());
     }
@@ -196,7 +196,7 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Ke
     {
         for (int i = 0; i < inliers.rows; i++)
             if (inliers.at<bool>(i))
-                inlierMatches_output.push_back(inlierMatches[i]);
+                inlierMatches_output.emplace_back(inlierMatches[i]);
 
         LOG_DEBUG("Nbinliers : {} (// {})", inlierMatches.size(), inlierMatches.size());
     }

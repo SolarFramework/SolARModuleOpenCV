@@ -213,13 +213,13 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
     KPose1 = m_camMatrix * cv::Mat(Pose1);
 
     for (int i = 0; i<pts_size; i++) {
-        cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()].getX(),pointsView1[matches[i].getIndexInDescriptorA()].getY());
+        cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()].x(),pointsView1[matches[i].getIndexInDescriptorA()].y());
         cv::Point3d u1(kp1.x, kp1.y, 1.0);
         // um1 represents an homogenous point in 3D camera space positionned on the image plan
         cv::Mat_<double> um1 = Kinv * cv::Mat_<double>(u1);
         u1.x = um1(0); u1.y = um1(1); u1.z = um1(2);
 
-        cv::Point2f kp2 = cv::Point2f(pointsView2[matches[i].getIndexInDescriptorB()].getX(),pointsView2[matches[i].getIndexInDescriptorB()].getY());
+        cv::Point2f kp2 = cv::Point2f(pointsView2[matches[i].getIndexInDescriptorB()].x(),pointsView2[matches[i].getIndexInDescriptorB()].y());
         cv::Point3d u2(kp2.x, kp2.y, 1.0);
         // um1 represents an homogenous point in 3D camera space positionned on the image plan
         cv::Mat_<double> um2 = Kinv * cv::Mat_<double>(u2);
@@ -236,15 +236,14 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
         cv::Point2f xPt_img_1(xPt_img1(0) / xPt_img1(2), xPt_img1(1) / xPt_img1(2));
 
         double reprj_err = norm(xPt_img_1 - kp1);
-        reproj_error.push_back(reprj_err);
+        reproj_error.emplace_back(reprj_err);
 
         std::map<unsigned int, unsigned int> visibility;
 
         visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
         visibility[working_views.second] = matches[i].getIndexInDescriptorB();
 
-        CloudPoint cp(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
-        pcloud.push_back(cp);
+        pcloud.emplace_back(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
     }
     cv::Scalar mse = cv::mean(reproj_error);
     return mse[0];
@@ -285,13 +284,13 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & po
     KPose1 = m_camMatrix * cv::Mat(Pose1);
 
     for (int i = 0; i<pts_size; i++) {
-        cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()].getX(),pointsView1[matches[i].getIndexInDescriptorA()].getY());
+        cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()].x(),pointsView1[matches[i].getIndexInDescriptorA()].y());
         cv::Point3d u1(kp1.x, kp1.y, 1.0);
         // um1 represents an homogenous point in 3D camera space positionned on the image plan
         cv::Mat_<double> um1 = Kinv * cv::Mat_<double>(u1);
         u1.x = um1(0); u1.y = um1(1); u1.z = um1(2);
 
-        cv::Point2f kp2 = cv::Point2f(pointsView2[matches[i].getIndexInDescriptorB()].getX(),pointsView2[matches[i].getIndexInDescriptorB()].getY());
+        cv::Point2f kp2 = cv::Point2f(pointsView2[matches[i].getIndexInDescriptorB()].x(),pointsView2[matches[i].getIndexInDescriptorB()].y());
         cv::Point3d u2(kp2.x, kp2.y, 1.0);
         // um1 represents an homogenous point in 3D camera space positionned on the image plan
         cv::Mat_<double> um2 = Kinv * cv::Mat_<double>(u2);
@@ -317,15 +316,14 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & po
 
         double reprj_err = norm(xPt_img_1 - kp1);
 
-        reproj_error.push_back(reprj_err);
+        reproj_error.emplace_back(reprj_err);
 
         std::map<unsigned int, unsigned int> visibility;
 
         visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
         visibility[working_views.second] = matches[i].getIndexInDescriptorB();
 
-        CloudPoint cp(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
-        pcloud.push_back(cp);
+        pcloud.emplace_back(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
     }
     cv::Scalar mse = cv::mean(reproj_error);
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
@@ -349,21 +347,21 @@ double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> & curKeyfra
 
 void SolARSVDTriangulationOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
     //TODO.. check to inverse
-    this->m_camDistorsion.at<double>(0, 0)  = (double)distorsionParams(0);
-    this->m_camDistorsion.at<double>(1, 0)  = (double)distorsionParams(1);
-    this->m_camDistorsion.at<double>(2, 0)  =(double) distorsionParams(2);
-    this->m_camDistorsion.at<double>(3, 0)  = (double)distorsionParams(3);
-    this->m_camDistorsion.at<double>(4, 0)  = (double)distorsionParams(4);
+    m_camDistorsion.at<double>(0, 0)  = (double)distorsionParams(0);
+    m_camDistorsion.at<double>(1, 0)  = (double)distorsionParams(1);
+    m_camDistorsion.at<double>(2, 0)  =(double) distorsionParams(2);
+    m_camDistorsion.at<double>(3, 0)  = (double)distorsionParams(3);
+    m_camDistorsion.at<double>(4, 0)  = (double)distorsionParams(4);
 
-    this->m_camMatrix.at<double>(0, 0) = (double)intrinsicParams(0,0);
-    this->m_camMatrix.at<double>(0, 1) = (double)intrinsicParams(0,1);
-    this->m_camMatrix.at<double>(0, 2) = (double)intrinsicParams(0,2);
-    this->m_camMatrix.at<double>(1, 0) = (double)intrinsicParams(1,0);
-    this->m_camMatrix.at<double>(1, 1) = (double)intrinsicParams(1,1);
-    this->m_camMatrix.at<double>(1, 2) = (double)intrinsicParams(1,2);
-    this->m_camMatrix.at<double>(2, 0) = (double)intrinsicParams(2,0);
-    this->m_camMatrix.at<double>(2, 1) = (double)intrinsicParams(2,1);
-    this->m_camMatrix.at<double>(2, 2) = (double)intrinsicParams(2,2);
+    m_camMatrix.at<double>(0, 0) = (double)intrinsicParams(0,0);
+    m_camMatrix.at<double>(0, 1) = (double)intrinsicParams(0,1);
+    m_camMatrix.at<double>(0, 2) = (double)intrinsicParams(0,2);
+    m_camMatrix.at<double>(1, 0) = (double)intrinsicParams(1,0);
+    m_camMatrix.at<double>(1, 1) = (double)intrinsicParams(1,1);
+    m_camMatrix.at<double>(1, 2) = (double)intrinsicParams(1,2);
+    m_camMatrix.at<double>(2, 0) = (double)intrinsicParams(2,0);
+    m_camMatrix.at<double>(2, 1) = (double)intrinsicParams(2,1);
+    m_camMatrix.at<double>(2, 2) = (double)intrinsicParams(2,2);
 
     cv::invert(m_camMatrix,m_Kinv);
 }

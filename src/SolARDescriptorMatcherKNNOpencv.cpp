@@ -82,7 +82,7 @@ namespace SolAR {
 
         for(auto & nn_matche : nn_matches) {
             if(nn_matche[0].distance < m_distanceRatio * nn_matche[1].distance) {
-                matches.push_back(DescriptorMatch(nn_matche[0].queryIdx, nn_matche[0].trainIdx,nn_matche[0].distance ));
+                matches.emplace_back(nn_matche[0].queryIdx, nn_matche[0].trainIdx,nn_matche[0].distance);
             }
         }
         return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;
@@ -120,7 +120,7 @@ namespace SolAR {
             if (k->getDescriptorDataType() != DescriptorBuffer::TYPE_32F)
                 cvDescriptor.convertTo(cvDescriptor, CV_32F);
 
-            cvDescriptors.push_back(cvDescriptor);
+            cvDescriptors.emplace_back(cvDescriptor);
         }
 
 
@@ -141,7 +141,7 @@ namespace SolAR {
 
         for(auto & nn_matche : nn_matches) {
             if(nn_matche[0].distance < m_distanceRatio * nn_matche[1].distance) {
-                matches.push_back(DescriptorMatch(nn_matche[0].queryIdx, nn_matche[0].trainIdx,nn_matche[0].distance ));
+                matches.emplace_back(nn_matche[0].queryIdx, nn_matche[0].trainIdx,nn_matche[0].distance);
             }
         }
 

@@ -89,20 +89,26 @@ namespace OPENCV {
         imageCorners.clear();
         auto patternSize = (float)m_pattern.getSize();
 
-        imageCorners.push_back(Point2Df(-patternSize/2.0f, -patternSize/2.0f));
-        imageCorners.push_back(Point2Df(patternSize/2.0f, -patternSize/2.0f));
-        imageCorners.push_back(Point2Df(patternSize/2.0f, patternSize/2.0f));
-        imageCorners.push_back(Point2Df(-patternSize/2.0f, patternSize/2.0f));
+        imageCorners =
+        {
+            {-patternSize/2.0f, -patternSize/2.0f},
+            {patternSize/2.0f, -patternSize/2.0f},
+            {patternSize/2.0f, patternSize/2.0f},
+            {-patternSize/2.0f, patternSize/2.0f},
+        };
+
         return FrameworkReturnCode::_SUCCESS;
     }
 
     FrameworkReturnCode SolARMarker2DSquaredBinaryOpencv::getWorldCorners(std::vector<Point3Df> & worldCorners) const
     {
-        worldCorners.clear();
-        worldCorners.push_back(Point3Df(-m_size.width/2.0f, -m_size.height/2.0f, 0.0f));
-        worldCorners.push_back(Point3Df(m_size.width/2.0f, -m_size.height/2.0f, 0.0f));
-        worldCorners.push_back(Point3Df(m_size.width/2.0f, m_size.height/2.0f, 0.0f));
-        worldCorners.push_back(Point3Df(-m_size.width/2.0f, m_size.height/2.0f, 0.0f));
+        worldCorners =
+        {
+            {-m_size.width/2.0f, -m_size.height/2.0f, 0.0f},
+            {m_size.width/2.0f, -m_size.height/2.0f, 0.0f},
+            {m_size.width/2.0f, m_size.height/2.0f, 0.0f},
+            {-m_size.width/2.0f, m_size.height/2.0f, 0.0f},
+        };
 
         return FrameworkReturnCode::_SUCCESS;
     }

@@ -60,7 +60,7 @@ namespace OPENCV {
         for (i = 0; i < inputImages.size(); i++)
         {
             if (isPattern(inputImages[i]))
-                recognizedPatterns.push_back(i);
+                recognizedPatterns.emplace_back(i);
         }
         if (recognizedPatterns.empty())
         {
@@ -77,7 +77,7 @@ namespace OPENCV {
             if (getPatternDescriptorFromImage(inputImages[recognizedPatterns[i]], data) == FrameworkReturnCode::_SUCCESS)
             {
                 Contour2Df recognizedContour = contours[recognizedPatterns[i]];
-                recognized_contours.push_back(recognizedContour);
+                recognized_contours.emplace_back(recognizedContour);
                 unsigned char* descriptorDataTemp = data;
                 Contour2Df rotatedContourTemp = recognizedContour;
                 //check all possible rotations
@@ -94,10 +94,11 @@ namespace OPENCV {
                          }
                      // Rotate the curent contour counter-clockwise to set the new rotated contour
                     Contour2Df rotatedContour;
+                    rotatedContour.reserve(4);
                     for (int num_point = 0; num_point <4; num_point++)
-                        rotatedContour.push_back(rotatedContourTemp[(num_point+1)%4]);
+                        rotatedContour.emplace_back(rotatedContourTemp[(num_point+1)%4]);
 
-                    recognized_contours.push_back(rotatedContour);
+                    recognized_contours.emplace_back(rotatedContour);
 
                     descriptorDataTemp = descriptorData;
                     rotatedContourTemp = rotatedContour;

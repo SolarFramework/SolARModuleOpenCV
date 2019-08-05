@@ -135,7 +135,7 @@ void goodFeaturesToTrackDetection(cv::Mat &img, int &nbDescriptors, std::vector<
 	cv::goodFeaturesToTrack(img, corners, nbDescriptors, 0.008, 3, cv::Mat(), 3);
 	cornerSubPix(img, corners, cv::Size(7, 7), Size(-1, -1), cv::TermCriteria(TermCriteria::COUNT | TermCriteria::EPS, 20, 0.03));
 	for (const auto& it : corners) {
-		kpts.push_back(cv::KeyPoint(it, 0.f));
+        kpts.emplace_back(it, 0.f);
 	}
 }
 
@@ -163,8 +163,8 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const st
 		}
 		else {
 			if (!m_detector) {
-				LOG_DEBUG(" detector is initialized with default value : {}", this->m_type)
-					setType(stringToType.at(this->m_type));
+                LOG_DEBUG(" detector is initialized with default value : {}", m_type)
+                    setType(stringToType.at(m_type));
 			}
 			m_detector->detect(img_1, kpts, Mat());
 			if (m_nbDescriptors >= 0)
@@ -189,8 +189,8 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const st
     auto checkInside = [getAngle](const std::vector<Point2Df>& contours, Point2f &ptToCheck) {
 		float sumAngles(0.f);
 		for (int i = 0; i < contours.size(); ++i) {
-            cv::Point2f pt1(contours[i].getX(), contours[i].getY());
-            cv::Point2f pt2(contours[(i + 1) % contours.size()].getX(), contours[(i + 1) % contours.size()].getY());
+            cv::Point2f pt1(contours[i].x(), contours[i].y());
+            cv::Point2f pt2(contours[(i + 1) % contours.size()].x(), contours[(i + 1) % contours.size()].y());
 			sumAngles += getAngle(pt1, pt2, ptToCheck);
 		}
 		
@@ -200,9 +200,7 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const st
     for(auto itr=kpts.begin();itr!=kpts.end();++itr){
         Point2f ptToCheck = (*itr).pt * ratioInv;
         if (checkInside(contours, ptToCheck)) {
-            Keypoint kpa;
-            kpa.init((*itr).pt.x*ratioInv, (*itr).pt.y*ratioInv, (*itr).size, (*itr).angle, (*itr).response, (*itr).octave, (*itr).class_id);
-			keypoints.push_back(kpa);
+            keypoints.emplace_back((*itr).pt.x*ratioInv, (*itr).pt.y*ratioInv, (*itr).size, (*itr).angle, (*itr).response, (*itr).octave, (*itr).class_id);
 		}
     }
 }

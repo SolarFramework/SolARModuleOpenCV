@@ -73,10 +73,10 @@ double SolARCameraCalibrationOpencv::computeReprojectionErrors(const std::vector
 void SolARCameraCalibrationOpencv::calcChessboardCorners(cv::Size boardSize, float squareSize, std::vector<cv::Point3f>& corners)
 {
     corners.resize(0);
+    corners.reserve(boardSize.height * boardSize.width);
     for (int i = 0; i < boardSize.height; i++)
         for (int j = 0; j < boardSize.width; j++)
-            corners.push_back(cv::Point3f(float(j*squareSize),
-                float(i*squareSize), 0));
+            corners.emplace_back(j*squareSize, i*squareSize, 0);
 }
 
 bool SolARCameraCalibrationOpencv::runCalibration(const std::vector<std::vector<cv::Point2f>> & imagePoints,
@@ -248,7 +248,7 @@ bool SolARCameraCalibrationOpencv::process(cv::VideoCapture & capture, const std
 
         if (mode == SOLAR_CAPTURE && found &&
             (!capture.isOpened() || clock() - prevTimestamp > m_delay*1e-3*CLOCKS_PER_SEC)){
-            imagePoints.push_back(pointbuf);
+            imagePoints.emplace_back(pointbuf);
             prevTimestamp = clock();
             blink = capture.isOpened();
         }
@@ -331,7 +331,7 @@ bool SolARCameraCalibrationOpencv::process(cv::VideoCapture & capture, const std
 //
 //		if (mode == CAPTURING && found &&
 //			(!capture.isOpened() || clock() - prevTimestamp > m_delay*1e-3*CLOCKS_PER_SEC)) {
-//			imagePoints.push_back(pointbuf);
+//			imagePoints.emplace_back(pointbuf);
 //			prevTimestamp = clock();
 //			blink = capture.isOpened();
 //		}

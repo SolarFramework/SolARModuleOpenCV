@@ -72,9 +72,10 @@ namespace OPENCV {
                 if (minDist > m_minContourLength)
                 {
                     Contour2Df contour;
+                    contour.reserve(4);
                     for (int i = 0; i<4; i++)
                     {
-                        contour.push_back(Point2Df(approxCurve[i].x, approxCurve[i].y));
+                        contour.emplace_back(approxCurve[i].x, approxCurve[i].y);
                      }
                     Point2Df v1 = (contour[1]) - (contour[0]);
                     Point2Df v2 = (contour[2]) - (contour[0]);
@@ -85,7 +86,7 @@ namespace OPENCV {
                         contour[3] = contour[1];
                         contour[1] = temp_point;
                     }
-                    possibleMarkers.push_back(contour);
+                    possibleMarkers.emplace_back(contour);
                 }
             }
         }
@@ -107,7 +108,7 @@ namespace OPENCV {
                 distSquared /= 4;
                 if (distSquared < minSquaredDistance)
                 {
-                    tooNearCandidates.push_back(std::pair<int, int>(i, j));
+                    tooNearCandidates.emplace_back(i, j);
                 }
             }
         }
@@ -132,7 +133,7 @@ namespace OPENCV {
         for (size_t i = 0; i<possibleMarkers.size(); i++)
         {
             if (!removalMask[i])
-                output_contours.push_back(possibleMarkers[i]);
+                output_contours.emplace_back(possibleMarkers[i]);
         }
         return FrameworkReturnCode::_SUCCESS;
     }

@@ -78,9 +78,9 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
         if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(i);
-                point2 = points_image2.at(i);
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
+                point1 = points_image1[i];
+                point2 = points_image2[i];
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode == "RANDOM")
@@ -89,17 +89,17 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
             std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(i);
-                point2 = points_image2.at(i);
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
+                point1 = points_image1[i];
+                point2 = points_image2[i];
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
             }
         }
         else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(i);
-                point2 = points_image2.at(i);
+                point1 = points_image1[i];
+                point2 = points_image2[i];
                 float distance = ((point1/image1->getWidth())-(point2/image2->getWidth())).norm();
                 std::vector<unsigned int> color = {0,0,0};
 
@@ -118,7 +118,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -133,9 +133,9 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
         if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(matches[i].getIndexInDescriptorA());
-                point2 = points_image2.at(matches[i].getIndexInDescriptorB());
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
+                point1 = points_image1[matches[i].getIndexInDescriptorA()];
+                point2 = points_image2[matches[i].getIndexInDescriptorB()];
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode == "RANDOM")
@@ -144,17 +144,17 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
             std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(matches[i].getIndexInDescriptorA());
-                point2 = points_image2.at(matches[i].getIndexInDescriptorB());
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
+                point1 = points_image1[matches[i].getIndexInDescriptorA()];
+                point2 = points_image2[matches[i].getIndexInDescriptorB()];
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
              }
         }
         else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(matches[i].getIndexInDescriptorA());
-                point2 = points_image2.at(matches[i].getIndexInDescriptorB());
+                point1 = points_image1[matches[i].getIndexInDescriptorA()];
+                point2 = points_image2[matches[i].getIndexInDescriptorB()];
                 float distance = ((point1/image1->getWidth())-(point2/image2->getWidth())).norm();
                 std::vector<unsigned int> color = {0,0,0};
 
@@ -173,7 +173,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -216,9 +216,9 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
         if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(i);
-                point2 = points_image2.at(i);
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
+                point1 = points_image1[i].getPosition();
+                point2 = points_image2[i].getPosition();
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode == "RANDOM")
@@ -227,17 +227,17 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
             std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(i);
-                point2 = points_image2.at(i);
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
+                point1 = points_image1[i].getPosition();
+                point2 = points_image2[i].getPosition();
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
             }
         }
         else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(i);
-                point2 = points_image2.at(i);
+                point1 = points_image1[i].getPosition();
+                point2 = points_image2[i].getPosition();
                 float distance = ((point1/image1->getWidth())-(point2/image2->getWidth())).norm();
                 std::vector<unsigned int> color = {0,0,0};
 
@@ -256,7 +256,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -271,9 +271,9 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
         if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(matches[i].getIndexInDescriptorA());
-                point2 = points_image2.at(matches[i].getIndexInDescriptorB());
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
+                point1 = points_image1[matches[i].getIndexInDescriptorA()].getPosition();
+                point2 = points_image2[matches[i].getIndexInDescriptorB()].getPosition();
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode == "RANDOM")
@@ -282,17 +282,17 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
             std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(matches[i].getIndexInDescriptorA());
-                point2 = points_image2.at(matches[i].getIndexInDescriptorB());
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
+                point1 = points_image1[matches[i].getIndexInDescriptorA()].getPosition();
+                point2 = points_image2[matches[i].getIndexInDescriptorB()].getPosition();
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
              }
         }
         else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
-                point1 = points_image1.at(matches[i].getIndexInDescriptorA());
-                point2 = points_image2.at(matches[i].getIndexInDescriptorB());
+                point1 = points_image1[matches[i].getIndexInDescriptorA()].getPosition();
+                point2 = points_image2[matches[i].getIndexInDescriptorB()].getPosition();
                 float distance = ((point1/image1->getWidth())-(point2/image2->getWidth())).norm();
                 std::vector<unsigned int> color = {0,0,0};
 
@@ -311,7 +311,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX()+img1_width,point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x()+img1_width,point2.y()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -351,9 +351,9 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
         if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(i);
-                point2 = points2.at(i);
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
+                point1 = points1[i];
+                point2 = points2[i];
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode == "RANDOM")
@@ -362,17 +362,17 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
             std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(i);
-                point2 = points2.at(i);
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
+                point1 = points1[i];
+                point2 = points2[i];
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
             }
         }
         else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(i);
-                point2 = points2.at(i);
+                point1 = points1[i];
+                point2 = points2[i];
                 float distance = (point1-point2).norm()/image->getWidth();
                 std::vector<unsigned int> color = {0,0,0};
 
@@ -391,7 +391,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -407,9 +407,9 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
         if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(matches[i].getIndexInDescriptorA());
-                point2 = points2.at(matches[i].getIndexInDescriptorB());
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
+                point1 = points1[matches[i].getIndexInDescriptorA()];
+                point2 = points2[matches[i].getIndexInDescriptorB()];
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode == "RANDOM")
@@ -418,17 +418,17 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
             std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(matches[i].getIndexInDescriptorA());
-                point2 = points2.at(matches[i].getIndexInDescriptorB());
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
+                point1 = points1[matches[i].getIndexInDescriptorA()];
+                point2 = points2[matches[i].getIndexInDescriptorB()];
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
              }
         }
         else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(matches[i].getIndexInDescriptorA());
-                point2 = points2.at(matches[i].getIndexInDescriptorB());
+                point1 = points1[matches[i].getIndexInDescriptorA()];
+                point2 = points2[matches[i].getIndexInDescriptorB()];
                 float distance = (point1-point2).norm()/image->getWidth();
                 std::vector<unsigned int> color = {0,0,0};
 
@@ -447,7 +447,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -487,9 +487,9 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
         if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(i);
-                point2 = points2.at(i);
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
+                point1 = points1[i].getPosition();
+                point2 = points2[i].getPosition();
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode == "RANDOM")
@@ -498,17 +498,17 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
             std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(i);
-                point2 = points2.at(i);
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
+                point1 = points1[i].getPosition();
+                point2 = points2[i].getPosition();
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
             }
         }
         else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(i);
-                point2 = points2.at(i);
+                point1 = points1[i].getPosition();
+                point2 = points2[i].getPosition();
                 float distance = (point1-point2).norm()/image->getWidth();
                 std::vector<unsigned int> color = {0,0,0};
 
@@ -527,7 +527,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else
@@ -543,9 +543,9 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
         if (m_mode == "COLOR")
         {
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(matches[i].getIndexInDescriptorA());
-                point2 = points2.at(matches[i].getIndexInDescriptorB());
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
+                point1 = points1[matches[i].getIndexInDescriptorA()].getPosition();
+                point2 = points2[matches[i].getIndexInDescriptorB()].getPosition();
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(m_color[2],m_color[1],m_color[0]),m_thickness);
             }
         }
         else if (m_mode == "RANDOM")
@@ -554,17 +554,17 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
             std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
             std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(matches[i].getIndexInDescriptorA());
-                point2 = points2.at(matches[i].getIndexInDescriptorB());
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
+                point1 = points1[matches[i].getIndexInDescriptorA()].getPosition();
+                point2 = points2[matches[i].getIndexInDescriptorB()].getPosition();
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(uni(rng),uni(rng),uni(rng)),m_thickness);
              }
         }
         else if (m_mode == "FADING")
         {
             float halfMinDistanceRatioGreen = m_minDistanceRatioGreen/2.0f;
             for (int i = 0;i<nbPoints;++i){
-                point1 = points1.at(matches[i].getIndexInDescriptorA());
-                point2 = points2.at(matches[i].getIndexInDescriptorB());
+                point1 = points1[matches[i].getIndexInDescriptorA()].getPosition();
+                point2 = points2[matches[i].getIndexInDescriptorB()].getPosition();
                 float distance = (point1-point2).norm()/image->getWidth();
                 std::vector<unsigned int> color = {0,0,0};
 
@@ -583,7 +583,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
                         color[1] = 255;
                     }
                 }
-                cv::line(outImg,cv::Point2f(point1.getX(), point1.getY()),cv::Point2f(point2.getX(),point2.getY()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
+                cv::line(outImg,cv::Point2f(point1.x(), point1.y()),cv::Point2f(point2.x(),point2.y()),cv::Scalar(color[2],color[1],color[0]),m_thickness);
             }
         }
         else

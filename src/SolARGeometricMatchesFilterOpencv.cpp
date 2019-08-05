@@ -44,7 +44,7 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
                                                const std::vector<Keypoint> & inputKeyPointsA,
                                                const std::vector<Keypoint> & inputKeyPointsB)
 {
-
+    // Note: this function has absolutely no effect...
     std::vector<DescriptorMatch>tempMatches;
     std::vector<uchar> status(inputKeyPointsA.size());
     std::vector<cv::Point2f> pts1, pts2;
@@ -52,14 +52,16 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
     if(!inputMatches.empty() != 0u){
 
         // get Align matches
+        pts1.reserve(inputMatches.size());
+        pts2.reserve(inputMatches.size());
         for (const auto & inputMatche : inputMatches) {
             assert(inputMatche.getIndexInDescriptorA() < inputKeyPointsA.size());
-            pts1.push_back(cv::Point2f(inputKeyPointsA[inputMatche.getIndexInDescriptorA()].getX(),
-                                       inputKeyPointsA[inputMatche.getIndexInDescriptorA()].getY()));
+            pts1.emplace_back(inputKeyPointsA[inputMatche.getIndexInDescriptorA()].x(),
+                                       inputKeyPointsA[inputMatche.getIndexInDescriptorA()].y());
 
             assert(inputMatche.getIndexInDescriptorB() < inputKeyPointsB.size());
-            pts2.push_back(cv::Point2f(inputKeyPointsB[inputMatche.getIndexInDescriptorB()].getX(),
-                                       inputKeyPointsB[inputMatche.getIndexInDescriptorB()].getY()));
+            pts2.emplace_back(inputKeyPointsB[inputMatche.getIndexInDescriptorB()].x(),
+                                       inputKeyPointsB[inputMatche.getIndexInDescriptorB()].y());
 
         }
 
@@ -73,7 +75,7 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
 
         for (unsigned int i = 0; i<status.size(); i++) {
             if (status[i] != 0u) {
-                   tempMatches.push_back(inputMatches[i]);
+                   tempMatches.emplace_back(inputMatches[i]);
             }
         }
     }

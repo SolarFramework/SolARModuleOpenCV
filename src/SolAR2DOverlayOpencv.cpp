@@ -46,15 +46,15 @@ SolAR2DOverlayOpencv::SolAR2DOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolAR
 void SolAR2DOverlayOpencv::drawCircle(const Point2Df & point, SRef<Image> displayImage)
 {
     // check that center of cirlcle is inside the image
-    if (point.getX()<0 || point.getY() < 0 || point.getX() > displayImage->getWidth() || point.getY() > displayImage->getHeight())
+    if (point.x()<0 || point.y() < 0 || point.x() > displayImage->getWidth() || point.y() > displayImage->getHeight())
         return;
 
     // image where circle will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
     if (m_randomColor == 0u)
-        cv::circle(displayedImage,cv::Point2f(point.getX(), point.getY()) ,m_radius,cv::Scalar(m_color[0],m_color[1], m_color[2]),m_thickness);
+        cv::circle(displayedImage,cv::Point2f(point.x(), point.y()) ,m_radius,cv::Scalar(m_color[0],m_color[1], m_color[2]),m_thickness);
     else
-        cv::circle(displayedImage,cv::Point2f(point.getX(), point.getY()) ,m_radius,cv::Scalar(128,128,128),m_thickness);
+        cv::circle(displayedImage,cv::Point2f(point.x(), point.y()) ,m_radius,cv::Scalar(128,128,128),m_thickness);
 
 }
 
@@ -139,16 +139,16 @@ void SolAR2DOverlayOpencv::drawContour (const Contour2Df & contour, SRef<Image> 
     {
         if (i != contour.size() - 1)
         {
-            cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
-            cv::Point2f pt_b(contour[i+1].getX(),contour[i+1].getY());
+            cv::Point2f pt_a(contour[i].x(), contour[i].y());
+            cv::Point2f pt_b(contour[i+1].x(),contour[i+1].y());
 
             SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
         }
         else
         {
             //the contours loops to the first point
-            cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
-            cv::Point2f pt_b(contour[0].getX(), contour[0].getY());
+            cv::Point2f pt_a(contour[i].x(), contour[i].y());
+            cv::Point2f pt_b(contour[0].x(), contour[0].y());
 
             SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
         }
@@ -179,16 +179,16 @@ void SolAR2DOverlayOpencv::drawContours (const std::vector<Contour2Df> & contour
         {
             if (i != contour.size() - 1)
             {
-                cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
-                cv::Point2f pt_b(contour[i+1].getX(),contour[i+1].getY());
+                cv::Point2f pt_a(contour[i].x(), contour[i].y());
+                cv::Point2f pt_b(contour[i+1].x(),contour[i+1].y());
 
                 SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
             }
             else
             {
                 //the contours loops to the first point
-                cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
-                cv::Point2f pt_b(contour[0].getX(), contour[0].getY());
+                cv::Point2f pt_a(contour[i].x(), contour[i].y());
+                cv::Point2f pt_b(contour[0].x(), contour[0].y());
 
                 SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
             }

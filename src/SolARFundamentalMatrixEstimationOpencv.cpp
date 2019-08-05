@@ -56,11 +56,11 @@ api::solver::pose::Transform2DFinder::RetCode SolARFundamentalMatrixEstimationOp
     std::vector<uchar>status(points_view1.size());
 
     for( int i = 0; i < srcPoints.size(); i++ ){
-        points_view1[i].x=srcPoints.at(i).getX();
-        points_view1[i].y=srcPoints.at(i).getY();
+        points_view1[i].x=srcPoints[i].x();
+        points_view1[i].y=srcPoints[i].y();
 
-        points_view2[i].x=dstPoints.at(i).getX();
-        points_view2[i].y=dstPoints.at(i).getY();
+        points_view2[i].x=dstPoints[i].x();
+        points_view2[i].y=dstPoints[i].y();
     }
     cv::minMaxIdx(points_view1, &minVal, &maxVal);
     F = cv::findFundamentalMat(points_view1, points_view2, cv::FM_RANSAC, m_outlierDistanceRatio * maxVal, m_confidenceLevel, status);

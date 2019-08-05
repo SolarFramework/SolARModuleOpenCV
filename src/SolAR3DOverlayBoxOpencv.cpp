@@ -69,16 +69,16 @@ xpcf::XPCFErrorCode SolAR3DOverlayBoxOpencv::onConfigured()
     transform.translate(translation);
     transform.rotate(rotation);
 
-    std::vector<Vector4f> parallelepiped;
-
-    parallelepiped.push_back(transform * Vector4f(-half_X, -half_Y, 0.0f, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(half_X, -half_Y, 0.0f, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(half_X, half_Y, 0.0f, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(-half_X, half_Y, 0.0f, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(-half_X, -half_Y, -Z, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(half_X, -half_Y, -Z, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(half_X, half_Y, -Z, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(-half_X, half_Y, -Z, 1.0f));
+    std::vector<Vector4f> parallelepiped = {
+        {transform * Vector4f(-half_X, -half_Y, 0.0f, 1.0f)},
+        {transform * Vector4f(half_X, -half_Y, 0.0f, 1.0f)},
+        {transform * Vector4f(half_X, half_Y, 0.0f, 1.0f)},
+        {transform * Vector4f(-half_X, half_Y, 0.0f, 1.0f)},
+        {transform * Vector4f(-half_X, -half_Y, -Z, 1.0f)},
+        {transform * Vector4f(half_X, -half_Y, -Z, 1.0f)},
+        {transform * Vector4f(half_X, half_Y, -Z, 1.0f)},
+        {transform * Vector4f(-half_X, half_Y, -Z, 1.0f)},
+    };
 
     for (int i = 0; i < parallelepiped.size(); i++)
          for (int j = 0; j < 3; j++)

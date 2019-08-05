@@ -156,12 +156,12 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
             cv::goodFeaturesToTrack(img_1, corners, m_nbDescriptors, 0.008, 3, cv::Mat(), 3);
             cornerSubPix(img_1, corners, cv::Size(7, 7), Size(-1, -1), cv::TermCriteria(TermCriteria::COUNT | TermCriteria::EPS, 20, 0.03));
             for (const auto& it : corners)
-                kpts.push_back(cv::KeyPoint(it, 0.f));
+                kpts.emplace_back(it, 0.f);
         }
         else {
             if(!m_detector){
-                LOG_DEBUG(" detector is initialized with default value : {}", this->m_type)
-                setType(stringToType.at(this->m_type));
+                LOG_DEBUG(" detector is initialized with default value : {}", m_type)
+                setType(stringToType.at(m_type));
             }
             m_detector->detect(img_1, kpts, Mat());
             if (m_nbDescriptors >= 0)
@@ -176,9 +176,7 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
     }
 
     for(const auto& keypoint : kpts){
-       Keypoint kpa;
-       kpa.init(keypoint.pt.x*ratioInv, keypoint.pt.y*ratioInv, keypoint.size, keypoint.angle, keypoint.response, keypoint.octave, keypoint.class_id) ;
-       keypoints.push_back(kpa);
+       keypoints.emplace_back(keypoint.pt.x*ratioInv, keypoint.pt.y*ratioInv, keypoint.size, keypoint.angle, keypoint.response, keypoint.octave, keypoint.class_id);
     }
 }
 

@@ -52,15 +52,15 @@ namespace SolAR {
                     auto it= keyframeVisibility.find(current_matche.getIndexInDescriptorA());
                     if (it != keyframeVisibility.end())
                     {
-                            shared_mapPoint.push_back(it->second) ;
-                            shared_3dpoint.push_back(Point3Df(it->second.getX(),it->second.getY(),it->second.getZ()));
-                            shared_2dpoint.push_back(Point2Df(current_kpoints[current_matche.getIndexInDescriptorB()].getX(),
-                                                                              current_kpoints[current_matche.getIndexInDescriptorB()].getY()));
-                            found_matches.push_back(current_matche);
+                            shared_mapPoint.emplace_back(it->second) ;
+                            shared_3dpoint.emplace_back(it->second.x(),it->second.y(),it->second.z());
+                            shared_2dpoint.emplace_back(current_kpoints[current_matche.getIndexInDescriptorB()].x(),
+                                                                              current_kpoints[current_matche.getIndexInDescriptorB()].y());
+                            found_matches.emplace_back(current_matche);
                     }
                     else
                     {
-                        remaining_matches.push_back(current_matche);
+                        remaining_matches.emplace_back(current_matche);
                     }
                 }
 
@@ -89,15 +89,15 @@ namespace SolAR {
                         auto it_pcl = frameVisibility.find(it_kp->second);
 						if (it_pcl != frameVisibility.end())
 						{
-							shared_mapPoint.push_back(it_pcl->second);
-                            shared_3dpoint.push_back(Point3Df(it_pcl->second.getX(), it_pcl->second.getY(), it_pcl->second.getZ()));
-                            shared_2dpoint.push_back(Point2Df(current_kpoints[current_matche.getIndexInDescriptorB()].getX(),
-                                current_kpoints[current_matche.getIndexInDescriptorB()].getY()));
-							found_matches.push_back(DescriptorMatch(it_kp->second, current_matche.getIndexInDescriptorB(), current_matche.getMatchingScore()));							
+                            shared_mapPoint.emplace_back(it_pcl->second);
+                            shared_3dpoint.emplace_back(it_pcl->second.x(), it_pcl->second.y(), it_pcl->second.z());
+                            shared_2dpoint.emplace_back(current_kpoints[current_matche.getIndexInDescriptorB()].x(),
+                                current_kpoints[current_matche.getIndexInDescriptorB()].y());
+                            found_matches.emplace_back(it_kp->second, current_matche.getIndexInDescriptorB(), current_matche.getMatchingScore());
 						}
 						else
 						{
-							remaining_matches.push_back(DescriptorMatch(it_kp->second, current_matche.getIndexInDescriptorB(), current_matche.getMatchingScore()));
+                            remaining_matches.emplace_back(it_kp->second, current_matche.getIndexInDescriptorB(), current_matche.getMatchingScore());
 						}
 					}
 				}

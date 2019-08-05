@@ -56,11 +56,12 @@ namespace OPENCV {
                 if (contourSize > m_minContourEdges)
                 {
                     Contour2Df contour;
+                    contour.reserve(contourSize);
                     for (size_t j = 0; j < contourSize; j++)
                     {
-                        contour.push_back(Point2Df(ocv_contour[j].x, ocv_contour[j].y));
+                        contour.emplace_back(ocv_contour[j].x, ocv_contour[j].y);
                     }
-                    contours.push_back(contour);
+                    contours.emplace_back(contour);
                 }
             }
         }

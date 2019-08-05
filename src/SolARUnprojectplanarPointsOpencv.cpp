@@ -55,10 +55,11 @@ FrameworkReturnCode unprojectOCV(const std::vector<cv::Point2f>& imagePoints, st
 	cv::Mat unProj = ext.inv();
 
 	// unproject points
+    worldPoints.reserve(worldPoints.size() + correctedImagePoints.size());
 	for (const auto& it : correctedImagePoints) {
 		cv::Mat pt2D = (cv::Mat_<float>(3, 1) << it.x, it.y, 1.f);
 		cv::Mat pt3D = unProj * pt2D;
-        worldPoints.push_back(Point3Df(pt3D.at<float>(0, 0) / pt3D.at<float>(2, 0), pt3D.at<float>(1, 0) / pt3D.at<float>(2, 0), 0.f));
+        worldPoints.emplace_back(pt3D.at<float>(0, 0) / pt3D.at<float>(2, 0), pt3D.at<float>(1, 0) / pt3D.at<float>(2, 0), 0.f);
 	}
 
     return FrameworkReturnCode::_SUCCESS;
@@ -73,7 +74,7 @@ FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vecto
     std::vector<cv::Point2f> cvPoints;
     cvPoints.reserve(imagePoints.size());
     for (const auto& point : imagePoints)
-        cvPoints.push_back(cv::Point2f(point.getX(), point.getY()));
+        cvPoints.emplace_back(point.x(), point.y());
 
     return unprojectOCV(cvPoints, worldPoints, pose, m_camMatrix, m_camDistorsion);
 }
@@ -87,28 +88,28 @@ FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vecto
     std::vector<cv::Point2f> cvPoints;
     cvPoints.reserve(imageKeypoints.size());
 for (const auto& point : imageKeypoints)
-        cvPoints.push_back(cv::Point2f(point.getX(), point.getY()));
+        cvPoints.emplace_back(point.x(), point.y());
 
     return unprojectOCV(cvPoints, worldPoints, pose, m_camMatrix, m_camDistorsion);
 }
 
 void SolARUnprojectPlanarPointsOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
 
-    this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
-    this->m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
-    this->m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
-    this->m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
-    this->m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
+    m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
+    m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
+    m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
+    m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
+    m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
 
-    this->m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
-    this->m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
-    this->m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
-    this->m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
-    this->m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
-    this->m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
-    this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
-    this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
-    this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
+    m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
+    m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
+    m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
+    m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
+    m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
+    m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
+    m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
+    m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
+    m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
 }
 
 }

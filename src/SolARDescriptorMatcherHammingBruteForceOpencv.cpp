@@ -108,9 +108,9 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match
     matches.clear();
     for(auto & nn_matche : nn_matches) {
         if (nn_matche.size()==1)
-            matches.push_back(DescriptorMatch(nn_matche[0].queryIdx, nn_matche[0].trainIdx,nn_matche[0].distance ));
+            matches.emplace_back(nn_matche[0].queryIdx, nn_matche[0].trainIdx,nn_matche[0].distance);
         else if(nn_matche[0].distance < m_distanceRatio * nn_matche[1].distance) {
-                 matches.push_back(DescriptorMatch(nn_matche[0].queryIdx, nn_matche[0].trainIdx,nn_matche[0].distance ));
+                 matches.emplace_back(nn_matche[0].queryIdx, nn_matche[0].trainIdx,nn_matche[0].distance);
         }
     }
   
@@ -146,7 +146,7 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match
         if (k->getDescriptorDataType() != DescriptorBuffer::TYPE_32F)
            cvDescriptor.convertTo(cvDescriptor, CV_32F);
  
-        cvDescriptors.push_back(cvDescriptor);
+        cvDescriptors.emplace_back(cvDescriptor);
     } 
  
     cv::Mat cvDescriptors2;
@@ -167,7 +167,7 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match
     
              if(nn_matche[0].distance < m_distanceRatio * nn_matche[1].distance) {
                   
-                 matches.push_back(DescriptorMatch(nn_matche[0].queryIdx, nn_matche[0].trainIdx, nn_matche[0].distance ));
+                 matches.emplace_back(nn_matche[0].queryIdx, nn_matche[0].trainIdx, nn_matche[0].distance);
              }
     }
     return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;

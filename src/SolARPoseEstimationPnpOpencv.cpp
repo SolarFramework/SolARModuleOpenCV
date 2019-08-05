@@ -58,12 +58,14 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
     }
 
+    imageCVPoints.reserve(imagePoints.size());
+    worldCVPoints.reserve(imagePoints.size());
     for (int i=0;i<imagePoints.size();++i) {
 
-        const Point2Df& point2D = imagePoints.at(i);
-        const Point3Df& point3D = worldPoints.at(i);
-        imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
-        worldCVPoints.push_back(cv::Point3f(point3D.getX(), point3D.getY(),point3D.getZ()));
+        const Point2Df& point2D = imagePoints[i];
+        const Point3Df& point3D = worldPoints[i];
+        imageCVPoints.emplace_back(point2D.x(), point2D.y());
+        worldCVPoints.emplace_back(point3D.x(), point3D.y(),point3D.z());
     }
 
     cv::Mat Rvec;
@@ -109,21 +111,21 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
 
 void SolARPoseEstimationPnpOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
     //TODO.. check to inverse
-    this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
-    this->m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
-    this->m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
-    this->m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
-    this->m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
+    m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
+    m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
+    m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
+    m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
+    m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
 
-    this->m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
-    this->m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
-    this->m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
-    this->m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
-    this->m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
-    this->m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
-    this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
-    this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
-    this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
+    m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
+    m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
+    m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
+    m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
+    m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
+    m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
+    m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
+    m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
+    m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
 }
 
 }

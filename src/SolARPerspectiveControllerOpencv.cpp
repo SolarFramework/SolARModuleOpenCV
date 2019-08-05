@@ -39,20 +39,23 @@ namespace OPENCV {
     {
         std::vector<cv::Point2f> points;
         cv::Size patches_size(m_outputImageWidth, m_outputImageHeight);
-        std::vector<cv::Point2f> markerCorners2D;
-        markerCorners2D.push_back(cv::Point2f(0, 0));
-        markerCorners2D.push_back(cv::Point2f(m_outputImageWidth - 1, 0));
-        markerCorners2D.push_back(cv::Point2f(m_outputImageWidth - 1, m_outputImageHeight - 1));
-        markerCorners2D.push_back(cv::Point2f(0, m_outputImageHeight - 1));
+        std::vector<cv::Point2f> markerCorners2D =
+        {
+            {0, 0},
+            {static_cast<float>(m_outputImageWidth) - 1, 0},
+            {static_cast<float>(m_outputImageWidth) - 1, static_cast<float>(m_outputImageWidth) - 1},
+            {0, static_cast<float>(m_outputImageWidth) - 1},
+        };
 
         cv::Mat cv_inputImg = SolAROpenCVHelper::mapToOpenCV(inputImg);
           // For each contour, extract the patch
         if (contour.size()>=4)
 
         {
+            points.reserve(4);
             for(unsigned int j =0; j < 4; ++j)
             {
-               points.push_back(cv::Point2f(contour[j].getX(),contour[j].getY()));
+               points.emplace_back(contour[j].x(),contour[j].y());
             }
                 // Find the perspective transformation that brings current marker to rectangular form
             cv::Mat markerTransform = cv::getPerspectiveTransform(points, markerCorners2D);
@@ -84,11 +87,13 @@ namespace OPENCV {
         }
         std::vector<cv::Point2f> points;
         cv::Size patches_size(m_outputImageWidth, m_outputImageHeight);
-        std::vector<cv::Point2f> markerCorners2D;
-        markerCorners2D.push_back(cv::Point2f(0, 0));
-        markerCorners2D.push_back(cv::Point2f(m_outputImageWidth - 1, 0));
-        markerCorners2D.push_back(cv::Point2f(m_outputImageWidth - 1, m_outputImageHeight - 1));
-        markerCorners2D.push_back(cv::Point2f(0, m_outputImageHeight - 1));
+        std::vector<cv::Point2f> markerCorners2D =
+        {
+            {0, 0},
+            {static_cast<float>(m_outputImageWidth) - 1, 0},
+            {static_cast<float>(m_outputImageWidth) - 1, static_cast<float>(m_outputImageWidth) - 1},
+            {0, static_cast<float>(m_outputImageWidth) - 1},
+        };
 
         cv::Mat cv_inputImg = SolAROpenCVHelper::mapToOpenCV(inputImg);
         patches.clear();
@@ -99,9 +104,10 @@ namespace OPENCV {
             // If the contour contains at least 4 points
             if (contours[i].size() >= 4)
             {
+                points.reserve(4);
                 for(unsigned int j =0; j < 4; ++j)
                 {
-                   points.push_back(cv::Point2f((contours[i])[j].getX(),(contours[i])[j].getY()));
+                   points.emplace_back((contours[i])[j].x(),(contours[i])[j].y());
                 }
                     // Find the perspective transformation that brings current marker to rectangular form
                 cv::Mat markerTransform = cv::getPerspectiveTransform(points, markerCorners2D);
@@ -110,11 +116,11 @@ namespace OPENCV {
                 cv::warpPerspective(cv_inputImg, cv_patch, markerTransform, patches_size);
                 SRef<Image> patch;
                 SolAROpenCVHelper::convertToSolar(cv_patch, patch);
-                patches.push_back(patch);
+                patches.emplace_back(patch);
             }
             // else add a empty image to ensure the order of contours and output corrected images.
             else
-                patches.push_back(nullptr);
+                patches.emplace_back(nullptr);
         }
         return FrameworkReturnCode::_SUCCESS;
     }

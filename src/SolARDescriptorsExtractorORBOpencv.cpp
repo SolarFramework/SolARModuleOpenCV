@@ -60,18 +60,19 @@ void SolARDescriptorsExtractorORBOpencv::extract(const SRef<Image> image, const 
     cv::Mat out_mat_descps;
 
     std::vector<cv::KeyPoint> transform_to_data;
+    transform_to_data.reserve(keypoints.size());
 
     for(const auto & keypoint : keypoints)
     {
-        transform_to_data.push_back(
-                    //instantiate keypoint
-                    cv::KeyPoint(keypoint.getX(),
-                                 keypoint.getY(),
-                                 keypoint.getSize(),
-                                 keypoint.getAngle(),
-                                 keypoint.getResponse(),
-                                 keypoint.getOctave(),
-                                 keypoint.getClassId())
+        transform_to_data.emplace_back(
+                        //instantiate keypoint
+                        keypoint.x(),
+                        keypoint.y(),
+                        keypoint.getSize(),
+                        keypoint.getAngle(),
+                        keypoint.getResponse(),
+                        keypoint.getOctave(),
+                        keypoint.getClassId()
                     );
     }
 
