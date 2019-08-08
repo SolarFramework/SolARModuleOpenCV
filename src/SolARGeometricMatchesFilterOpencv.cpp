@@ -49,7 +49,7 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
     std::vector<uchar> status(inputKeyPointsA.size());
     std::vector<cv::Point2f> pts1, pts2;
 
-    if(!inputMatches.empty() != 0u){
+    if(!inputMatches.empty()){
 
         // get Align matches
         pts1.reserve(inputMatches.size());
