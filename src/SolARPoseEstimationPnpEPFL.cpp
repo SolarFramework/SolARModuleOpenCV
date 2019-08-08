@@ -46,11 +46,11 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<Point
                                                          const std::vector<Point3Df> & worldPoints,
                                                          Transform3Df & pose,
                                                          const Transform3Df initialPose) {
-    SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(m_maxNumberCorrespondences);
+    set_maximum_number_of_correspondences(m_maxNumberCorrespondences);
     Transform3Df initialPoseInverse = initialPose.inverse();
     Eigen::Matrix3f R = initialPoseInverse.rotation();
     Eigen::Vector3f T = initialPoseInverse.translation();
-    SolARPoseEstimationPnpEPFL::reset_correspondences();
+    reset_correspondences();
 
     for (int i = 0; i < worldPoints.size(); i++) {
          double Xw, Yw, Zw, u, v;
@@ -61,10 +61,10 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<Point
          u = imagePoints[i].x();
          v = imagePoints[i].y();
 
-         SolARPoseEstimationPnpEPFL::add_correspondence(Xw, Yw, Zw, u, v);
+         add_correspondence(Xw, Yw, Zw, u, v);
       }
      double R_est[3][3], t_est[3];
-     double err2 = SolARPoseEstimationPnpEPFL::compute_pose(R_est, t_est);
+     double err2 = compute_pose(R_est, t_est);
 
      for (int i = 0; i < 3; ++i) {
          for (int j = 0; j < 3; ++j) {
@@ -102,14 +102,14 @@ void SolARPoseEstimationPnpEPFL::setCameraParameters(const CamCalibration & intr
     m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
     m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
 
-    SolARPoseEstimationPnpEPFL::set_internal_parameters(intrinsicParams(0,2),intrinsicParams(1,2),intrinsicParams(0,0),
+    set_internal_parameters(intrinsicParams(0,2),intrinsicParams(1,2),intrinsicParams(0,0),
                                                          intrinsicParams(1,1));
-    SolARPoseEstimationPnpEPFL::maximum_number_of_correspondences = 0;
-    SolARPoseEstimationPnpEPFL::number_of_correspondences = 0;
-    SolARPoseEstimationPnpEPFL::pws = nullptr;
-    SolARPoseEstimationPnpEPFL::us = nullptr;
-    SolARPoseEstimationPnpEPFL::alphas = nullptr;
-    SolARPoseEstimationPnpEPFL::pcs = nullptr;
+    maximum_number_of_correspondences = 0;
+    number_of_correspondences = 0;
+    pws = nullptr;
+    us = nullptr;
+    alphas = nullptr;
+    pcs = nullptr;
 }
 
 
