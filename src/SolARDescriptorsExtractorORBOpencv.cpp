@@ -15,7 +15,7 @@
  */
 
 #include "SolARDescriptorsExtractorORBOpencv.h"
-#include "SolARImageConvertorOpencv.h"
+#include "SolARImageConverterOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
 
@@ -49,9 +49,9 @@ void SolARDescriptorsExtractorORBOpencv::extract(const SRef<Image> image, const 
 
     if (image->getImageLayout() != Image::ImageLayout::LAYOUT_GREY) {
         // input Image not in grey levels : convert it !
-        SolARImageConvertorOpencv convertor;
+        SolARImageConverterOpencv converter;
         convertedImage = xpcf::utils::make_shared<Image>(Image::ImageLayout::LAYOUT_GREY,Image::PixelOrder::INTERLEAVED,image->getDataType());
-        convertor.convert(image,convertedImage);
+        converter.convert(image,convertedImage);
     }
 
     cv::Mat opencvImage;

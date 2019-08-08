@@ -63,7 +63,7 @@ void SolARDescriptorsExtractorAKAZE2Opencv::extract(const SRef<Image> image, con
     if (image->getImageLayout() != Image::ImageLayout::LAYOUT_GREY) {
         // input Image not in grey levels : convert it !
         convertedImage = xpcf::utils::make_shared<Image>(Image::ImageLayout::LAYOUT_GREY,Image::PixelOrder::INTERLEAVED,image->getDataType());
-        m_convertor.convert(image,convertedImage);
+        m_converter.convert(image,convertedImage);
     }
 
     cv::Mat opencvImage;

@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-#include "SolARImageConvertorUnity.h"
+#include "SolARImageConverterUnity.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/highgui/highgui.hpp"
 #include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageConvertorUnity)
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageConverterUnity)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARImageConvertorUnity::SolARImageConvertorUnity():ComponentBase(xpcf::toUUID<SolARImageConvertorUnity>())
+SolARImageConverterUnity::SolARImageConverterUnity():ComponentBase(xpcf::toUUID<SolARImageConverterUnity>())
 {  
-    declareInterface<api::image::IImageConvertor>(this);
+    declareInterface<api::image::IImageConverter>(this);
 }
 
 
-SolARImageConvertorUnity::~SolARImageConvertorUnity() = default;
+SolARImageConverterUnity::~SolARImageConverterUnity() = default;
 
 static std::map<std::pair<Image::ImageLayout,Image::ImageLayout>,int> convertMapInfos = {{{Image::ImageLayout::LAYOUT_RGB,Image::ImageLayout::LAYOUT_GREY},CV_RGB2GRAY},
                                                                                        {{Image::ImageLayout::LAYOUT_BGR,Image::ImageLayout::LAYOUT_GREY},CV_BGR2GRAY}};
 
-FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout)
+FrameworkReturnCode SolARImageConverterUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout)
 {
     cv::Mat opencvImage = SolAROpenCVHelper::mapToOpenCV(imgSrc);
     cv::flip(opencvImage, opencvImage,0);
@@ -48,7 +48,7 @@ FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<I
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst)
+FrameworkReturnCode SolARImageConverterUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst)
 {
    return FrameworkReturnCode::_SUCCESS;
 }

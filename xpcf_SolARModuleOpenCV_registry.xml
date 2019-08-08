@@ -77,9 +77,9 @@
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
       <interface uuid="0404e8b9-b824-4852-a34d-6eafa7563918" name="I2DTO3DTransformDecomposer" description="I2DTO3DTransformDecomposer"/>
     </component>        
-    <component uuid="fd7fb607-144f-418c-bcf2-f7cf71532c22" name="SolARImageConvertorOpencv" description="SolARImageConvertorOpencv">
+    <component uuid="fd7fb607-144f-418c-bcf2-f7cf71532c22" name="SolARImageConverterOpencv" description="SolARImageConverterOpencv">
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-      <interface uuid="9c982719-6cb4-4831-aa88-9e01afacbd16" name="IImageConvertor" description="IImageConvertor"/>
+      <interface uuid="9c982719-6cb4-4831-aa88-9e01afacbd16" name="IImageConverter" description="IImageConverter"/>
     </component>
     <component uuid="e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2" name="SolARImageFilterBinaryOpencv" description="SolARImageFilterBinaryOpencv">
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>

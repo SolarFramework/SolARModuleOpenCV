@@ -39,8 +39,8 @@ class SolARFundamentalMatrixEstimationOpencv;
 class SolARGeometricMatchesFilterOpencv;
 class SolARHomographyEstimationOpencv;
 class SolARHomographyMatrixDecomposerOpencv;
-class SolARImageConvertorOpencv;
-class SolARImageConvertorUnity;
+class SolARImageConverterOpencv;
+class SolARImageConverterUnity;
 class SolARImageFilterBinaryOpencv;
 class SolARImageFilterAdaptiveBinaryOpencv;
 class SolARImageFilterBlurOpencv;
@@ -162,14 +162,14 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARHomographyMatrixDecomp
                              "SolARHomographyMatrixDecomposerOpencv",
                              "Decomposes a homography matrix to extract four possible 3D poses.")
 
-XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv,
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageConverterOpencv,
                              "fd7fb607-144f-418c-bcf2-f7cf71532c22",
-                             "SolARImageConvertorOpencv",
+                             "SolARImageConverterOpencv",
                              "Converts an image according to a given expected layout.")
 
-XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageConvertorUnity,
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageConverterUnity,
                              "65282fb3-6651-4e73-b532-5a64ade0ead0",
-                             "SolARImageConvertorUnity",
+                             "SolARImageConverterUnity",
                              "Converts an image to be compliant with Unity image format and layout.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterBinaryOpencv,
