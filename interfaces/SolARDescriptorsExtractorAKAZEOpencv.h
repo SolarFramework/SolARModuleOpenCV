@@ -50,7 +50,7 @@ public:
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() final;
     void unloadComponent () final;
-    inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE") ;};
+    std::string getTypeString() override { return std::string("DescriptorsExtractorType::AKAZE") ;};
 
     /// @brief Extracts a set of descriptors from a given image around a set of keypoints based on AKAZE algorithm
     /// "Fast explicit diffusion for acceleratedfeatures in nonlinear scale space"
