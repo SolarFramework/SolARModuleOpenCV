@@ -3,8 +3,9 @@ cmake_minimum_required(VERSION 3.7.2)
 ##################################################
 set (VERSION_NUMBER "0.6.0")
 project("SolARModuleOpenCV")
-set (SOURCES 
+set (SOURCES
     src/SolARModuleOpencv.cpp
+	src/SolARBaseCameraOpencv.cpp
     src/SolARKeypointDetectorOpencv.cpp
 	src/SolARKeypointDetectorRegionOpencv.cpp
     src/SolARImageLoaderOpencv.cpp
@@ -60,6 +61,7 @@ set (SOURCES
 
 set (HEADERS
     interfaces/SolARCameraOpencv.h
+	interfaces/SolARBaseCameraOpencv.h
     interfaces/SolARImageConvertorOpencv.h
 	interfaces/SolARImageConvertorUnity.h
     interfaces/SolARImageLoaderOpencv.h
@@ -121,7 +123,7 @@ install (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xpcf_SolARModuleOpenCV_registry.xml"
 ##################################################
 
 # various macros
-include("$ENV{BCOMDEVROOT}/bcomBuild/SolARFramework/solarmacros.cmake")
+include("$ENV{BCOMDEVROOT}/SolARFramework/solarmacros.cmake")
 # config setup
 setup()
 # process packagedependencies.txt
