@@ -38,22 +38,24 @@ namespace SolAR {
             FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(const SRef<Keyframe> referenceKeyframe,
                                                                            const SRef<Frame> currentFrame,
                                                                            const std::vector<DescriptorMatch> & current_matches,
-                                                                           std::vector<CloudPoint> & shared_mapPoint,
+																		   const SRef<Map> worldMap,
                                                                            std::vector<Point3Df> & shared_3dpoint,
                                                                            std::vector<Point2Df> & shared_2dpoint,
                                                                            std::vector<DescriptorMatch> & found_matches,
                                                                            std::vector<DescriptorMatch> & remaining_matches){
 
 
-                 const std::map<unsigned int, CloudPoint> keyframeVisibility = referenceKeyframe->getVisibleMapPoints();
+                 const std::map<unsigned int, unsigned int> keyframeVisibility = referenceKeyframe->getVisibleMapPoints();
                  const std::vector<Keypoint> current_kpoints =  currentFrame->getKeypoints();
+
+				 std::vector<CloudPoint> cloudPoint = worldMap->getPointCloud();
+
                  for (int j = 0; j < current_matches.size(); ++j)
                  {
-                    std::map<unsigned int, CloudPoint>::const_iterator it= keyframeVisibility.find(current_matches[j].getIndexInDescriptorA());
+                    std::map<unsigned int, unsigned int>::const_iterator it= keyframeVisibility.find(current_matches[j].getIndexInDescriptorA());
                     if (it != keyframeVisibility.end())
                     {
-                            shared_mapPoint.push_back(it->second) ;
-                            shared_3dpoint.push_back(Point3Df(it->second.getX(),it->second.getY(),it->second.getZ()));
+                            shared_3dpoint.push_back(Point3Df(cloudPoint[it->second].getX(), cloudPoint[it->second].getY(), cloudPoint[it->second].getZ()));
                             shared_2dpoint.push_back(Point2Df(current_kpoints[current_matches[j].getIndexInDescriptorB()].getX(),
                                                                               current_kpoints[current_matches[j].getIndexInDescriptorB()].getY()));
                             found_matches.push_back(current_matches[j]);
@@ -71,26 +73,28 @@ namespace SolAR {
 			FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(	const SRef<Frame> lastFrame,
 																			const SRef<Frame> currentFrame,
                                                                             const std::vector<DescriptorMatch> & current_matches,
-                                                                            std::vector<CloudPoint> & shared_mapPoint,
+																			const SRef<Map> worldMap,
                                                                             std::vector<Point3Df> & shared_3dpoint,
                                                                             std::vector<Point2Df> & shared_2dpoint,
 																			std::vector<DescriptorMatch> & found_matches,
 																			std::vector<DescriptorMatch> & remaining_matches) {
 
 				const std::map<unsigned int, unsigned int> kpKeyframeVisibility = lastFrame->getVisibleKeypoints();
-                const std::map<unsigned int, CloudPoint> frameVisibility = lastFrame->getReferenceKeyframe()->getVisibleMapPoints();
+                const std::map<unsigned int, unsigned int> cpVisibility = lastFrame->getReferenceKeyframe()->getVisibleMapPoints();
                 const std::vector<Keypoint> current_kpoints = currentFrame->getKeypoints();
+
+				std::vector<CloudPoint> cloudPoint = worldMap->getPointCloud();
+
 				std::map<unsigned int, unsigned int> newKpKeyframeVisibility;
 				for (int j = 0; j < current_matches.size(); ++j)
 				{
 					std::map<unsigned int, unsigned int>::const_iterator it_kp = kpKeyframeVisibility.find(current_matches[j].getIndexInDescriptorA());
 					if (it_kp != kpKeyframeVisibility.end()) {
 						newKpKeyframeVisibility[current_matches[j].getIndexInDescriptorB()] = it_kp->second;
-                        std::map<unsigned int, CloudPoint>::const_iterator it_pcl = frameVisibility.find(it_kp->second);
-						if (it_pcl != frameVisibility.end())
+                        std::map<unsigned int, unsigned int>::const_iterator it_pcl = cpVisibility.find(it_kp->second);
+						if (it_pcl != cpVisibility.end())
 						{
-							shared_mapPoint.push_back(it_pcl->second);
-                            shared_3dpoint.push_back(Point3Df(it_pcl->second.getX(), it_pcl->second.getY(), it_pcl->second.getZ()));
+                            shared_3dpoint.push_back(Point3Df(cloudPoint[it_pcl->second].getX(), cloudPoint[it_pcl->second].getY(), cloudPoint[it_pcl->second].getZ()));
                             shared_2dpoint.push_back(Point2Df(current_kpoints[current_matches[j].getIndexInDescriptorB()].getX(),
                                 current_kpoints[current_matches[j].getIndexInDescriptorB()].getY()));
 							found_matches.push_back(DescriptorMatch(it_kp->second, current_matches[j].getIndexInDescriptorB(), current_matches[j].getMatchingScore()));							
