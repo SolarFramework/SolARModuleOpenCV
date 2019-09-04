@@ -3,6 +3,7 @@ QT       -= core gui
 CONFIG -= qt
 
 ## global defintions : target lib name, version
+INSTALLSUBDIR = SolARBuild
 TARGET = SolARModuleOpenCV
 FRAMEWORK = $$TARGET
 VERSION=0.6.0
