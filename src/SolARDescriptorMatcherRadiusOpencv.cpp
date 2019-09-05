@@ -73,10 +73,10 @@ namespace SolAR {
         cv::Mat cvDescriptors2(desc2->getNbDescriptors(), desc2->getNbElements(), type_conversion);
         cvDescriptors2.data=(uchar*)desc2->data();
 
-        if (desc1->getDescriptorDataType() != DescriptorBuffer::TYPE_32F){
+        if (desc1->getDescriptorDataType() != DescriptorDataType::TYPE_32F){
             cvDescriptors1.convertTo(cvDescriptors1, CV_32F);
         }
-        if (desc2->getDescriptorDataType() != DescriptorBuffer::TYPE_32F){
+        if (desc2->getDescriptorDataType() != DescriptorDataType::TYPE_32F){
             cvDescriptors2.convertTo(cvDescriptors2, CV_32F);
         }
 
@@ -113,7 +113,7 @@ namespace SolAR {
         cv::Mat cvDescriptors1(descriptors1->getNbDescriptors(), descriptors1->getNbElements(), type_conversion);
         cvDescriptors1.data=(uchar*)descriptors1->data();
 
-        if (descriptors1->getDescriptorDataType() != DescriptorBuffer::TYPE_32F){
+        if (descriptors1->getDescriptorDataType() != DescriptorDataType::TYPE_32F){
             cvDescriptors1.convertTo(cvDescriptors1, CV_32F);
         }
 
@@ -125,7 +125,7 @@ namespace SolAR {
             cv::Mat cvDescriptor(descriptors2[k]->getNbDescriptors(), descriptors2[k]->getNbElements(), type_conversion);
             cvDescriptor.data=(uchar*)(descriptors2[k]->data());
 
-            if (descriptors2[k]->getDescriptorDataType() != DescriptorBuffer::TYPE_32F){
+            if (descriptors2[k]->getDescriptorDataType() != DescriptorDataType::TYPE_32F){
                 cvDescriptor.convertTo(cvDescriptor, CV_32F);
             }
 

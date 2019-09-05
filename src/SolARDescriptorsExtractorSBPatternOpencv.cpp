@@ -36,7 +36,7 @@ namespace OPENCV {
     {
         SquaredBinaryPatternMatrix matrix = pattern.getPatternMatrix();
 
-        descriptor = xpcf::utils::make_shared<DescriptorBuffer>(DescriptorBuffer::SBPATTERN, DescriptorBuffer::TYPE_8U, matrix.rows() * matrix.cols(), 1);
+        descriptor = xpcf::utils::make_shared<DescriptorBuffer>(DescriptorType::SBPATTERN, DescriptorDataType::TYPE_8U, matrix.rows() * matrix.cols(), 1);
         unsigned char* descriptorData = (unsigned char*)descriptor->data();
 
         int nbCols = matrix.cols();
@@ -64,11 +64,11 @@ namespace OPENCV {
         }
         if (recognizedPatterns.size()== 0)
         {
-            pattern_descriptors = xpcf::utils::make_shared<DescriptorBuffer>(DescriptorBuffer::SBPATTERN, DescriptorBuffer::TYPE_8U, m_patternSize*m_patternSize, 0);
+            pattern_descriptors = xpcf::utils::make_shared<DescriptorBuffer>(DescriptorType::SBPATTERN, DescriptorDataType::TYPE_8U, m_patternSize*m_patternSize, 0);
             return FrameworkReturnCode::_SUCCESS;
         }
 
-        pattern_descriptors = xpcf::utils::make_shared<DescriptorBuffer>(DescriptorBuffer::SBPATTERN, DescriptorBuffer::TYPE_8U, m_patternSize*m_patternSize, recognizedPatterns.size()*4);
+        pattern_descriptors = xpcf::utils::make_shared<DescriptorBuffer>(DescriptorType::SBPATTERN, DescriptorDataType::TYPE_8U, m_patternSize*m_patternSize, recognizedPatterns.size()*4);
         int descriptor_size = pattern_descriptors->getDescriptorByteSize();
 
         for (i = 0; i < recognizedPatterns.size(); i++)

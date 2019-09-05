@@ -132,7 +132,7 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match
     cv::Mat cvDescriptors1(descriptors1->getNbDescriptors(), descriptors1->getNbElements(), type_conversion);
     cvDescriptors1.data=(uchar*)descriptors1->data();
  
-    if (descriptors1->getDescriptorDataType() != DescriptorBuffer::TYPE_32F)
+    if (descriptors1->getDescriptorDataType() != DescriptorDataType::TYPE_32F)
        cvDescriptors1.convertTo(cvDescriptors1, CV_32F);
  
     std::vector<cv::Mat> cvDescriptors;
@@ -143,7 +143,7 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match
         cv::Mat cvDescriptor(descriptors2[k]->getNbDescriptors(), descriptors2[k]->getNbElements(), type_conversion);
         cvDescriptor.data=(uchar*)(descriptors2[k]->data());
  
-        if (descriptors2[k]->getDescriptorDataType() != DescriptorBuffer::TYPE_32F)
+        if (descriptors2[k]->getDescriptorDataType() != DescriptorDataType::TYPE_32F)
            cvDescriptor.convertTo(cvDescriptor, CV_32F);
  
         cvDescriptors.push_back(cvDescriptor);

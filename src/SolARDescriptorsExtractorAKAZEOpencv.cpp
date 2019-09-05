@@ -90,7 +90,7 @@ void SolARDescriptorsExtractorAKAZEOpencv::extract(const SRef<Image> image, cons
 
    m_extractor->compute(opencvImage, transform_to_data, out_mat_descps);
 
-   descriptors.reset( new DescriptorBuffer(out_mat_descps.data,DescriptorBuffer::AKAZE, DescriptorBuffer::TYPE_8U, 61, out_mat_descps.rows)) ;
+   descriptors.reset( new DescriptorBuffer(out_mat_descps.data, DescriptorType::AKAZE, DescriptorDataType::TYPE_8U, 61, out_mat_descps.rows)) ;
 
 }
 

@@ -413,9 +413,9 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 		// calculate the mean of two features
 		cv::Mat cvDescMean;
 
-		if (descriptor1->getDescriptorDataType() == DescriptorBuffer::DataType::TYPE_8U){
-			Descriptor8U desc_1 = descriptor1->getDescriptor<DescriptorBuffer::DataType::TYPE_8U>(matches[i].getIndexInDescriptorA());
-			Descriptor8U desc_2 = descriptor1->getDescriptor<DescriptorBuffer::DataType::TYPE_8U>(matches[i].getIndexInDescriptorB());
+		if (descriptor1->getDescriptorDataType() == DescriptorDataType::TYPE_8U){
+			Descriptor8U desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_8U>(matches[i].getIndexInDescriptorA());
+			Descriptor8U desc_2 = descriptor1->getDescriptor<DescriptorDataType::TYPE_8U>(matches[i].getIndexInDescriptorB());
 
 			cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
 			cvDesc1.data = (uchar*)desc_1.data();
@@ -426,8 +426,8 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 			cvDescMean = (cvDesc1 + cvDesc2) / 2;
 		}
 		else {
-			Descriptor32F desc_1 = descriptor1->getDescriptor<DescriptorBuffer::DataType::TYPE_32F>(matches[i].getIndexInDescriptorA());
-			Descriptor32F desc_2 = descriptor1->getDescriptor<DescriptorBuffer::DataType::TYPE_32F>(matches[i].getIndexInDescriptorB());
+			Descriptor32F desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_32F>(matches[i].getIndexInDescriptorA());
+			Descriptor32F desc_2 = descriptor1->getDescriptor<DescriptorDataType::TYPE_32F>(matches[i].getIndexInDescriptorB());
 
 			cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
 			cvDesc1.data = (uchar*)desc_1.data();

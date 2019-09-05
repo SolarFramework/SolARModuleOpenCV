@@ -77,7 +77,7 @@ void SolARDescriptorsExtractorORBOpencv::extract(const SRef<Image> image, const 
 
     m_extractor->compute(opencvImage, transform_to_data, out_mat_descps);
 
-    descriptors.reset( new DescriptorBuffer(out_mat_descps.data,DescriptorBuffer::ORB, DescriptorBuffer::TYPE_8U, 32, out_mat_descps.rows)) ;
+    descriptors.reset( new DescriptorBuffer(out_mat_descps.data, DescriptorType::ORB, DescriptorDataType::TYPE_8U, 32, out_mat_descps.rows)) ;
     
 }
 

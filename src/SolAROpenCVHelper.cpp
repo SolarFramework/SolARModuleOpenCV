@@ -28,8 +28,8 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-static std::map<DescriptorBuffer::DataType,uint32_t> solarDescriptor2cvType =
-{{ DescriptorBuffer::DataType::TYPE_8U,CV_8U},{DescriptorBuffer::DataType::TYPE_32F,CV_32F}};
+static std::map<DescriptorDataType,uint32_t> solarDescriptor2cvType =
+{{ DescriptorDataType::TYPE_8U,CV_8U},{DescriptorDataType::TYPE_32F,CV_32F}};
 
 
 
@@ -38,7 +38,7 @@ static std::map<std::tuple<uint32_t,std::size_t,uint32_t>,int> solar2cvTypeConve
 static std::map<int,std::pair<Image::ImageLayout,Image::DataType>> cv2solarTypeConvertMap = {{CV_8UC3,{Image::ImageLayout::LAYOUT_BGR,Image::DataType::TYPE_8U}},
                                                                                                       {CV_8UC1,{Image::ImageLayout::LAYOUT_GREY,Image::DataType::TYPE_8U}}};
 
-uint32_t SolAROpenCVHelper::deduceOpenDescriptorCVType(DescriptorBuffer::DataType querytype){
+uint32_t SolAROpenCVHelper::deduceOpenDescriptorCVType(DescriptorDataType querytype){
     return solarDescriptor2cvType.at(querytype);
 }
 
