@@ -252,8 +252,8 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
     return mse[0];
 }
 
-double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & pointsView1,
-                                                const std::vector<Keypoint> & pointsView2,
+double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & keypointsView1,
+                                                const std::vector<Keypoint> & keypointsView2,
                                                 const std::vector<DescriptorMatch> & matches,
                                                 const std::pair<unsigned int,unsigned int> & working_views,
                                                 const Transform3Df & poseView1,
@@ -287,13 +287,13 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & po
     KPose1 = m_camMatrix * cv::Mat(Pose1);
 
     for (int i = 0; i<pts_size; i++) {
-        cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()].getX(),pointsView1[matches[i].getIndexInDescriptorA()].getY());
+        cv::Point2f kp1 = cv::Point2f(keypointsView1[matches[i].getIndexInDescriptorA()].getX(), keypointsView1[matches[i].getIndexInDescriptorA()].getY());
         cv::Point3d u1(kp1.x, kp1.y, 1.0);
         // um1 represents an homogenous point in 3D camera space positionned on the image plan
         cv::Mat_<double> um1 = Kinv * cv::Mat_<double>(u1);
         u1.x = um1(0); u1.y = um1(1); u1.z = um1(2);
 
-        cv::Point2f kp2 = cv::Point2f(pointsView2[matches[i].getIndexInDescriptorB()].getX(),pointsView2[matches[i].getIndexInDescriptorB()].getY());
+        cv::Point2f kp2 = cv::Point2f(keypointsView2[matches[i].getIndexInDescriptorB()].getX(), keypointsView2[matches[i].getIndexInDescriptorB()].getY());
         cv::Point3d u2(kp2.x, kp2.y, 1.0);
         // um1 represents an homogenous point in 3D camera space positionned on the image plan
         cv::Mat_<double> um2 = Kinv * cv::Mat_<double>(u2);
@@ -324,7 +324,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & po
         std::map<unsigned int, unsigned int> visibility;
 
         visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
-        visibility[working_views.second] = matches[i].getIndexInDescriptorB();
+        visibility[working_views.second] = matches[i].getIndexInDescriptorB();		
 
         CloudPoint cp(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
         pcloud.push_back(cp);
@@ -332,6 +332,121 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & po
     cv::Scalar mse = cv::mean(reproj_error);
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
     return mse[0];
+}
+
+double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& keypointsView1, 
+												const std::vector<Keypoint>& keypointsView2, 
+												SRef<DescriptorBuffer>& descriptor1, 
+												SRef<DescriptorBuffer>& descriptor2, 
+												const std::vector<DescriptorMatch>& matches, 
+												const std::pair<unsigned int, unsigned int>& working_views, 
+												const Transform3Df & poseView1, 
+												const Transform3Df & poseView2, 
+												std::vector<CloudPoint>& pcloud)
+{
+	Transform3Df poseView1Inverse = poseView1.inverse();
+	Transform3Df poseView2Inverse = poseView2.inverse();
+	cv::Matx34d Pose1(poseView1Inverse(0, 0), poseView1Inverse(0, 1), poseView1Inverse(0, 2), poseView1Inverse(0, 3),
+		poseView1Inverse(1, 0), poseView1Inverse(1, 1), poseView1Inverse(1, 2), poseView1Inverse(1, 3),
+		poseView1Inverse(2, 0), poseView1Inverse(2, 1), poseView1Inverse(2, 2), poseView1Inverse(2, 3));
+
+
+
+	cv::Matx34d Pose2(poseView2Inverse(0, 0), poseView2Inverse(0, 1), poseView2Inverse(0, 2), poseView2Inverse(0, 3),
+		poseView2Inverse(1, 0), poseView2Inverse(1, 1), poseView2Inverse(1, 2), poseView2Inverse(1, 3),
+		poseView2Inverse(2, 0), poseView2Inverse(2, 1), poseView2Inverse(2, 2), poseView2Inverse(2, 3));
+
+	cv::Mat_<double> Kinv;
+
+	cv::invert(m_camMatrix, Kinv);
+	//std::cout<<"KInv :" << Kinv <<std::endl;
+	double t = cv::getTickCount();
+	// Create a vector to store the reprojection error of each triangulated 3D points
+	std::vector<double> reproj_error;
+	// unsigned int pts_size = pt2d_1.size();
+	unsigned int pts_size = matches.size();
+
+	// KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
+	cv::Mat_<double> KPose1;
+	KPose1 = m_camMatrix * cv::Mat(Pose1);
+
+	for (int i = 0; i < pts_size; i++) {
+		cv::Point2f kp1 = cv::Point2f(keypointsView1[matches[i].getIndexInDescriptorA()].getX(), keypointsView1[matches[i].getIndexInDescriptorA()].getY());
+		cv::Point3d u1(kp1.x, kp1.y, 1.0);
+		// um1 represents an homogenous point in 3D camera space positionned on the image plan
+		cv::Mat_<double> um1 = Kinv * cv::Mat_<double>(u1);
+		u1.x = um1(0); u1.y = um1(1); u1.z = um1(2);
+
+		cv::Point2f kp2 = cv::Point2f(keypointsView2[matches[i].getIndexInDescriptorB()].getX(), keypointsView2[matches[i].getIndexInDescriptorB()].getY());
+		cv::Point3d u2(kp2.x, kp2.y, 1.0);
+		// um1 represents an homogenous point in 3D camera space positionned on the image plan
+		cv::Mat_<double> um2 = Kinv * cv::Mat_<double>(u2);
+		u2.x = um2(0); u2.y = um2(1); u2.z = um2(2);
+
+		//std::cout<<"point1: "<< kp1 <<", u1: "<<u1<<std::endl;
+		//std::cout<<"P1: "<<Pose1<<std::endl;
+
+		//std::cout<<"point2: "<< kp2 <<", u2: "<<u2<<std::endl;
+		//std::cout<<"P2: "<<Pose2<<std::endl;
+
+		// Compute the position of the 3D point projected in u1 for the camera1 with Pose1 and projected in u2 for the camera 2 with Pose 2
+
+		cv::Mat_<double> X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
+		//double error;
+
+
+		//std::cout<<"X: "<<X<<std::endl;
+
+		// Reproject this point on the image plane of the second camera
+		cv::Mat_<double> xPt_img1 = KPose1 * X;				//reproject
+		cv::Point2f xPt_img_1(xPt_img1(0) / xPt_img1(2), xPt_img1(1) / xPt_img1(2));
+
+		double reprj_err = norm(xPt_img_1 - kp1);
+
+		reproj_error.push_back(reprj_err);
+
+		std::map<unsigned int, unsigned int> visibility;
+
+		visibility[working_views.first] = matches[i].getIndexInDescriptorA();
+		visibility[working_views.second] = matches[i].getIndexInDescriptorB();
+
+		// calculate the mean of two features
+		cv::Mat cvDescMean;
+
+		if (descriptor1->getDescriptorDataType() == DescriptorBuffer::DataType::TYPE_8U){
+			Descriptor8U desc_1 = descriptor1->getDescriptor<DescriptorBuffer::DataType::TYPE_8U>(matches[i].getIndexInDescriptorA());
+			Descriptor8U desc_2 = descriptor1->getDescriptor<DescriptorBuffer::DataType::TYPE_8U>(matches[i].getIndexInDescriptorB());
+
+			cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
+			cvDesc1.data = (uchar*)desc_1.data();
+
+			cv::Mat cvDesc2(1, desc_2.length(), desc_2.type());
+			cvDesc2.data = (uchar*)desc_2.data();
+
+			cvDescMean = (cvDesc1 + cvDesc2) / 2;
+		}
+		else {
+			Descriptor32F desc_1 = descriptor1->getDescriptor<DescriptorBuffer::DataType::TYPE_32F>(matches[i].getIndexInDescriptorA());
+			Descriptor32F desc_2 = descriptor1->getDescriptor<DescriptorBuffer::DataType::TYPE_32F>(matches[i].getIndexInDescriptorB());
+
+			cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
+			cvDesc1.data = (uchar*)desc_1.data();
+
+			cv::Mat cvDesc2(1, desc_2.length(), desc_2.type());
+			cvDesc2.data = (uchar*)desc_2.data();
+
+			cvDescMean = (cvDesc1 + cvDesc2) / 2;
+		}
+
+		SRef<DescriptorBuffer> descMean = xpcf::utils::make_shared<DescriptorBuffer>(cvDescMean.data, descriptor1->getDescriptorType(), descriptor1->getDescriptorDataType(), descriptor1->getNbElements(), 1);
+
+		// make a new cloud point
+		CloudPoint cp(X(0), X(1), X(2), 0.0, 0.0, 0.0, reprj_err, visibility, descMean);
+		pcloud.push_back(cp);
+	}
+	cv::Scalar mse = cv::mean(reproj_error);
+	t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+	return mse[0];
 }
 
 double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> & curKeyframe,
@@ -342,6 +457,8 @@ double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> & curKeyfra
 
     return triangulate(refKeyframe->getKeypoints(),
                        curKeyframe->getKeypoints(),
+					   refKeyframe->getDescriptors(),
+					   curKeyframe->getDescriptors(),
                        matches,
                        std::make_pair(refKeyframe->m_idx,curKeyframe->m_idx),
                        refKeyframe->getPose(),
