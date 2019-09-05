@@ -336,8 +336,8 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
 
 double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& keypointsView1, 
 												const std::vector<Keypoint>& keypointsView2, 
-												SRef<DescriptorBuffer>& descriptor1, 
-												SRef<DescriptorBuffer>& descriptor2, 
+												const SRef<DescriptorBuffer>& descriptor1,
+												const SRef<DescriptorBuffer>& descriptor2,
 												const std::vector<DescriptorMatch>& matches, 
 												const std::pair<unsigned int, unsigned int>& working_views, 
 												const Transform3Df & poseView1, 
@@ -457,8 +457,8 @@ double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> & curKeyfra
 
     return triangulate(refKeyframe->getKeypoints(),
                        curKeyframe->getKeypoints(),
-					   refKeyframe->getDescriptors(),
-					   curKeyframe->getDescriptors(),
+                       refKeyframe->getDescriptors(),
+                       curKeyframe->getDescriptors(),
                        matches,
                        std::make_pair(refKeyframe->m_idx,curKeyframe->m_idx),
                        refKeyframe->getPose(),
