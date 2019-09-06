@@ -85,12 +85,12 @@ namespace SolAR {
 
 				std::vector<CloudPoint> cloudPoint = worldMap->getPointCloud();
 
-				std::map<unsigned int, unsigned int> newMapVisibility;
+				//std::map<unsigned int, unsigned int> newMapVisibility;
 				for (int j = 0; j < current_matches.size(); ++j)
 				{
 					std::map<unsigned int, unsigned int>::const_iterator it_cp = mapVisibility.find(current_matches[j].getIndexInDescriptorA());
 					if (it_cp != mapVisibility.end()) {
-						newMapVisibility[current_matches[j].getIndexInDescriptorB()] = it_cp->second;
+						//newMapVisibility[current_matches[j].getIndexInDescriptorB()] = it_cp->second;
                         shared_3dpoint.push_back(Point3Df(cloudPoint[it_cp->second].getX(), cloudPoint[it_cp->second].getY(), cloudPoint[it_cp->second].getZ()));
                         shared_2dpoint.push_back(Point2Df(current_kpoints[current_matches[j].getIndexInDescriptorB()].getX(),
                             current_kpoints[current_matches[j].getIndexInDescriptorB()].getY()));
@@ -101,7 +101,7 @@ namespace SolAR {
 					}
 				}
 
-				currentFrame->addVisibleMapPoints(newMapVisibility);
+				//currentFrame->addVisibleMapPoints(newMapVisibility);
 
 				// std::cout<<" point cloud size: "<<cloud.size()<<" shared: "<<shared_3dpoint.size()<<std::endl;
 				return FrameworkReturnCode::_SUCCESS;
