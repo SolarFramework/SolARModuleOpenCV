@@ -176,6 +176,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
                                                 const Transform3Df & poseView1,
                                                 const Transform3Df & poseView2,
                                                 std::vector<CloudPoint> & pcloud){
+	pcloud.clear();
 
     Transform3Df poseView1Inverse = poseView1.inverse();
     Transform3Df poseView2Inverse = poseView2.inverse();
@@ -259,6 +260,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
                                                 const Transform3Df & poseView1,
                                                 const Transform3Df & poseView2,
                                                 std::vector<CloudPoint> & pcloud){
+	pcloud.clear();
 
     Transform3Df poseView1Inverse = poseView1.inverse();
     Transform3Df poseView2Inverse = poseView2.inverse();
@@ -344,6 +346,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 												const Transform3Df & poseView2, 
 												std::vector<CloudPoint>& pcloud)
 {
+	pcloud.clear();
 	Transform3Df poseView1Inverse = poseView1.inverse();
 	Transform3Df poseView2Inverse = poseView2.inverse();
 	cv::Matx34d Pose1(poseView1Inverse(0, 0), poseView1Inverse(0, 1), poseView1Inverse(0, 2), poseView1Inverse(0, 3),
