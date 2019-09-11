@@ -128,22 +128,19 @@ namespace SolAR {
         cv::vconcat(cvDescriptors,cvDescriptors2);
 
 
-        int nbOfMatches=1;
+        int nbOfMatches=2;
 
         if(cvDescriptors2.rows<nbOfMatches)
             return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;
-
-        std::vector<std::vector<cv::DMatch>> initial_matches;
-        std::vector<cv::DMatch> good_matches;
 
         std::vector< std::vector<cv::DMatch> > nn_matches;
         m_matcher.knnMatch(cvDescriptors1, cvDescriptors2, nn_matches,nbOfMatches);
 
         for(unsigned i = 0; i < nn_matches.size(); i++) {
-            //if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
+            if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
                 matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
             }
-        //}
+        }
 
         return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;
 

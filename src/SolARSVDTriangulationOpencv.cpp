@@ -417,20 +417,20 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 		cv::Mat cvDescMean;
 
 		if (descriptor1->getDescriptorDataType() == DescriptorDataType::TYPE_8U){
-			Descriptor8U desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_8U>(matches[i].getIndexInDescriptorA());
-			Descriptor8U desc_2 = descriptor1->getDescriptor<DescriptorDataType::TYPE_8U>(matches[i].getIndexInDescriptorB());
+			DescriptorView8U desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_8U>(matches[i].getIndexInDescriptorA());
+			DescriptorView8U desc_2 = descriptor2->getDescriptor<DescriptorDataType::TYPE_8U>(matches[i].getIndexInDescriptorB());
 
 			cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
 			cvDesc1.data = (uchar*)desc_1.data();
 
 			cv::Mat cvDesc2(1, desc_2.length(), desc_2.type());
 			cvDesc2.data = (uchar*)desc_2.data();
-
-			cvDescMean = (cvDesc1 + cvDesc2) / 2;
+			
+			cvDescMean = cvDesc1 / 2 + cvDesc2 / 2;
 		}
 		else {
-			Descriptor32F desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_32F>(matches[i].getIndexInDescriptorA());
-			Descriptor32F desc_2 = descriptor1->getDescriptor<DescriptorDataType::TYPE_32F>(matches[i].getIndexInDescriptorB());
+			DescriptorView32F desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_32F>(matches[i].getIndexInDescriptorA());
+			DescriptorView32F desc_2 = descriptor2->getDescriptor<DescriptorDataType::TYPE_32F>(matches[i].getIndexInDescriptorB());
 
 			cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
 			cvDesc1.data = (uchar*)desc_1.data();
@@ -438,7 +438,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 			cv::Mat cvDesc2(1, desc_2.length(), desc_2.type());
 			cvDesc2.data = (uchar*)desc_2.data();
 
-			cvDescMean = (cvDesc1 + cvDesc2) / 2;
+			cvDescMean = cvDesc1 / 2 + cvDesc2 / 2;
 		}
 
 		SRef<DescriptorBuffer> descMean = xpcf::utils::make_shared<DescriptorBuffer>(cvDescMean.data, descriptor1->getDescriptorType(), descriptor1->getDescriptorDataType(), descriptor1->getNbElements(), 1);
