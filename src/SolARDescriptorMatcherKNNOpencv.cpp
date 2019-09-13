@@ -146,6 +146,91 @@ namespace SolAR {
 
     }
 
+	IDescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::matchInRegion(const std::vector<Point2Df>& points2D, const std::vector<SRef<DescriptorBuffer>>& descriptors, const SRef<Frame> frame, std::vector<DescriptorMatch>& matches, const float radius)
+	{
+
+		matches.clear();
+
+		SRef<DescriptorBuffer> descriptorFrame = frame->getDescriptors();
+
+		if (descriptors.size() == 0 || descriptorFrame->getNbDescriptors() == 0)
+			return IDescriptorMatcher::RetCode::DESCRIPTOR_EMPTY;
+
+		// check if the descriptors type match
+		if (descriptorFrame->getDescriptorType() != descriptors[0]->getDescriptorType()) {
+			return IDescriptorMatcher::RetCode::DESCRIPTORS_DONT_MATCH;
+		}
+
+		if (points2D.size() != descriptors.size()) {			
+			return IDescriptorMatcher::RetCode::DESCRIPTOR_TYPE_UNDEFINED;
+		}		
+
+		uint32_t type_conversion = SolAROpenCVHelper::deduceOpenDescriptorCVType(descriptorFrame->getDescriptorDataType());
+
+		// convert frame descriptor to opencv's descriptor
+		cv::Mat cvDescriptorFrame(descriptorFrame->getNbDescriptors(), descriptorFrame->getNbElements(), type_conversion);
+		cvDescriptorFrame.data = (uchar*)descriptorFrame->data();
+
+		std::vector<cv::Mat> cvDescriptors;
+		for (unsigned k = 0; k < descriptors.size(); k++) {
+			cv::Mat cvDescriptor(descriptors[k]->getNbDescriptors(), descriptors[k]->getNbElements(), type_conversion);
+			cvDescriptor.data = (uchar*)(descriptors[k]->data());
+			cvDescriptors.push_back(cvDescriptor);
+		}
+
+		// init kd tree to accelerate searching		
+		const std::vector<Keypoint> &keypointsFrame = frame->getKeypoints();
+		std::vector<cv::Point2f> pointsForSearch;
+		for (auto &it : keypointsFrame)
+			pointsForSearch.push_back(cv::Point2f(it.getX(), it.getY()));
+
+		cv::flann::KDTreeIndexParams indexParams;
+		cv::flann::Index kdtree(cv::Mat(pointsForSearch).reshape(1), indexParams);
+
+		int imgWidth = frame->getView()->getWidth();
+		int imgHeight = frame->getView()->getHeight();
+		
+		// Match each descriptor to descriptors of frame in a corresponding region
+		std::vector<bool> checkMatches(keypointsFrame.size(), true);
+		int idx = 0;
+		for (auto &it : cvDescriptors) {
+			std::vector<int> idxCandidates;
+			if ((points2D[idx].getX() > 0) && (points2D[idx].getX() < imgWidth) && (points2D[idx].getY() > 0) && (points2D[idx].getY() < imgHeight)) {
+				std::vector<float> dists;
+				std::vector<float> query = { points2D[idx].getX(), points2D[idx].getY() };
+				kdtree.radiusSearch(query, idxCandidates, dists, radius, 10);
+			}
+
+			if (idxCandidates.size() > 1) {
+				float bestDist = std::numeric_limits<float>::max();
+				float bestDist2 = std::numeric_limits<float>::max();
+				int bestIdx = -1;
+				for (auto &it_des: idxCandidates) {
+					float dist = cv::norm(it, cvDescriptorFrame.row(it_des), cv::NORM_L2);
+					if (dist < bestDist)
+					{
+						bestDist2 = bestDist;
+						bestDist = dist;
+						bestIdx = it_des;
+					}
+					else if (dist < bestDist2)
+					{
+						bestDist2 = dist;
+					}
+				}
+
+				if ((bestIdx != -1) && (bestDist < m_distanceRatio * bestDist2) && (checkMatches[bestIdx])) {
+					matches.push_back(DescriptorMatch(idx, bestIdx, bestDist));
+					checkMatches[bestIdx] = false;
+				}
+			}
+
+			idx++;
+		}		
+
+		return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;
+	}
+
     }
     }
 }  // end of namespace SolAR
