@@ -41,6 +41,23 @@ public:
                     std::vector<DescriptorMatch> & outputMatches,
                     const std::vector<Keypoint> & inputKeyPointsA,
                     const std::vector<Keypoint> & inputKeyPointsB) override;
+
+		/// @brief filter matches based fundamental matrix calculated from camera matrices
+		/// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".
+		/// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
+		/// @param[in] Original keypoints associated to desc_1.
+		/// @param[in] Original keypoints associated to desc_2.
+		/// @param[in] camera pose 1.
+		/// @param[in] camera pose 2.
+		/// @param[in] camera's intrinsic parameters.
+		virtual void filter(const std::vector<DescriptorMatch> & inputMatches,
+							std::vector<DescriptorMatch> & outputMatches,
+							const std::vector<Keypoint> & inputKeyPoints1,
+							const std::vector<Keypoint> & inputKeyPoints2,
+							const Transform3Df &pose1,
+							const Transform3Df &pose2,
+							const CamCalibration &intrinsicParams) override;
+
         void unloadComponent () override final;
 
      private:
@@ -55,6 +72,8 @@ public:
         ///  By default, this value is set to the one proposed by [Snavely07 4.1]
         float m_outlierDistanceRatio = 0.006;
 
+		///  @brief threshold to valid matches based on distance to epilines
+		float m_epilinesDistance = 10.f;
 };
 
 }
