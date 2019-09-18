@@ -15,7 +15,6 @@
  */
 
 #include "xpcf/xpcf.h"
-#include "SolARModuleOpencv_traits.h"
 #include "api/image/IImageLoader.h"
 #include "api/image/IImageConvertor.h"
 #include "api/display/IImageViewer.h"
@@ -27,7 +26,6 @@
 
 using namespace std;
 using namespace SolAR;
-using namespace SolAR::MODULES::OPENCV;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
 
@@ -56,9 +54,9 @@ int main(int argc, char **argv)
 
 
     // components declarations and creation
-    SRef<image::IImageLoader> imageLoader = xpcfComponentManager->create<SolARImageLoaderOpencv>()->bindTo<image::IImageLoader>();
-    SRef<image::IImageConvertor> convertor = xpcfComponentManager->create<SolARImageConvertorOpencv>()->bindTo<image::IImageConvertor>();
-    SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
+    SRef<image::IImageLoader> imageLoader = xpcfComponentManager->resolve<image::IImageLoader>();
+    SRef<image::IImageConvertor> convertor = xpcfComponentManager->resolve<image::IImageConvertor>();
+    SRef<display::IImageViewer> viewer = xpcfComponentManager->resolve<display::IImageViewer>();
 
     if (!imageLoader || !convertor || !viewer)
     {

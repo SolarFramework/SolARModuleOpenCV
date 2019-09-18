@@ -16,7 +16,6 @@
 
 #include "xpcf/xpcf.h"
 
-#include "SolARModuleOpencv_traits.h"
 #include "api/image/IImageLoader.h"
 #include "api/features/IKeypointDetector.h"
 #include "api/display/IImageViewer.h"
@@ -31,7 +30,6 @@
 #include <vector>
 
 using namespace SolAR;
-using namespace SolAR::MODULES::OPENCV;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
 
@@ -58,13 +56,15 @@ int main(int argc,char** argv)
     // declare and create components
     LOG_INFO("Start creating components");
 
-    SRef<image::IImageLoader> imageLoaderImage1 = xpcfComponentManager->create<SolARImageLoaderOpencv>("image1")->bindTo<image::IImageLoader>();
-    SRef<image::IImageLoader> imageLoaderImage2 = xpcfComponentManager->create<SolARImageLoaderOpencv>("image2")->bindTo<image::IImageLoader>();
-    SRef<features::IKeypointDetector> keypointsDetector = xpcfComponentManager->create<SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
-    SRef<features::IDescriptorsExtractor> extractorAKAZE2 = xpcfComponentManager->create<SolARDescriptorsExtractorAKAZE2Opencv>()->bindTo<features::IDescriptorsExtractor>();
-    SRef<features::IDescriptorMatcher> matcher = xpcfComponentManager->create<SolARDescriptorMatcherHammingBruteForceOpencv>()->bindTo<features::IDescriptorMatcher>();
-    SRef<display::IMatchesOverlay> overlay = xpcfComponentManager->create<SolARMatchesOverlayOpencv>()->bindTo<display::IMatchesOverlay>();
-    SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
+    SRef<image::IImageLoader> imageLoaderImage1 = xpcfComponentManager->resolve<image::IImageLoader>();
+    imageLoaderImage1->bindTo<xpcf::IConfigurable>()->configure("conf_DescriptorMatcher.xml", "image1"); //Temporary solution pending xpcf 2.3.0
+    SRef<image::IImageLoader> imageLoaderImage2 = xpcfComponentManager->resolve<image::IImageLoader>();
+    imageLoaderImage2->bindTo<xpcf::IConfigurable>()->configure("conf_DescriptorMatcher.xml", "image2"); //Temporary solution pending xpcf 2.3.0
+    SRef<features::IKeypointDetector> keypointsDetector = xpcfComponentManager->resolve<features::IKeypointDetector>();
+    SRef<features::IDescriptorsExtractor> extractorAKAZE2 = xpcfComponentManager->resolve<features::IDescriptorsExtractor>();
+    SRef<features::IDescriptorMatcher> matcher = xpcfComponentManager->resolve<features::IDescriptorMatcher>();
+    SRef<display::IMatchesOverlay> overlay = xpcfComponentManager->resolve<display::IMatchesOverlay>();
+    SRef<display::IImageViewer> viewer = xpcfComponentManager->resolve<display::IImageViewer>();
 
     if (!imageLoaderImage1  || !imageLoaderImage2 || !keypointsDetector || !extractorAKAZE2 || !matcher || !overlay || !viewer)
     {
@@ -72,16 +72,16 @@ int main(int argc,char** argv)
         return -1;
     }
 
-    SRef<Image>                                        image1;
-    SRef<Image>                                        image2;
-    std::vector< SRef<Keypoint>>                       keypoints1;
-    std::vector< SRef<Keypoint>>                       keypoints2;
-    SRef<DescriptorBuffer>                             descriptors1;
-    SRef<DescriptorBuffer>                             descriptors2;
-    std::vector<DescriptorMatch>                       matches;
-    std::vector<SRef<Point2Df>>                        matchedKeypoints1;
-    std::vector<SRef<Point2Df>>                        matchedKeypoints2;
-    SRef<Image>                                        viewerImage;
+    SRef<Image>                     image1;
+    SRef<Image>                     image2;
+    std::vector<Keypoint>           keypoints1;
+    std::vector<Keypoint>           keypoints2;
+    SRef<DescriptorBuffer>          descriptors1;
+    SRef<DescriptorBuffer>          descriptors2;
+    std::vector<DescriptorMatch>    matches;
+    std::vector<SRef<Point2Df>>     matchedKeypoints1;
+    std::vector<SRef<Point2Df>>     matchedKeypoints2;
+    SRef<Image>                     viewerImage;
 
  // Start
     // Get the first image (the path of this image is defined in the conf_DetectorMatcher.xml)

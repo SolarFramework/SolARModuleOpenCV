@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry>
     
-	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$BCOMDEVROOT/bcomBuild/SolARModuleOpenCV/0.6.0/lib/x86_64/shared">
+	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$SolARBuild/SolARModuleOpenCV/0.6.0/lib/x86_64/shared">
         <component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" name="SolARCameraOpencv" description="SolARCameraOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
@@ -35,7 +35,7 @@
 	<configuration>
 		<component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4"> <!-- SolARCameraOpencv -->
 			<property name="calibrationFile" type="string" value="camera_calibration.yml"/>
-			<property name="deviceID" type="UnsignedInteger" value="1"/>
+			<property name="deviceID" type="UnsignedInteger" value="0"/>
 		</component>
 		<component uuid="e81c7e4e-7da6-476a-8eba-078b43071272"> <!-- SolAROpticalFlowPyrLKOpencv -->
 			<property name="searchWinWidth" type="Integer" value="21"/>

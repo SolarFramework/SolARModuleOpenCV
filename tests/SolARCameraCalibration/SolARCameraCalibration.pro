@@ -1,4 +1,4 @@
-TARGET = SolARFundamentalMatrixEstimationOpenCVTest
+TARGET =SolARCameraCalibration
 VERSION=0.6.0
 
 CONFIG += c++11
@@ -18,7 +18,7 @@ CONFIG(release,debug|release) {
 
 win32:CONFIG -= static
 win32:CONFIG += shared
-
+QMAKE_TARGET.arch = x86_64 #must be defined prior to include
 
 DEPENDENCIESCONFIG = shared recursive install
 
@@ -31,7 +31,8 @@ include (../../../builddefs/qmake/templateappconfig.pri)
 HEADERS += \
 
 SOURCES += \
-    main.cpp
+    SolARCameraCalibrationOpenCVTest.cpp
+
 
 unix {
 }

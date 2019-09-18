@@ -1,5 +1,5 @@
-TARGET = SolARopticalFlowOpenCVTest
-VERSION=0.5.2
+TARGET = SolARImageLoaderOpenCVTest
+VERSION=0.6.0
 
 CONFIG += c++11
 CONFIG -= qt
@@ -19,15 +19,20 @@ CONFIG(release,debug|release) {
 win32:CONFIG -= static
 win32:CONFIG += shared
 
-DEPENDENCIESCONFIG = sharedlib
-#NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib MUST BE DEFINED BEFORE templateappconfig.pri inclusion
-include ($$(BCOMDEVROOT)/builddefs/qmake/templateappconfig.pri)
+DEPENDENCIESCONFIG = shared recursive install
+
+## Configuration for Visual Studio to install binaries and dependencies. Work also for QT Creator by replacing QMAKE_INSTALL
+PROJECTCONFIG = QTVS
+
+#NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
+include (../../../builddefs/qmake/templateappconfig.pri)
 
 SOURCES += \
     main.cpp
 
 unix {
-LIBS += -ldl
+    LIBS += -ldl
+    QMAKE_CXXFLAGS += -DBOOST_LOG_DYN_LINK
 }
 
 macx {
@@ -43,5 +48,7 @@ win32 {
     # Windows Kit (msvc2013 64)
     LIBS += -L$$(WINDOWSSDKDIR)lib/winv6.3/um/x64 -lshell32 -lgdi32 -lComdlg32
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
-
 }
+
+#NOTE : Must be placed at the end of the .pro
+include (../../../builddefs/qmake/remaken_install_lib.pri)

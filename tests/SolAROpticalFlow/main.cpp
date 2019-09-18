@@ -16,7 +16,6 @@
 
 #include "xpcf/xpcf.h"
 
-#include "SolARModuleOpencv_traits.h"
 #include "api/input/devices/ICamera.h"
 #include "api/features/IKeypointDetector.h"
 #include "api/display/IImageViewer.h"
@@ -30,7 +29,6 @@
 #include <vector>
 
 using namespace SolAR;
-using namespace SolAR::MODULES::OPENCV;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
 
@@ -59,20 +57,20 @@ int main(int argc,char** argv)
         // declare and create components
         LOG_INFO("Start creating components");
 
-        SRef<input::devices::ICamera> camera = xpcfComponentManager->create<SolARCameraOpencv>()->bindTo<input::devices::ICamera>();
-        SRef<features::IKeypointDetector> keypointsDetector = xpcfComponentManager->create<SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
-        SRef<tracking::IOpticalFlowEstimator> opticalFlowLK = xpcfComponentManager->create<SolAROpticalFlowPyrLKOpencv>()->bindTo<tracking::IOpticalFlowEstimator>();
-        SRef<display::IMatchesOverlay> overlay = xpcfComponentManager->create<SolARMatchesOverlayOpencv>()->bindTo<display::IMatchesOverlay>();
-        SRef<display::IImageViewer> viewer = xpcfComponentManager->create<SolARImageViewerOpencv>()->bindTo<display::IImageViewer>();
+        SRef<input::devices::ICamera> camera = xpcfComponentManager->resolve<input::devices::ICamera>();
+        SRef<features::IKeypointDetector> keypointsDetector = xpcfComponentManager->resolve<features::IKeypointDetector>();
+        SRef<tracking::IOpticalFlowEstimator> opticalFlowLK = xpcfComponentManager->resolve<tracking::IOpticalFlowEstimator>();
+        SRef<display::IMatchesOverlay> overlay = xpcfComponentManager->resolve<display::IMatchesOverlay>();
+        SRef<display::IImageViewer> viewer = xpcfComponentManager->resolve<display::IImageViewer>();
 
 
         // declare data structures
         SRef<Image>                 previousImage;
         SRef<Image>                 currentImage;
-        std::vector<SRef<Keypoint>> keypointsToTrack;
-        std::vector<SRef<Point2Df>> pointsToTrack;
-        std::vector<SRef<Point2Df>> trackedPoints;
-        std::vector<SRef<Point2Df>> points1, points2;
+        std::vector<Keypoint>       keypointsToTrack;
+        std::vector<Point2Df>       pointsToTrack;
+        std::vector<Point2Df>       trackedPoints;
+        std::vector<Point2Df>       points1, points2;
         std::vector<unsigned char>  opticalFlowStatus;
         std::vector<float>          opticalFlowError;
         SRef<Image>                 viewerImage;
@@ -127,10 +125,10 @@ int main(int argc,char** argv)
                     if (opticalFlowStatus[i] == 1)
                     {
                         if (trackingIteration == 0)
-                            points1.push_back(xpcf::utils::make_shared<Point2Df>(keypointsToTrack[i]->getX(), keypointsToTrack[i]->getY()));
+                            points1.push_back(Point2Df(keypointsToTrack[i].getX(), keypointsToTrack[i].getY()));
                         else
-                            points1.push_back(xpcf::utils::make_shared<Point2Df>(pointsToTrack[i]->getX(), pointsToTrack[i]->getY()));
-                        points2.push_back(xpcf::utils::make_shared<Point2Df>(trackedPoints[i]->getX(), trackedPoints[i]->getY()));
+                            points1.push_back(Point2Df(pointsToTrack[i].getX(), pointsToTrack[i].getY()));
+                        points2.push_back(Point2Df(trackedPoints[i].getX(), trackedPoints[i].getY()));
                     }
                 }
                 // Draw the matches in a dedicated image

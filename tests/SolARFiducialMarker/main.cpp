@@ -22,7 +22,6 @@
 
 // ADD COMPONENTS HEADERS HERE, e.g #include "SolarComponent.h"
 
-#include "SolARModuleOpencv_traits.h"
 #include "api/input/files/IMarker2DSquaredBinary.h"
 #include "core/Log.h"
 
@@ -31,7 +30,6 @@ namespace xpcf  = org::bcom::xpcf;
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
-using namespace SolAR::MODULES::OPENCV;
 namespace xpcf  = org::bcom::xpcf;
 
 int main(int argc,char* argv[])
@@ -55,7 +53,7 @@ int main(int argc,char* argv[])
     // declare and create components
     LOG_INFO("Start creating components");
 
-    SRef<input::files::IMarker2DSquaredBinary> binaryMarker = xpcfComponentManager->create<SolARMarker2DSquaredBinaryOpencv>()->bindTo<input::files::IMarker2DSquaredBinary>();
+    SRef<input::files::IMarker2DSquaredBinary> binaryMarker = xpcfComponentManager->resolve<input::files::IMarker2DSquaredBinary>();
 
     if (binaryMarker->loadMarker() != FrameworkReturnCode::_SUCCESS)
     {
@@ -68,7 +66,7 @@ int main(int argc,char* argv[])
     LOG_INFO("Marker size height: {}",binaryMarker->getHeight());
 
     // Display the pattern information in the console, w=white=1 case, b=black=0 case.
-    LOG_INFO("Marker pattern: \n{}", binaryMarker->getPattern()->getPatternMatrix());
+    LOG_INFO("Marker pattern: \n{}", binaryMarker->getPattern().getPatternMatrix());
 
     return 0;
 }
