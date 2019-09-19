@@ -19,7 +19,6 @@
 #include <boost/log/core.hpp>
 
 using namespace std;
-#include "SolARModuleOpencv_traits.h"
 
 #include "xpcf/xpcf.h"
 #include "api/image/IImageLoader.h"
@@ -36,7 +35,6 @@ using namespace std;
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
-using namespace SolAR::MODULES::OPENCV;
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -64,15 +62,19 @@ int main(int argc, char **argv)
     // declare and create components
     LOG_INFO("Start creating components");
 
-    SRef<image::IImageLoader>               image1Loader = xpcfComponentManager->create<SolARImageLoaderOpencv>("image1")->bindTo<image::IImageLoader>();
-    SRef<image::IImageLoader>               image2Loader = xpcfComponentManager->create<SolARImageLoaderOpencv>("image2")->bindTo<image::IImageLoader>();
-    SRef<features::IKeypointDetector>       keypointsDetector = xpcfComponentManager->create<SolARKeypointDetectorOpencv>()->bindTo<features::IKeypointDetector>();
-    SRef<features::IDescriptorsExtractor>   extractorAKAZE2 = xpcfComponentManager->create<SolARDescriptorsExtractorAKAZE2Opencv>()->bindTo<features::IDescriptorsExtractor>();
-    SRef<features::IDescriptorMatcher>      matcher = xpcfComponentManager->create<SolARDescriptorMatcherKNNOpencv>()->bindTo<features::IDescriptorMatcher>();
-    SRef<features::IMatchesFilter>          matchesFilterGeometric = xpcfComponentManager->create<SolARGeometricMatchesFilterOpencv>()->bindTo<features::IMatchesFilter>();
-    SRef<display::IMatchesOverlay>          overlayMatches = xpcfComponentManager->create<SolARMatchesOverlayOpencv>()->bindTo<display::IMatchesOverlay>();
-    SRef<display::IImageViewer>             viewerWithoutFilter = xpcfComponentManager->create<SolARImageViewerOpencv>("withoutFilter")->bindTo<display::IImageViewer>();
-    SRef<display::IImageViewer>             viewerWithFilter = xpcfComponentManager->create<SolARImageViewerOpencv>("withFilter")->bindTo<display::IImageViewer>();
+    SRef<image::IImageLoader>               image1Loader = xpcfComponentManager->resolve<image::IImageLoader>();
+    image1Loader->bindTo<xpcf::IConfigurable>()->configure("conf_MatchesFilter.xml", "image1");
+    SRef<image::IImageLoader>               image2Loader = xpcfComponentManager->resolve<image::IImageLoader>();
+    image2Loader->bindTo<xpcf::IConfigurable>()->configure("conf_MatchesFilter.xml", "image2");
+    SRef<features::IKeypointDetector>       keypointsDetector = xpcfComponentManager->resolve<features::IKeypointDetector>();
+    SRef<features::IDescriptorsExtractor>   extractorAKAZE2 = xpcfComponentManager->resolve<features::IDescriptorsExtractor>();
+    SRef<features::IDescriptorMatcher>      matcher = xpcfComponentManager->resolve<features::IDescriptorMatcher>();
+    SRef<features::IMatchesFilter>          matchesFilterGeometric = xpcfComponentManager->resolve<features::IMatchesFilter>();
+    SRef<display::IMatchesOverlay>          overlayMatches = xpcfComponentManager->resolve<display::IMatchesOverlay>();
+    SRef<display::IImageViewer>             viewerWithoutFilter = xpcfComponentManager->resolve<display::IImageViewer>();
+    viewerWithoutFilter->bindTo<xpcf::IConfigurable>()->configure("conf_MatchesFilter.xml","withoutFilter");
+    SRef<display::IImageViewer>             viewerWithFilter = xpcfComponentManager->resolve<display::IImageViewer>();
+    viewerWithFilter->bindTo<xpcf::IConfigurable>()->configure("conf_MatchesFilter.xml","withFilter");
 
     /* we need to check that components are well created*/
     if (!image1Loader || !image2Loader || !keypointsDetector || !extractorAKAZE2 || !matcher ||
@@ -85,16 +87,16 @@ int main(int argc, char **argv)
 
     // Declare data structures used to exchange information between components
 
-    SRef<Image>                             image1;
-    SRef<Image>                             image2;
+    SRef<Image>                     image1;
+    SRef<Image>                     image2;
 
-    std::vector< SRef<Keypoint>>            keypoints1;
-    std::vector< SRef<Keypoint>>            keypoints2;
+    std::vector<Keypoint>           keypoints1;
+    std::vector<Keypoint>           keypoints2;
 
 
-    SRef<DescriptorBuffer>                  descriptors1;
-    SRef<DescriptorBuffer>                  descriptors2;
-    std::vector<DescriptorMatch>            matches;
+    SRef<DescriptorBuffer>          descriptors1;
+    SRef<DescriptorBuffer>          descriptors2;
+    std::vector<DescriptorMatch>    matches;
 
     SRef<Image>                             matchesImage;
     SRef<Image>                             filteredMatchesImage;
