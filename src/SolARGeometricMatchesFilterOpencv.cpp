@@ -89,14 +89,16 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
 	std::vector<DescriptorMatch> tmpMatches;
 	// compute fundamental matrice
 	Transform3Df pose12 = pose1.inverse() * pose2;
-	cv::Mat R12(3, 3, CV_32FC1, (void *)pose12.rotation().data());
+	cv::Mat R12 = (cv::Mat_<float>(3, 3) << pose12(0, 0), pose12(0, 1), pose12(0, 2),
+											pose12(1, 0), pose12(1, 1), pose12(1, 2), 
+											pose12(2, 0), pose12(2, 1), pose12(2, 2));
 	cv::Mat T12 = (cv::Mat_<float>(3, 1) << pose12(0, 3), pose12(1, 3), pose12(2, 3));
 
 	cv::Mat T12x = (cv::Mat_<float>(3, 3) << 0, -T12.at<float>(2), T12.at<float>(1),
 											T12.at<float>(2), 0, -T12.at<float>(0),
 											-T12.at<float>(1), T12.at<float>(0), 0);
 
-	cv::Mat K(3, 3, CV_32FC1, (void *)intrinsicParams.data());
+	cv::Mat K(3, 3, CV_32FC1, (void *)intrinsicParams.data());		
 	cv::Mat F12 = K.t().inv() * T12x * R12 * K.inv();
 	
 	// check matches based on distance to epipolar lines
@@ -104,10 +106,11 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
 		Keypoint kp1 = inputKeyPoints1[inputMatches[i].getIndexInDescriptorA()];
 		Keypoint kp2 = inputKeyPoints2[inputMatches[i].getIndexInDescriptorB()];
 		// Epipolar line in second image l = x1'F12 = [a b c]
-		float a = kp1.getX() * F12.at<float>(0, 0) + kp1.getY() * F12.at<float>(1, 0) + F12.at<float>(2, 0);
-		float b = kp1.getX() * F12.at<float>(0, 1) + kp1.getY() * F12.at<float>(1, 1) + F12.at<float>(2, 1);
-		float c = kp1.getX() * F12.at<float>(0, 2) + kp1.getY() * F12.at<float>(1, 2) + F12.at<float>(2, 2);
-		float dis = std::fabsf(a * kp2.getX() + b * kp2.getY() + c) / (std::sqrtf(a * a + b * b));
+		double a = kp1.getX() * F12.at<float>(0, 0) + kp1.getY() * F12.at<float>(1, 0) + F12.at<float>(2, 0);
+		double b = kp1.getX() * F12.at<float>(0, 1) + kp1.getY() * F12.at<float>(1, 1) + F12.at<float>(2, 1);
+		double c = kp1.getX() * F12.at<float>(0, 2) + kp1.getY() * F12.at<float>(1, 2) + F12.at<float>(2, 2);
+		double dis = std::fabs(a * kp2.getX() + b * kp2.getY() + c) / (std::sqrt(a * a + b * b));
+
 		if (dis < m_epilinesDistance)
 			tmpMatches.push_back(inputMatches[i]);
 	}
