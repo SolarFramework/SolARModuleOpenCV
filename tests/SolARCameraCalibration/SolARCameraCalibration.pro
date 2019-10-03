@@ -1,4 +1,4 @@
-TARGET =SolARCameraCalibration
+TARGET =SolAROpenCVCameraCalibration
 VERSION=0.6.0
 
 CONFIG += c++11
@@ -8,13 +8,14 @@ CONFIG += console
 DEFINES += MYVERSION=$${VERSION}
 
 CONFIG(debug,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}\..\bin\debug
+    DEPENDENCIESCONFIG = shared recurse
     DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
 
 CONFIG(release,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}\..\bin\release
+    TARGETDEPLOYDIR = $${PWD}\..\bin
+    DEPENDENCIESCONFIG = shared install_recurse # install only in release mode
     DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
 }
@@ -23,13 +24,11 @@ win32:CONFIG -= static
 win32:CONFIG += shared
 QMAKE_TARGET.arch = x86_64 #must be defined prior to include
 
-DEPENDENCIESCONFIG = shared install_recurse
-
 ## Configuration for Visual Studio to install binaries and dependencies. Work also for QT Creator by replacing QMAKE_INSTALL
 PROJECTCONFIG = QTVS
 
 #NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
-include ($$(REMAKEN_RULES_ROOT)/qmake/templateappconfig.pri)
+include ($$shell_quote($$shell_path($$(REMAKEN_RULES_ROOT)/qmake/templateappconfig.pri))) # Shell_quote & shell_path required for visual on windows
 
 HEADERS += \
 
@@ -56,10 +55,9 @@ win32 {
 
 }
 
-configfile.path = $${TARGETDEPLOYDIR}
-configfile.file = $$files{$${PWD}/calibration_config.yml}
-INSTALLS += configfile
-
+ymlconfig.path = $${TARGETDEPLOYDIR}/
+ymlconfig.files = $$files($${PWD}/SolAROpenCVCameraCalibration_config.yml)
+INSTALLS += ymlconfig
 
 #NOTE : Must be placed at the end of the .pro
-include ($$(REMAKEN_RULES_ROOT)/qmake/remaken_install_target.pri))
+include ($$shell_quote($$shell_path($$(REMAKEN_RULES_ROOT)/qmake/remaken_install_target.pri))) # Shell_quote & shell_path required for visual on windows

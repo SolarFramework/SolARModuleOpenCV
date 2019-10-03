@@ -47,9 +47,9 @@ int main(int argc,char** argv)
     /* this is needed in dynamic mode */
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-    if(xpcfComponentManager->load("conf_DescriptorMatcher.xml")!=org::bcom::xpcf::_SUCCESS)
+    if(xpcfComponentManager->load("SolAROpenCVDescriptorMatcher_config.xml")!=org::bcom::xpcf::_SUCCESS)
     {
-        LOG_ERROR("Failed to load the configuration file conf_DescriptorMatcher.xml")
+        LOG_ERROR("Failed to load the configuration file SolAROpenCVDescriptorMatcher_config.xml")
         return -1;
     }
 
@@ -57,9 +57,9 @@ int main(int argc,char** argv)
     LOG_INFO("Start creating components");
 
     SRef<image::IImageLoader> imageLoaderImage1 = xpcfComponentManager->resolve<image::IImageLoader>();
-    imageLoaderImage1->bindTo<xpcf::IConfigurable>()->configure("conf_DescriptorMatcher.xml", "image1"); //Temporary solution pending xpcf 2.3.0
+    imageLoaderImage1->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVDescriptorMatcher_config.xml", "image1"); //Temporary solution pending xpcf 2.3.0
     SRef<image::IImageLoader> imageLoaderImage2 = xpcfComponentManager->resolve<image::IImageLoader>();
-    imageLoaderImage2->bindTo<xpcf::IConfigurable>()->configure("conf_DescriptorMatcher.xml", "image2"); //Temporary solution pending xpcf 2.3.0
+    imageLoaderImage2->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVDescriptorMatcher_config.xml", "image2"); //Temporary solution pending xpcf 2.3.0
     SRef<features::IKeypointDetector> keypointsDetector = xpcfComponentManager->resolve<features::IKeypointDetector>();
     SRef<features::IDescriptorsExtractor> extractorAKAZE2 = xpcfComponentManager->resolve<features::IDescriptorsExtractor>();
     SRef<features::IDescriptorMatcher> matcher = xpcfComponentManager->resolve<features::IDescriptorMatcher>();

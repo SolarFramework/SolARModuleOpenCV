@@ -44,9 +44,9 @@ int main(int argc,char* argv[])
     /* this is needed in dynamic mode */
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-    if(xpcfComponentManager->load("conf_FiducialMarker.xml")!=org::bcom::xpcf::_SUCCESS)
+    if(xpcfComponentManager->load("SolAROpenCVFiducialMarker_conf.xml")!=org::bcom::xpcf::_SUCCESS)
     {
-        LOG_ERROR("Failed to load the configuration file conf_Marker2DFiducial.xml")
+        LOG_ERROR("Failed to load the configuration file SolAROpenCVFiducialMarker_conf.xml")
         return -1;
     }
 

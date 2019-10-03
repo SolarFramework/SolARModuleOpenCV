@@ -65,9 +65,9 @@ int main() {
         /* instantiate component manager*/
         SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-        if(xpcfComponentManager->load("conf_FundamentalMatrixEstimation.xml")!=org::bcom::xpcf::_SUCCESS)
+        if(xpcfComponentManager->load("SolAROpenCVFundamentalMatrixEstimation_conf.xml")!=org::bcom::xpcf::_SUCCESS)
         {
-            LOG_ERROR("Failed to load the configuration file conf_FundamentalMatrixEstimation.xml")
+            LOG_ERROR("Failed to load the configuration file SolAROpenCVFundamentalMatrixEstimation_conf.xml")
             return -1;
         }
 

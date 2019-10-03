@@ -48,9 +48,9 @@ int main(int argc,char** argv)
 
     try {
 
-        if(xpcfComponentManager->load("conf_OpticalFlow.xml")!=org::bcom::xpcf::_SUCCESS)
+        if(xpcfComponentManager->load("SolAROpenCVOpticalFlow_conf.xml")!=org::bcom::xpcf::_SUCCESS)
         {
-            LOG_ERROR("Failed to load the configuration file conf_DescriptorMatcher.xml")
+            LOG_ERROR("Failed to load the configuration file SolAROpenCVOpticalFlow_conf.xml")
             return -1;
         }
 

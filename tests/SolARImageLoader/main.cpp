@@ -45,9 +45,9 @@ int main(int argc, char *argv[])
         /* this is needed in dynamic mode */
         SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-        if(xpcfComponentManager->load("conf_ImageLoader.xml")!=org::bcom::xpcf::_SUCCESS)
+        if(xpcfComponentManager->load("SolAROpenCVImageLoader_conf.xml")!=org::bcom::xpcf::_SUCCESS)
         {
-            LOG_ERROR("Failed to load the configuration file conf_ImageLoader.xml")
+            LOG_ERROR("Failed to load the configuration file SolAROpenCVImageLoader_conf.xml")
             return -1;
         }
 
@@ -56,9 +56,9 @@ int main(int argc, char *argv[])
 
         SRef<image::IImageLoader> imageLoader = xpcfComponentManager->resolve<image::IImageLoader>();
         SRef<display::IImageViewer> viewerConfImage = xpcfComponentManager->resolve<display::IImageViewer>(); //create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>("confImage")->bindTo<display::IImageViewer>();
-        viewerConfImage->bindTo<xpcf::IConfigurable>()->configure("conf_ImageLoader.xml", "confImage"); //Temporary solution pending xpcf 2.3.0
+        viewerConfImage->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVImageLoader_conf.xml", "confImage"); //Temporary solution pending xpcf 2.3.0
         SRef<display::IImageViewer> viewerParamImage = xpcfComponentManager->resolve<display::IImageViewer>(); //create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>("paramImage")->bindTo<display::IImageViewer>();
-        viewerParamImage->bindTo<xpcf::IConfigurable>()->configure("conf_ImageLoader.xml", "paramImage"); //Temporary solution pending xpcf 2.3.0
+        viewerParamImage->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVImageLoader_conf.xml", "paramImage"); //Temporary solution pending xpcf 2.3.0
 
         if (!imageLoader || !viewerConfImage || !viewerParamImage)
         {

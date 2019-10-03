@@ -1,4 +1,4 @@
-TARGET = SolARDescriptorMatcherOpenCVTest
+TARGET = SolAROpenCVDescriptorMatcher
 VERSION=0.6.0
 
 CONFIG += c++11
@@ -8,13 +8,14 @@ CONFIG += console
 DEFINES += MYVERSION=$${VERSION}
 
 CONFIG(debug,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}\..\bin\debug
+    DEPENDENCIESCONFIG = shared recurse
     DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
 
 CONFIG(release,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}\..\bin\release
+    DEPENDENCIESCONFIG = shared install_recurse # install only in release mode
+    TARGETDEPLOYDIR = $${PWD}\..\bin
     DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
 }
@@ -22,13 +23,11 @@ CONFIG(release,debug|release) {
 win32:CONFIG -= static
 win32:CONFIG += shared
 
-DEPENDENCIESCONFIG = shared install_recurse
-
 ## Configuration for Visual Studio to install binaries and dependencies. Work also for QT Creator by replacing QMAKE_INSTALL
 PROJECTCONFIG = QTVS
 
 #NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
-include ($$(REMAKEN_RULES_ROOT)/qmake/templateappconfig.pri)
+include ($$shell_quote($$shell_path($$(REMAKEN_RULES_ROOT)/qmake/templateappconfig.pri))) # Shell_quote & shell_path required for visual on windows
 
 SOURCES += \
     main.cpp
@@ -52,8 +51,8 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
-configfile.path = $${TARGETDEPLOYDIR}
-configfile.file = $$files{$${PWD}/conf_DescriptorExtractor.xml}
+configfile.path = $${TARGETDEPLOYDIR}/
+configfile.files = $${PWD}/SolAROpenCVDescriptorMatcher_config.xml
 INSTALLS += configfile
 
 #NOTE : Must be placed at the end of the .pro

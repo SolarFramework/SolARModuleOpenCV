@@ -60,7 +60,7 @@ int calibratio_run(int cameraId) {
 
     auto cameraCalibration =xpcf::ComponentFactory::createInstance<SolARCameraCalibrationOpencv>()->bindTo<input::devices::ICameraCalibration>();
 
-	std::string calib_config = std::string("../calibration_config.yml");
+    std::string calib_config = std::string("SolAROpenCVCameraCalibration_config.yml");
 	std::ifstream ifs(calib_config.c_str());
 	if (!ifs) {
 		LOG_ERROR("Calibration config File {} does not exist", calib_config.c_str());
@@ -68,7 +68,7 @@ int calibratio_run(int cameraId) {
 		return -1;
 	}
 
-	std::string calib_output = std::string("../camera_calibration.yml");
+    std::string calib_output = std::string("../Data/camera_calibration.yml");
 
 	if (cameraCalibration->setParameters(calib_config))
 	{
@@ -89,7 +89,7 @@ int calibratio_run(std::string& video) {
 
     auto cameraCalibration =xpcf::ComponentFactory::createInstance<SolARCameraCalibrationOpencv>()->bindTo<input::devices::ICameraCalibration>();
 
-	std::string calib_config = std::string("../calibration_config.yml");
+    std::string calib_config = std::string("SolAROpenCVCameraCalibration_config.yml");
 	std::ifstream ifs(calib_config.c_str());
 	if (!ifs) {
 		LOG_ERROR("Calibration config File {} does not exist", calib_config.c_str());
@@ -97,7 +97,7 @@ int calibratio_run(std::string& video) {
 		return -1;
 	}
 
-	std::string calib_output = std::string("../camera_calibration.yml");
+    std::string calib_output = std::string("../Data/camera_calibration.yml");
 
 	if (cameraCalibration->setParameters(calib_config))
 	{

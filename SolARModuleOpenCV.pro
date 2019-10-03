@@ -28,7 +28,8 @@ DEPENDENCIESCONFIG = shared recurse install
 ## Configuration for Visual Studio to install binaries and dependencies. Work also for QT Creator by replacing QMAKE_INSTALL
 PROJECTCONFIG = QTVS
 
-include ($(REMAKEN_RULES_ROOT)/qmake/templatelibconfig.pri)
+#NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
+include ($$shell_quote($$shell_path($$(REMAKEN_RULES_ROOT)/qmake/templatelibconfig.pri)))  # Shell_quote & shell_path required for visual on windows
 
 ## DEFINES FOR MSVC/INTEL C++ compilers
 msvc {
@@ -74,4 +75,4 @@ OTHER_FILES += \
     packagedependencies.txt
 
 #NOTE : Must be placed at the end of the .pro
-include ($(REMAKEN_RULES_ROOT)/qmake/remaken_install_target.pri)
+include ($$shell_quote($$shell_path($$(REMAKEN_RULES_ROOT)/qmake/remaken_install_target.pri)))) # Shell_quote & shell_path required for visual on windows

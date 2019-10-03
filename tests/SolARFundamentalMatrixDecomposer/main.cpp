@@ -66,9 +66,9 @@ int main() {
         /* instantiate component manager*/
         SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-        if(xpcfComponentManager->load("conf_FundamentalMatrixDecomposer.xml")!=org::bcom::xpcf::_SUCCESS)
+        if(xpcfComponentManager->load("SolAROpenCVFundamentalMatrixDecomposer_conf.xml")!=org::bcom::xpcf::_SUCCESS)
         {
-            LOG_ERROR("Failed to load the configuration file conf_FundamentalMatrixDecomposer.xml")
+            LOG_ERROR("Failed to load the configuration file SolAROpenCVFundamentalMatrixDecomposer_conf.xml")
             return -1;
         }
 

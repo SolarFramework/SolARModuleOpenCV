@@ -54,27 +54,27 @@ int main(int argc, char **argv)
     /* this is needed in dynamic mode */
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-    if(xpcfComponentManager->load("conf_MatchesFilter.xml")!=org::bcom::xpcf::_SUCCESS)
+    if(xpcfComponentManager->load("SolAROpenCVMatchesFilter_conf.xml")!=org::bcom::xpcf::_SUCCESS)
     {
-        LOG_ERROR("Failed to load the configuration file conf_NaturalImageMarker.xml", argv[1])
+        LOG_ERROR("Failed to load the configuration file SolAROpenCVMatchesFilter_conf.xml", argv[1])
         return -1;
     }
     // declare and create components
     LOG_INFO("Start creating components");
 
     SRef<image::IImageLoader>               image1Loader = xpcfComponentManager->resolve<image::IImageLoader>();
-    image1Loader->bindTo<xpcf::IConfigurable>()->configure("conf_MatchesFilter.xml", "image1");
+    image1Loader->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVMatchesFilter_conf.xml", "image1");
     SRef<image::IImageLoader>               image2Loader = xpcfComponentManager->resolve<image::IImageLoader>();
-    image2Loader->bindTo<xpcf::IConfigurable>()->configure("conf_MatchesFilter.xml", "image2");
+    image2Loader->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVMatchesFilter_conf.xml", "image2");
     SRef<features::IKeypointDetector>       keypointsDetector = xpcfComponentManager->resolve<features::IKeypointDetector>();
     SRef<features::IDescriptorsExtractor>   extractorAKAZE2 = xpcfComponentManager->resolve<features::IDescriptorsExtractor>();
     SRef<features::IDescriptorMatcher>      matcher = xpcfComponentManager->resolve<features::IDescriptorMatcher>();
     SRef<features::IMatchesFilter>          matchesFilterGeometric = xpcfComponentManager->resolve<features::IMatchesFilter>();
     SRef<display::IMatchesOverlay>          overlayMatches = xpcfComponentManager->resolve<display::IMatchesOverlay>();
     SRef<display::IImageViewer>             viewerWithoutFilter = xpcfComponentManager->resolve<display::IImageViewer>();
-    viewerWithoutFilter->bindTo<xpcf::IConfigurable>()->configure("conf_MatchesFilter.xml","withoutFilter");
+    viewerWithoutFilter->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVMatchesFilter_conf.xml","withoutFilter");
     SRef<display::IImageViewer>             viewerWithFilter = xpcfComponentManager->resolve<display::IImageViewer>();
-    viewerWithFilter->bindTo<xpcf::IConfigurable>()->configure("conf_MatchesFilter.xml","withFilter");
+    viewerWithFilter->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVMatchesFilter_conf.xml","withFilter");
 
     /* we need to check that components are well created*/
     if (!image1Loader || !image2Loader || !keypointsDetector || !extractorAKAZE2 || !matcher ||
