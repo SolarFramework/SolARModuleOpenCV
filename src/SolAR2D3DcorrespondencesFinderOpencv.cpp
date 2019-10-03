@@ -48,8 +48,8 @@ namespace SolAR {
                  const std::map<unsigned int, unsigned int> keyframeVisibility = referenceKeyframe->getVisibleMapPoints();
                  const std::vector<Keypoint> current_kpoints =  currentFrame->getKeypoints();
 
-				 std::vector<CloudPoint> cloudPoint = worldMap->getPointCloud();
-
+				 const std::vector<CloudPoint> &cloudPoint = worldMap->getPointCloud();
+				 
                  for (int j = 0; j < current_matches.size(); ++j)
                  {
                     std::map<unsigned int, unsigned int>::const_iterator it= keyframeVisibility.find(current_matches[j].getIndexInDescriptorA());
@@ -83,7 +83,7 @@ namespace SolAR {
                 const std::map<unsigned int, unsigned int> cpVisibility = lastFrame->getReferenceKeyframe()->getVisibleMapPoints();
                 const std::vector<Keypoint> current_kpoints = currentFrame->getKeypoints();
 
-				std::vector<CloudPoint> cloudPoint = worldMap->getPointCloud();
+				const std::vector<CloudPoint> &cloudPoint = worldMap->getPointCloud();
 
 				//std::map<unsigned int, unsigned int> newMapVisibility;
 				for (int j = 0; j < current_matches.size(); ++j)
