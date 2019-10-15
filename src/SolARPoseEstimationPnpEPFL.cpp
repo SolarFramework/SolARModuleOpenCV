@@ -50,8 +50,13 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<Point
                                                          const Transform3Df initialPose) {
     SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(m_maxNumberCorrespondences);
     Transform3Df initialPoseInverse = initialPose.inverse();
-    Eigen::Matrix3f R = initialPoseInverse.rotation();
-    Eigen::Vector3f T = initialPoseInverse.translation();
+	Eigen::Matrix3f R;
+	R << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
+		initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
+		initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2);
+	Eigen::Vector3f T;
+	T << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3);
+
     SolARPoseEstimationPnpEPFL::reset_correspondences();
 
     for (int i = 0; i < worldPoints.size(); i++) {
