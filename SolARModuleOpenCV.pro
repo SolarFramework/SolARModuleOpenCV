@@ -6,7 +6,7 @@ CONFIG -= qt
 INSTALLSUBDIR = SolARBuild
 TARGET = SolARModuleOpenCV
 FRAMEWORK = $$TARGET
-VERSION=0.6.0
+VERSION=0.7.0
 
 DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
@@ -40,7 +40,7 @@ INCLUDEPATH += interfaces/
 
 include (SolARModuleOpenCV.pri)
 
-unix {
+unix:!android {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
     QMAKE_LINK=clang++
     QMAKE_CXX = clang++	
@@ -60,6 +60,10 @@ win32 {
     DEFINES += WIN64 UNICODE _UNICODE
     QMAKE_COMPILER_DEFINES += _WIN64
     QMAKE_CXXFLAGS += -wd4250 -wd4251 -wd4244 -wd4275 /Od
+}
+
+android {
+    QMAKE_LFLAGS += -nostdlib++
 }
 
 header_files.path = $${PROJECTDEPLOYDIR}/interfaces
