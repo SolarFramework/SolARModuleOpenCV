@@ -45,16 +45,17 @@ SolARPoseEstimationSACPnpOpencv::~SolARPoseEstimationSACPnpOpencv(){
 
 }
 
-FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector<Point2Df> & imagePoints,
-                                                            const std::vector<Point3Df> & worldPoints,
-                                                            std::vector<Point2Df>&imagePoints_inlier,
-                                                            std::vector<Point3Df>&worldPoints_inlier,
+FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<Point2Df> & imagePoints,
+															const std::vector<Point3Df> & worldPoints,
+															std::vector<Point2Df>&imagePoints_inlier,
+															std::vector<Point3Df>&worldPoints_inlier,
+															std::vector<bool> &inliers,
                                                             Transform3Df & pose,
                                                             const Transform3Df initialPose) {
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
-    std::vector<int> inliers;
+	inliers.resize(imagePoints.size(), false);
 
     Transform3Df initialPoseInverse = initialPose.inverse();
 
@@ -71,8 +72,8 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector
     }
      cv::Mat Rvec;
      cv::Mat_<float> Tvec;
-     cv::Mat raux, taux, r33;
-     cv::Mat inliers_cv;
+     cv::Mat raux, taux, r33;     
+	 cv::Mat inliers_cv;
 
      // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
      if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
@@ -98,6 +99,7 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector
      for (int i = 0; i<projected3D.size(); i++) {
          double err_reprj = norm(projected3D[i]-imageCVPoints[i]);
          if (err_reprj <m_reprojError) {
+			 inliers[i] = true;
              worldPoints_inlier.push_back(worldPoints[i]);
              imagePoints_inlier.push_back(imagePoints[i]);
 
@@ -136,6 +138,17 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector
     pose = pose.inverse();
 
     return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<Point2Df> & imagePoints,
+															const std::vector<Point3Df> & worldPoints,
+															std::vector<Point2Df>&imagePoints_inlier,
+															std::vector<Point3Df>&worldPoints_inlier,
+															Transform3Df & pose,
+															const Transform3Df initialPose) 
+{
+	std::vector<bool> inliers;
+	return estimate(imagePoints, worldPoints, imagePoints_inlier, worldPoints_inlier, inliers, pose, initialPose);
 }
 
 

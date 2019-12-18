@@ -49,12 +49,14 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
                                                                     const std::vector<Point3Df> & worldPoints,
                                                                     std::vector<Point2Df> &imagePoints_inlier,
                                                                     std::vector<Point3Df> &worldPoints_inlier,
+																	std::vector<bool> &inliers,
                                                                     Transform3Df & pose,
                                                                     const Transform3Df initialPose) {
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point2f> worldCVPoints;
     std::vector<cv::Point2f> correctedImageCVPoints;
+	inliers.resize(imagePoints.size(), false);
 
     if (worldPoints.size()!=imagePoints.size() || worldPoints.size()< 4 ){
         LOG_WARNING("world/image points must be valid ( equal and > to 4)");
@@ -83,6 +85,7 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
     {
         if (status.at<uchar>(i, 0) == 1)
         {
+			inliers[i] = true;
             imagePoints_inlier.push_back(imagePoints[i]);
             worldPoints_inlier.push_back(worldPoints[i]);
             tmp_cvImagePoints.push_back(correctedImageCVPoints[i]);
@@ -131,6 +134,18 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
 
     return FrameworkReturnCode::_SUCCESS;
 }
+
+FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::vector<Point2Df> & imagePoints,
+																	const std::vector<Point3Df> & worldPoints,
+																	std::vector<Point2Df> &imagePoints_inlier,
+																	std::vector<Point3Df> &worldPoints_inlier,	
+																	Transform3Df & pose,
+																	const Transform3Df initialPose) 
+{
+	std::vector<bool> inliers;
+	return estimate(imagePoints, worldPoints, imagePoints_inlier, worldPoints_inlier, inliers, pose, initialPose);
+}
+
 void SolARPoseEstimationPlanarPointsOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
 
     this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);

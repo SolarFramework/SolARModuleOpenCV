@@ -55,6 +55,8 @@
 # Visual Studio files
 .vs*
 x64*
+*-packagedependencies.txt
+*-packagedependencies-win.txt
 
 # generated documentation
 doc/ 
