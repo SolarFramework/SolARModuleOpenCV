@@ -59,8 +59,8 @@ int main() {
 
     LOG_ADD_LOG_TO_CONSOLE();
 
-    std::string path_points1 = "../data/pt1_F.txt";
-    std::string path_points2 = "../data/pt2_F.txt";
+    std::string path_points1 = "../../data/pt1_F.txt";
+    std::string path_points2 = "../../data/pt2_F.txt";
 
     try{
         /* instantiate component manager*/
