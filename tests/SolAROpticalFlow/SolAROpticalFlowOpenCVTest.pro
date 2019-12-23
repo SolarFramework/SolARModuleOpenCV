@@ -19,7 +19,7 @@ CONFIG(release,debug|release) {
     DEFINES += NDEBUG=1
 }
 
-DEPENDENCIESCONFIG = shared recurse
+DEPENDENCIESCONFIG = shared install_recurse
 
 win32:CONFIG -= static
 win32:CONFIG += shared

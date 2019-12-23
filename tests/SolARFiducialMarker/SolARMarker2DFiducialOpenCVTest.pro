@@ -9,17 +9,17 @@ DEFINES += MYVERSION=$${VERSION}
 
 CONFIG(debug,debug|release) {
     TARGETDEPLOYDIR = $${PWD}/../bin/Debug
-    DEPENDENCIESCONFIG = shared install_recurse
     DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
 
 CONFIG(release,debug|release) {
     TARGETDEPLOYDIR = $${PWD}/../bin/Release
-    DEPENDENCIESCONFIG = shared install_recurse
     DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
 }
+
+DEPENDENCIESCONFIG = shared install_recurse
 
 win32:CONFIG -= static
 win32:CONFIG += shared
