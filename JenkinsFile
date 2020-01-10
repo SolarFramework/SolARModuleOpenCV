@@ -43,6 +43,12 @@ pipeline {
             }
         }
 
+        stage("Run Tests") {
+            steps {
+                runTests("tests");
+            }
+        }        
+
         stage("Share Binaries") {
             steps {
                 script {
