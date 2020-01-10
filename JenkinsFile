@@ -39,6 +39,7 @@ pipeline {
                 withEnv(['REMAKEN_RULES_ROOT=/home/jenkins/.remaken/rules/']) {
                     sh "qmake SolARModuleOpenCV.pro"
                     sh "make"
+                    sh "make install"
                 }
             }
         }
@@ -52,7 +53,6 @@ pipeline {
         stage("Share Binaries") {
             steps {
                 script {
-                     sh "make install"
                      BRANCH = BRANCH.replace('/','_')
                 }
                 withCredentials([usernamePassword(credentialsId: 'bc6e150e-ede8-4e35-8af4-0f037edee8ac', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
