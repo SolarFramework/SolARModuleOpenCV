@@ -8,6 +8,9 @@ pipeline {
     parameters {
         gitParameter branchFilter: 'origin/(.*)', type: 'PT_BRANCH', selectedValue: 'DEFAULT',
                 name: 'BRANCH', defaultValue: 'develop', useRepository: '.*SolARModuleOpenCV.git'
+        booleanParam(name: 'RELEASE',
+            defaultValue: false,
+            description: 'Create a Release')                
     }
     stages {
 
