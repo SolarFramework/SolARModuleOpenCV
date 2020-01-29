@@ -37,6 +37,7 @@ SolAR2DOverlayOpencv::SolAR2DOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolAR
    declareProperty("radius", m_radius);
    declarePropertySequence("color", m_color);
    declareProperty("randomColor", m_randomColor);
+   declareProperty("font", m_font);
 
    LOG_DEBUG(" SolAR2DOverlayOpencv constructor");
 
@@ -219,6 +220,26 @@ void SolAR2DOverlayOpencv::drawSBPattern (const SquaredBinaryPattern & pattern, 
             }
         }
     }
+}
+
+void SolAR2DOverlayOpencv::putText(const std::string & text, Point2Df origin, double fontScale, std::vector<int> color, SRef<Image> displayImage)
+{
+	cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
+	cv::Scalar chosenColor = cv::Scalar(color[0], color[1], color[2]);
+	int font;
+
+	if (m_font == -1)
+		font = cv::FONT_HERSHEY_SIMPLEX;
+	else
+		font = m_font;
+
+	cv::putText(displayedImage,
+				text,
+				cv::Point(origin.getX(), origin.getY()),
+				font,
+				fontScale,
+				chosenColor,
+				m_thickness);
 }
 }
 }

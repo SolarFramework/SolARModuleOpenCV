@@ -77,6 +77,11 @@ public:
     /// @param[in,out] displayImage The image on which the squared binary pattern will be drawn (on the whole image).
     void drawSBPattern (const SquaredBinaryPattern & pattern, SRef<Image> displayImage) override;
 
+	/// @brief Writes text on the image.
+	/// @param[in] text, bottom-left point as origin, fontSize and color
+	/// @param[in,out]  displayImage The image on which the text will be written.
+	void putText(const std::string & text, Point2Df origin, double fontSize, std::vector<int> color, SRef<Image> displayImage) override;
+
     void unloadComponent () override final;
 
 private:
@@ -91,6 +96,9 @@ private:
 
     /// @brief if not null, the color will be randomized for each elements
     unsigned int m_randomColor = 0;
+
+	/// @brief font chosen for the text to be written on the image
+	unsigned int m_font = -1;
 };
 
 }
