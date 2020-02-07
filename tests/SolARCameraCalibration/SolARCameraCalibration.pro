@@ -1,5 +1,6 @@
 TARGET =SolAROpenCVCameraCalibration
-VERSION=0.6.0
+VERSION=0.7.0
+TARGETDEPLOYDIR = ../bin
 
 CONFIG += c++11
 CONFIG -= qt
@@ -14,8 +15,8 @@ CONFIG(debug,debug|release) {
 }
 
 CONFIG(release,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}\..\bin
     DEPENDENCIESCONFIG = shared install_recurse # install only in release mode
+    TARGETDEPLOYDIR = $${PWD}/../bin/
     DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
 }
@@ -23,6 +24,7 @@ CONFIG(release,debug|release) {
 win32:CONFIG -= static
 win32:CONFIG += shared
 QMAKE_TARGET.arch = x86_64 #must be defined prior to include
+
 
 ## Configuration for Visual Studio to install binaries and dependencies. Work also for QT Creator by replacing QMAKE_INSTALL
 PROJECTCONFIG = QTVS
