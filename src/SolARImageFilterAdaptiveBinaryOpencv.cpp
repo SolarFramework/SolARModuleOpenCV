@@ -30,10 +30,9 @@ namespace OPENCV {
 SolARImageFilterAdaptiveBinaryOpencv::SolARImageFilterAdaptiveBinaryOpencv():ConfigurableBase(xpcf::toUUID<SolARImageFilterAdaptiveBinaryOpencv>())
 {
     declareInterface<api::image::IImageFilter>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("max", m_max);
-    params->wrapInteger("blockSize", m_blockSize);
-    params->wrapInteger("C", m_C);
+    declareProperty("max", m_max);
+    declareProperty("blockSize", m_blockSize);
+    declareProperty("C", m_C);
 
 }
 

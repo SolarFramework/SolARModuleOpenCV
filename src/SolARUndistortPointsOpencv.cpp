@@ -37,7 +37,7 @@ namespace OPENCV {
 
     }
 
-    FrameworkReturnCode SolARUndistortPointsOpencv::undistort(const std::vector<SRef<Point2Df>> & inputPoints, std::vector<SRef<Point2Df>> & outputPoints){
+    FrameworkReturnCode SolARUndistortPointsOpencv::undistort(const std::vector<Point2Df> & inputPoints, std::vector<Point2Df> & outputPoints){
         
     std::vector<cv::Point2f> ptvec; 
     std::vector<cv::Point2f> out_ptvec; 
@@ -47,14 +47,14 @@ namespace OPENCV {
     outputPoints.resize(inputPoints.size());
 
     for(unsigned int k = 0; k < inputPoints.size();k++){
-        ptvec[k].x = inputPoints[k]->getX();
-        ptvec[k].y = inputPoints[k]->getY();
+        ptvec[k].x = inputPoints[k].getX();
+        ptvec[k].y = inputPoints[k].getY();
     }
     
       cv::undistortPoints(ptvec,out_ptvec, m_camMatrix, m_camDistorsion);
 
-    for(unsigned int k = 0; k < out_ptvec.size();k++){
-        outputPoints[k] = ( xpcf::utils::make_shared<Point2Df>( out_ptvec[k].x, out_ptvec[k].y ));
+    for(unsigned int k = 0 ; k < out_ptvec.size() ; k++){
+        outputPoints[k] = Point2Df( out_ptvec[k].x, out_ptvec[k].y );
     }
         return FrameworkReturnCode::_SUCCESS;
     }

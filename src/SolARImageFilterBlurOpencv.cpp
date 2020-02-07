@@ -30,11 +30,10 @@ namespace OPENCV {
 SolARImageFilterBlurOpencv::SolARImageFilterBlurOpencv():ConfigurableBase(xpcf::toUUID<SolARImageFilterBlurOpencv>())
 {
     declareInterface<api::image::IImageFilter>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("kernel_id", kernel_id);
-    params->wrapInteger("kernel_width", kernel_width);
-    params->wrapInteger("kernel_height", kernel_height);
-    params->wrapInteger("direction", direction);
+    declareProperty("kernel_id", kernel_id);
+    declareProperty("kernel_width", kernel_width);
+    declareProperty("kernel_height", kernel_height);
+    declareProperty("direction", direction);
 }
 
 

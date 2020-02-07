@@ -51,23 +51,25 @@ public:
     SolARKeypointDetectorRegionOpencv();
 
     /// @brief SolARKeypointDetectorRegionOpencv default destructor
-    ~SolARKeypointDetectorRegionOpencv();
+    ~SolARKeypointDetectorRegionOpencv() override;
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
     /// @brief Set the type of method used to detect keypoints in the image
     /// @param[in] type The type of method used to detect keypoints.
-    void setType(KeypointDetectorType type) override;
+    void setType(IKeypointDetector::KeypointDetectorType type) override;
 
     /// @brief Get the type of method used to detect keypoints in the image
     /// @return The type of method used to detect keypoints.
-    KeypointDetectorType  getType() override;
+    IKeypointDetector::KeypointDetectorType  getType() override;
  
     /// @brief This method detects keypoints in an input Image
     /// @param[in] image input image on which we are extracting keypoints.
     /// @param[in] contours a set of 2D points defining the contour of the region where keypoints will be detected
     /// @param[out] keypoints The keypoints detected from the given region of the image passed as first argument.
-    void detect (const SRef<Image> &image, const std::vector<SRef<Point2Df>>& contours, std::vector<SRef<Keypoint>> &keypoints) override;
+    void detect (const SRef<Image> image,
+                             const std::vector<Point2Df> & contours,
+                             std::vector<Keypoint> & keypoints) override;
 
     void unloadComponent () override final;
 

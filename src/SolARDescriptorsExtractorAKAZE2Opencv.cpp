@@ -37,8 +37,7 @@ SolARDescriptorsExtractorAKAZE2Opencv::SolARDescriptorsExtractorAKAZE2Opencv():C
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZE2Opencv constructor")
     // m_extractor must have a default implementation : initialize default extractor type
     m_extractor=AKAZE2::create();
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapDouble("threshold", m_threshold);
+    declareProperty("threshold", m_threshold);
 }
 
 SolARDescriptorsExtractorAKAZE2Opencv::~SolARDescriptorsExtractorAKAZE2Opencv()
@@ -55,9 +54,8 @@ xpcf::XPCFErrorCode SolARDescriptorsExtractorAKAZE2Opencv::onConfigured()
     return xpcf::_SUCCESS;
 }
 
-void SolARDescriptorsExtractorAKAZE2Opencv::extract(const SRef<Image> image, const std::vector<SRef<Keypoint> > &keypoints, SRef<DescriptorBuffer>& descriptors){
-
-
+void SolARDescriptorsExtractorAKAZE2Opencv::extract(const SRef<Image> image, const std::vector<Keypoint> & keypoints, SRef<DescriptorBuffer> & descriptors)
+{
     //transform all SolAR data to openCv data
 
     SRef<Image> convertedImage = image;
@@ -79,19 +77,19 @@ void SolARDescriptorsExtractorAKAZE2Opencv::extract(const SRef<Image> image, con
     {
         transform_to_data.push_back(
                     //instantiate keypoint
-                     cv::KeyPoint(keypoints[k]->getX(),
-                                  keypoints[k]->getY(),
-                                  keypoints[k]->getSize(),
-                                  keypoints[k]->getAngle(),
-                                  keypoints[k]->getResponse(),
-                                  keypoints[k]->getOctave(),
-                                  keypoints[k]->getClassId())
+                     cv::KeyPoint(keypoints[k].getX(),
+                                  keypoints[k].getY(),
+                                  keypoints[k].getSize(),
+                                  keypoints[k].getAngle(),
+                                  keypoints[k].getResponse(),
+                                  keypoints[k].getOctave(),
+                                  keypoints[k].getClassId())
                     );
     }
 
    m_extractor->compute(opencvImage, transform_to_data, out_mat_descps);
 
-   descriptors.reset( new DescriptorBuffer(out_mat_descps.data,DescriptorBuffer::AKAZE, DescriptorBuffer::TYPE_8U, 61, out_mat_descps.rows)) ;
+   descriptors.reset( new DescriptorBuffer(out_mat_descps.data, DescriptorType::AKAZE, DescriptorDataType::TYPE_8U, 61, out_mat_descps.rows)) ;
 
 }
 

@@ -29,27 +29,26 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-static std::map<std::string,KeypointDetectorType> stringToType = {{"AKAZE",KeypointDetectorType::AKAZE},
-                                                                  {"AKAZE2",KeypointDetectorType::AKAZE2},
-                                                                  {"ORB",KeypointDetectorType::ORB},
-                                                                  {"BRISK",KeypointDetectorType::BRISK},
-                                                                  {"FEATURE_TO_TRACK", KeypointDetectorType::FEATURE_TO_TRACK}};
+static std::map<std::string,IKeypointDetector::KeypointDetectorType> stringToType = {{"AKAZE",IKeypointDetector::KeypointDetectorType::AKAZE},
+                                                                  {"AKAZE2",IKeypointDetector::KeypointDetectorType::AKAZE2},
+                                                                  {"ORB",IKeypointDetector::KeypointDetectorType::ORB},
+                                                                  {"BRISK",IKeypointDetector::KeypointDetectorType::BRISK},
+                                                                  {"FEATURE_TO_TRACK", IKeypointDetector::KeypointDetectorType::FEATURE_TO_TRACK}};
 
-static std::map<KeypointDetectorType,std::string> typeToString = {{KeypointDetectorType::AKAZE, "AKAZE"},
-                                                                  {KeypointDetectorType::AKAZE2,"AKAZE2"},
-                                                                  {KeypointDetectorType::ORB,"ORB"},
-                                                                  {KeypointDetectorType::BRISK,"BRISK"},
-                                                                  {KeypointDetectorType::FEATURE_TO_TRACK,"FEATURE_TO_TRACK"}};
+static std::map<IKeypointDetector::KeypointDetectorType,std::string> typeToString = {{IKeypointDetector::KeypointDetectorType::AKAZE, "AKAZE"},
+                                                                  {IKeypointDetector::KeypointDetectorType::AKAZE2,"AKAZE2"},
+                                                                  {IKeypointDetector::KeypointDetectorType::ORB,"ORB"},
+                                                                  {IKeypointDetector::KeypointDetectorType::BRISK,"BRISK"},
+                                                                  {IKeypointDetector::KeypointDetectorType::FEATURE_TO_TRACK,"FEATURE_TO_TRACK"}};
 
 SolARKeypointDetectorOpencv::SolARKeypointDetectorOpencv():ConfigurableBase(xpcf::toUUID<SolARKeypointDetectorOpencv>())
 {
     declareInterface<api::features::IKeypointDetector>(this);
 
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapFloat("imageRatio", m_imageRatio);
-    params->wrapInteger("nbDescriptors", m_nbDescriptors);
-	params->wrapFloat("threshold", m_threshold);
-    params->wrapString("type", m_type);
+    declareProperty("imageRatio", m_imageRatio);
+    declareProperty("nbDescriptors", m_nbDescriptors);
+    declareProperty("threshold", m_threshold);
+    declareProperty("type", m_type);
     LOG_DEBUG("SolARKeypointDetectorOpencv constructor");
 }
 
@@ -128,12 +127,12 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
     }
 }
 
-KeypointDetectorType SolARKeypointDetectorOpencv::getType()
+IKeypointDetector::KeypointDetectorType SolARKeypointDetectorOpencv::getType()
 {
     return stringToType.at(m_type);
 }
 
-void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints)
+void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Keypoint> & keypoints)
 {
     std::vector<cv::KeyPoint> kpts;
 
@@ -176,11 +175,10 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> &image, std::vector<S
         return;
     }
 
-    for(std::vector<cv::KeyPoint>::iterator itr=kpts.begin();itr!=kpts.end();++itr){
-       SRef<Keypoint> kpa = xpcf::utils::make_shared<Keypoint>();
-
-        kpa->init((*itr).pt.x*ratioInv,(*itr).pt.y*ratioInv,(*itr).size,(*itr).angle,(*itr).response,(*itr).octave,(*itr).class_id) ;
-        keypoints.push_back(kpa);
+    for(auto keypoint : kpts){
+       Keypoint kpa;
+       kpa.init(keypoint.pt.x*ratioInv, keypoint.pt.y*ratioInv, keypoint.size, keypoint.angle, keypoint.response, keypoint.octave, keypoint.class_id) ;
+       keypoints.push_back(kpa);
     }
 }
 

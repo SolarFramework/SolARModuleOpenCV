@@ -54,8 +54,8 @@ public:
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distorsion parameters.
     /// @param[out] Decomposed camera poses in the world coordinate system.
-    bool decompose(const Transform2Df& F,
-                   std::vector<Transform3Df>& decomposedPoses) override;
+    bool decompose(const Transform2Df & F,
+                   std::vector<Transform3Df> & decomposedPoses) override;
 
     void unloadComponent () override final;
 

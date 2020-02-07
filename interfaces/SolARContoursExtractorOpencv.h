@@ -42,7 +42,7 @@ public:
     /// @brief Extracts an ensemble of contours from a given image.
     /// [in] inputImg: source image from which the contour will be extracted.
     ///[out] contours: ensemble of contours extracted.
-    FrameworkReturnCode extract(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours) override;
+    FrameworkReturnCode extract(const SRef<Image> inputImg, std::vector<Contour2Df> & contours) override;
 
     void unloadComponent () override final;
 

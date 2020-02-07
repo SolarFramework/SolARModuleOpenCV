@@ -29,27 +29,26 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-static std::map<std::string,KeypointDetectorType> stringToType = {{"AKAZE",KeypointDetectorType::AKAZE},
-                                                                  {"AKAZE2",KeypointDetectorType::AKAZE2},
-                                                                  {"ORB",KeypointDetectorType::ORB},
-                                                                  {"BRISK",KeypointDetectorType::BRISK},
-                                                                  {"FEATURE_TO_TRACK", KeypointDetectorType::FEATURE_TO_TRACK}};
+static std::map<std::string,IKeypointDetector::KeypointDetectorType> stringToType = {{"AKAZE",IKeypointDetector::KeypointDetectorType::AKAZE},
+                                                                  {"AKAZE2",IKeypointDetector::KeypointDetectorType::AKAZE2},
+                                                                  {"ORB",IKeypointDetector::KeypointDetectorType::ORB},
+                                                                  {"BRISK",IKeypointDetector::KeypointDetectorType::BRISK},
+                                                                  {"FEATURE_TO_TRACK", IKeypointDetector::KeypointDetectorType::FEATURE_TO_TRACK}};
 
-static std::map<KeypointDetectorType,std::string> typeToString = {{KeypointDetectorType::AKAZE, "AKAZE"},
-                                                                  {KeypointDetectorType::AKAZE2,"AKAZE2"},
-                                                                  {KeypointDetectorType::ORB,"ORB"},
-                                                                  {KeypointDetectorType::BRISK,"BRISK"},
-                                                                  {KeypointDetectorType::FEATURE_TO_TRACK,"FEATURE_TO_TRACK"}};
+static std::map<IKeypointDetector::KeypointDetectorType,std::string> typeToString = {{IKeypointDetector::KeypointDetectorType::AKAZE, "AKAZE"},
+                                                                  {IKeypointDetector::KeypointDetectorType::AKAZE2,"AKAZE2"},
+                                                                  {IKeypointDetector::KeypointDetectorType::ORB,"ORB"},
+                                                                  {IKeypointDetector::KeypointDetectorType::BRISK,"BRISK"},
+                                                                  {IKeypointDetector::KeypointDetectorType::FEATURE_TO_TRACK,"FEATURE_TO_TRACK"}};
 
 SolARKeypointDetectorRegionOpencv::SolARKeypointDetectorRegionOpencv():ConfigurableBase(xpcf::toUUID<SolARKeypointDetectorRegionOpencv>())
 {
     declareInterface<api::features::IKeypointDetectorRegion>(this);
 
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapFloat("imageRatio", m_imageRatio);
-    params->wrapInteger("nbDescriptors", m_nbDescriptors);
-	params->wrapFloat("threshold", m_threshold);
-    params->wrapString("type", m_type);
+    declareProperty("imageRatio", m_imageRatio);
+    declareProperty("nbDescriptors", m_nbDescriptors);
+    declareProperty("threshold", m_threshold);
+    declareProperty("type", m_type);
     LOG_DEBUG("SolARKeypointDetectorRegionOpencv constructor");
 }
 
@@ -73,7 +72,7 @@ xpcf::XPCFErrorCode SolARKeypointDetectorRegionOpencv::onConfigured()
     }
 }
 
-void SolARKeypointDetectorRegionOpencv::setType(KeypointDetectorType type)
+void SolARKeypointDetectorRegionOpencv::setType(IKeypointDetector::KeypointDetectorType type)
 {
 
     /*
@@ -89,28 +88,28 @@ void SolARKeypointDetectorRegionOpencv::setType(KeypointDetectorType type)
         */
     m_type=typeToString.at(type);
     switch (type) {
-	case (KeypointDetectorType::AKAZE):
+    case (IKeypointDetector::KeypointDetectorType::AKAZE):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
 		if (m_threshold > 0)
 			m_detector = AKAZE::create(5, 0, 3, m_threshold);
 		else
 			m_detector = AKAZE::create();
 		break;
-	case (KeypointDetectorType::AKAZE2):
+    case (IKeypointDetector::KeypointDetectorType::AKAZE2):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE2)");
 		if (m_threshold > 0)
 			m_detector = AKAZE2::create(5, 0, 3, m_threshold);
 		else
 			m_detector = AKAZE2::create();
 		break;
-	case (KeypointDetectorType::ORB):
+    case (IKeypointDetector::KeypointDetectorType::ORB):
         LOG_DEBUG("KeypointDetectorImp::setType(ORB)");
 		if (m_nbDescriptors > 0)
 			m_detector=ORB::create(m_nbDescriptors);
 		else
 			m_detector = ORB::create();
         break;
-    case (KeypointDetectorType::BRISK):
+    case (IKeypointDetector::KeypointDetectorType::BRISK):
         LOG_DEBUG("KeypointDetectorImp::setType(BRISK)");
 		if (m_threshold > 0)
 			m_detector = BRISK::create((int)m_threshold);
@@ -126,7 +125,7 @@ void SolARKeypointDetectorRegionOpencv::setType(KeypointDetectorType type)
     }
 }
 
-KeypointDetectorType SolARKeypointDetectorRegionOpencv::getType()
+IKeypointDetector::KeypointDetectorType SolARKeypointDetectorRegionOpencv::getType()
 {
     return stringToType.at(m_type);
 }
@@ -140,7 +139,7 @@ void goodFeaturesToTrackDetection(cv::Mat &img, int &nbDescriptors, std::vector<
 	}
 }
 
-void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> &image, const std::vector<SRef<Point2Df>>& contours, std::vector<SRef<Keypoint>> &keypoints)
+void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const std::vector<Point2Df> & contours, std::vector<Keypoint> & keypoints)
 {
     std::vector<cv::KeyPoint> kpts;
 
@@ -187,11 +186,11 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> &image, const s
 		return acosf(tmp);
 	};
 
-	auto checkInside = [getAngle](const std::vector<SRef<Point2Df>>& contours, Point2f &ptToCheck) {
+    auto checkInside = [getAngle](const std::vector<Point2Df>& contours, Point2f &ptToCheck) {
 		float sumAngles(0.f);
 		for (int i = 0; i < contours.size(); ++i) {
-			cv::Point2f pt1(contours[i]->getX(), contours[i]->getY());
-			cv::Point2f pt2(contours[(i + 1) % contours.size()]->getX(), contours[(i + 1) % contours.size()]->getY());
+            cv::Point2f pt1(contours[i].getX(), contours[i].getY());
+            cv::Point2f pt2(contours[(i + 1) % contours.size()].getX(), contours[(i + 1) % contours.size()].getY());
 			sumAngles += getAngle(pt1, pt2, ptToCheck);
 		}
 		
@@ -204,8 +203,8 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> &image, const s
     for(std::vector<cv::KeyPoint>::iterator itr=kpts.begin();itr!=kpts.end();++itr){
         Point2f ptToCheck = (*itr).pt * ratioInv;
         if (checkInside(contours, ptToCheck)) {
-			SRef<Keypoint> kpa = xpcf::utils::make_shared<Keypoint>();
-			kpa->init((*itr).pt.x*ratioInv, (*itr).pt.y*ratioInv, (*itr).size, (*itr).angle, (*itr).response, (*itr).octave, (*itr).class_id);
+            Keypoint kpa;
+            kpa.init((*itr).pt.x*ratioInv, (*itr).pt.y*ratioInv, (*itr).size, (*itr).angle, (*itr).response, (*itr).octave, (*itr).class_id);
 			keypoints.push_back(kpa);
 		}
     }

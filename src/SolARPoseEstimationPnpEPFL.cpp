@@ -31,8 +31,7 @@ namespace OPENCV {
 SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpEPFL>())
 {
     declareInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("maxNumberCorrespondences", m_maxNumberCorrespondences);
+    declareProperty("maxNumberCorrespondences", m_maxNumberCorrespondences);
 
 
     m_camMatrix.create(3, 3, CV_32FC1);
@@ -45,24 +44,29 @@ SolARPoseEstimationPnpEPFL::~SolARPoseEstimationPnpEPFL(){
 
 }
 
-FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<Point2Df>> & imagePoints,
-                                                         const std::vector<SRef<Point3Df>> & worldPoints,
+FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<Point2Df> & imagePoints,
+                                                         const std::vector<Point3Df> & worldPoints,
                                                          Transform3Df & pose,
                                                          const Transform3Df initialPose) {
     SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(m_maxNumberCorrespondences);
     Transform3Df initialPoseInverse = initialPose.inverse();
-    Eigen::Matrix3f R = initialPoseInverse.rotation();
-    Eigen::Vector3f T = initialPoseInverse.translation();
+	Eigen::Matrix3f R;
+	R << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
+		initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
+		initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2);
+	Eigen::Vector3f T;
+	T << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3);
+
     SolARPoseEstimationPnpEPFL::reset_correspondences();
 
     for (int i = 0; i < worldPoints.size(); i++) {
          double Xw, Yw, Zw, u, v;
-         Xw = worldPoints[i]->getX();
-         Yw = worldPoints[i]->getY();
-         Zw = worldPoints[i]->getZ();
+         Xw = worldPoints[i].getX();
+         Yw = worldPoints[i].getY();
+         Zw = worldPoints[i].getZ();
 
-         u = imagePoints[i]->getX();
-         v = imagePoints[i]->getY();
+         u = imagePoints[i].getX();
+         v = imagePoints[i].getY();
 
          SolARPoseEstimationPnpEPFL::add_correspondence(Xw, Yw, Zw, u, v);
       }

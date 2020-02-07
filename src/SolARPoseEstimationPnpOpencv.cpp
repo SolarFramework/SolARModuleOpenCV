@@ -30,11 +30,10 @@ namespace OPENCV {
 SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
     declareInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("iterationsCount", m_iterationsCount);
-    params->wrapFloat("reprojError", m_reprojError);
-    params->wrapFloat("confidence", m_confidence);
-	params->wrapInteger("minNbInliers", m_NbInliersToValidPose);
+    declareProperty("iterationsCount", m_iterationsCount);
+    declareProperty("reprojError", m_reprojError);
+    declareProperty("confidence", m_confidence);
+    declareProperty("minNbInliers", m_NbInliersToValidPose);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
@@ -46,8 +45,8 @@ SolARPoseEstimationPnpOpencv::~SolARPoseEstimationPnpOpencv(){
 
 }
 
-FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SRef<Point2Df>> & imagePoints,
-                                                            const std::vector<SRef<Point3Df>> & worldPoints,
+FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Point2Df> & imagePoints,
+                                                            const std::vector<Point3Df> & worldPoints,
                                                             Transform3Df & pose,
                                                             const Transform3Df initialPose) {
 
@@ -63,23 +62,24 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<SR
 
     for (int i=0;i<imagePoints.size();++i) {
 
-        Point2Df point2D = *(imagePoints.at(i));
-        Point3Df point3D = *(worldPoints.at(i));
+        Point2Df point2D = imagePoints.at(i);
+        Point3Df point3D = worldPoints.at(i);
         imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
         worldCVPoints.push_back(cv::Point3f(point3D.getX(), point3D.getY(),point3D.getZ()));
     }
 
     cv::Mat Rvec;
     cv::Mat_<float> Tvec;
-    cv::Mat raux, taux;
+    cv::Mat raux, taux, r33;
 
     
     // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
     if (!initialPoseInverse.isApprox(Transform3Df::Identity())){
-
-        int type = SolAROpenCVHelper::inferOpenCVType<float>();
-        raux = cv::Mat(3,3,type,(void *)initialPoseInverse.rotation().data());
-        taux = cv::Mat(3,1,type,(void *)initialPoseInverse.translation().data());
+		r33 = (cv::Mat_<float>(3, 3) << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
+										initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
+										initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2));
+		taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
+		cv::Rodrigues(r33, raux);
         
         cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1, cv::SOLVEPNP_ITERATIVE);
     }

@@ -31,13 +31,12 @@ namespace OPENCV {
 SolAROpticalFlowPyrLKOpencv::SolAROpticalFlowPyrLKOpencv():ConfigurableBase(xpcf::toUUID<SolAROpticalFlowPyrLKOpencv>())
 {
     declareInterface<IOpticalFlowEstimator>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("searchWinWidth", m_searchWinWidth);
-    params->wrapInteger("searchWinHeight", m_searchWinHeight);
-    params->wrapInteger("maxLevel", m_maxLevel);
-    params->wrapDouble("minEigenThreshold", m_minEigenThreshold);
-    params->wrapInteger("maxSearchIterations", m_maxSearchIterations);
-    params->wrapFloat("searchWindowAccuracy",m_searchWindowAccuracy);
+    declareProperty("searchWinWidth", m_searchWinWidth);
+    declareProperty("searchWinHeight", m_searchWinHeight);
+    declareProperty("maxLevel", m_maxLevel);
+    declareProperty("minEigenThreshold", m_minEigenThreshold);
+    declareProperty("maxSearchIterations", m_maxSearchIterations);
+    declareProperty("searchWindowAccuracy",m_searchWindowAccuracy);
 
     LOG_DEBUG(" SolAROpticalFlowPyrLKOpencv constructor")
 }
@@ -47,35 +46,35 @@ SolAROpticalFlowPyrLKOpencv::~SolAROpticalFlowPyrLKOpencv()
     LOG_DEBUG(" SolAROpticalFlowPyrLKOpencv destructor")
 }
 
-template <class T> std::vector<cv::Point2f> fillcvpoints(const std::vector<SRef<T>> & points)
+template <class T> std::vector<cv::Point2f> fillcvpoints(const std::vector<T> & points)
 {
 
 }
 
 template <>
-inline std::vector<cv::Point2f> fillcvpoints(const std::vector<SRef<Point2Df>> & points)
+inline std::vector<cv::Point2f> fillcvpoints(const std::vector<Point2Df> & points)
 {
 
     std::vector<cv::Point2f> cv_points;
     for (auto point : points)
-        cv_points.push_back(cv::Point2f(point->getX(), point->getY()));
+        cv_points.push_back(cv::Point2f(point.getX(), point.getY()));
     return cv_points;
 }
 
 template <>
-inline std::vector<cv::Point2f> fillcvpoints(const std::vector<SRef<Keypoint>> & points)
+inline std::vector<cv::Point2f> fillcvpoints(const std::vector<Keypoint> & points)
 {
     std::vector<cv::Point2f> cv_points;
     for (auto point : points)
-        cv_points.push_back(cv::Point2f(point->getX(), point->getY()));
+        cv_points.push_back(cv::Point2f(point.getX(), point.getY()));
     return cv_points;
 }
 
 FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(
                 const SRef<Image> previousImage,
                 const SRef<Image> currentImage,
-                const std::vector<SRef<Keypoint>> & pointsToTrack,
-                std::vector<SRef<Point2Df>> & trackedPoints,
+                const std::vector<Keypoint> & pointsToTrack,
+                std::vector<Point2Df> & trackedPoints,
                 std::vector<unsigned char> & status,
                 std::vector<float> & error)
 {
@@ -86,8 +85,8 @@ FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(
 FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(
                 const SRef<Image> previousImage,
                 const SRef<Image> currentImage,
-                const std::vector<SRef<Point2Df>> & pointsToTrack,
-                std::vector<SRef<Point2Df>> & trackedPoints,
+                const std::vector<Point2Df> & pointsToTrack,
+                std::vector<Point2Df> & trackedPoints,
                 std::vector<unsigned char> & status,
                 std::vector<float> & error)
 {
@@ -98,7 +97,7 @@ FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(
 FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(const SRef<Image> previousImage,
                                                           const SRef<Image> currentImage,
                                                           const std::vector<cv::Point2f> & pointsToTrack,
-                                                          std::vector<SRef<Point2Df>> & trackedPoints,
+                                                          std::vector<Point2Df> & trackedPoints,
                                                           std::vector<unsigned char> & status,
                                                           std::vector<float> & error)
 {
@@ -125,7 +124,7 @@ FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(const SRef<Image> prev
 
     trackedPoints.clear();
     for (int i = 0; i < cv_trackedPoints.size(); i++)
-        trackedPoints.push_back(xpcf::utils::make_shared<Point2Df>(cv_trackedPoints[i].x, cv_trackedPoints[i].y));
+        trackedPoints.push_back(Point2Df(cv_trackedPoints[i].x, cv_trackedPoints[i].y));
 
     return FrameworkReturnCode::_SUCCESS;
 }

@@ -57,7 +57,9 @@ public:
     /// [in] image: source image.
     /// [in] keypoints: set of keypoints.
     /// [out] decsriptors: se of computed descriptors.
-    void extract (const SRef<Image> image, const std::vector<SRef<Keypoint>> &keypoints, SRef<DescriptorBuffer>& descriptors) override;
+    void extract (const SRef<Image> image,
+                  const std::vector< Keypoint > &keypoints,
+                  SRef<DescriptorBuffer> & descriptors) override;
 
 private:
     cv::Ptr<cv::AKAZE> m_extractor;

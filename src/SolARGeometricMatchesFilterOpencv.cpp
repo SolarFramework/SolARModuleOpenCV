@@ -30,9 +30,9 @@ SolARGeometricMatchesFilterOpencv::SolARGeometricMatchesFilterOpencv():Configura
 { 
     LOG_DEBUG("SolARGeometricMatchesFilterOpencv constructor")
     declareInterface<api::features::IMatchesFilter>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapFloat("confidence", m_confidence);
-    params->wrapFloat("outlierDistanceRatio", m_outlierDistanceRatio);
+    declareProperty("confidence", m_confidence);
+    declareProperty("outlierDistanceRatio", m_outlierDistanceRatio);
+    declareProperty("epilinesDistance", m_epilinesDistance);
 }
 
 
@@ -42,10 +42,11 @@ SolARGeometricMatchesFilterOpencv::~SolARGeometricMatchesFilterOpencv(){
 
 
 
-void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch>&inputMatches,
-                                               std::vector<DescriptorMatch>&outputMatches,
-                                               const std::vector<SRef<Keypoint>>&inputKeyPointsA,
-                                               const std::vector<SRef<Keypoint>>&inputKeyPointsB){
+void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch> & inputMatches,
+                                               std::vector<DescriptorMatch> & outputMatches,
+                                               const std::vector<Keypoint> & inputKeyPointsA,
+                                               const std::vector<Keypoint> & inputKeyPointsB)
+{
 
     std::vector<DescriptorMatch>tempMatches;
     std::vector<uchar> status(inputKeyPointsA.size());
@@ -56,12 +57,12 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
         // get Align matches
         for (unsigned int i = 0; i<inputMatches.size(); i++) {
             assert(inputMatches[i].getIndexInDescriptorA() < inputKeyPointsA.size());
-            pts1.push_back(cv::Point2f(inputKeyPointsA[inputMatches[i].getIndexInDescriptorA()]->getX(),
-                                       inputKeyPointsA[inputMatches[i].getIndexInDescriptorA()]->getY()));
+            pts1.push_back(cv::Point2f(inputKeyPointsA[inputMatches[i].getIndexInDescriptorA()].getX(),
+                                       inputKeyPointsA[inputMatches[i].getIndexInDescriptorA()].getY()));
 
             assert(inputMatches[i].getIndexInDescriptorB() < inputKeyPointsB.size());
-            pts2.push_back(cv::Point2f(inputKeyPointsB[inputMatches[i].getIndexInDescriptorB()]->getX(),
-                                       inputKeyPointsB[inputMatches[i].getIndexInDescriptorB()]->getY()));
+            pts2.push_back(cv::Point2f(inputKeyPointsB[inputMatches[i].getIndexInDescriptorB()].getX(),
+                                       inputKeyPointsB[inputMatches[i].getIndexInDescriptorB()].getY()));
 
         }
 
@@ -79,8 +80,41 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
             }
         }
     }
-    outputMatches=tempMatches;
+    outputMatches = tempMatches;
     return;
+}
+
+void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch>& inputMatches, std::vector<DescriptorMatch>& outputMatches, const std::vector<Keypoint>& inputKeyPoints1, const std::vector<Keypoint>& inputKeyPoints2, const Transform3Df & pose1, const Transform3Df & pose2, const CamCalibration & intrinsicParams)
+{
+	std::vector<DescriptorMatch> tmpMatches;
+	// compute fundamental matrice
+	Transform3Df pose12 = pose1.inverse() * pose2;
+	cv::Mat R12 = (cv::Mat_<float>(3, 3) << pose12(0, 0), pose12(0, 1), pose12(0, 2),
+											pose12(1, 0), pose12(1, 1), pose12(1, 2), 
+											pose12(2, 0), pose12(2, 1), pose12(2, 2));
+	cv::Mat T12 = (cv::Mat_<float>(3, 1) << pose12(0, 3), pose12(1, 3), pose12(2, 3));
+
+	cv::Mat T12x = (cv::Mat_<float>(3, 3) << 0, -T12.at<float>(2), T12.at<float>(1),
+											T12.at<float>(2), 0, -T12.at<float>(0),
+											-T12.at<float>(1), T12.at<float>(0), 0);
+
+	cv::Mat K(3, 3, CV_32FC1, (void *)intrinsicParams.data());		
+	cv::Mat F12 = K.t().inv() * T12x * R12 * K.inv();
+	
+	// check matches based on distance to epipolar lines
+	for (int i = 0; i < inputMatches.size(); ++i) {		
+		Keypoint kp1 = inputKeyPoints1[inputMatches[i].getIndexInDescriptorA()];
+		Keypoint kp2 = inputKeyPoints2[inputMatches[i].getIndexInDescriptorB()];
+		// Epipolar line in second image l = x1'F12 = [a b c]
+		double a = kp1.getX() * F12.at<float>(0, 0) + kp1.getY() * F12.at<float>(1, 0) + F12.at<float>(2, 0);
+		double b = kp1.getX() * F12.at<float>(0, 1) + kp1.getY() * F12.at<float>(1, 1) + F12.at<float>(2, 1);
+		double c = kp1.getX() * F12.at<float>(0, 2) + kp1.getY() * F12.at<float>(1, 2) + F12.at<float>(2, 2);
+		double dis = std::fabs(a * kp2.getX() + b * kp2.getY() + c) / (std::sqrt(a * a + b * b));
+
+		if (dis < m_epilinesDistance)
+			tmpMatches.push_back(inputMatches[i]);
+	}
+	outputMatches.swap(tmpMatches);
 }
 
 }

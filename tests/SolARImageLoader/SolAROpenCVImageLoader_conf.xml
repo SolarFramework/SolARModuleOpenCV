@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xpcf-registry>
+	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$SolARBuild/SolARModuleOpenCV/0.7.0/lib/x86_64/shared">
+        <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="SolARImageLoaderOpencv" description="SolARImageLoaderOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" name="IImageLoader" description="IImageLoader"/>
+        </component>
+		<component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="SolARImageViewerOpencv" description="SolARImageViewerOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
+        </component>   	
+    </module>
+	
+	<configuration>
+		<component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c"> <!-- SolARImageLoaderOpencv -->
+			<property name="filePath" type="string" value="../../data/notredame1.jpg"/>
+		</component>
+		<component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="confImage"> <!-- SolARImageViewerOpencv -->
+			<property name="title" type="string" value="Image from the configuration file (press esc key to exit)"/>
+			<property name="exitKey" type="Integer" value="27"/>
+			<property name="width" type="Integer" value="0"/>
+			<property name="height" type="Integer" value="0"/>
+		</component>
+		<component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="paramImage"> <!-- SolARImageViewerOpencv -->
+			<property name="title" type="string" value="Image from the exe parameter (press esc key to exit)"/>
+			<property name="exitKey" type="Integer" value="27"/>
+			<property name="width" type="Integer" value="0"/>
+			<property name="height" type="Integer" value="0"/>
+		</component>		
+    </configuration>
+</xpcf-registry>

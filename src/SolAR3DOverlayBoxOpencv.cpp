@@ -39,10 +39,9 @@ SolAR3DOverlayBoxOpencv::SolAR3DOverlayBoxOpencv():ConfigurableBase(xpcf::toUUID
     m_camDistorsion.create(5, 1, CV_32FC1);
     m_parallelepiped.create(8, 3, CV_32FC1);
 
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapFloatVector("position", m_position);
-    params->wrapFloatVector("orientation", m_orientation);
-    params->wrapFloatVector("size", m_size);
+    declarePropertySequence("orientation", m_orientation);
+    declarePropertySequence("position", m_position);
+    declarePropertySequence("size", m_size);
 
    LOG_DEBUG(" SolAR3DOverlayBoxOpencv constructor");
 

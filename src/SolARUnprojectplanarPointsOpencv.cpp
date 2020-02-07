@@ -32,8 +32,6 @@ namespace OPENCV {
 SolARUnprojectPlanarPointsOpencv::SolARUnprojectPlanarPointsOpencv():ConfigurableBase(xpcf::toUUID<SolARUnprojectPlanarPointsOpencv>())
 {
     declareInterface<api::geom::IUnproject>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
 
@@ -44,7 +42,7 @@ SolARUnprojectPlanarPointsOpencv::~SolARUnprojectPlanarPointsOpencv(){
 
 }
 
-FrameworkReturnCode unprojectOCV(const std::vector<cv::Point2f>& imagePoints, std::vector<SRef<Point3Df>>& worldPoints, const Transform3Df& pose, const cv::Mat &m_camMatrix, const cv::Mat &m_camDistorsion)
+FrameworkReturnCode unprojectOCV(const std::vector<cv::Point2f>& imagePoints, std::vector<Point3Df>& worldPoints, const Transform3Df& pose, const cv::Mat &m_camMatrix, const cv::Mat &m_camDistorsion)
 {	
 	// undistort 2D points	
 	std::vector<cv::Point2f> correctedImagePoints;
@@ -62,34 +60,34 @@ FrameworkReturnCode unprojectOCV(const std::vector<cv::Point2f>& imagePoints, st
 	for (auto it : correctedImagePoints) {
 		cv::Mat pt2D = (cv::Mat_<float>(3, 1) << it.x, it.y, 1.f);
 		cv::Mat pt3D = unProj * pt2D;
-		worldPoints.push_back(xpcf::utils::make_shared<Point3Df>(pt3D.at<float>(0, 0) / pt3D.at<float>(2, 0), pt3D.at<float>(1, 0) / pt3D.at<float>(2, 0), 0.f));
+        worldPoints.push_back(Point3Df(pt3D.at<float>(0, 0) / pt3D.at<float>(2, 0), pt3D.at<float>(1, 0) / pt3D.at<float>(2, 0), 0.f));
 	}
 
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vector<SRef<Point2Df>> & imagePoints,
-                                                                std::vector<SRef<Point3Df>> & worldPoints,
+FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vector<Point2Df> & imagePoints,
+                                                                std::vector<Point3Df> & worldPoints,
                                                                 const Transform3Df& pose)
 {
     if (imagePoints.empty())
         return FrameworkReturnCode::_ERROR_;
     std::vector<cv::Point2f> cvPoints;
     for (auto point : imagePoints)
-        cvPoints.push_back(cv::Point2f(point->getX(), point->getY()));
+        cvPoints.push_back(cv::Point2f(point.getX(), point.getY()));
 
     return unprojectOCV(cvPoints, worldPoints, pose, m_camMatrix, m_camDistorsion);
 }
 
-FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vector<SRef<Keypoint>> & imageKeypoints,
-                                                                std::vector<SRef<Point3Df>> & worldPoints,
+FrameworkReturnCode SolARUnprojectPlanarPointsOpencv::unproject(const std::vector<Keypoint> & imageKeypoints,
+                                                                std::vector<Point3Df> & worldPoints,
                                                                 const Transform3Df& pose)
 {
     if (imageKeypoints.empty())
         return FrameworkReturnCode::_ERROR_;
     std::vector<cv::Point2f> cvPoints;
     for (auto point : imageKeypoints)
-        cvPoints.push_back(cv::Point2f(point->getX(), point->getY()));
+        cvPoints.push_back(cv::Point2f(point.getX(), point.getY()));
 
     return unprojectOCV(cvPoints, worldPoints, pose, m_camMatrix, m_camDistorsion);
 }
