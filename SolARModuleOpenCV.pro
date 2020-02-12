@@ -70,7 +70,7 @@ android {
 header_files.path = $${PROJECTDEPLOYDIR}/interfaces
 header_files.files = $$files($${PWD}/interfaces/*.h*)
 
-xpcf_xml_files.path = $$(HOME)/.xpcf/SolAR
+xpcf_xml_files.path = $${USERHOMEFOLDER}/.xpcf/SolAR
 xpcf_xml_files.files=$$files($${PWD}/xpcf*.xml)
 
 INSTALLS += header_files
