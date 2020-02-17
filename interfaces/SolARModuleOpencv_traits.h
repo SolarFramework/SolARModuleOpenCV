@@ -21,6 +21,12 @@
 
 namespace SolAR {
 namespace MODULES {
+/**
+ * @namespace SolAR::MODULES::OPENCV
+ * @brief <B>Provides a set of computer vision components based on OpenCV library: https://opencv.org/</B>
+ * <TT>UUID: 15e1990b-86b2-445c-8194-0cbe80ede970</TT>
+ *
+ */
 namespace OPENCV {
 class SolAR2DOverlayOpencv;
 class SolAR3DOverlayBoxOpencv;
