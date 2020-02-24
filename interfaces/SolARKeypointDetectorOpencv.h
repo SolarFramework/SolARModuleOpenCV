@@ -36,20 +36,35 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARKeypointDetectorOpencv
+ * @brief <B>Detects keypoints in an image.</B>
+ * <TT>UUID: e81c7e4e-7da6-476a-8eba-078b43071272</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARKeypointDetectorOpencv : public org::bcom::xpcf::ConfigurableBase,
         public IKeypointDetector {
 public:
 
     SolARKeypointDetectorOpencv();
-    ~SolARKeypointDetectorOpencv();
+    ~SolARKeypointDetectorOpencv() override;
     void unloadComponent () override final;
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 
-    void setType(KeypointDetectorType type);
-    KeypointDetectorType  getType();
+    /// @brief Set the type of method used to detect keypoints in the image
+    /// @param[in] type The type of method used to detect keypoints.
+    void setType(KeypointDetectorType type) override;
+
+    /// @brief Get the type of method used to detect keypoints in the image
+    /// @return The type of method used to detect keypoints.
+    KeypointDetectorType  getType() override;
  
-    void detect (const SRef<Image> &image, std::vector<SRef<Keypoint>> &keypoints);
+    /// @brief This method detects keypoints in an input Image
+    /// @param[in] image input image on which we are extracting keypoints.
+    /// @param[out] keypoints The keypoints detected from the image passed as first argument.
+    void detect (const SRef<Image> image, std::vector<Keypoint> & keypoints) override;
 
 private:
     /// @brief the type of descriptor used for the extraction (AKAZE, AKAZE2, ORB, BRISK)
@@ -64,7 +79,6 @@ private:
 
 	/// @brief the threshold of detector to accept a keypoint
 	float m_threshold = 1e-3;
-
 
     int m_id;
     cv::Ptr<cv::Feature2D> m_detector;

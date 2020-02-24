@@ -16,6 +16,7 @@
 
 #include "SolARImageViewerOpencv.h"
 #include <opencv2/highgui.hpp>
+#include "core/Log.h"
 
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageViewerOpencv)
@@ -48,13 +49,12 @@ inline int deduceOpenCVType(SRef<Image> img)
 
 SolARImageViewerOpencv::SolARImageViewerOpencv():ConfigurableBase(xpcf::toUUID<SolARImageViewerOpencv>())
 {
-    addInterface<api::display::IImageViewer>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapString("title", m_title);
-    params->wrapInteger("width", m_width);
-    params->wrapInteger("height", m_height);
-    params->wrapInteger("exitKey", m_exitKey);
-    params->wrapUnsignedInteger("duration", m_duration);
+    declareInterface<api::display::IImageViewer>(this);
+    declareProperty("title", m_title);
+    declareProperty("width", m_width);
+    declareProperty("height", m_height);
+    declareProperty("exitKey", m_exitKey);
+    declareProperty("duration", m_duration);
     LOG_DEBUG(" SolARImageViewerOpencv constructor")
 }
 

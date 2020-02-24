@@ -33,14 +33,42 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARMarker2DSquaredBinaryOpencv
+ * @brief <B>Loads a 2D squared binary marker from a file.</B>
+ * <TT>UUID: 5d2b8da9-528e-4e5e-96c1-f883edcf3b1c</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARMarker2DSquaredBinaryOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::input::files::IMarker2DSquaredBinary{
 public:
 
    SolARMarker2DSquaredBinaryOpencv();
-   ~SolARMarker2DSquaredBinaryOpencv();
+   ~SolARMarker2DSquaredBinaryOpencv() override;
 
     FrameworkReturnCode loadMarker() override;
+
+    /// @brief Provide the position of 2D corners in image coordinate system
+    /// @param[out] imageCorners the 2D corners of the marker in image coordinate system
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
+    FrameworkReturnCode getImageCorners(std::vector<Point2Df> & imageCorners) const override;
+
+    /// @brief Provide the position of 3D corners in world coordinate system
+    /// @param[out] worldCorners the 3D corners of the marker in world coordinate system
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
+    FrameworkReturnCode getWorldCorners(std::vector<Point3Df> & worldCorners) const override;
+
+    void setSize (const float & width, const float & height) override { m_size.width = width; m_size.height = height; }
+    float getWidth() const override { return m_size.width; }
+    float getHeight() const override { return m_size.height; }
+    const Sizef & getSize() const override { return m_size; }
+
+    const SquaredBinaryPattern & getPattern() const override { return m_pattern; }
+
+protected:
+    Sizef m_size; ///<define the size of the 2D Marker according to the user-defined unit (the same used for the camera calibration)
+    SquaredBinaryPattern m_pattern;
 
     void unloadComponent () override final;
 

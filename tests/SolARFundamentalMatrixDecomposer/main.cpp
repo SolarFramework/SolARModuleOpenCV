@@ -23,19 +23,18 @@
 
 // ADD COMPONENTS HEADERS HER
 
-#include "SolARModuleOpencv_traits.h"
 #include "api/input/devices/ICamera.h"
 #include "api/solver/pose/I2DTransformFinder.h"
 #include "api/solver/pose/I2Dto3DTransformDecomposer.h"
+#include "core/Log.h"
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
-using namespace SolAR::MODULES::OPENCV;
 
 namespace xpcf  = org::bcom::xpcf;
 
-void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2Df>>&pt2d){
+void load_2dpoints(std::string&path_file, int points_no, std::vector<Point2Df>&pt2d){
 
     std::ifstream ox(path_file);
     float pt[2];
@@ -48,7 +47,7 @@ void load_2dpoints(std::string&path_file, int points_no, std::vector<SRef<Point2
        v[0]  = std::stof(dummy);
        ox>>dummy;
        v[1]= std::stof(dummy);
-       pt2d[i]  = xpcf::utils::make_shared<Point2Df>(v[0], v[1]);
+       pt2d[i]  = Point2Df(v[0], v[1]);
     }
   ox.close();
 }
@@ -60,53 +59,63 @@ int main() {
 
     LOG_ADD_LOG_TO_CONSOLE();
 
-    std::string path_points1 = "../data/pt1_F.txt";
-    std::string path_points2 = "../data/pt2_F.txt";
+    std::string path_points1 = "../../data/pt1_F.txt";
+    std::string path_points2 = "../../data/pt2_F.txt";
 
-    /* instantiate component manager*/
-    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+    try{
+        /* instantiate component manager*/
+        SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-    if(xpcfComponentManager->load("conf_FundamentalMatrixDecomposer.xml")!=org::bcom::xpcf::_SUCCESS)
+        if(xpcfComponentManager->load("SolAROpenCVFundamentalMatrixDecomposer_conf.xml")!=org::bcom::xpcf::_SUCCESS)
+        {
+            LOG_ERROR("Failed to load the configuration file SolAROpenCVFundamentalMatrixDecomposer_conf.xml")
+            return -1;
+        }
+
+        // declare and create components
+        LOG_INFO("Start creating components");
+
+        // component creation
+        SRef<input::devices::ICamera> camera = xpcfComponentManager->resolve<input::devices::ICamera>();
+        SRef<solver::pose::I2DTransformFinder> fundamentalFinder = xpcfComponentManager->resolve<solver::pose::I2DTransformFinder>();
+        SRef<solver::pose::I2Dto3DTransformDecomposer> fundamentalDecomposer = xpcfComponentManager->resolve<solver::pose::I2Dto3DTransformDecomposer>();
+
+        /* we need to check that components are well created*/
+        if (!camera || !fundamentalFinder || !fundamentalDecomposer)
+        {
+            LOG_ERROR("One or more component creations have failed");
+            return -1;
+        }
+
+
+     // declarations
+        Transform2Df                                      F;
+        std::vector<Transform3Df>                         poses;
+        std::vector<Point2Df>                       points_view1;
+        std::vector<Point2Df>                       points_view2;
+
+     // Initialization
+       fundamentalDecomposer->setCameraParameters(camera->getIntrinsicsParameters(), camera->getDistorsionParameters());
+
+       const int nb_points = 6953;
+       load_2dpoints(path_points1, nb_points, points_view1);
+       load_2dpoints(path_points2, nb_points, points_view2);
+
+       fundamentalFinder->find(points_view1, points_view2, F);
+       fundamentalDecomposer->decompose(F,poses);
+
+       for(int k = 0; k <poses.size(); ++k)
+           LOG_INFO("pose {} \n {}", k, poses[k].matrix());
+    }
+
+    catch (xpcf::Exception e)
     {
-        LOG_ERROR("Failed to load the configuration file conf_FundamentalMatrixDecomposer.xml")
+        LOG_ERROR ("The following exception has been catch : {}", e.what());
         return -1;
     }
 
-    // declare and create components
-    LOG_INFO("Start creating components");
+    return 0;
 
-    // component creation
-    SRef<input::devices::ICamera> camera = xpcfComponentManager->create<SolARCameraOpencv>()->bindTo<input::devices::ICamera>();
-    SRef<solver::pose::I2DTransformFinder> fundamentalFinder = xpcfComponentManager->create<SolARHomographyEstimationOpencv>()->bindTo<solver::pose::I2DTransformFinder>();
-    SRef<solver::pose::I2Dto3DTransformDecomposer> fundamentalDecomposer = xpcfComponentManager->create<SolARSVDFundamentalMatrixDecomposerOpencv>()->bindTo<solver::pose::I2Dto3DTransformDecomposer>();
-
-    /* we need to check that components are well created*/
-    if (!camera || !fundamentalFinder || !fundamentalDecomposer)
-    {
-        LOG_ERROR("One or more component creations have failed");
-        return -1;
-    }
-
-
- // declarations
-    Transform2Df                                      F;
-    std::vector<Transform3Df>                         poses;
-    std::vector<SRef<Point2Df>>                       points_view1;
-    std::vector<SRef<Point2Df>>                       points_view2;
-
- // Initialization
-   fundamentalDecomposer->setCameraParameters(camera->getIntrinsicsParameters(), camera->getDistorsionParameters());
-
-   const int nb_points = 6953;
-   load_2dpoints(path_points1, nb_points, points_view1);
-   load_2dpoints(path_points2, nb_points, points_view2);
-
-   fundamentalFinder->find(points_view1, points_view2, F);
-   fundamentalDecomposer->decompose(F,poses);
-
-   for(int k = 0; k <poses.size(); ++k)
-       LOG_INFO("pose {} \n {}", k, poses[k].matrix());
-   return 0;
 }
 
 

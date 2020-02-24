@@ -16,6 +16,7 @@
 
 #include "SolARImageFilterBlurOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -28,12 +29,11 @@ namespace OPENCV {
 
 SolARImageFilterBlurOpencv::SolARImageFilterBlurOpencv():ConfigurableBase(xpcf::toUUID<SolARImageFilterBlurOpencv>())
 {
-    addInterface<api::image::IImageFilter>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("kernel_id", kernel_id);
-    params->wrapInteger("kernel_width", kernel_width);
-    params->wrapInteger("kernel_height", kernel_height);
-    params->wrapInteger("direction", direction);
+    declareInterface<api::image::IImageFilter>(this);
+    declareProperty("kernel_id", kernel_id);
+    declareProperty("kernel_width", kernel_width);
+    declareProperty("kernel_height", kernel_height);
+    declareProperty("direction", direction);
 }
 
 

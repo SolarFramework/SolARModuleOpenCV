@@ -15,6 +15,7 @@
  */
 
 #include "SolARMarker2DSquaredBinaryOpencv.h"
+#include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -27,10 +28,9 @@ namespace OPENCV {
 
     SolARMarker2DSquaredBinaryOpencv::SolARMarker2DSquaredBinaryOpencv():ConfigurableBase(xpcf::toUUID<SolARMarker2DSquaredBinaryOpencv>())
     {
-        addInterface<api::input::files::IMarker2DSquaredBinary>(this);
+        declareInterface<api::input::files::IMarker2DSquaredBinary>(this);
         LOG_DEBUG("SolARMarker2DSquaredBinaryOpencv constructor")
-        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-        params->wrapString("filePath", m_filePath);
+        declareProperty("filePath", m_filePath);
 
         m_size.width = 0;
         m_size.height = 0;
@@ -38,7 +38,7 @@ namespace OPENCV {
 
     SolARMarker2DSquaredBinaryOpencv::~SolARMarker2DSquaredBinaryOpencv()
     {
-    LOG_DEBUG(" SolARMarker2DSquaredBinaryOpencv")
+        LOG_DEBUG(" SolARMarker2DSquaredBinaryOpencv Destructor")
     }
 
     FrameworkReturnCode SolARMarker2DSquaredBinaryOpencv::loadMarker()
@@ -81,6 +81,29 @@ namespace OPENCV {
                  sfpm(i,j) =(bool)cv_pattern.at<bool>(i,j);
 
         m_pattern.setPatternMatrix(sfpm);
+        return FrameworkReturnCode::_SUCCESS;
+    }
+
+    FrameworkReturnCode SolARMarker2DSquaredBinaryOpencv::getImageCorners(std::vector<Point2Df> & imageCorners) const
+    {
+        imageCorners.clear();
+        float patternSize = (float)m_pattern.getSize();
+
+        imageCorners.push_back(Point2Df(-patternSize/2.0f, -patternSize/2.0f));
+        imageCorners.push_back(Point2Df(patternSize/2.0f, -patternSize/2.0f));
+        imageCorners.push_back(Point2Df(patternSize/2.0f, patternSize/2.0f));
+        imageCorners.push_back(Point2Df(-patternSize/2.0f, patternSize/2.0f));
+        return FrameworkReturnCode::_SUCCESS;
+    }
+
+    FrameworkReturnCode SolARMarker2DSquaredBinaryOpencv::getWorldCorners(std::vector<Point3Df> & worldCorners) const
+    {
+        worldCorners.clear();
+        worldCorners.push_back(Point3Df(-m_size.width/2.0f, -m_size.height/2.0f, 0.0f));
+        worldCorners.push_back(Point3Df(m_size.width/2.0f, -m_size.height/2.0f, 0.0f));
+        worldCorners.push_back(Point3Df(m_size.width/2.0f, m_size.height/2.0f, 0.0f));
+        worldCorners.push_back(Point3Df(-m_size.width/2.0f, m_size.height/2.0f, 0.0f));
+
         return FrameworkReturnCode::_SUCCESS;
     }
 

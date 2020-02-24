@@ -16,6 +16,7 @@
 
 #include "SolARPoseFinderFrom2D2DOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv);
@@ -29,10 +30,9 @@ namespace OPENCV {
 
 SolARPoseFinderFrom2D2DOpencv::SolARPoseFinderFrom2D2DOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseFinderFrom2D2DOpencv>())
 {
-    addInterface<api::solver::pose::I3DTransformFinderFrom2D2D>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapFloat("outlierDistanceRatio", m_outlierDistanceRatio);
-    params->wrapFloat("confidence", m_confidence);
+    declareInterface<api::solver::pose::I3DTransformFinderFrom2D2D>(this);
+    declareProperty("outlierDistanceRatio", m_outlierDistanceRatio);
+    declareProperty("confidence", m_confidence);
 
     LOG_DEBUG(" SolARPoseFinderFrom2D2DOpencv constructor");
 }
@@ -41,14 +41,17 @@ SolARPoseFinderFrom2D2DOpencv::~SolARPoseFinderFrom2D2DOpencv(){
 
 }
 
-FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SRef<Point2Df>> & matchedPointsView1,
-                                                            const std::vector<SRef<Point2Df>> & matchedPointsView2,
-                                                            const Transform3Df& poseView1,
+FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Point2Df> & matchedPointsView1,
+                                                            const std::vector<Point2Df> & matchedPointsView2,
+                                                            const Transform3Df & poseView1,
                                                             Transform3Df & poseView2,
-                                                            std::vector<DescriptorMatch>& inlierMatches){
+                                                            std::vector<DescriptorMatch> & inlierMatches){
     double minVal, maxVal;
 
     Transform3Df poseView1Inverse = poseView1.inverse();
+    LOG_INFO("Estimated pose of poseView1: \n {}", poseView1.matrix());
+    LOG_INFO("Estimated pose of poseView1Inverse: \n {}", poseView1Inverse.matrix());
+
     std::vector<cv::Point2f> points_view1;
     std::vector<cv::Point2f> points_view2;
 
@@ -60,11 +63,11 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
         points_view2.resize(matchedPointsView1.size());
 
         for( int i = 0; i < matchedPointsView1.size(); i++ ){
-            points_view1[i].x=matchedPointsView1.at(i)->getX();
-            points_view1[i].y=matchedPointsView1.at(i)->getY();
+            points_view1[i].x=matchedPointsView1.at(i).getX();
+            points_view1[i].y=matchedPointsView1.at(i).getY();
 
-            points_view2[i].x=matchedPointsView2.at(i)->getX();
-            points_view2[i].y=matchedPointsView2.at(i)->getY();
+            points_view2[i].x=matchedPointsView2.at(i).getX();
+            points_view2[i].y=matchedPointsView2.at(i).getY();
         }
     }
     else // Inliers are defined, take only them
@@ -73,18 +76,21 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
         points_view2.resize(inlierMatches.size());
 
         for( int i = 0; i < inlierMatches.size(); i++ ){
-            points_view1[i].x=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA())->getX();
-            points_view1[i].y=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA())->getY();
+            points_view1[i].x=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA()).getX();
+            points_view1[i].y=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA()).getY();
 
-            points_view2[i].x=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB())->getX();
-            points_view2[i].y=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB())->getY();
+            points_view2[i].x=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB()).getX();
+            points_view2[i].y=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB()).getY();
         }
     }
+
     cv::minMaxIdx(points_view1, &minVal, &maxVal);
     cv::Point2f pp; pp.x=m_camCalibration(0,2); pp.y=m_camCalibration(1,2);
     cv::Mat Ecv = cv::findEssentialMat(points_view1, points_view2, m_camCalibration(0,0), pp, cv::RANSAC, m_confidence, m_outlierDistanceRatio * maxVal, inliers);
     cv::Mat cvRot;
     cv::Mat cvPos;
+
+     std::cout <<"Essential matrix : "<<Ecv<<" "<<std::endl;
 
     cv::recoverPose(Ecv, points_view1, points_view2, cvRot, cvPos, m_camCalibration(0,0), pp, inliers);
 
@@ -95,6 +101,8 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
     Transform3Df view2Transform;
     SolAROpenCVHelper::convertCVMatToSolar(cvTransform, view2Transform);
     poseView2 = view2Transform * poseView1Inverse ;
+
+    LOG_INFO("Estimated pose of poseView2: \n {}", poseView2.matrix());
 
     int nbInliers = 0;
     std::vector<DescriptorMatch> inlierMatches_output;
@@ -121,11 +129,11 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SRef<Keypoint>> & matchedPointsView1,
-                                                            const std::vector<SRef<Keypoint>> & matchedPointsView2,
-                                                            const Transform3Df& poseView1,
+FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Keypoint> & matchedPointsView1,
+                                                            const std::vector<Keypoint> & matchedPointsView2,
+                                                            const Transform3Df & poseView1,
                                                             Transform3Df & poseView2,
-                                                            std::vector<DescriptorMatch>& inlierMatches){
+                                                            std::vector<DescriptorMatch> & inlierMatches){
     double minVal, maxVal;
 
     std::vector<cv::Point2f> points_view1;
@@ -140,11 +148,11 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
         points_view2.resize(matchedPointsView1.size());
 
         for( int i = 0; i < matchedPointsView1.size(); i++ ){
-            points_view1[i].x=matchedPointsView1.at(i)->getX();
-            points_view1[i].y=matchedPointsView1.at(i)->getY();
+            points_view1[i].x=matchedPointsView1.at(i).getX();
+            points_view1[i].y=matchedPointsView1.at(i).getY();
 
-            points_view2[i].x=matchedPointsView2.at(i)->getX();
-            points_view2[i].y=matchedPointsView2.at(i)->getY();
+            points_view2[i].x=matchedPointsView2.at(i).getX();
+            points_view2[i].y=matchedPointsView2.at(i).getY();
         }
     }
     else // Inliers are defined, take only them
@@ -153,11 +161,11 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<SR
         points_view2.resize(inlierMatches.size());
 
         for( int i = 0; i < inlierMatches.size(); i++ ){
-            points_view1[i].x=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA())->getX();
-            points_view1[i].y=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA())->getY();
+            points_view1[i].x=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA()).getX();
+            points_view1[i].y=matchedPointsView1.at(inlierMatches[i].getIndexInDescriptorA()).getY();
 
-            points_view2[i].x=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB())->getX();
-            points_view2[i].y=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB())->getY();
+            points_view2[i].x=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB()).getX();
+            points_view2[i].y=matchedPointsView2.at(inlierMatches[i].getIndexInDescriptorB()).getY();
         }
     }
     cv::minMaxIdx(points_view1, &minVal, &maxVal);

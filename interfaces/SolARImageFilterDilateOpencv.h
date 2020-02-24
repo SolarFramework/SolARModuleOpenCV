@@ -32,6 +32,14 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARImageFilterDilateOpencv
+ * @brief <B>Dilates the white regions of a binary image.</B>
+ * <TT>UUID: 7ac9d1b8-afda-4c99-b8df-92e71015a3be</TT>
+ *
+ */
+
+
 class SOLAROPENCV_EXPORT_API SolARImageFilterDilateOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::image::IImageFilter {
 public:

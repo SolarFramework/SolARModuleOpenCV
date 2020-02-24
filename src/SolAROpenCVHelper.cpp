@@ -28,8 +28,8 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-static std::map<DescriptorBuffer::DataType,uint32_t> solarDescriptor2cvType =
-{{ DescriptorBuffer::DataType::TYPE_8U,CV_8U},{DescriptorBuffer::DataType::TYPE_32F,CV_32F}};
+static std::map<DescriptorDataType,uint32_t> solarDescriptor2cvType =
+{{ DescriptorDataType::TYPE_8U,CV_8U},{DescriptorDataType::TYPE_32F,CV_32F}};
 
 
 
@@ -42,7 +42,7 @@ static std::map<std::tuple<uint32_t,std::size_t,uint32_t>,int> solar2cvTypeConve
 static std::map<int,std::pair<Image::ImageLayout,Image::DataType>> cv2solarTypeConvertMap = {{CV_8UC3,{Image::ImageLayout::LAYOUT_BGR,Image::DataType::TYPE_8U}},
                                                                                                       {CV_8UC1,{Image::ImageLayout::LAYOUT_GREY,Image::DataType::TYPE_8U}}};
 
-uint32_t SolAROpenCVHelper::deduceOpenDescriptorCVType(DescriptorBuffer::DataType querytype){
+uint32_t SolAROpenCVHelper::deduceOpenDescriptorCVType(DescriptorDataType querytype){
     return solarDescriptor2cvType.at(querytype);
 }
 
@@ -56,7 +56,7 @@ int SolAROpenCVHelper::deduceOpenCVType(SRef<Image> img)
 
 void SolAROpenCVHelper::mapToOpenCV (SRef<Image> imgSrc, cv::Mat& imgDest)
 {
-    cv::Mat imgCV(imgSrc->getHeight(),imgSrc->getWidth(),deduceOpenCVType(imgSrc), imgSrc->data());
+    cv::Mat imgCV(imgSrc->getHeight(),imgSrc->getWidth(),deduceOpenCVType(imgSrc), imgSrc->data()); 
     imgDest = imgCV;
 }
 
@@ -83,7 +83,7 @@ std::vector<cv::Point2i> SolAROpenCVHelper::convertToOpenCV (const Contour2Di &c
     std::vector<cv::Point2i> output;
     for (int i = 0; i < contour.size(); i++)
     {
-        output.push_back(cv::Point2i(contour[i][0], contour[i][1]));
+        output.push_back(cv::Point2i(contour[i]->getX(), contour[i]->getY()));
     }
     return output;
 }
@@ -93,7 +93,7 @@ std::vector<cv::Point2f> SolAROpenCVHelper::convertToOpenCV (const Contour2Df &c
     std::vector<cv::Point2f> output;
     for (int i = 0; i < contour.size(); i++)
     {
-        output.push_back(cv::Point2f(contour[i][0], contour[i][1]));
+        output.push_back(cv::Point2f(contour[i].getX(), contour[i].getY()));
     }
     return output;
 }

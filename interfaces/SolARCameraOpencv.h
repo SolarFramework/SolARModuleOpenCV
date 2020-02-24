@@ -19,58 +19,42 @@
 
 #include <vector>
 #include <string>
-#include "api/input/devices/ICamera.h"
-
-#include "opencv2/opencv.hpp"
-
-#include "xpcf/component/ConfigurableBase.h"
-
-#include "SolAROpencvAPI.h"
+#include "SolARBaseCameraOpencv.h"
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARCameraOpencv : public org::bcom::xpcf::ConfigurableBase,
-        public api::input::devices::ICamera {
+/**
+ * @class SolARCameraOpencv
+ * @brief <B>Grabs current image captured by a RGB camera.</B>
+ * <TT>UUID: 5b7396f4-a804-4f3c-a0eb-fb1d56042bb4</TT>
+ *
+ */
+
+class SOLAROPENCV_EXPORT_API SolARCameraOpencv : public SolARBaseCameraOpencv {
 public:
     SolARCameraOpencv(); // to replace with ISolARDeviceInfo ! should be set later with init method ? default behavior on devices with facefront/rear embedded cams ?
 
-    ~SolARCameraOpencv() = default;
+    ~SolARCameraOpencv() override;
 
-    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
-
+    /// @brief Start the acquisition device referenced by its device_id
+    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
     FrameworkReturnCode start() override;
 
+    /// @brief Fill the SRef img buffer with a last image captured by the camera device.
+    /// @return FrameworkReturnCode to track sucessful or failing event.
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
-
-    FrameworkReturnCode setResolution(Sizei resolution) override;
-    FrameworkReturnCode setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
-    FrameworkReturnCode setDistortionParameters(const CamDistortion & distortion_parameters) override;
-
-    Sizei getResolution () override;
-    const CamCalibration& getIntrinsicsParameters() const override;
-    const CamDistortion& getDistortionParameters() const override;
 
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
     void unloadComponent () override final;
 
  private:
-     /// @brief Path to the calibration file of the camera
-     std::string m_calibrationFile = "";
 
-     /// @brief The ID of the camera to capture with
-     unsigned int m_deviceID;
-
-     cv::VideoCapture m_capture;
-     bool m_is_resolution_set;
-     Sizei m_resolution;
-
-     CamCalibration m_intrinsic_parameters = CamCalibration::Identity();
-     CamDistortion m_distortion_parameters = CamDistortion::Zero();
-
+    /// @brief The ID of the camera to capture with
+    uint32_t m_deviceID;
 };
 
 }

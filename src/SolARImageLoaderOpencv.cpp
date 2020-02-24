@@ -16,6 +16,7 @@
 
 #include "SolARImageLoaderOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include <opencv2/imgcodecs.hpp>
 
 namespace xpcf = org::bcom::xpcf;
@@ -29,9 +30,8 @@ namespace OPENCV {
 
 SolARImageLoaderOpencv::SolARImageLoaderOpencv():ConfigurableBase(xpcf::toUUID<SolARImageLoaderOpencv>())
 { 
-    addInterface<api::image::IImageLoader>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapString("filePath", m_filePath);
+    declareInterface<api::image::IImageLoader>(this);
+    declareProperty("filePath", m_filePath);
     LOG_DEBUG(" SolARImageLoaderOpencv constructor")
 }
 

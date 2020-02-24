@@ -16,6 +16,7 @@
 
 #include "SolAR3DOverlayBoxOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/core.hpp"
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
@@ -32,16 +33,15 @@ namespace OPENCV {
 
 SolAR3DOverlayBoxOpencv::SolAR3DOverlayBoxOpencv():ConfigurableBase(xpcf::toUUID<SolAR3DOverlayBoxOpencv>())
 {
-    addInterface<api::display::I3DOverlay>(this);
+    declareInterface<api::display::I3DOverlay>(this);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
     m_parallelepiped.create(8, 3, CV_32FC1);
 
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapFloatVector("position", m_position);
-    params->wrapFloatVector("orientation", m_orientation);
-    params->wrapFloatVector("size", m_size);
+    declarePropertySequence("orientation", m_orientation);
+    declarePropertySequence("position", m_position);
+    declarePropertySequence("size", m_size);
 
    LOG_DEBUG(" SolAR3DOverlayBoxOpencv constructor");
 
@@ -120,7 +120,7 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displ
     Tvec.at<float>(2,0) = poseInverse(2,3);
 
     cv::Mat rodrig;
-    cv::Rodrigues(Rvec,rodrig);
+     cv::Rodrigues(Rvec,rodrig);
 
     //compute the projection of the points of the cube
     cv::projectPoints(m_parallelepiped, rodrig, Tvec, m_camMatrix, m_camDistorsion, imagePoints);

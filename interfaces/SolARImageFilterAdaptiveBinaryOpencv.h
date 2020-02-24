@@ -32,6 +32,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARImageFilterAdaptiveBinaryOpencv
+ * @brief <B>Filters a greyscale image to a binary image based on an adaptive threshold.</B>
+ * <TT>UUID: 901e7a07-5013-4907-be41-0259fca3726c</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARImageFilterAdaptiveBinaryOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::image::IImageFilter {
 public:
@@ -44,7 +51,9 @@ public:
     void unloadComponent () override final;
 
  private:
-    int max,blockSize,C;
+    int m_max = 255;
+    int m_blockSize = 11;
+    int m_C = 2;
 };
 
 }

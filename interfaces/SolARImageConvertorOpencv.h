@@ -34,14 +34,21 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARImageConvertorOpencv
+ * @brief <B>Converts an image according to a given expected layout.</B>
+ * <TT>UUID: fd7fb607-144f-418c-bcf2-f7cf71532c22</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARImageConvertorOpencv : public org::bcom::xpcf::ComponentBase,
         public api::image::IImageConvertor {
 public:
     SolARImageConvertorOpencv();
     ~SolARImageConvertorOpencv();
 
-    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, const float scale = 1.f) override;
-    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout, const float scale = 1.f) override;
+    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst) override;
+    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
 
     void unloadComponent () override final;
 

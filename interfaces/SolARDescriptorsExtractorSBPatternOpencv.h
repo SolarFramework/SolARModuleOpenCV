@@ -27,14 +27,28 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARDescriptorsExtractorSBPatternOpencv
+ * @brief <B>Extracts the descriptor corresponding to a squared binary marker pattern.</B>
+ * <TT>UUID: d25625ba-ce3a-11e7-abc4-cec278b6b50a</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorSBPatternOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorsExtractorSBPattern {
 public:
     SolARDescriptorsExtractorSBPatternOpencv();
-    ~SolARDescriptorsExtractorSBPatternOpencv() = default;
+    ~SolARDescriptorsExtractorSBPatternOpencv() override = default;
+    /// @brief Extracts a set of descriptors from a given images based on a marker pattern
+    /// [in] : set of keypoints.
+    /// [out] decsriptors: se of computed descriptors.
+    FrameworkReturnCode extract(const std::vector<SRef<Image>> & images,
+                                           const std::vector<Contour2Df> & inContours,
+                                           SRef<DescriptorBuffer> & descriptors,
+                                           std::vector<Contour2Df> & outContours) override;
 
-    FrameworkReturnCode extract(const std::vector<SRef<Image>>& inputImages, const std::vector<SRef<Contour2Df>>& contours, SRef<DescriptorBuffer> & pattern_descriptors, std::vector<SRef<Contour2Df>> & recognized_contours) override;
-    FrameworkReturnCode extract(const SRef<SquaredBinaryPattern> pattern, SRef<DescriptorBuffer> & descriptor) override;
+    FrameworkReturnCode extract(const SquaredBinaryPattern & pattern,
+                                           SRef<DescriptorBuffer> & descriptor) override;
 
     void unloadComponent () override final;
 

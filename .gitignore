@@ -42,7 +42,7 @@
 *.app
 
 #others
-
+*.*pre1
 *.rej
 *.stash
 *.rc
@@ -50,15 +50,30 @@
 *.exp
 *.ilk
 *.pdb
+*.autosave
 
 # Visual Studio files
 .vs*
 x64*
 
-*.txt
+# generated documentation
+doc/ 
+
 *.log
 *.tlog
 *.TMP
 *.tmp
 
+tests/bin
 
+build/
+
+*InstallDependencies.bat
+*debug.bat
+*release.bat
+*remakeninfo.txt
+*.pc
+
+interfaces/SolARModuleOpencv_traits.h.bak
+interfaces/SolAROpticalFlowPyrLKOpencv.h.bak
+interfaces/SolARPoseFinderFrom2D2DOpencv.h.bak

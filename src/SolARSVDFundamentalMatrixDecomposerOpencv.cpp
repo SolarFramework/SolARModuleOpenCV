@@ -16,6 +16,7 @@
 
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDFundamentalMatrixDecomposerOpencv);
@@ -28,7 +29,7 @@ namespace MODULES {
 namespace OPENCV {
 
 SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOpencv():ComponentBase(xpcf::toUUID<SolARSVDFundamentalMatrixDecomposerOpencv>()){
-    addInterface<api::solver::pose::I2Dto3DTransformDecomposer>(this);
+    declareInterface<api::solver::pose::I2Dto3DTransformDecomposer>(this);
     LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
 
     m_camMatrix.create(3, 3);
@@ -38,10 +39,10 @@ SolARSVDFundamentalMatrixDecomposerOpencv::SolARSVDFundamentalMatrixDecomposerOp
 SolARSVDFundamentalMatrixDecomposerOpencv::~SolARSVDFundamentalMatrixDecomposerOpencv(){
 }
 
-void SolARSVDFundamentalMatrixDecomposerOpencv::takeSVDOfE(cv::Mat_<double>& E,
-                                                           cv::Mat& svd_u,
-                                                           cv::Mat& svd_vt,
-                                                           cv::Mat& svd_w) {
+void SolARSVDFundamentalMatrixDecomposerOpencv::takeSVDOfE(cv::Mat_<double> & E,
+                                                           cv::Mat & svd_u,
+                                                           cv::Mat & svd_vt,
+                                                           cv::Mat & svd_w) {
     //Using OpenCV's SVD
     cv::SVD svd(E, cv::SVD::MODIFY_A);
     svd_u = svd.u;
@@ -49,11 +50,11 @@ void SolARSVDFundamentalMatrixDecomposerOpencv::takeSVDOfE(cv::Mat_<double>& E,
     svd_w = svd.w;
 }
 
-void SolARSVDFundamentalMatrixDecomposerOpencv::fillposes(const cv::Mat_<double>& R1,
-                                                          const cv::Mat_<double>& R2,
-                                                          const cv::Mat_<double>& t1,
-                                                          const cv::Mat_<double>& t2,
-                                                          std::vector<Transform3Df>&decomposedPoses){
+void SolARSVDFundamentalMatrixDecomposerOpencv::fillposes(const cv::Mat_<double> & R1,
+                                                          const cv::Mat_<double> & R2,
+                                                          const cv::Mat_<double> & t1,
+                                                          const cv::Mat_<double >& t2,
+                                                          std::vector<Transform3Df> & decomposedPoses){
         decomposedPoses.resize(4);
 
         decomposedPoses[0](0,0) = R1(0,0);decomposedPoses[0](0,1) = R1(0,1);decomposedPoses[0](0,2) = R1(0,2);decomposedPoses[0](0,3) = t1(0);
@@ -82,11 +83,11 @@ void SolARSVDFundamentalMatrixDecomposerOpencv::fillposes(const cv::Mat_<double>
         decomposedPoses[3] = decomposedPoses[3].inverse();
 }
 
-bool SolARSVDFundamentalMatrixDecomposerOpencv::decomposeInternal(cv::Mat_<double>& E,
-                                                                  cv::Mat_<double>& R1,
-                                                                  cv::Mat_<double>& R2,
-                                                                  cv::Mat_<double>& t1,
-                                                                  cv::Mat_<double>& t2){
+bool SolARSVDFundamentalMatrixDecomposerOpencv::decomposeInternal(cv::Mat_<double> & E,
+                                                                  cv::Mat_<double> & R1,
+                                                                  cv::Mat_<double> & R2,
+                                                                  cv::Mat_<double> & t1,
+                                                                  cv::Mat_<double> & t2){
 
 
         cv::Mat svd_u, svd_vt, svd_w;
@@ -116,14 +117,14 @@ bool SolARSVDFundamentalMatrixDecomposerOpencv::decomposeInternal(cv::Mat_<doubl
         return true;
 }
 
-bool SolARSVDFundamentalMatrixDecomposerOpencv::decompose(const Transform2Df&F, std::vector<Transform3Df>& decomposedPoses){
+bool SolARSVDFundamentalMatrixDecomposerOpencv::decompose(const Transform2Df & F, std::vector<Transform3Df> & decomposedPoses){
     //Using HZ E decomposition
        cv::Mat svd_u, svd_vt, svd_w;
        cv::Mat _F(3,3,CV_64FC1);
        for(int i  = 0; i < 3; ++i){
            for(int j = 0; j < 3; ++j){
                double e1 = F(i,j);
-               _F.at<double>(i,j) =e1;// double(F(i,j));                       }
+               _F.at<double>(i,j) =e1;
             }
        }
 
@@ -131,22 +132,9 @@ bool SolARSVDFundamentalMatrixDecomposerOpencv::decompose(const Transform2Df&F, 
       cv::Mat_<double> R1(3, 3);
       cv::Mat_<double> R2(3, 3);
       cv::Mat_<double> t(1, 3);
-      //cv::Mat_<double> t1(1, 3);
-      //cv::Mat_<double> t2(1, 3);
+
 
       cv::decomposeEssentialMat(E, R1, R2, t);
-/*
-      if(!decomposeInternal(E,R1,R2,t1,t2)){
-          return false;
-      }
-      if(cv::determinant(R1)+ 1.0 < 1e-09){
-          E = -E;
-          decomposeInternal(E,R1,R2,t1,t2);
-          fillposes(R1,R2, t1,t2, decomposedPoses);
-          return true;
-      }
-*/
-      //fillposes(R1,R2,t1,t2,decomposedPoses);
       fillposes(R1,R2,t,-t,decomposedPoses);
       return true;
 }

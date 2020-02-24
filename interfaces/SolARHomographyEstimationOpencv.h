@@ -30,15 +30,28 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARHomographyEstimationOpencv
+ * @brief <B>Estimates the homography between two images from their matching keypoints.</B>
+ * <TT>UUID: fb9dac20-2a44-44b2-aa42-2871eec31427</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARHomographyEstimationOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::solver::pose::I2DTransformFinder {
 
 public:
     SolARHomographyEstimationOpencv();
+    ~SolARHomographyEstimationOpencv() override = default;
 
-    api::solver::pose::Transform2DFinder::RetCode find(const std::vector< SRef<Point2Df> >& srcPoints,
-                  const std::vector< SRef<Point2Df> >& dstPoints,
-                  Transform2Df & homography) override;
+    /// @brief Computes an homography transformation from a set of source points and target points.
+    /// [in] srcPoints: set of source points.
+    /// [in] targetPints: set of target points.
+    /// [out] homography: 3x3  homography matrice transformation.
+    /// @return Transform2DFinder::RetCode::TRANSFORM2D_ESTIMATION_OK if succed.
+    api::solver::pose::Transform2DFinder::RetCode find(const std::vector<Point2Df> & srcPoints,
+                                                      const std::vector<Point2Df> & targetPoints,
+                                                      Transform2Df & homography) override;
 
     void unloadComponent () override final;
 

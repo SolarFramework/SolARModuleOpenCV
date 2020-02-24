@@ -25,6 +25,7 @@
 #include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
+#include <limits>
 #include "opencv2/core.hpp"
 #include "opencv2/features2d.hpp"
 #include "opencv2/imgcodecs.hpp"
@@ -39,23 +40,52 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARDescriptorMatcherKNNOpencv
+ * @brief <B>Matches descriptors and selects k best matches for each descriptor.</B>
+ * <TT>UUID: 7823dac8-1597-41cf-bdef-59aa22f3d40a</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorMatcher {
 public:
     SolARDescriptorMatcherKNNOpencv();
-    ~SolARDescriptorMatcherKNNOpencv();
+    ~SolARDescriptorMatcherKNNOpencv() override;
     void unloadComponent () override final;
 
-  DescriptorMatcher::RetCode match(
-            SRef<DescriptorBuffer> desc1,
-            SRef<DescriptorBuffer> desc2,
-            std::vector<DescriptorMatch>& matches);
+    /// @brief Matches two descriptors desc1 and desc2 respectively based on KNN search strategy.
+    /// [in] desc1: source descriptor.
+    /// [in] desc2: target descriptor.
+    /// [out] matches: ensemble of detected matches, a pair of source/target indices.
+    ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
+  IDescriptorMatcher::RetCode match(
+            const SRef<DescriptorBuffer> desc1,
+            const SRef<DescriptorBuffer> desc2,
+            std::vector<DescriptorMatch> & matches) override;
+  /// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on KNN search strategy.
+  /// [in] desc1: source descriptor.
+  /// [in] desc2: target descriptors.
+  /// [out] matches: ensemble of detected matches, a pair of source/target indices.
+  ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
+    IDescriptorMatcher::RetCode match(
+           const SRef<DescriptorBuffer> descriptors1,
+           const std::vector<SRef<DescriptorBuffer>> & descriptors2,
+           std::vector<DescriptorMatch> & matches) override;
 
-    DescriptorMatcher::RetCode match(
-           SRef<DescriptorBuffer> descriptors1,
-           std::vector<SRef<DescriptorBuffer>>& descriptors2,
-           std::vector<DescriptorMatch>& matches
-        );
+	/// @brief Match each descriptor input with descriptors of a frame in a region. The searching space is a circle which is defined by a 2D center and a radius
+	/// @param[in] points2D The center points of searching regions
+	/// @param[in] descriptors The descriptors organized in a vector of dedicated buffer structure.
+	/// @param[in] frame The frame contains descriptors to match.
+	/// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
+	/// @return DesciptorMatcher::DESCRIPTORS_MATCHER_OK if matching succeeds, DesciptorMatcher::DESCRIPTORS_DONT_MATCH if the types of descriptors are different, DesciptorMatcher::DESCRIPTOR_TYPE_UNDEFINED if one of the descriptors set is unknown, or DesciptorMatcher::DESCRIPTOR_EMPTY if one of the set is empty.
+	virtual IDescriptorMatcher::RetCode matchInRegion(
+		const std::vector<Point2Df> & points2D,
+		const std::vector<SRef<DescriptorBuffer>> & descriptors,
+		const SRef<Frame> frame,
+		std::vector<DescriptorMatch> &matches,
+		const float radius = 3.f
+	) override;
 
 
 private:
@@ -69,7 +99,7 @@ private:
     int m_id;
     cv::FlannBasedMatcher m_matcher;
 
-    DescriptorMatcher::RetCode match(
+    IDescriptorMatcher::RetCode match(
             SRef<DescriptorBuffer>& descriptors1,
             SRef<DescriptorBuffer>& descriptors2,
             std::vector<std::vector< cv::DMatch >>& matches,int nbOfMatches);

@@ -16,6 +16,7 @@
 
 #include "SolARPoseEstimationPnpEPFL.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL);
@@ -29,9 +30,8 @@ namespace OPENCV {
 
 SolARPoseEstimationPnpEPFL::SolARPoseEstimationPnpEPFL():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpEPFL>())
 {
-    addInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("maxNumberCorrespondences", m_maxNumberCorrespondences);
+    declareInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
+    declareProperty("maxNumberCorrespondences", m_maxNumberCorrespondences);
 
 
     m_camMatrix.create(3, 3, CV_32FC1);
@@ -44,24 +44,29 @@ SolARPoseEstimationPnpEPFL::~SolARPoseEstimationPnpEPFL(){
 
 }
 
-FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<Point2Df>> & imagePoints,
-                                                         const std::vector<SRef<Point3Df>> & worldPoints,
+FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<Point2Df> & imagePoints,
+                                                         const std::vector<Point3Df> & worldPoints,
                                                          Transform3Df & pose,
                                                          const Transform3Df initialPose) {
     SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(m_maxNumberCorrespondences);
     Transform3Df initialPoseInverse = initialPose.inverse();
-    Eigen::Matrix3f R = initialPoseInverse.rotation();
-    Eigen::Vector3f T = initialPoseInverse.translation();
+	Eigen::Matrix3f R;
+	R << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
+		initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
+		initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2);
+	Eigen::Vector3f T;
+	T << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3);
+
     SolARPoseEstimationPnpEPFL::reset_correspondences();
 
     for (int i = 0; i < worldPoints.size(); i++) {
          double Xw, Yw, Zw, u, v;
-         Xw = worldPoints[i]->getX();
-         Yw = worldPoints[i]->getY();
-         Zw = worldPoints[i]->getZ();
+         Xw = worldPoints[i].getX();
+         Yw = worldPoints[i].getY();
+         Zw = worldPoints[i].getZ();
 
-         u = imagePoints[i]->getX();
-         v = imagePoints[i]->getY();
+         u = imagePoints[i].getX();
+         v = imagePoints[i].getY();
 
          SolARPoseEstimationPnpEPFL::add_correspondence(Xw, Yw, Zw, u, v);
       }
@@ -86,53 +91,6 @@ FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<
     pose = pose.inverse();
     return FrameworkReturnCode::_SUCCESS;
 }
-
-FrameworkReturnCode SolARPoseEstimationPnpEPFL::estimate(const std::vector<SRef<Point2Df>> & imagePoints,
-                                                         const std::vector<SRef<Point3Df>> & worldPoints,
-                                                         std::vector<SRef<Point2Df>>&imagePoints_inlier,
-                                                         std::vector<SRef<Point3Df>>&worldPoints_inlier,
-                                                         Transform3Df & pose,
-                                                         const Transform3Df initialPose) {
-
-    SolARPoseEstimationPnpEPFL::set_maximum_number_of_correspondences(worldPoints.size());
-    Transform3Df initialPoseInverse = initialPose.inverse();
-    Eigen::Matrix3f R = initialPoseInverse.rotation();
-    Eigen::Vector3f T = initialPoseInverse.translation();
-    SolARPoseEstimationPnpEPFL::reset_correspondences();
-    for (int i = 0; i < worldPoints.size(); i++) {
-         double Xw, Yw, Zw, u, v;
-         Xw = worldPoints[i]->getX();
-         Yw = worldPoints[i]->getY();
-         Zw = worldPoints[i]->getZ();
-
-         u = imagePoints[i]->getX();
-         v = imagePoints[i]->getY();
-
-         SolARPoseEstimationPnpEPFL::add_correspondence(Xw, Yw, Zw, u, v);
-      }
-     double R_est[3][3], t_est[3];
-     double err2 = SolARPoseEstimationPnpEPFL::compute_pose(R_est, t_est);
-
-     for (int i = 0; i < 3; ++i) {
-         for (int j = 0; j < 3; ++j) {
-            pose(i,j) = R_est[i][j];
-          }
-      }
-      for (int i = 0; i < 3; ++i) {
-          pose(i,3) = t_est[i];
-      }
-
-      pose(3,0)  = 0.0;
-      pose(3,1)  = 0.0;
-      pose(3,2)  = 0.0;
-      pose(3,3)  = 1.0;
-
-      pose = pose.inverse();
-
-    return FrameworkReturnCode::_SUCCESS;
-}
-
-
 void SolARPoseEstimationPnpEPFL::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
     //TODO.. check to inverse
     this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);

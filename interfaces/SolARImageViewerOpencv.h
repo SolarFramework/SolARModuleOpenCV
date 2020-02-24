@@ -28,6 +28,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARImageViewerOpencv
+ * @brief <B>Displays an image in a dedicated window.</B>
+ * <TT>UUID: 19ea4e13-7085-4e3f-92ca-93f200ffb01b</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARImageViewerOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::display::IImageViewer {
 public:

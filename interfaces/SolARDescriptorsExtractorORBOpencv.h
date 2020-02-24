@@ -35,16 +35,28 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARDescriptorsExtractorORBOpencv
+ * @brief <B>Extracts the ORB descriptors for a set of keypoints.</B>
+ * <TT>UUID: 0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorORBOpencv : public org::bcom::xpcf::ComponentBase,
         public api::features::IDescriptorsExtractor {
 public:
     SolARDescriptorsExtractorORBOpencv();
-    ~SolARDescriptorsExtractorORBOpencv();
+    ~SolARDescriptorsExtractorORBOpencv() override;
     void unloadComponent () override final;
-    inline std::string getTypeString() override { return std::string("DescriptorsExtractorType::ORB") ;};
-
-    void extract (const SRef<Image> image, const std::vector<SRef<Keypoint>> &keypoints, SRef<DescriptorBuffer>& descriptors) override;
-
+    std::string getTypeString() override { return std::string("DescriptorsExtractorType::ORB"); }
+    /// @brief Extracts a set of descriptors from a given image around a set of keypoints based on ORB algorithm
+    /// "ORB: an efficient alternative to SIFT or SURF"
+    /// [in] image: source image.
+    /// [in] keypoints: set of keypoints.
+    /// [out] decsriptors: se of computed descriptors.
+    void extract (const SRef<Image> image,
+                  const std::vector< Keypoint > &keypoints,
+                  SRef<DescriptorBuffer> & descriptors) override;
 private:
     cv::Ptr<cv::Feature2D> m_extractor;
 };

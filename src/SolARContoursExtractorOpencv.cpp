@@ -16,6 +16,7 @@
 
 #include "SolARContoursExtractorOpencv.h"
 #include "SolAROpenCVHelper.h"
+#include "core/Log.h"
 
 #include "opencv2/opencv.hpp"
 
@@ -30,12 +31,11 @@ namespace OPENCV {
 
     SolARContoursExtractorOpencv::SolARContoursExtractorOpencv():ConfigurableBase(xpcf::toUUID<SolARContoursExtractorOpencv>())
     {
-        addInterface<api::features::IContoursExtractor>(this);
-        SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-        params->wrapInteger("minContourEdges",m_minContourEdges);
+        declareInterface<api::features::IContoursExtractor>(this);
+        declareProperty("minContourEdges",m_minContourEdges);
     }
 
-    FrameworkReturnCode SolARContoursExtractorOpencv::extract(const SRef<Image> inputImg, std::vector<SRef<Contour2Df>> & contours)
+    FrameworkReturnCode SolARContoursExtractorOpencv::extract(const SRef<Image> inputImg, std::vector<Contour2Df> & contours)
     {
         if (inputImg->getImageLayout() != Image::LAYOUT_GREY)
         {
@@ -55,13 +55,10 @@ namespace OPENCV {
                 size_t contourSize = ocv_contours[i].size();
                 if (contourSize > m_minContourEdges)
                 {
-                    SRef<Contour2Df> contour = xpcf::utils::make_shared<Contour2Df>();
+                    Contour2Df contour;
                     for (size_t j = 0; j < contourSize; j++)
                     {
-                        Point2Df point;
-                        point[0] = ocv_contours[i][j].x;
-                        point[1] = ocv_contours[i][j].y;
-                        contour->push_back(point);
+                        contour.push_back(Point2Df(ocv_contours[i][j].x, ocv_contours[i][j].y));
                     }
                     contours.push_back(contour);
                 }
