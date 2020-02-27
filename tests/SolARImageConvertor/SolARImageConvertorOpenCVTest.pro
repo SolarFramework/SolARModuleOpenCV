@@ -1,7 +1,7 @@
 TARGET = SolAROpenCVImageConvertor
 VERSION=0.7.0
 
-CONFIG += c++11
+CONFIG += c++1z
 CONFIG -= qt
 CONFIG += console
 
