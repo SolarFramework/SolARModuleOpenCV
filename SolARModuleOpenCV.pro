@@ -80,4 +80,4 @@ OTHER_FILES += \
     packagedependencies.txt
 
 #NOTE : Must be placed at the end of the .pro
-include ($${REMAKEN_RULES_ROOT}/remaken_install_target.pri)))) # Shell_quote & shell_path required for visual on windows
+include ($${REMAKEN_RULES_ROOT}/remaken_install_target.pri) # Shell_quote & shell_path required for visual on windows
