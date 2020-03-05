@@ -47,8 +47,10 @@ public:
     SolARImageConvertorOpencv();
     ~SolARImageConvertorOpencv();
 
-    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst) override;
-    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
+    FrameworkReturnCode convert(const SRef<Image> imgSrc, SRef<Image>& imgDst) override;
+	FrameworkReturnCode convert(const SRef<Image> imgSrc, SRef<Image> & imgDst, const float scale) override;
+    FrameworkReturnCode convert(const SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
+	FrameworkReturnCode convert(const SRef<Image> imgSrc, SRef<Image> & imgDst, Image::ImageLayout destLayout, const float scale) override;
 
     void unloadComponent () override final;
 

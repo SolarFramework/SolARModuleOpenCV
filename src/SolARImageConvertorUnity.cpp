@@ -51,9 +51,24 @@ FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<I
     return FrameworkReturnCode::_SUCCESS;
 }
 
+FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout,const float scale)
+{
+	return FrameworkReturnCode::_SUCCESS;
+}
+
 FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst)
 {
    return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst,const float scale)
+{
+	if (imgDst == nullptr)
+	{
+		LOG_ERROR("The imgDst has not been instantiated before calling convert method. Pleae, instantiate it or call the convert method that takes in argument the layout of the output image.")
+			return FrameworkReturnCode::_ERROR_;
+	}
+	return convert(imgSrc, imgDst, imgDst->getImageLayout(), scale);
 }
 
 }
