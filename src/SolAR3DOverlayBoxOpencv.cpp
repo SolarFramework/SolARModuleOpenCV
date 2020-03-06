@@ -23,7 +23,6 @@
 
 namespace xpcf  = org::bcom::xpcf;
 
-
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolAR3DOverlayBoxOpencv)
 
 namespace SolAR {
@@ -41,28 +40,31 @@ SolAR3DOverlayBoxOpencv::SolAR3DOverlayBoxOpencv():ConfigurableBase(xpcf::toUUID
 
     declarePropertySequence("orientation", m_orientation);
     declarePropertySequence("position", m_position);
-    declarePropertySequence("size", m_size);
+	declarePropertySequence("size", m_size);
+	declarePropertySequence("colorCorner", m_colorCorner);
+	declarePropertySequence("colorFront", m_colorFront);
+	declarePropertySequence("colorBack", m_colorBack);
+	declarePropertySequence("colorSide", m_colorSide);
 
-   LOG_DEBUG(" SolAR3DOverlayBoxOpencv constructor");
-
+	LOG_DEBUG(" SolAR3DOverlayBoxOpencv constructor");
 }
 
 xpcf::XPCFErrorCode SolAR3DOverlayBoxOpencv::onConfigured()
 {
     LOG_DEBUG(" SolAR3DOverlayBoxOpencv onConfigured");
-    float half_X=m_size[0]*0.5f;
-    float half_Y=m_size[1]*0.5f;
-    float Z=m_size[2];
+    float half_X = m_size[0] * 0.5f;
+    float half_Y = m_size[1] * 0.5f;
+    float Z = m_size[2];
 
     RotationMatrixf rotation;
     rotation = Maths::AngleAxisf(m_orientation[0] * SOLAR_DEG2RAD, Vector3f::UnitX())
-                             * Maths::AngleAxisf(m_orientation[1] * SOLAR_DEG2RAD, Vector3f::UnitY())
-                             * Maths::AngleAxisf(m_orientation[2] * SOLAR_DEG2RAD, Vector3f::UnitZ());
-    Vector3f translation;
+             * Maths::AngleAxisf(m_orientation[1] * SOLAR_DEG2RAD, Vector3f::UnitY())
+             * Maths::AngleAxisf(m_orientation[2] * SOLAR_DEG2RAD, Vector3f::UnitZ());
+    
+	Vector3f translation;
     translation(0) = m_position[0];
     translation(1) = m_position[1];
     translation(2) = m_position[2];
-
 
     Transform3Df transform;
     transform.setIdentity();
@@ -81,27 +83,31 @@ xpcf::XPCFErrorCode SolAR3DOverlayBoxOpencv::onConfigured()
     parallelepiped.push_back(transform * Vector4f(-half_X, half_Y, -Z, 1.0f));
 
     for (int i = 0; i < parallelepiped.size(); i++)
-         for (int j = 0; j < 3; j++)
-            m_parallelepiped.at< float >(i, j) = parallelepiped[i](j);
+		for (int j = 0; j < 3; j++)
+			m_parallelepiped.at< float >(i, j) = parallelepiped[i](j);
 
     return xpcf::_SUCCESS;
+}
+
+cv::Scalar SolAR3DOverlayBoxOpencv::toColorCV(std::vector<int> colorVec)
+{
+	return cv::Scalar(colorVec[0], colorVec[1], colorVec[2]);
 }
 
 void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displayImage)
 {
 
-    Transform3Df poseInverse =pose.inverse();
+    Transform3Df poseInverse = pose.inverse();
 
     // image where parallelepiped will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 
     // where to store image points of parallelpiped with pose applied
-    std::vector<cv::Point2f > imagePoints;
+    std::vector<cv::Point2f> imagePoints;
 
     // Rotation and Translation from input pose
-    cv::Mat Rvec;   Rvec.create(3, 3, CV_32FC1);
+	cv::Mat Rvec;	Rvec.create(3, 3, CV_32FC1);
     cv::Mat Tvec;   Tvec.create(3, 1, CV_32FC1);
-
 
     Rvec.at<float>(0,0) = poseInverse(0,0);
     Rvec.at<float>(0,1) = poseInverse(0,1);
@@ -120,29 +126,30 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displ
     Tvec.at<float>(2,0) = poseInverse(2,3);
 
     cv::Mat rodrig;
-     cv::Rodrigues(Rvec,rodrig);
+    cv::Rodrigues(Rvec,rodrig);
 
-    //compute the projection of the points of the cube
+    // compute the projection of the points of the cube
     cv::projectPoints(m_parallelepiped, rodrig, Tvec, m_camMatrix, m_camDistorsion, imagePoints);
 
-   // draw parallelepiped
+    // draw parallelepiped
     // circle around corners
-    for(auto & element : imagePoints ){
-        if (element.x >=0 && element.x < displayedImage.cols && element.y >= 0 && element.y < displayedImage.rows)
-            circle(displayedImage, element, 8, cv::Scalar(128, 0, 128), -1);
-   }
+	for (auto & element : imagePoints)
+	{
+		if (element.x >= 0 && element.x < displayedImage.cols && element.y >= 0 && element.y < displayedImage.rows)
+			circle(displayedImage, element, 8, toColorCV(m_colorCorner), -1);
+	}
 
     // finally draw cube
     for (int i = 0; i < 4; i++)
     {
-        SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[(i + 1) % 4], cv::Scalar(0,0,255), 4);
-        SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i + 4], imagePoints[4 + (i + 1) % 4], cv::Scalar(0,255,0), 4);
-        SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[i + 4], cv::Scalar(255,0,0), 4);
+        SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[(i + 1) % 4], toColorCV(m_colorSide), 4);
+        SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i + 4], imagePoints[4 + (i + 1) % 4], toColorCV(m_colorBack), 4);
+        SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[i + 4], toColorCV(m_colorFront), 4);
     }
 }
 
-void SolAR3DOverlayBoxOpencv::setCameraParameters(const CamCalibration & intrinsic_param, const CamDistortion & distorsion_param){
-
+void SolAR3DOverlayBoxOpencv::setCameraParameters(const CamCalibration & intrinsic_param, const CamDistortion & distorsion_param)
+{
     m_camDistorsion.at<float>(0, 0)  = distorsion_param(0);
     m_camDistorsion.at<float>(1, 0)  = distorsion_param(1);
     m_camDistorsion.at<float>(2, 0)  = distorsion_param(2);
@@ -158,8 +165,6 @@ void SolAR3DOverlayBoxOpencv::setCameraParameters(const CamCalibration & intrins
     m_camMatrix.at<float>(2, 0) = intrinsic_param(2,0);
     m_camMatrix.at<float>(2, 1) = intrinsic_param(2,1);
     m_camMatrix.at<float>(2, 2) = intrinsic_param(2,2);
-
-
 }
 
 }
