@@ -36,8 +36,11 @@ SolAR3DOverlayBoxOpencv::SolAR3DOverlayBoxOpencv():ConfigurableBase(xpcf::toUUID
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
-    m_parallelepiped.create(8, 3, CV_32FC1);
+	m_parallelepiped.create(8, 3, CV_32FC1);
 
+	declareProperty("chiralityCheck", m_chiralityCheck);
+	declareProperty("nearPlane", m_nearPlane);
+	declareProperty("farPlane", m_farPlane);
     declarePropertySequence("orientation", m_orientation);
     declarePropertySequence("position", m_position);
 	declarePropertySequence("size", m_size);
@@ -102,8 +105,10 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displ
     // image where parallelepiped will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 
-    // where to store image points of parallelpiped with pose applied
+    // where to store image points of parallelepiped with pose applied
     std::vector<cv::Point2f> imagePoints;
+	// Is the point at index i visible given the camera pose
+	std::vector<int> visibilityFlag;
 
     // Rotation and Translation from input pose
 	cv::Mat Rvec;	Rvec.create(3, 3, CV_32FC1);
@@ -128,24 +133,54 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displ
     cv::Mat rodrig;
     cv::Rodrigues(Rvec,rodrig);
 
+	// Chirality check
+	if (m_chiralityCheck)
+	{
+		Vector4f point, pointInCamRef;
+		for (int i = 0; i < 8; i++)
+		{
+			point(0) = m_parallelepiped.at<float>(i, 0);
+			point(1) = m_parallelepiped.at<float>(i, 1);
+			point(2) = m_parallelepiped.at<float>(i, 2);
+			point(3) = 1.0f;
+
+			pointInCamRef = poseInverse * point;
+
+			if (m_nearPlane <= pointInCamRef(2) && pointInCamRef(2) <= m_farPlane)
+				visibilityFlag.push_back(1);
+			else
+				visibilityFlag.push_back(0);
+		}
+	}
+
     // compute the projection of the points of the cube
     cv::projectPoints(m_parallelepiped, rodrig, Tvec, m_camMatrix, m_camDistorsion, imagePoints);
 
     // draw parallelepiped
     // circle around corners
-	for (auto & element : imagePoints)
+	for (int i = 0; i < imagePoints.size(); i++)
 	{
-		if (element.x >= 0 && element.x < displayedImage.cols && element.y >= 0 && element.y < displayedImage.rows)
-			circle(displayedImage, element, 8, toColorCV(m_colorCorner), -1);
+		if (!m_chiralityCheck || visibilityFlag[i])
+		{
+			auto & element = imagePoints[i];
+			if (element.x >= 0 && element.x < displayedImage.cols && element.y >= 0 && element.y < displayedImage.rows)
+				circle(displayedImage, element, 8, toColorCV(m_colorCorner), -1);
+		}
 	}
-
+	
     // finally draw cube
     for (int i = 0; i < 4; i++)
     {
-        SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[(i + 1) % 4], toColorCV(m_colorSide), 4);
-        SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i + 4], imagePoints[4 + (i + 1) % 4], toColorCV(m_colorBack), 4);
-        SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[i + 4], toColorCV(m_colorFront), 4);
-    }
+		// Back edge
+		if ( !m_chiralityCheck || (visibilityFlag[i] && visibilityFlag[(i + 1) % 4]) )
+			SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[(i + 1) % 4], toColorCV(m_colorBack), 4);
+		// Front edge
+		if ( !m_chiralityCheck || (visibilityFlag[i + 4] && visibilityFlag[4 + (i + 1) % 4]) )
+			SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i + 4], imagePoints[4 + (i + 1) % 4], toColorCV(m_colorFront), 4);
+		// Side edge
+		if ( !m_chiralityCheck || (visibilityFlag[i] && visibilityFlag[i + 4]) )
+		    SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[i + 4], toColorCV(m_colorSide), 4);
+	}
 }
 
 void SolAR3DOverlayBoxOpencv::setCameraParameters(const CamCalibration & intrinsic_param, const CamDistortion & distorsion_param)

@@ -63,6 +63,15 @@ private:
 	/// @return A cv::Scalar with the R, G and B color values
 	cv::Scalar toColorCV(std::vector<int> colorVec);
 
+	/// @brief Whether or not to check for chirality before projecting 3D points
+	int m_chiralityCheck = 1;
+
+	/// @brief Near plane of the camera view frustrum
+	float m_nearPlane = 0.0f;
+
+	/// @brief Far plane of the camera view frustrum
+	float m_farPlane = 100.0f;
+
     /// @brief position of the center of the bottom face of the Box defined in world unit
     std::vector<float> m_position = {0.0,0.0,0.0};
 
@@ -77,6 +86,7 @@ private:
 
 	/// @brief Volume to display
 	cv::Mat m_parallelepiped;
+	cv::Mat m_pointsToProject;
 
 	/// @brief RGB color of the corners of the cube to draw
 	std::vector<int> m_colorCorner = { 128, 0, 128 };
