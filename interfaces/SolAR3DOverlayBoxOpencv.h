@@ -64,6 +64,8 @@ private:
 	cv::Scalar toColorCV(std::vector<int> colorVec);
 
 	/// @brief Whether or not to check for chirality before projecting 3D points
+	/// When chirality is set to true, only points with z coordinate in
+	/// [m_nearPlane, m_farPlane] relative to the camera perspective will be displayed.
 	int m_chiralityCheck = 1;
 
 	/// @brief Near plane of the camera view frustrum
@@ -88,13 +90,13 @@ private:
 	cv::Mat m_parallelepiped;
 	cv::Mat m_pointsToProject;
 
-	/// @brief RGB color of the corners of the cube to draw
+	/// @brief BGR color of the corners of the cube to draw
 	std::vector<int> m_colorCorner = { 128, 0, 128 };
-	/// @brief RGB color of the front face of the cube to draw
+	/// @brief BGR color of the front face of the cube to draw
 	std::vector<int> m_colorFront = { 255, 0, 0 };
-	/// @brief RGB color of the back face of the cube to draw
+	/// @brief BGR color of the back face of the cube to draw
 	std::vector<int> m_colorBack = { 0, 255, 0 };
-	/// @brief RGB color of the side faces of the cube to draw
+	/// @brief BGR color of the side faces of the cube to draw
 	std::vector<int> m_colorSide = { 0, 0, 255 };
 };
 

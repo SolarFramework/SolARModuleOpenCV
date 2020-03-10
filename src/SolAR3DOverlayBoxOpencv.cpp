@@ -77,13 +77,13 @@ xpcf::XPCFErrorCode SolAR3DOverlayBoxOpencv::onConfigured()
     std::vector<Vector4f> parallelepiped;
 
     parallelepiped.push_back(transform * Vector4f(-half_X, -half_Y, 0.0f, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(half_X, -half_Y, 0.0f, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(half_X, half_Y, 0.0f, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(-half_X, half_Y, 0.0f, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(-half_X, -half_Y, -Z, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(half_X, -half_Y, -Z, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(half_X, half_Y, -Z, 1.0f));
-    parallelepiped.push_back(transform * Vector4f(-half_X, half_Y, -Z, 1.0f));
+    parallelepiped.push_back(transform * Vector4f( half_X, -half_Y, 0.0f, 1.0f));
+    parallelepiped.push_back(transform * Vector4f( half_X,  half_Y, 0.0f, 1.0f));
+    parallelepiped.push_back(transform * Vector4f(-half_X,  half_Y, 0.0f, 1.0f));
+    parallelepiped.push_back(transform * Vector4f(-half_X, -half_Y,   -Z, 1.0f));
+    parallelepiped.push_back(transform * Vector4f( half_X, -half_Y,   -Z, 1.0f));
+    parallelepiped.push_back(transform * Vector4f( half_X,  half_Y,   -Z, 1.0f));
+    parallelepiped.push_back(transform * Vector4f(-half_X,  half_Y,   -Z, 1.0f));
 
     for (int i = 0; i < parallelepiped.size(); i++)
 		for (int j = 0; j < 3; j++)
@@ -102,10 +102,10 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displ
 
     Transform3Df poseInverse = pose.inverse();
 
-    // image where parallelepiped will be displayed
+    // Image where parallelepiped will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 
-    // where to store image points of parallelepiped with pose applied
+    // Where to store image points of parallelepiped with pose applied
     std::vector<cv::Point2f> imagePoints;
 	// Is the point at index i visible given the camera pose
 	std::vector<int> visibilityFlag;
@@ -153,11 +153,11 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displ
 		}
 	}
 
-    // compute the projection of the points of the cube
+    // Compute the projection of the points of the cube
     cv::projectPoints(m_parallelepiped, rodrig, Tvec, m_camMatrix, m_camDistorsion, imagePoints);
 
-    // draw parallelepiped
-    // circle around corners
+    // Draw parallelepiped
+    // Circle around corners
 	for (int i = 0; i < imagePoints.size(); i++)
 	{
 		if (!m_chiralityCheck || visibilityFlag[i])
@@ -168,18 +168,18 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displ
 		}
 	}
 	
-    // finally draw cube
+    // Finally draw cube edges
     for (int i = 0; i < 4; i++)
     {
 		// Back edge
+		if ( !m_chiralityCheck || (visibilityFlag[i] && visibilityFlag[i + 4]) )
+			SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[i + 4], toColorCV(m_colorBack), 4);
+		// Side edge
 		if ( !m_chiralityCheck || (visibilityFlag[i] && visibilityFlag[(i + 1) % 4]) )
-			SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[(i + 1) % 4], toColorCV(m_colorBack), 4);
+			SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[(i + 1) % 4], toColorCV(m_colorSide), 4);
 		// Front edge
 		if ( !m_chiralityCheck || (visibilityFlag[i + 4] && visibilityFlag[4 + (i + 1) % 4]) )
 			SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i + 4], imagePoints[4 + (i + 1) % 4], toColorCV(m_colorFront), 4);
-		// Side edge
-		if ( !m_chiralityCheck || (visibilityFlag[i] && visibilityFlag[i + 4]) )
-		    SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[i + 4], toColorCV(m_colorSide), 4);
 	}
 }
 
