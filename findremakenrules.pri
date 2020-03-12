@@ -1,7 +1,19 @@
 # Author(s) : Loic Touraine, Stephane Leduc
 
-unix {
-        USERHOMEFOLDER = $$(HOME)
+android {
+    # unix path
+    USERHOMEFOLDER = $$clean_path($$(HOME))
+    isEmpty(USERHOMEFOLDER) {
+        # windows path
+        USERHOMEFOLDER = $$clean_path($$(USERPROFILE))
+        isEmpty(USERHOMEFOLDER) {
+            USERHOMEFOLDER = $$clean_path($$(HOMEDRIVE)$$(HOMEPATH))
+        }
+    }
+}
+
+unix:!android {
+    USERHOMEFOLDER = $$clean_path($$(HOME))
 }
 
 win32 {
@@ -11,10 +23,18 @@ win32 {
     }
 }
 
-REMAKEN_RULES_ROOT = $$clean_path($$(REMAKENRULESROOT))
-isEmpty(REMAKEN_RULES_ROOT) {
-    REMAKEN_RULES_ROOT=$${USERHOMEFOLDER}/.remaken/rules/qmake
+exists(builddefs/qmake) {
+    QMAKE_REMAKEN_RULES_ROOT=builddefs/qmake
 }
-!exists($${REMAKEN_RULES_ROOT}) {
-    error("Unable to locate remaken rules in " $${REMAKEN_RULES_ROOT} ". Either check your remaken installation, or provide the path to your remaken qmake rules in REMAKENRULESROOT environment variable.")
+else {
+    QMAKE_REMAKEN_RULES_ROOT = $$clean_path($$(REMAKEN_RULES_ROOT))
+    isEmpty(QMAKE_REMAKEN_RULES_ROOT) {
+        QMAKE_REMAKEN_RULES_ROOT=$${USERHOMEFOLDER}/.remaken/rules/qmake
+    }
 }
+
+!exists($${QMAKE_REMAKEN_RULES_ROOT}) {
+    error("Unable to locate remaken rules in " $${QMAKE_REMAKEN_RULES_ROOT} ". Either check your remaken installation, or provide the path to your remaken qmake root folder rules in REMAKEN_RULES_ROOT environment variable.")
+}
+
+message("Remaken qmake build rules used : " $$QMAKE_REMAKEN_RULES_ROOT)
