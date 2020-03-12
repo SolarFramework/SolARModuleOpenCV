@@ -21,7 +21,7 @@
 #include "opencv2/video/video.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
 
-namespace xpcf  = org::bcom::xpcf;
+namespace xpcf = org::bcom::xpcf;
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolAR3DOverlayBoxOpencv)
 
@@ -99,7 +99,6 @@ cv::Scalar SolAR3DOverlayBoxOpencv::toColorCV(std::vector<int> colorVec)
 
 void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displayImage)
 {
-
     Transform3Df poseInverse = pose.inverse();
 
     // Image where parallelepiped will be displayed
