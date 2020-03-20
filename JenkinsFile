@@ -90,7 +90,7 @@ pipeline {
                 }                
                 prepareRelease("SolARBuild","linux-gcc","SolARModuleOpenCV")                
                 withCredentials([string(credentialsId: 'github-token', variable: 'token')]) {
-                    release("SolARModuleOpenCV","${version}","${WORKSPACE}/artifactory/x86_64_shared_release/SolARModuleOpenCV_${version}_x86_64_shared_release.zip ${WORKSPACE}/artifactory/x86_64_shared_debug/SolARModuleOpenCV_${version}_x86_64_shared_debug.zip",token);
+                    release("SolARModuleOpenCV","SolARModuleOpenCV/${version}/linux","SolARModuleOpenCV Version ${version} for Linux","${WORKSPACE}/artifactory/x86_64_shared_release/SolARModuleOpenCV_${version}_x86_64_shared_release.zip ${WORKSPACE}/artifactory/x86_64_shared_debug/SolARModuleOpenCV_${version}_x86_64_shared_debug.zip",token);
                 }
             }   
         }
