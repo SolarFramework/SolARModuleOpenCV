@@ -65,7 +65,6 @@ class SolARPerspectiveControllerOpencv;
 class SolARProjectOpencv;
 class SolARUnprojectPlanarPointsOpencv;
 class SolARPoseEstimationPlanarPointsOpencv;
-class SolARPoseEstimationPnpEPFL;
 class SolARPoseEstimationPnpOpencv;
 class SolARPoseEstimationSACPnpOpencv;
 class SolARPoseFinderFrom2D2DOpencv;
@@ -257,11 +256,6 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPlanarPo
                              "9fbadf80-251f-4160-94f8-a64dc3d40a2f",
                              "SolARPoseEstimationPlanarPointsEPFL",
                              "Finds the camera pose of 2D-3D planar points correspondances based on opencv homography.")
-
-XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL,
-                             "a38edf79-f0dc-45ca-92fc-2b336fceedf9",
-                             "SolARPoseEstimationPnpEPFL",
-                             "Finds the camera pose of 2D-3D points correspondaces based on EPFL pnp algorithm.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv,
                              "0753ade1-7932-4e29-a71c-66155e309a53",

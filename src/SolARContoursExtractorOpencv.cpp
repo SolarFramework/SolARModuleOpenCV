@@ -48,7 +48,7 @@ namespace OPENCV {
         if(!thresholdImg.empty())
         {
             std::vector<std::vector<cv::Point>> ocv_contours;
-            cv::findContours(thresholdImg, ocv_contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
+            cv::findContours(thresholdImg, ocv_contours, cv::RETR_LIST, cv::CHAIN_APPROX_NONE);
             contours.clear();
             for (size_t i = 0; i<ocv_contours.size(); i++)
             {

@@ -1,2 +1,2 @@
-opencv|3.4.3|opencv|thirdParties@github|https://github.com/SolarFramework/binaries/releases/download
+opencv|4.2.0|opencv|thirdParties@github|https://github.com/SolarFramework/SolarFramework/releases/download
 SolARFramework|0.7.0|SolARFramework|SolARBuild@github|https://github.com/SolarFramework/SolarFramework/releases/download

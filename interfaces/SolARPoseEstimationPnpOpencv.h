@@ -17,6 +17,7 @@
 #ifndef SOLARPOSEESTIMATIONPNPOPENCV_H
 #define SOLARPOSEESTIMATIONPNPOPENCV_H
 #include <vector>
+#include <string>
 #include "opencv2/core.hpp"
 #include "api/solver/pose/I3DTransformFinderFrom2D3D.h"
 #include "datastructure/Image.h"
@@ -76,6 +77,8 @@ private:
     /// @brief The minimum of number of inliers to valid a good pose estimation
     int m_NbInliersToValidPose = 10;
 
+    /// @brief The method for solving the PnP problem (ITERATIVE, P3P, AP3P, EPNP, DLS, UPNP, IPPE, IPPE_SQUARE)
+    std::string m_method = "ITERATIVE";
 
     cv::Mat m_camMatrix;
     cv::Mat m_camDistorsion;
