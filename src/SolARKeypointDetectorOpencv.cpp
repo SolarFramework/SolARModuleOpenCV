@@ -92,7 +92,7 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
 	case (KeypointDetectorType::AKAZE):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
 		if (m_threshold > 0)
-			m_detector = AKAZE::create(5, 0, 3, m_threshold);
+            m_detector = AKAZE::create(5, 0, 3, m_threshold);
 		else
 			m_detector = AKAZE::create();
 		break;
