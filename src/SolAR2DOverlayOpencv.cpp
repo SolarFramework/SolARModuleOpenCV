@@ -118,6 +118,32 @@ void SolAR2DOverlayOpencv::drawCircles(const std::vector<Keypoint>& keypoints, S
 
 }
 
+void SolAR2DOverlayOpencv::drawLines(const std::vector<Keyline>& keylines, SRef<Image> displayImage)
+{
+    // image where lines will be displayed
+    cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
+    cv::Scalar color;
+
+    if (!m_randomColor)
+        color = cv::Scalar(m_color[0], m_color[1], m_color[2]);
+    else
+    {
+        std::random_device rd;     // only used once to initialise (seed) engine
+        std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+        std::uniform_int_distribution<int> uni(0, 255); // guaranteed unbiased
+
+        color = cv::Scalar(uni(rng), uni(rng), uni(rng));
+    }
+
+    for (int i = 0; i < keylines.size(); i++)
+    {
+        cv::Point2f start(keylines[i].getStartPointX(), keylines[i].getStartPointY());
+        cv::Point2f end(keylines[i].getEndPointX(), keylines[i].getEndPointY());
+
+        SolAROpenCVHelper::drawCVLine(displayedImage, start, end, color, m_thickness);
+    }
+}
+
 void SolAR2DOverlayOpencv::drawContour (const Contour2Df & contour, SRef<Image> displayImage)
 {
     // image where contours will be displayed
