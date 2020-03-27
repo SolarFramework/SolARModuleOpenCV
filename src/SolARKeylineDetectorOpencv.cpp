@@ -102,6 +102,8 @@ void SolARKeylineDetectorOpencv::detect(const SRef<Image> image, std::vector<Key
     cv::cvtColor(opencvImage, img_1, cv::COLOR_BGR2GRAY);
 	cv::resize(img_1, img_1, cv::Size(img_1.cols * m_imageRatio, img_1.rows * m_imageRatio), 0, 0);
 
+	std::vector<cv::Vec4f> outlines;
+	std::vector<double> width, prec, nfa;
 	try
 	{
 		if (!m_detector)
@@ -110,10 +112,11 @@ void SolARKeylineDetectorOpencv::detect(const SRef<Image> image, std::vector<Key
 			setType(stringToType.at(m_type));
 		}
 		
-		cv::Mat outlines, width, prec, nfa;
 		m_detector->detect(img_1, outlines, width, prec, nfa);
-		m_detector->drawSegments(opencvImage, outlines);
 		LOG_DEBUG("outlines size: {}", outlines.size());
+		LOG_DEBUG("width size: {}", width.size());
+		LOG_DEBUG("prec size: {}", prec.size());
+		LOG_DEBUG("nfa size: {}", nfa.size());
 	}
 	catch (cv::Exception & e)
 	{
@@ -122,28 +125,28 @@ void SolARKeylineDetectorOpencv::detect(const SRef<Image> image, std::vector<Key
 		return;
 	}
 
-	//for (auto keyline : lines)
-	//{
-	//	Keyline kli;
-	//	kli.init(	keyline.pt.x * ratioInv,
-	//				keyline.pt.y * ratioInv,
-	//				keyline.startPointX * ratioInv,
-	//				keyline.startPointY * ratioInv,
-	//				keyline.sPointInOctaveX * ratioInv,
-	//				keyline.sPointInOctaveY * ratioInv,
-	//				keyline.endPointX * ratioInv,
-	//				keyline.endPointY * ratioInv,
-	//				keyline.ePointInOctaveX * ratioInv,
-	//				keyline.ePointInOctaveY * ratioInv,
-	//				keyline.lineLength * ratioInv,
-	//				keyline.size,
-	//				keyline.angle,
-	//				keyline.response,
-	//				keyline.numOfPixels,
-	//				keyline.octave,
-	//				keyline.class_id);
-	//	keylines.push_back(kli);
-	//}
+	for (cv::Vec4f line : outlines)
+	{
+		Keyline kli;
+		kli.init(	0,
+					0,
+					line(0) * ratioInv,
+					line(1) * ratioInv,
+					0,
+					0,
+					line(2) * ratioInv,
+					line(3) * ratioInv,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0);
+		keylines.push_back(kli);
+	}
 }
 
 }

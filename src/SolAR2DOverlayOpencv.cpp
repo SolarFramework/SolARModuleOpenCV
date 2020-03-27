@@ -123,25 +123,35 @@ void SolAR2DOverlayOpencv::drawLines(const std::vector<Keyline>& keylines, SRef<
     // image where lines will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
     cv::Scalar color;
+	cv::Point2f start, end;
 
-    if (!m_randomColor)
-        color = cv::Scalar(m_color[0], m_color[1], m_color[2]);
-    else
-    {
-        std::random_device rd;     // only used once to initialise (seed) engine
-        std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-        std::uniform_int_distribution<int> uni(0, 255); // guaranteed unbiased
+	if (!m_randomColor)
+	{
+		color = cv::Scalar(m_color[0], m_color[1], m_color[2]);
 
-        color = cv::Scalar(uni(rng), uni(rng), uni(rng));
-    }
+		for (int i = 0; i < keylines.size(); i++)
+		{
+			start = cv::Point2f(keylines[i].getStartPointX(), keylines[i].getStartPointY());
+			end = cv::Point2f(keylines[i].getEndPointX(), keylines[i].getEndPointY());
 
-    for (int i = 0; i < keylines.size(); i++)
-    {
-        cv::Point2f start(keylines[i].getStartPointX(), keylines[i].getStartPointY());
-        cv::Point2f end(keylines[i].getEndPointX(), keylines[i].getEndPointY());
+			SolAROpenCVHelper::drawCVLine(displayedImage, start, end, color, m_thickness);
+		}
+	}
+	else
+	{
+		std::random_device rd;     // only used once to initialise (seed) engine
+		std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+		std::uniform_int_distribution<int> uni(0, 255); // guaranteed unbiased
 
-        SolAROpenCVHelper::drawCVLine(displayedImage, start, end, color, m_thickness);
-    }
+		for (int i = 0; i < keylines.size(); i++)
+		{
+			start = cv::Point2f(keylines[i].getStartPointX(), keylines[i].getStartPointY());
+			end = cv::Point2f(keylines[i].getEndPointX(), keylines[i].getEndPointY());
+
+			color = cv::Scalar(uni(rng), uni(rng), uni(rng));
+			SolAROpenCVHelper::drawCVLine(displayedImage, start, end, color, m_thickness);
+		}
+	}
 }
 
 void SolAR2DOverlayOpencv::drawContour (const Contour2Df & contour, SRef<Image> displayImage)

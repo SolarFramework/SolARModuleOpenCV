@@ -17,6 +17,8 @@ using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
 
+#define WEBCAM
+
 /**
  * Declare module.
  */
@@ -42,6 +44,7 @@ int main(int argc, char *argv[])
 		// declare and create components
         LOG_INFO("Start creating components");
 
+		SRef<input::devices::ICamera> camera = xpcfComponentManager->resolve<input::devices::ICamera>();
 		SRef<image::IImageLoader> imageLoader = xpcfComponentManager->resolve<image::IImageLoader>();
 		SRef<features::IKeylineDetector> keylineDetector = xpcfComponentManager->resolve<features::IKeylineDetector>();
 		SRef<display::I2DOverlay> overlay = xpcfComponentManager->resolve<display::I2DOverlay>();
@@ -52,8 +55,37 @@ int main(int argc, char *argv[])
 		SRef<Image> image;
 		std::vector<Keyline> keylines;
 
+#ifdef WEBCAM
+		if (camera->start() != FrameworkReturnCode::_SUCCESS)
+		{
+			LOG_ERROR("Camera cannot start");
+			return -1;
+		}
 
+		int count = 0;
+		clock_t start, end;
+		start = clock();
 
+		while (true)
+		{
+			if (camera->getNextImage(image) == FrameworkReturnCode::_ERROR_)
+				break;
+			count++;
+
+			keylineDetector->detect(image, keylines);
+			overlay->drawLines(keylines, image);
+
+			if (viewer->display(image) == FrameworkReturnCode::_STOP)
+			{
+				LOG_INFO("End of SolARKeylineDetector test");
+				break;
+			}
+		}
+		end = clock();
+		double duration = double(end - start) / CLOCKS_PER_SEC;
+		printf("\n\nElasped time is %.2lf seconds.\n", duration);
+		printf("Number of processed frames per second : %8.2f\n\n", count / duration);
+#else
 		if (imageLoader->getImage(image) !=  FrameworkReturnCode::_SUCCESS)
 		{
 			LOG_WARNING("Image can't be loaded", imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->getStringValue());
@@ -74,6 +106,7 @@ int main(int argc, char *argv[])
                         break;
                 }
         }
+#endif
 	}
 	catch (xpcf::Exception &e)
 	{
