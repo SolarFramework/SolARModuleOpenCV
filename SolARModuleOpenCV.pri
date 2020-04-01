@@ -4,7 +4,6 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARImageConvertorUnity.h \
     interfaces/SolARImageLoaderOpencv.h \
     interfaces/SolARImageViewerOpencv.h \
-    interfaces/SolARKeylineDetectorOpencv.h \
     interfaces/SolARKeypointDetectorOpencv.h \
     interfaces/SolARKeypointDetectorRegionOpencv.h \
     interfaces/SolAROpenCVHelper.h \
@@ -58,7 +57,6 @@ HEADERS += interfaces/SolARCameraOpencv.h \
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARBaseCameraOpencv.cpp \
-    src/SolARKeylineDetectorOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
     src/SolARKeypointDetectorRegionOpencv.cpp \
     src/SolARImageLoaderOpencv.cpp \
