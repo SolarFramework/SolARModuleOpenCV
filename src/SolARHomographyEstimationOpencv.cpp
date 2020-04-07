@@ -56,7 +56,7 @@ api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::f
         scene.push_back( point);
     }
 
-    H = cv::findHomography( obj, scene, CV_RANSAC, m_ransacReprojThreshold );
+    H = cv::findHomography( obj, scene, cv::RANSAC, m_ransacReprojThreshold );
 	if (!H.data) {
 		LOG_DEBUG("Homography matrix is empty")
         return api::solver::pose::Transform2DFinder::TRANSFORM2D_EMPTY;

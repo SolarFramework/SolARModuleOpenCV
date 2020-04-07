@@ -1,2 +1,2 @@
-opencv#stable|4.1.1|opencv|conan|conan-center
 SolARFramework|0.7.0|SolARFramework|SolARBuild@github|https://github.com/SolarFramework/SolarFramework/releases/download
+

@@ -64,8 +64,8 @@ namespace SolAR {
         {
             if (m_is_resolution_set)
             {
-                m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_parameters.resolution.width );
-                m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_parameters.resolution.height );
+                m_capture.set(cv::CAP_PROP_FRAME_WIDTH, m_parameters.resolution.width );
+                m_capture.set(cv::CAP_PROP_FRAME_HEIGHT, m_parameters.resolution.height );
             }
             return FrameworkReturnCode::_SUCCESS;
         }

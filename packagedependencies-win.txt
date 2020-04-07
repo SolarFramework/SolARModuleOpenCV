@@ -1,0 +1,1 @@
+opencv|4.1.1|opencv|conan|conan-center|default|eigen=False#openexr=False#libtiff:jbig=False#libtiff:lzma=False#protobuf:shared=True

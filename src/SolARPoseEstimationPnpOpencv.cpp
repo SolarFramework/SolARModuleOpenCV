@@ -17,6 +17,7 @@
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
+#include <map>
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv);
 
@@ -27,6 +28,16 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+const static std::map<std::string,int> convertPnPMethod = {{"ITERATIVE", cv::SOLVEPNP_ITERATIVE},
+                                                           {"P3P", cv::SOLVEPNP_P3P},
+                                                           {"AP3P", cv::SOLVEPNP_AP3P},
+                                                           {"EPNP", cv::SOLVEPNP_EPNP},
+                                                           {"DLS", cv::SOLVEPNP_DLS},
+                                                           {"UPNP", cv::SOLVEPNP_UPNP},
+                                                           {"IPPE", cv::SOLVEPNP_IPPE},
+                                                           {"IPPE SQUARE", cv::SOLVEPNP_IPPE_SQUARE},
+                                                          };
+
 SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
     declareInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
@@ -34,6 +45,7 @@ SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xp
     declareProperty("reprojError", m_reprojError);
     declareProperty("confidence", m_confidence);
     declareProperty("minNbInliers", m_NbInliersToValidPose);
+    declareProperty("method", m_method);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
@@ -52,6 +64,14 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
+
+    int method;
+    auto itr = convertPnPMethod.find(m_method);
+    if (itr != convertPnPMethod.end())
+        method = itr->second;
+    else
+        method = cv::SOLVEPNP_ITERATIVE;
+
 
     Transform3Df initialPoseInverse = initialPose.inverse();
 
@@ -81,10 +101,10 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
 		taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
 		cv::Rodrigues(r33, raux);
         
-        cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1, cv::SOLVEPNP_ITERATIVE);
+        cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1, method);
     }
     else{
-        cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 0, cv::SOLVEPNP_ITERATIVE);
+        cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 0, method);
     }
     
     raux.convertTo(Rvec, CV_32F);

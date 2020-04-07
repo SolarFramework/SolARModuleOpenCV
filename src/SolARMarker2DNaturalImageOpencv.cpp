@@ -67,7 +67,7 @@ namespace OPENCV {
 
         LOG_DEBUG("{}",imageFullPath)
 
-        m_ocvImage = cv::imread(imageFullPath.string(), CV_LOAD_IMAGE_COLOR);
+        m_ocvImage = cv::imread(imageFullPath.string(), cv::IMREAD_COLOR);
         if(! m_ocvImage.data )  // Check for invalid input
         {
             LOG_ERROR("Error: Could not open or find the 2D natural image marker {}", m_filePath)
