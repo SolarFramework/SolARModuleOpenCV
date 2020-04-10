@@ -591,6 +591,66 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
     }
 }
 
+void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <Keyline> & keylines_image1, const std::vector <Keyline> & keylines_image2, const std::vector<DescriptorMatch> matches)
+{
+	if (outImage == nullptr)
+	{
+		outImage = xpcf::utils::make_shared<Image>(image1->getWidth() + image2->getWidth(), std::max(image1->getHeight(), image2->getHeight()), image1->getImageLayout(), image1->getPixelOrder(), image1->getDataType());
+	}
+	else if ((outImage->getWidth() != image1->getWidth() + image2->getWidth()) || (outImage->getHeight() != std::max(image1->getHeight(), image2->getHeight())))
+	{
+		outImage->setSize(image1->getWidth() + image2->getWidth(), std::max(image1->getHeight(), image2->getHeight()));
+	}
+
+	cv::Mat img1, img2, outImg;
+	Keyline kl1, kl2;
+	int img1_width = image1->getWidth();
+
+	img1 = SolAROpenCVHelper::mapToOpenCV(image1);
+	img2 = SolAROpenCVHelper::mapToOpenCV(image2);
+	outImg = SolAROpenCVHelper::mapToOpenCV(outImage);
+
+	outImg.setTo(0);
+
+	img1.copyTo(outImg(cv::Rect(0, 0, img1_width, image1->getHeight())));
+	img2.copyTo(outImg(cv::Rect(img1_width, 0, image2->getWidth(), image2->getHeight())));
+
+	int nbLines = matches.size();
+	if (m_maxMatches >= 0)
+		nbLines = std::min((int)m_maxMatches, nbLines);
+
+	if (m_mode.compare("COLOR") == 0)
+	{
+		for (int i = 0; i < nbLines; ++i) {
+			kl1 = keylines_image1.at(matches[i].getIndexInDescriptorA());
+			kl2 = keylines_image2.at(matches[i].getIndexInDescriptorB());
+			cv::line(outImg, cv::Point2f(kl1.getStartPointX(), kl1.getStartPointY()), cv::Point2f(kl1.getEndPointX(), kl1.getEndPointY()), cv::Scalar(m_color[2], m_color[1], m_color[0]), m_thickness);
+			cv::line(outImg, cv::Point2f(kl2.getStartPointX() + img1_width, kl2.getStartPointY()), cv::Point2f(kl2.getEndPointX() + img1_width, kl2.getEndPointY()), cv::Scalar(m_color[2], m_color[1], m_color[0]), m_thickness);
+		}
+	}
+	else if (m_mode.compare("RANDOM") == 0)
+	{
+		cv::Scalar color;
+		std::random_device rd;     // only used once to initialise (seed) engine
+		std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+		std::uniform_int_distribution<int> uni(0, 255); // guaranteed unbiased
+		for (int i = 0; i < nbLines; ++i) {
+			kl1 = keylines_image1.at(matches[i].getIndexInDescriptorA());
+			kl2 = keylines_image2.at(matches[i].getIndexInDescriptorB());
+			color = cv::Scalar(uni(rng), uni(rng), uni(rng));
+			cv::line(outImg, cv::Point2f(kl1.getStartPointX(), kl1.getStartPointY()), cv::Point2f(kl1.getEndPointX(), kl1.getEndPointY()), color, m_thickness);
+			cv::line(outImg, cv::Point2f(kl2.getStartPointX() + img1_width, kl2.getStartPointY()), cv::Point2f(kl2.getEndPointX() + img1_width, kl2.getEndPointY()), color, m_thickness);
+			cv::line(outImg, cv::Point2f(kl1.getX(), kl1.getY()), cv::Point2f(kl2.getX() + img1_width, kl2.getY()), color, m_thickness);
+		}
+	}
+	else if (m_mode.compare("FADING") == 0)
+	{
+		LOG_WARNING("FADING mode not implemented");
+	}
+	else
+		LOG_WARNING("For SolARMatchesOverlayOpenCV, mode should be either COLOR, RANDOM or FADING");
+}
+
 }
 }
 }
