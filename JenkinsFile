@@ -13,25 +13,21 @@ pipeline {
     triggers { pollSCM('*/10 * * * *') } 
     stages {
 
-        stage("Get Binaries") {
-            steps {
-                script {
-                     BRANCH = BRANCH_NAME.replace('/','_')
-                }
-                withCredentials([usernamePassword(credentialsId: 'bc6e150e-ede8-4e35-8af4-0f037edee8ac', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                     getBinaries(BRANCH,USERNAME,PASSWORD)
-                }
-            }
-        }
-
         stage("Get Third Parties") {
-            when {
-                expression { params.RELEASE == false }
-            }                 
-            steps {
-                installDependency('opencv','3.4.3')
-            }
-        }        
+             steps {
+                 script {
+                     BRANCH = BRANCH_NAME.replace('/','_')
+                     version = sh (
+                        script: "cat *.pro  | grep VERSION | head -1 | cut -d '=' -f 2",
+                        returnStdout: true
+                     )
+                     version = version.replaceAll("[\r|\n]","")
+                 }
+                 withCredentials([string(credentialsId: 'artifactoryApiKey', variable: 'apiKey')]) {
+                    installRemaken(params.RELEASE,BRANCH,apiKey)
+                 }
+             }
+        }
 
         stage("Build") {
             steps {
@@ -62,33 +58,32 @@ pipeline {
              }
         }  
 
-        stage("Share Binaries") {
-            when {
-                expression { params.RELEASE == false }
-            }                 
+        stage("Generate artifacts") {
             steps {
                 script {
-                     BRANCH = BRANCH.replace('/','_')
-                }
-                withCredentials([usernamePassword(credentialsId: 'bc6e150e-ede8-4e35-8af4-0f037edee8ac', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                     shareBinaries(BRANCH,USERNAME,PASSWORD)
+                     prepareRelease("SolARBuild","linux-gcc","SolARModuleOpenCV")                
                 }
             }
-        }       
+        }  
+
+        // Trigger only if not a RELEASE
+        stage("Upload to Artifactory") {
+            when {
+                expression { params.RELEASE == false }
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'bc6e150e-ede8-4e35-8af4-0f037edee8ac', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                    uploadArchive(BRANCH,"SolARModuleOpenCV/${version}/linux","${WORKSPACE}/artifactory/x86_64_shared_release/SolARModuleOpenCV_${version}_x86_64_shared_release.zip",USERNAME,PASSWORD)
+                }
+            }
+        }
+
 
         stage("Release") {
             when {
                 expression { params.RELEASE == true }
             }
             steps {
-                script {
-                    version = sh (
-                        script: "cat *.pro  | grep VERSION | head -1 | cut -d '=' -f 2",
-                        returnStdout: true
-                    )
-                    version = version.replace("\n","")
-                }                
-                prepareRelease("SolARBuild","linux-gcc","SolARModuleOpenCV")                
                 withCredentials([string(credentialsId: 'github-token', variable: 'token')]) {
                     release("SolARModuleOpenCV","SolARModuleOpenCV/${version}/linux","SolARModuleOpenCV Version ${version} for Linux","${WORKSPACE}/artifactory/x86_64_shared_release/SolARModuleOpenCV_${version}_x86_64_shared_release.zip ${WORKSPACE}/artifactory/x86_64_shared_debug/SolARModuleOpenCV_${version}_x86_64_shared_debug.zip",token);
                 }
