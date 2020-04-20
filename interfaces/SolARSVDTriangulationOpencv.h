@@ -88,6 +88,12 @@ public:
                                            const cv::Matx34d & P1,       //camera 2 matrix
                                            double & error);
 
+	bool lineTriangulation(	const Keyline & kl1, const Keyline & kl2,
+							const cv::Mat & pose1Inv, const cv::Mat & pose2Inv,
+							const cv::Mat & proj1, const cv::Mat & proj2,
+							const cv::Mat & F12,
+							Edge3Df & line3D, double & error);
+
     /// @brief triangulate pairs of points 2d captured from two views with differents poses (with respect to the camera instrinsic parameters).
     /// @param[in] pointsView1, set of 2D points seen in view_1.
     /// @param[in] pointsView2, set of 2D points seen in view_2.
@@ -152,9 +158,34 @@ public:
                         const std::vector<DescriptorMatch> & matches,
                         std::vector<CloudPoint> & pcloud) override;
 
+	/// @brief triangulate pairs of 2D keylines captured from two different views with their associated poses
+	/// @param[in] keylines1, set of keylines detected in the first view.
+	/// @param[in] keylines2, set of keylines detected in the second view.
+	/// @param[in] matches, the matches between the keylines detected in each view.
+	/// @param[in] pose1, camera pose of the first view.
+	/// @param[in] pose2, camera pose of the second view.
+	/// @param[out] lines3D, set of triangulated 3D lines.
+	/// @param[out] indices, set of indices to recover the 2D keylines from which the 3D line was triangulated.
+	/// @return the mean re-projection error
+	double triangulate( const std::vector<Keyline> & keylines1,
+						const std::vector<Keyline> & keylines2,
+						const std::vector<DescriptorMatch> & matches,
+						const Transform3Df & pose1,
+						const Transform3Df & pose2,
+						std::vector<Edge3Df> & lines3D,
+						std::vector<int> & indices) override;
+
     void unloadComponent () override final;
 
  private:
+	double distancePointLine2D(const cv::Mat & line, const cv::Mat & point);
+	
+	bool solvePoint3DLine(	const cv::Mat & l1, const cv::Mat & l2,
+							const cv::Mat & proj1, const cv::Mat & proj2,
+							const cv::Mat & point2D,
+							cv::Mat & point3D,
+							double & error);
+
     // Camera calibration matrix
     cv::Mat_<double> m_camMatrix;
     // inverse of the Camera calibration matrix

@@ -25,6 +25,7 @@ namespace xpcf  = org::bcom::xpcf;
 
 #define EPSILON 0.0001
 #define intrpmnmx(val,min,max) (max==min ? 0.0 : ((val)-min)/(max-min))
+#define MAX_ERROR_TRIANGULATION 0.001
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARSVDTriangulationOpencv);
 
@@ -156,6 +157,57 @@ cv::Mat_<double> SolARSVDTriangulationOpencv::LinearLSTriangulation(const cv::Po
     //out = cv::Vec3f((float)matrV(3, 0) / matrV(3, 3), (float)matrV(3, 1) / matrV(3, 3), (float)matrV(3, 2) / matrV(3, 3));
     cv::Mat_<double> output(matrV(3, 0) / matrV(3, 3), matrV(3, 1) / matrV(3, 3), matrV(3, 2) / matrV(3, 3));
     return output;
+}
+
+bool SolARSVDTriangulationOpencv::lineTriangulation(const Keyline & kl1, const Keyline & kl2,
+													const cv::Mat & pose1Inv, const cv::Mat & pose2Inv, 
+													const cv::Mat & proj1, const cv::Mat & proj2,
+													const cv::Mat & F12,
+													Edge3Df & line3D,
+													double & error)
+{
+	// Get start and end points in homogeneous space
+	cv::Mat start1	= (cv::Mat_<double>(3, 1) << kl1.getStartPointX(),	kl1.getStartPointY(),	1);
+	cv::Mat end1	= (cv::Mat_<double>(3, 1) << kl1.getEndPointX(),	kl1.getEndPointY(),		1);
+	cv::Mat start2	= (cv::Mat_<double>(3, 1) << kl2.getStartPointX(),	kl2.getStartPointY(),	1);
+	cv::Mat end2	= (cv::Mat_<double>(3, 1) << kl2.getEndPointX(),	kl2.getEndPointY(),		1);
+
+
+	// Define l1 and l2 Plücker coordinates
+	cv::Mat l1 = start1.cross(end1);
+	cv::Mat l2 = start2.cross(end2);
+
+	// Assert that epipolar lines are not parallel to l2
+	cv::Mat epipolarLine_start1 = F12 * start1;
+	cv::Mat epipolarLine_end1	= F12 * end1;
+
+	cv::Mat intersect_start = epipolarLine_start1.cross(l2);
+	cv::Mat intersect_end	= epipolarLine_end1.cross(l2);
+
+	if (std::abs(intersect_start.at<double>(2)) == 0 || std::abs(intersect_end.at<double>(2)) == 0)
+		return false;
+
+	// Triangulate start and end points
+	cv::Mat start3D, end3D;
+	double error1, error2;
+	if (!solvePoint3DLine(l1, l2, proj1, proj2, start1, start3D, error1))
+		return false;
+	if (!solvePoint3DLine(l1, l2, proj1, proj2, end1, end3D, error2))
+		return false;
+
+	// Check chirality (is line in front of the camera)
+	if (pose1Inv.row(2).dot(start3D) <= 0 || pose1Inv.row(2).dot(end3D) <= 0 ||
+		pose2Inv.row(2).dot(start3D) <= 0 || pose2Inv.row(2).dot(end3D) <= 0 )
+		return false;
+
+	line3D.p1.setX(start3D.at<double>(0));
+	line3D.p1.setY(start3D.at<double>(1));
+	line3D.p1.setZ(start3D.at<double>(2));
+	line3D.p2.setX(end3D.at<double>(0));
+	line3D.p2.setY(end3D.at<double>(1));
+	line3D.p2.setZ(end3D.at<double>(2));
+	error = (error1 + error2) / 2;
+	return true;
 }
 
 
@@ -479,11 +531,109 @@ double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> & curKeyfra
                        pcloud);
 }
 
+double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keyline>& keylines1,
+												const std::vector<Keyline>& keylines2,
+												const std::vector<DescriptorMatch>& matches,
+												const Transform3Df & pose1,
+												const Transform3Df & pose2,
+												std::vector<Edge3Df>& lines3D,
+												std::vector<int>& indices)
+{
+	// Compute Projection matrices
+	cv::Matx44d Pose1(	pose1(0, 0), pose1(0, 1), pose1(0, 2), pose1(0, 3),
+						pose1(1, 0), pose1(1, 1), pose1(1, 2), pose1(1, 3),
+						pose1(2, 0), pose1(2, 1), pose1(2, 2), pose1(2, 3),
+						pose1(3, 0), pose1(3, 1), pose1(3, 2), pose1(3, 3));
+
+	cv::Matx44d Pose2(	pose2(0, 0), pose2(0, 1), pose2(0, 2), pose2(0, 3),
+						pose2(1, 0), pose2(1, 1), pose2(1, 2), pose2(1, 3),
+						pose2(2, 0), pose2(2, 1), pose2(2, 2), pose2(2, 3),
+						pose2(3, 0), pose2(3, 1), pose2(3, 2), pose2(3, 3));
+
+	cv::Mat P1 = cv::Mat(Pose1);
+	cv::Mat P2 = cv::Mat(Pose2);
+
+	cv::Mat pose1Inv = P1.inv();
+	cv::Mat pose2Inv = P2.inv();
+
+	cv::Mat Proj1 = m_camMatrix * (pose1Inv.rowRange(0, 3));
+	cv::Mat Proj2 = m_camMatrix * (pose2Inv.rowRange(0, 3));
+
+	// Compute fundamental matrix
+	cv::Mat pose12 = pose1Inv * P2;
+	cv::Mat R12 = (cv::Mat_<double>(3, 3) << pose12.at<double>(0, 0), pose12.at<double>(0, 1), pose12.at<double>(0, 2),
+		pose12.at<double>(1, 0), pose12.at<double>(1, 1), pose12.at<double>(1, 2),
+		pose12.at<double>(2, 0), pose12.at<double>(2, 1), pose12.at<double>(2, 2));
+	cv::Mat T12 = (cv::Mat_<double>(3, 1) << pose12.at<double>(0, 3), pose12.at<double>(1, 3), pose12.at<double>(2, 3));
+
+	cv::Mat T12x = (cv::Mat_<double>(3, 3) << 0, -T12.at<double>(2), T12.at<double>(1),
+		T12.at<double>(2), 0, -T12.at<double>(0),
+		-T12.at<double>(1), T12.at<double>(0), 0);
+	cv::Mat F12 = m_camMatrix.t().inv() * T12x * R12 * m_camMatrix.inv();
+
+	// Triangulate lines
+	double error, meanError;
+	Keyline kl1, kl2;
+	Edge3Df line3D;
+	bool check;
+	for (unsigned i = 0; i < matches.size(); i++)
+	{
+		kl1 = keylines1[matches[i].getIndexInDescriptorA()];
+		kl2 = keylines2[matches[i].getIndexInDescriptorB()];
+		check = lineTriangulation(kl1, kl2, pose1Inv, pose2Inv, Proj1, Proj2, F12, line3D, error);
+		if (check && (error < MAX_ERROR_TRIANGULATION))
+		{
+			lines3D.push_back(line3D);
+			indices.push_back(i);
+			meanError += error;
+		}
+	}
+	meanError /= indices.size();
+	return meanError;
+}
+
+double SolARSVDTriangulationOpencv::distancePointLine2D(const cv::Mat & line, const cv::Mat & point)
+{
+	cv::Mat point2D;
+	if (point.at<double>(2) == 1.0)
+		point2D = point;
+	else
+		point2D = point / point.at<double>(2);
+
+	cv::Mat lp = line.t() * point2D;
+	return std::abs(lp.at<double>(0, 0)) / std::sqrt(std::pow(line.at<double>(0), 2) + std::pow(line.at<double>(1), 2));
+}
+
+bool SolARSVDTriangulationOpencv::solvePoint3DLine( const cv::Mat & l1, const cv::Mat & l2,
+													const cv::Mat & proj1, const cv::Mat & proj2,
+													const cv::Mat & point2D,
+													cv::Mat & point3D,
+													double & error)
+{
+	cv::Mat A(4, 4, CV_64F);
+	A.row(0) = l1.t() * proj1;
+	A.row(1) = l2.t() * proj2;
+	A.row(2) = point2D.at<double>(0) * proj1.row(2) - proj1.row(0);
+	A.row(3) = point2D.at<double>(1) * proj1.row(2) - proj1.row(1);
+	cv::Mat w, u, vt;
+	cv::SVD::compute(A, w, u, vt);
+	point3D = vt.row(3).t();
+	if (point3D.at<double>(3) == 0)
+		return false;
+
+	// calculate error
+	point3D = point3D / point3D.at<double>(3);
+	cv::Mat point3D_proj1 = proj1 * point3D;
+	cv::Mat point3D_proj2 = proj2 * point3D;
+	error = (distancePointLine2D(l1, point3D_proj1) + distancePointLine2D(l2, point3D_proj2)) / 2;
+	return true;
+}
+
 void SolARSVDTriangulationOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
     //TODO.. check to inverse
     this->m_camDistorsion.at<double>(0, 0)  = (double)distorsionParams(0);
     this->m_camDistorsion.at<double>(1, 0)  = (double)distorsionParams(1);
-    this->m_camDistorsion.at<double>(2, 0)  =(double) distorsionParams(2);
+    this->m_camDistorsion.at<double>(2, 0)  = (double)distorsionParams(2);
     this->m_camDistorsion.at<double>(3, 0)  = (double)distorsionParams(3);
     this->m_camDistorsion.at<double>(4, 0)  = (double)distorsionParams(4);
 
