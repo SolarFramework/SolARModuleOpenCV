@@ -28,6 +28,8 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+#if CV_VERSION_MAJOR >= 4 // Only in OpenCV 4
+
 const static std::map<std::string,int> convertPnPMethod = {{"ITERATIVE", cv::SOLVEPNP_ITERATIVE},
                                                            {"P3P", cv::SOLVEPNP_P3P},
                                                            {"AP3P", cv::SOLVEPNP_AP3P},
@@ -37,6 +39,7 @@ const static std::map<std::string,int> convertPnPMethod = {{"ITERATIVE", cv::SOL
                                                            {"IPPE", cv::SOLVEPNP_IPPE},
                                                            {"IPPE SQUARE", cv::SOLVEPNP_IPPE_SQUARE},
                                                           };
+#endif
 
 SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
@@ -65,13 +68,14 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
 
+#if CV_VERSION_MAJOR >= 4 // Only in OpenCV 4
     int method;
     auto itr = convertPnPMethod.find(m_method);
     if (itr != convertPnPMethod.end())
         method = itr->second;
     else
         method = cv::SOLVEPNP_ITERATIVE;
-
+#endif
 
     Transform3Df initialPoseInverse = initialPose.inverse();
 
@@ -100,12 +104,19 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
 										initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2));
 		taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
 		cv::Rodrigues(r33, raux);
-        
+#if CV_VERSION_MAJOR >= 4 // Only in OpenCV 4
         cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1, method);
     }
     else{
         cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 0, method);
-    }
+#else // OpenCV 3
+		cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1);
+	}
+	else {
+		cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 0);
+#endif
+	}
+
     
     raux.convertTo(Rvec, CV_32F);
     taux.convertTo(Tvec, CV_32F);
