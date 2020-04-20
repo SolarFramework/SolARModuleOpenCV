@@ -18,6 +18,7 @@
 #define SolARPoseEstimationSACPnpOpencv_H
 #include <vector>
 #include "opencv2/core.hpp"
+#include "opencv2/calib3d/calib3d.hpp"
 #include "api/solver/pose/I3DTransformSACFinderFrom2D3D.h"
 #include "datastructure/Image.h"
 #include "SolAROpencvAPI.h"
@@ -97,6 +98,8 @@ private:
     /// @brief The minimum of number of inliers to valid a good pose estimation
     int m_NbInliersToValidPose = 10;
 
+    /// @brief The method for solving the PnP problem (ITERATIVE, P3P, AP3P, EPNP, DLS, UPNP, IPPE, IPPE_SQUARE)
+    std::string m_method = "ITERATIVE";
 
     cv::Mat m_camMatrix;
     cv::Mat m_camDistorsion;

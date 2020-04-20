@@ -61,8 +61,8 @@ namespace OPENCV {
             LOG_INFO("Camera using {}  *  {} resolution", m_parameters.resolution.width ,m_parameters.resolution.height)
             if (m_is_resolution_set)
             {
-                m_capture.set(CV_CAP_PROP_FRAME_WIDTH, m_parameters.resolution.width );
-                m_capture.set( CV_CAP_PROP_FRAME_HEIGHT, m_parameters.resolution.height );
+                m_capture.set(cv::CAP_PROP_FRAME_WIDTH, m_parameters.resolution.width );
+                m_capture.set(cv::CAP_PROP_FRAME_HEIGHT, m_parameters.resolution.height );
             }
             else {
                 // set default resolution : get camera resolution ? or force camera resolution from default resolution values ?

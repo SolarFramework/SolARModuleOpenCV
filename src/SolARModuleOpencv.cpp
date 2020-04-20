@@ -51,7 +51,6 @@
 #include "SolARProjectOpencv.h"
 #include "SolARUnprojectPlanarPointsOpencv.h"
 #include "SolARPoseEstimationPlanarPointsOpencv.h"
-#include "SolARPoseEstimationPnpEPFL.h"
 #include "SolARPoseEstimationPnpOpencv.h"
 #include "SolARPoseEstimationSACPnpOpencv.h"
 #include "SolARPoseFinderFrom2D2DOpencv.h"
@@ -216,10 +215,6 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL>(componentUUID,interfaceRef);
-    }
-    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
-    {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
@@ -285,7 +280,6 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPerspectiveControllerOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARProjectOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARUnprojectPlanarPointsOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPlanarPointsOpencv)
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpEPFL)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationPnpOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseEstimationSACPnpOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARPoseFinderFrom2D2DOpencv)

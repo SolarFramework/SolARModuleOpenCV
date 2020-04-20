@@ -211,13 +211,13 @@ void SolAROpenCVHelper::drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Po
 
     if (x1>=0 && x1 < inputImage.cols && y1>=0 && y1 < inputImage.rows &&
         x2>=0 && x2 < inputImage.cols && y2>=0 && y2 < inputImage.rows)
-        cv::line(inputImage, p1, p2, color, thickness, CV_AA);
+        cv::line(inputImage, p1, p2, color, thickness, cv::LINE_AA);
     else
     {
         cv::Point2f p1_result;
         cv::Point2f p2_result;
         if (Liang_Barsky(p1, p2, rect, p1_result, p2_result))
-            cv::line(inputImage, p1_result, p2_result, color, thickness, CV_AA);
+            cv::line(inputImage, p1_result, p2_result, color, thickness, cv::LINE_AA);
     }
 }
 

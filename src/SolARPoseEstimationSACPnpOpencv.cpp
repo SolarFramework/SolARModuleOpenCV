@@ -16,7 +16,6 @@
 #include "SolARPoseEstimationSACPnpOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
-#include "opencv2/calib3d/calib3d.hpp"
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationSACPnpOpencv);
 
@@ -27,6 +26,16 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+const static std::map<std::string,int> convertPnPSACMethod = {{"ITERATIVE", cv::SOLVEPNP_ITERATIVE},
+                                                              {"P3P", cv::SOLVEPNP_P3P},
+                                                              {"AP3P", cv::SOLVEPNP_AP3P},
+                                                              {"EPNP", cv::SOLVEPNP_EPNP},
+                                                              {"DLS", cv::SOLVEPNP_DLS},
+                                                              {"UPNP", cv::SOLVEPNP_UPNP},
+                                                              {"IPPE", cv::SOLVEPNP_IPPE},
+                                                              {"IPPE SQUARE", cv::SOLVEPNP_IPPE_SQUARE},
+                                                             };
+
 SolARPoseEstimationSACPnpOpencv::SolARPoseEstimationSACPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationSACPnpOpencv>())
 {
     declareInterface<api::solver::pose::I3DTransformSACFinderFrom2D3D>(this);
@@ -34,6 +43,7 @@ SolARPoseEstimationSACPnpOpencv::SolARPoseEstimationSACPnpOpencv():ConfigurableB
     declareProperty("reprojError", m_reprojError);
     declareProperty("confidence", m_confidence);
     declareProperty("minNbInliers", m_NbInliersToValidPose);
+    declareProperty("method", m_method);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
@@ -56,6 +66,13 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
 	inliers.resize(imagePoints.size(), false);
+
+    int method;
+    auto itr = convertPnPSACMethod.find(m_method);
+    if (itr != convertPnPSACMethod.end())
+        method = itr->second;
+    else
+        method = cv::SOLVEPNP_ITERATIVE;
 
     Transform3Df initialPoseInverse = initialPose.inverse();
 
@@ -85,11 +102,11 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
 		 cv::Rodrigues(r33, raux);
 
          cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, true,
-                               m_iterationsCount, m_reprojError, m_confidence, inliers_cv);
+                               m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
      }
      else
          cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, false,
-                               m_iterationsCount, m_reprojError, m_confidence, inliers_cv);
+                               m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
 
      std::vector<cv::Point3f>in3d;
      std::vector<cv::Point2f>in2d;
@@ -113,7 +130,7 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
          return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
      }
 
-     cv::solvePnP(in3d, in2d, m_camMatrix, m_camDistorsion, raux,taux, true);
+     cv::solvePnP(in3d, in2d, m_camMatrix, m_camDistorsion, raux,taux, true, method);
 
     raux.convertTo(Rvec, CV_32F);
     taux.convertTo(Tvec, CV_32F);
