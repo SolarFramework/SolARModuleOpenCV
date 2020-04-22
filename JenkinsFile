@@ -17,7 +17,7 @@ pipeline {
              steps {
                  script {
                      BRANCH = BRANCH_NAME.replace('/','_')
-                     version = version.getVersion()
+                     version = getVersion()
                  }
                  withCredentials([string(credentialsId: 'artifactoryApiKey', variable: 'apiKey')]) {
                     installRemaken(params.RELEASE,BRANCH,apiKey)
