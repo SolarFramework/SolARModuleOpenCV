@@ -200,11 +200,13 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const st
 			return false;
 	};
 
+    int kpID = 0;
+
     for(std::vector<cv::KeyPoint>::iterator itr=kpts.begin();itr!=kpts.end();++itr){
         Point2f ptToCheck = (*itr).pt * ratioInv;
         if (checkInside(contours, ptToCheck)) {
             Keypoint kpa;
-            kpa.init((*itr).pt.x*ratioInv, (*itr).pt.y*ratioInv, (*itr).size, (*itr).angle, (*itr).response, (*itr).octave, (*itr).class_id);
+            kpa.init(kpID++, (*itr).pt.x*ratioInv, (*itr).pt.y*ratioInv, (*itr).size, (*itr).angle, (*itr).response, (*itr).octave, (*itr).class_id);
 			keypoints.push_back(kpa);
 		}
     }
