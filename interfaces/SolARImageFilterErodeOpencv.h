@@ -32,6 +32,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARImageFilterErodeOpencv
+ * @brief <B>Erodes the white regions of a binary image.</B>
+ * <TT>UUID: 58b09819-64bc-4a80-b6a2-9fe7b179f3fc</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARImageFilterErodeOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::image::IImageFilter {
 public:

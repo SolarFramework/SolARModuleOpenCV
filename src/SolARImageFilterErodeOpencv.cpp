@@ -28,10 +28,9 @@ namespace OPENCV {
 
 SolARImageFilterErodeOpencv::SolARImageFilterErodeOpencv():ConfigurableBase(xpcf::toUUID<SolARImageFilterErodeOpencv>())
 {
-    addInterface<api::image::IImageFilter>(this);
-    SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
-    params->wrapInteger("erosion_elem", erosion_elem);
-    params->wrapInteger("erosion_size", erosion_size);
+    declareInterface<api::image::IImageFilter>(this);
+    declareProperty("erosion_elem", erosion_elem);
+    declareProperty("erosion_size", erosion_size);
 }
 
 

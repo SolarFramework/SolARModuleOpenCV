@@ -25,7 +25,7 @@
 #include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
-#include "opencv2/video/tracking.hpp""
+#include "opencv2/video/tracking.hpp"
 
 #include "datastructure/Image.h"
 #include "datastructure/Keypoint.h"
@@ -36,40 +36,50 @@ using namespace api::tracking;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolAROpticalFlowPyrLKOpencv
+ * @brief <B>Estimates the optical flow between two images based on a pyramidal Lucas Kanade approach.</B>
+ * <TT>UUID: b513e9ff-d2e7-4dcf-9a29-4ed95c512158</TT>
+ *
+ */
+
+
 class SOLAROPENCV_EXPORT_API SolAROpticalFlowPyrLKOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::tracking::IOpticalFlowEstimator {
 public:
     SolAROpticalFlowPyrLKOpencv();
-    ~SolAROpticalFlowPyrLKOpencv();
+    ~SolAROpticalFlowPyrLKOpencv() override;
     void unloadComponent () override final;
 
     /// @brief estimate the optical flow between two images
     /// @param[in] previousImage The previous image
     /// @param[in] currentImage The current image for which we want to estimate the optical flow relative to the previous image
-    /// @param[in] pointsToTrack The pixels to track in the previous image
+    /// @param[in] pointsToTrack KEYPOINTS The pixels to track in the previous image
     /// @param[out] trackedPoints The position of the pointsToTrack in the current image
     /// @param[out] status Specify for each point; each element of the vector is set to 1 if the flow for the corresponding features has been found, otherwise, it is set to 0.
     /// @param[out] error Specify for each point the tracking error
+    /// @return FrameworkReturnCode::_SUCCESS if the estimation is ok, otherwise frameworkReturnCode::_ERROR_
     FrameworkReturnCode estimate(const SRef<Image> previousImage,
                                  const SRef<Image> currentImage,
-                                 const std::vector<SRef<Keypoint>> & pointsToTrack,
-                                 std::vector<SRef<Point2Df>> & trackedPoints,
+                                 const std::vector<Keypoint> & pointsToTrack,
+                                 std::vector<Point2Df> & trackedPoints,
                                  std::vector<unsigned char> & status,
-                                 std::vector<float> & error);
+                                 std::vector<float> & error) override;
 
     /// @brief estimate the optical flow between two images
     /// @param[in] previousImage The previous image
     /// @param[in] currentImage The current image for which we want to estimate the optical flow relative to the previous image
-    /// @param[in] pointsToTrack The pixels to track in the previous image
+    /// @param[in] pointsToTrack POINT2DF The pixels to track in the previous image
     /// @param[out] trackedPoints The position of the pointsToTrack in the current image
     /// @param[out] status Specify for each point; each element of the vector is set to 1 if the flow for the corresponding features has been found, otherwise, it is set to 0.
     /// @param[out] error Specify for each point the tracking error
+    /// @return FrameworkReturnCode::_SUCCESS if the estimation is ok, otherwise frameworkReturnCode::_ERROR_
     FrameworkReturnCode estimate(const SRef<Image> previousImage,
                                  const SRef<Image> currentImage,
-                                 const std::vector<SRef<Point2Df>> & pointsToTrack,
-                                 std::vector<SRef<Point2Df>> & trackedPoints,
+                                 const std::vector<Point2Df> & pointsToTrack,
+                                 std::vector<Point2Df> & trackedPoints,
                                  std::vector<unsigned char> & status,
-                                 std::vector<float> & error);
+                                 std::vector<float> & error) override;
 
 private:
 
@@ -99,7 +109,7 @@ private:
     FrameworkReturnCode estimate(const SRef<Image> previousImage,
                                  const SRef<Image> currentImage,
                                  const std::vector<cv::Point2f> & pointsToTrack,
-                                 std::vector<SRef<Point2Df>> & trackedPoints,
+                                 std::vector<Point2Df> & trackedPoints,
                                  std::vector<unsigned char> & status,
                                  std::vector<float> & error);
 };

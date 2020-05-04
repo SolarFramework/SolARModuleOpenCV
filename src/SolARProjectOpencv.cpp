@@ -30,7 +30,7 @@ namespace OPENCV {
 
 SolARProjectOpencv::SolARProjectOpencv():ConfigurableBase(xpcf::toUUID<SolARProjectOpencv>())
 {
-    addInterface<api::geom::IProject>(this);
+    declareInterface<api::geom::IProject>(this);
 
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
@@ -42,7 +42,7 @@ SolARProjectOpencv::~SolARProjectOpencv(){
 
 }
 
-FrameworkReturnCode projectCV(const std::vector<cv::Point3f> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose, const cv::Mat & intrinsicParams, const cv::Mat & distorsionParams )
+FrameworkReturnCode projectCV(const std::vector<cv::Point3f> & inputPoints, std::vector<Point2Df> & imagePoints, const Transform3Df& pose, const cv::Mat & intrinsicParams, const cv::Mat & distorsionParams )
 {
     std::vector<cv::Point2f> cvImagePoints;
 
@@ -60,27 +60,27 @@ FrameworkReturnCode projectCV(const std::vector<cv::Point3f> & inputPoints, std:
 
     imagePoints.clear();
     for (auto cvPoint : cvImagePoints)
-        imagePoints.push_back(xpcf::utils::make_shared<Point2Df>((float)cvPoint.x, (float)cvPoint.y));
+        imagePoints.push_back(Point2Df((float)cvPoint.x, (float)cvPoint.y));
 
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<Point3Df>> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose)
+FrameworkReturnCode SolARProjectOpencv::project(const std::vector<Point3Df> & inputPoints, std::vector<Point2Df> & imagePoints, const Transform3Df& pose)
 {
     std::vector<cv::Point3f> cvWorldPoints;
 
     for (auto point : inputPoints)
-        cvWorldPoints.push_back(cv::Point3f(point->getX(), point->getY(), point->getZ()));
+        cvWorldPoints.push_back(cv::Point3f(point.getX(), point.getY(), point.getZ()));
 
       return projectCV(cvWorldPoints, imagePoints, pose, m_camMatrix, m_camDistorsion);
 }
 
-FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<CloudPoint>> & inputPoints, std::vector<SRef<Point2Df>> & imagePoints, const Transform3Df& pose)
+FrameworkReturnCode SolARProjectOpencv::project(const std::vector<CloudPoint> & inputPoints, std::vector<Point2Df> & imagePoints, const Transform3Df& pose)
 {
     std::vector<cv::Point3f> cvWorldPoints;
 
     for (auto point : inputPoints)
-        cvWorldPoints.push_back(cv::Point3f(point->getX(), point->getY(), point->getZ()));
+        cvWorldPoints.push_back(cv::Point3f(point.getX(), point.getY(), point.getZ()));
 
       return projectCV(cvWorldPoints, imagePoints, pose, m_camMatrix, m_camDistorsion);
 }

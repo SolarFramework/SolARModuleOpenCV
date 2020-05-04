@@ -19,64 +19,41 @@
 
 #include <vector>
 #include <string>
-#include "api/input/devices/ICamera.h"
-
-#include "opencv2/opencv.hpp"
-
-#include "xpcf/component/ConfigurableBase.h"
-
-#include "SolAROpencvAPI.h"
+#include "SolARBaseCameraOpencv.h"
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-class SOLAROPENCV_EXPORT_API SolARImagesAsCameraOpencv : public org::bcom::xpcf::ConfigurableBase,
-        public api::input::devices::ICamera {
+/**
+ * @class SolARImagesAsCameraOpencv
+ * @brief <B>Loads an image sequence stored in a dedicated folder.</B>
+ * <TT>UUID: b8a8b963-ba55-4ea4-b045-d9e7e8f6db02</TT>
+ *
+ */
+
+class SOLAROPENCV_EXPORT_API SolARImagesAsCameraOpencv : public SolARBaseCameraOpencv {
 public:
     SolARImagesAsCameraOpencv(); // to replace with ISolARDeviceInfo ! should be set later with init method ? default behavior on devices with facefront/rear embedded cams ?
 
-    ~SolARImagesAsCameraOpencv() = default;
-
-    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
+    ~SolARImagesAsCameraOpencv() override = default;
 
     /// @brief Start the Images acquisition
     /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
     FrameworkReturnCode start() override;
 
-    /// @brief Stop the Images acquisition
-    /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
-    FrameworkReturnCode stop() override;
 
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
-
-    void setResolution(Sizei resolution) override;
-    void setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
-    void setDistorsionParameters(const CamDistortion & distorsion_parameters) override;
-
-    Sizei getResolution () override;
-    CamCalibration getIntrinsicsParameters() override;
-    CamDistortion getDistorsionParameters() override;
 
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
     void unloadComponent () override final;
 
- private:
-     /// @brief Path to the calibration file of the camera
-     std::string m_calibrationFile = "";
-
-     /// @brief Path to the images which will be used as a camera capture
-     std::string m_ImagesDirectoryPath = "";
-
-     cv::VideoCapture m_capture;
-     bool m_is_resolution_set;
-     Sizei m_resolution;
-     std::vector<std::string> imagePaths;           //will contained the path of the images to use
-
-     CamCalibration m_intrinsic_parameters;
-     CamDistortion m_distorsion_parameters;
+private:
+    /// @brief Path to the images which will be used as a camera capture
+    std::string m_ImagesDirectoryPath = "";
+    std::vector<std::string> imagePaths;           //will contained the path of the images to us
 
 };
 

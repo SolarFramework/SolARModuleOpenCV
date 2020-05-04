@@ -33,6 +33,12 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolAROpenCVHelper
+ * @brief A toolbox to convert OpenCV structures to SolAR structures and respectively.
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolAROpenCVHelper {
 public:
     template <class T,int Rows, int Cols>
@@ -54,7 +60,7 @@ public:
     static void mapToOpenCV (SRef<Image> imgSrc, cv::Mat& imgDest);
 
     static cv::Mat mapToOpenCV (SRef<Image> imgSrc);
-    static uint32_t deduceOpenDescriptorCVType(DescriptorBuffer::DataType querytype);
+    static uint32_t deduceOpenDescriptorCVType(DescriptorDataType querytype);
 
     static void drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Point2f& p2, cv::Scalar color, int thickness);
 

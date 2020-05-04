@@ -56,9 +56,24 @@
 .vs*
 x64*
 
+# generated documentation
+doc/ 
+
 *.log
 *.tlog
 *.TMP
 *.tmp
 
+tests/bin
 
+build/
+
+*InstallDependencies.bat
+*debug.bat
+*release.bat
+*remakeninfo.txt
+*.pc
+
+interfaces/SolARModuleOpencv_traits.h.bak
+interfaces/SolAROpticalFlowPyrLKOpencv.h.bak
+interfaces/SolARPoseFinderFrom2D2DOpencv.h.bak

@@ -32,45 +32,44 @@ namespace OPENCV {
 
 SolAR2DOverlayOpencv::SolAR2DOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolAR2DOverlayOpencv>())
 {
-   addInterface<api::display::I2DOverlay>(this);
-   SRef<xpcf::IPropertyMap> params = getPropertyRootNode();
+   declareInterface<api::display::I2DOverlay>(this);
+   declareProperty("thickness", m_thickness);
+   declareProperty("radius", m_radius);
+   declarePropertySequence("color", m_color);
+   declareProperty("randomColor", m_randomColor);
 
-   params->wrapUnsignedInteger("thickness", m_thickness);
-   params->wrapUnsignedInteger("radius", m_radius);
-   params->wrapUnsignedIntegerVector("color", m_color);
-   params->wrapUnsignedInteger("randomColor", m_randomColor);
    LOG_DEBUG(" SolAR2DOverlayOpencv constructor");
 
 }
 
 
-void SolAR2DOverlayOpencv::drawCircle(const SRef<Point2Df> point, SRef<Image> displayImage)
+void SolAR2DOverlayOpencv::drawCircle(const Point2Df & point, SRef<Image> displayImage)
 {
     // check that center of cirlcle is inside the image
-    if (point->getX()<0 || point->getY() < 0 || point->getX() > displayImage->getWidth() || point->getY() > displayImage->getHeight())
+    if (point.getX()<0 || point.getY() < 0 || point.getX() > displayImage->getWidth() || point.getY() > displayImage->getHeight())
         return;
 
     // image where circle will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
     if (!m_randomColor)
-        cv::circle(displayedImage,cv::Point2f(point->getX(), point->getY()) ,m_radius,cv::Scalar(m_color[0],m_color[1], m_color[2]),m_thickness);
+        cv::circle(displayedImage,cv::Point2f(point.getX(), point.getY()) ,m_radius,cv::Scalar(m_color[0],m_color[1], m_color[2]),m_thickness);
     else
-        cv::circle(displayedImage,cv::Point2f(point->getX(), point->getY()) ,m_radius,cv::Scalar(128,128,128),m_thickness);
+        cv::circle(displayedImage,cv::Point2f(point.getX(), point.getY()) ,m_radius,cv::Scalar(128,128,128),m_thickness);
 
 }
 
-void SolAR2DOverlayOpencv::drawCircles(const std::vector<SRef<Point2Df>>& points, SRef<Image> displayImage)
+void SolAR2DOverlayOpencv::drawCircles(const std::vector<Point2Df>& points, SRef<Image> displayImage)
 {
     // image where circle will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 
     if (!m_randomColor)
     {
-        for (std::vector<SRef<Point2Df>>::const_iterator itr = points.begin(); itr != points.end(); itr++)
+        for (auto point : points)
         {
             // check that center of cirlcle is inside the image
-            if ((*itr)->x()>= 0 && (*itr)->y() >= 0 && (*itr)->x() <= displayImage->getWidth() && (*itr)->y() < displayImage->getHeight())
-                cv::circle(displayedImage,cv::Point2f((*itr)->x(), (*itr)->y()) ,m_radius,cv::Scalar(m_color[0],m_color[1], m_color[2]),m_thickness);
+            if (point.x()>= 0 && point.y() >= 0 && point.x() <= displayImage->getWidth() && point.y() < displayImage->getHeight())
+                cv::circle(displayedImage,cv::Point2f(point.x(), point.y()) ,m_radius,cv::Scalar(m_color[0],m_color[1], m_color[2]),m_thickness);
         }
     }
     else
@@ -79,27 +78,27 @@ void SolAR2DOverlayOpencv::drawCircles(const std::vector<SRef<Point2Df>>& points
         std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
         std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
 
-        for (std::vector<SRef<Point2Df>>::const_iterator itr = points.begin(); itr != points.end(); itr++)
+        for (auto point : points)
         {
             // check that center of cirlcle is inside the image
-            if ((*itr)->x()>= 0 && (*itr)->y() >= 0 && (*itr)->x() <= displayImage->getWidth() && (*itr)->y() < displayImage->getHeight())
-                cv::circle(displayedImage,cv::Point2f((*itr)->x(), (*itr)->y()) ,m_radius,cv::Scalar(uni(rng), uni(rng), uni(rng)),m_thickness);
+            if (point.x()>= 0 && point.y() >= 0 && point.x() <= displayImage->getWidth() && point.y() < displayImage->getHeight())
+                cv::circle(displayedImage,cv::Point2f(point.x(), point.y()) ,m_radius,cv::Scalar(uni(rng), uni(rng), uni(rng)),m_thickness);
         }
     }
 }
 
-void SolAR2DOverlayOpencv::drawCircles(const std::vector<SRef<Keypoint>>& keypoints, SRef<Image> displayImage)
+void SolAR2DOverlayOpencv::drawCircles(const std::vector<Keypoint>& keypoints, SRef<Image> displayImage)
 {
     // image where circle will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 
     if (!m_randomColor)
     {
-        for (std::vector<SRef<Keypoint>>::const_iterator itr = keypoints.begin(); itr != keypoints.end(); itr++)
+        for (auto keypoint : keypoints)
         {
             // check that center of cirlcle is inside the image
-            if ((*itr)->x()>= 0 && (*itr)->y() >= 0 && (*itr)->x() <= displayImage->getWidth() && (*itr)->y() < displayImage->getHeight())
-                cv::circle(displayedImage, cv::Point2f((*itr)->x(), (*itr)->y()), m_radius, cv::Scalar(m_color[0],m_color[1], m_color[2]), m_thickness);
+            if (keypoint.x()>= 0 && keypoint.y() >= 0 && keypoint.x() <= displayImage->getWidth() && keypoint.y() < displayImage->getHeight())
+                cv::circle(displayedImage, cv::Point2f(keypoint.x(), keypoint.y()), m_radius, cv::Scalar(m_color[0],m_color[1], m_color[2]), m_thickness);
         }
     }
     else // use random colors
@@ -108,17 +107,17 @@ void SolAR2DOverlayOpencv::drawCircles(const std::vector<SRef<Keypoint>>& keypoi
         std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
         std::uniform_int_distribution<int> uni(0,255); // guaranteed unbiased
 
-        for (std::vector<SRef<Keypoint>>::const_iterator itr = keypoints.begin(); itr != keypoints.end(); itr++)
+        for (auto keypoint : keypoints)
         {
             // check that center of cirlcle is inside the image
-            if ((*itr)->x()>= 0 && (*itr)->y() >= 0 && (*itr)->x() <= displayImage->getWidth() && (*itr)->y() < displayImage->getHeight())
-                cv::circle(displayedImage, cv::Point2f((*itr)->x(), (*itr)->y()), m_radius, cv::Scalar(uni(rng), uni(rng), uni(rng)), m_thickness);
+            if (keypoint.x()>= 0 && keypoint.y() >= 0 && keypoint.x() <= displayImage->getWidth() && keypoint.y() < displayImage->getHeight())
+                cv::circle(displayedImage, cv::Point2f(keypoint.x(), keypoint.y()), m_radius, cv::Scalar(uni(rng), uni(rng), uni(rng)), m_thickness);
         }
     }
 
 }
 
-void SolAR2DOverlayOpencv::drawContour (const Contour2Df& contour, SRef<Image> displayImage)
+void SolAR2DOverlayOpencv::drawContour (const Contour2Df & contour, SRef<Image> displayImage)
 {
     // image where contours will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
@@ -140,30 +139,30 @@ void SolAR2DOverlayOpencv::drawContour (const Contour2Df& contour, SRef<Image> d
     {
         if (i != contour.size() - 1)
         {
-            cv::Point2f pt_a(contour[i]->getX(), contour[i]->getY());
-            cv::Point2f pt_b(contour[i+1]->getX(),contour[i+1]->getY());
+            cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
+            cv::Point2f pt_b(contour[i+1].getX(),contour[i+1].getY());
 
             SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
         }
         else
         {
             //the contours loops to the first point
-            cv::Point2f pt_a(contour[i]->getX(), contour[i]->getY());
-            cv::Point2f pt_b(contour[0]->getX(),contour[0]->getY());
+            cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
+            cv::Point2f pt_b(contour[0].getX(), contour[0].getY());
 
             SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
         }
     }
 }
 
-void SolAR2DOverlayOpencv::drawContours (const std::vector<SRef<Contour2Df>> & contours, SRef<Image> displayImage)
+void SolAR2DOverlayOpencv::drawContours (const std::vector<Contour2Df> & contours, SRef<Image> displayImage)
 {
     // image where contours will be displayed
     cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 
     cv::Scalar color;
 
-    for (std::vector<SRef<Contour2Df>>::const_iterator itr = contours.begin(); itr != contours.end(); itr++)
+    for (auto contour : contours)
     {
         if (!m_randomColor)
             color = cv::Scalar(m_color[0], m_color[1], m_color[2]);
@@ -176,21 +175,20 @@ void SolAR2DOverlayOpencv::drawContours (const std::vector<SRef<Contour2Df>> & c
             color = cv::Scalar(uni(rng), uni(rng), uni(rng));
         }
 
-        const SRef<const Contour2Df> contour = *itr;
-        for (int i = 0; i < contour->size(); i++)
+        for (int i = 0; i < contour.size(); i++)
         {
-            if (i != contour->size() - 1)
+            if (i != contour.size() - 1)
             {
-                cv::Point2f pt_a((*contour)[i]->getX(), (*contour)[i]->getY());
-                cv::Point2f pt_b((*contour)[i+1]->getX(),(*contour)[i+1]->getY());
+                cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
+                cv::Point2f pt_b(contour[i+1].getX(),contour[i+1].getY());
 
                 SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
             }
             else
             {
                 //the contours loops to the first point
-                cv::Point2f pt_a((*contour)[i]->getX(), (*contour)[i]->getY());
-                cv::Point2f pt_b((*contour)[0]->getX(),(*contour)[0]->getY());
+                cv::Point2f pt_a(contour[i].getX(), contour[i].getY());
+                cv::Point2f pt_b(contour[0].getX(), contour[0].getY());
 
                 SolAROpenCVHelper::drawCVLine(displayedImage, pt_a, pt_b, cv::Scalar(color[0],color[1], color[2]), m_thickness);
             }
@@ -198,14 +196,14 @@ void SolAR2DOverlayOpencv::drawContours (const std::vector<SRef<Contour2Df>> & c
     }
 }
 
-void SolAR2DOverlayOpencv::drawSBPattern (const SRef<SquaredBinaryPattern> pattern, SRef<Image> displayImage)
+void SolAR2DOverlayOpencv::drawSBPattern (const SquaredBinaryPattern & pattern, SRef<Image> displayImage)
 {
     // image where contours will be displayed
     cv::Mat displayImageCV = SolAROpenCVHelper::mapToOpenCV(displayImage);
     displayImageCV.setTo(0);
 
-    int patternSize = pattern->getSize();
-    SquaredBinaryPatternMatrix matrix = pattern->getPatternMatrix();
+    int patternSize = pattern.getSize();
+    SquaredBinaryPatternMatrix matrix = pattern.getPatternMatrix();
 
     float cellSizeX = (float)displayImage->getWidth()/(patternSize+2);
     float cellSizeY = (float)displayImage->getHeight()/(patternSize+2);

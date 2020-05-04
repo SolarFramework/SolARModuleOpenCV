@@ -28,14 +28,14 @@ namespace MODULES {
 namespace OPENCV {
 SolARHomographyMatrixDecomposerOpencv::SolARHomographyMatrixDecomposerOpencv():ComponentBase(xpcf::toUUID<SolARHomographyMatrixDecomposerOpencv>())
 {
-    addInterface<api::solver::pose::I2Dto3DTransformDecomposer>(this);
+    declareInterface<api::solver::pose::I2Dto3DTransformDecomposer>(this);
     LOG_DEBUG("SolARSVDFundamentalMatrixDecomposerOpencv constructor")
 
     m_camMatrix.create(3, 3);
     m_camDistorsion.create(5, 1);
 }
 
-bool SolARHomographyMatrixDecomposerOpencv::decompose(const Transform2Df& H, std::vector<Transform3Df>& decomposedPoses){
+bool SolARHomographyMatrixDecomposerOpencv::decompose(const Transform2Df & H, std::vector<Transform3Df> & decomposedPoses){
    //Using HZ E decomposition
     cv::Mat svd_u, svd_vt, svd_w;
     cv::Mat _H(3,3,CV_64FC1);

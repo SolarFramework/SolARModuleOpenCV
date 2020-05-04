@@ -26,13 +26,19 @@
 #include "SolAROpencvAPI.h"
 #include <string>
 
-#include "opencv/cv.h"
 #include "opencv2/imgproc/imgproc.hpp"
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
+
+/**
+ * @class SolARImageConvertorUnity
+ * @brief <B>Converts an image to be compliant with Unity image format and layout.</B>
+ * <TT>UUID: 65282fb3-6651-4e73-b532-5a64ade0ead0</TT>
+ *
+ */
 
 class SOLAROPENCV_EXPORT_API SolARImageConvertorUnity : public org::bcom::xpcf::ComponentBase,
         public api::image::IImageConvertor {

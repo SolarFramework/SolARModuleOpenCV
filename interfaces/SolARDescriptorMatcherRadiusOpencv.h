@@ -36,6 +36,13 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARDescriptorMatcherRadiusOpencv
+ * @brief <B>Matches descriptors and selects all matches not farther than a specified distance.</B>
+ * <TT>UUID: 549f7873-96e4-4eae-b4a0-ae8d80664ce5</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherRadiusOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorMatcher {
 public:
@@ -43,16 +50,26 @@ public:
     ~SolARDescriptorMatcherRadiusOpencv();
     void unloadComponent () override final;
 
-  DescriptorMatcher::RetCode match(
-            SRef<DescriptorBuffer> desc1,
-            SRef<DescriptorBuffer> desc2,
-            std::vector<DescriptorMatch>& matches);
+    /// @brief Matches two descriptors desc1 and desc2 respectively based on radius search strategy.
+    /// [in] desc1: source descriptor.
+    /// [in] desc2: target descriptor.
+    /// [out] matches: ensemble of detected matches, a pair of source/target indices.
+    ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
+  IDescriptorMatcher::RetCode match(
+            const SRef<DescriptorBuffer> desc1,
+            const SRef<DescriptorBuffer> desc2,
+            std::vector<DescriptorMatch> & matches) override;
 
-    DescriptorMatcher::RetCode match(
-           SRef<DescriptorBuffer> descriptors1,
-           std::vector<SRef<DescriptorBuffer>>& descriptors2,
-           std::vector<DescriptorMatch>& matches
-        );
+  /// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on radius search strategy.
+  /// [in] desc1: source descriptor.
+  /// [in] desc2: target descriptors.
+  /// [out] matches: ensemble of detected matches, a pair of source/target indices.
+  ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
+    IDescriptorMatcher::RetCode match(
+           const SRef<DescriptorBuffer> descriptors1,
+           const std::vector<SRef<DescriptorBuffer>> & descriptors2,
+           std::vector<DescriptorMatch> & matches) override;
+
 
 private:
     /// @brief Threshold for the distance between matched descriptors. Distance means here metric distance (e.g. Hamming distance), not the distance between coordinates (which is measured in Pixels)

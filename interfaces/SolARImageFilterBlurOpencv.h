@@ -32,6 +32,13 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+/**
+ * @class SolARImageFilterBlurOpencv
+ * @brief <B>Blurs an image using the normalized box filter.</B>
+ * <TT>UUID: deb083aa-69fb-409a-af94-151d476de922</TT>
+ *
+ */
+
 class SOLAROPENCV_EXPORT_API SolARImageFilterBlurOpencv : public org::bcom::xpcf::ConfigurableBase,public api::image::IImageFilter {
 public:
 
