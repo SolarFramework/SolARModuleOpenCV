@@ -1,4 +1,0 @@
-= SolAR unitary tests
-
-this project feines unitary test to check any regression, using boost
-
