@@ -180,19 +180,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
 
     Transform3Df poseView1Inverse = poseView1.inverse();
     Transform3Df poseView2Inverse = poseView2.inverse();
-
-    cv::Matx34d Pose1(   poseView1Inverse(0, 0),poseView1Inverse(1, 0),poseView1Inverse(2, 0), poseView1Inverse(3, 0),
-                         poseView1Inverse(0, 1),poseView1Inverse(1, 1),poseView1Inverse(2, 1), poseView1Inverse(3, 1),
-                         poseView1Inverse(0, 2),poseView1Inverse(1, 2),poseView1Inverse(2, 2), poseView1Inverse(3, 2));
-
-
-
-    cv::Matx34d Pose2(poseView2Inverse(0, 0),poseView2Inverse(1, 0),poseView2Inverse(2, 0), poseView2Inverse(3, 0),
-                      poseView2Inverse(0, 1),poseView2Inverse(1, 1),poseView2Inverse(2, 1), poseView2Inverse(3, 1),
-                      poseView2Inverse(0, 2),poseView2Inverse(1, 2),poseView2Inverse(2, 2), poseView2Inverse(3, 2));
-
-
-    /*
+    
     cv::Matx34d Pose1( poseView1Inverse(0, 0),poseView1Inverse(0, 1),poseView1Inverse(0, 2), poseView1Inverse(0, 3),
                        poseView1Inverse(1, 0),poseView1Inverse(1, 1),poseView1Inverse(1, 2), poseView1Inverse(1, 3),
                        poseView1Inverse(2, 0),poseView1Inverse(2, 1),poseView1Inverse(2, 2), poseView1Inverse(2, 3));
@@ -202,7 +190,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
     cv::Matx34d Pose2(poseView2Inverse(0, 0),poseView2Inverse(0, 1),poseView2Inverse(0, 2), poseView2Inverse(0, 3),
                       poseView2Inverse(1, 0),poseView2Inverse(1, 1),poseView2Inverse(1, 2), poseView2Inverse(1, 3),
                       poseView2Inverse(2, 0),poseView2Inverse(2, 1),poseView2Inverse(2, 2), poseView2Inverse(2, 3));
-*/
+
     cv::Mat_<double> Kinv;
 
     cv::invert(m_camMatrix,Kinv);
@@ -214,6 +202,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
     // KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
     cv::Mat_<double> KPose1;
     KPose1 = m_camMatrix * cv::Mat(Pose1);
+	Vector3f meanCamCenter((poseView1(0, 3) + poseView2(0, 3)) / 2, (poseView1(1, 3) + poseView2(1, 3)) / 2, (poseView1(2, 3) + poseView2(2, 3)) / 2);
 
     for (int i = 0; i<pts_size; i++) {
         cv::Point2f kp1 = cv::Point2f(pointsView1[matches[i].getIndexInDescriptorA()].getX(),pointsView1[matches[i].getIndexInDescriptorA()].getY());
@@ -245,8 +234,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
 
         visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
         visibility[working_views.second] = matches[i].getIndexInDescriptorB();
-
-        CloudPoint cp(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
+		CloudPoint cp(X(0), X(1), X(2), 0.0, 0.0, 0.0, meanCamCenter(0) - X(0), meanCamCenter(1) - X(1), meanCamCenter(2) - X(2), reprj_err, visibility);
         pcloud.push_back(cp);
     }
     cv::Scalar mse = cv::mean(reproj_error);
@@ -287,6 +275,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
     // KPose 1 and KPose2 represent the transformations from 3D space to 2D image (K*[R|T]).
     cv::Mat_<double> KPose1;
     KPose1 = m_camMatrix * cv::Mat(Pose1);
+	Vector3f meanCamCenter((poseView1(0, 3) + poseView2(0, 3)) / 2, (poseView1(1, 3) + poseView2(1, 3)) / 2, (poseView1(2, 3) + poseView2(2, 3)) / 2);
 
     for (int i = 0; i<pts_size; i++) {
         cv::Point2f kp1 = cv::Point2f(keypointsView1[matches[i].getIndexInDescriptorA()].getX(), keypointsView1[matches[i].getIndexInDescriptorA()].getY());
@@ -328,7 +317,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
         visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
         visibility[working_views.second] = matches[i].getIndexInDescriptorB();		
 
-        CloudPoint cp(X(0), X(1), X(2),0.0,0.0,0.0,reprj_err,visibility);
+		CloudPoint cp(X(0), X(1), X(2), 0.0, 0.0, 0.0, meanCamCenter(0) - X(0), meanCamCenter(1) - X(1), meanCamCenter(2) - X(2), reprj_err, visibility);
         pcloud.push_back(cp);
     }
     cv::Scalar mse = cv::mean(reproj_error);
@@ -374,6 +363,8 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 	KPose1 = m_camMatrix * cv::Mat(Pose1);
 	cv::Mat_<double> KPose2;
 	KPose2 = m_camMatrix * cv::Mat(Pose2);
+
+	Vector3f meanCamCenter((poseView1(0, 3) + poseView2(0, 3)) / 2, (poseView1(1, 3) + poseView2(1, 3)) / 2, (poseView1(2, 3) + poseView2(2, 3)) / 2);
 
 	for (int i = 0; i < pts_size; i++) {
 		cv::Point2f kp1 = cv::Point2f(keypointsView1[matches[i].getIndexInDescriptorA()].getX(), keypointsView1[matches[i].getIndexInDescriptorA()].getY());
@@ -454,7 +445,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 		SRef<DescriptorBuffer> descMean = xpcf::utils::make_shared<DescriptorBuffer>(cvDescMean.data, descriptor1->getDescriptorType(), descriptor1->getDescriptorDataType(), descriptor1->getNbElements(), 1);
 
 		// make a new cloud point
-		CloudPoint cp(X(0), X(1), X(2), 0.0, 0.0, 0.0, reprj_err, visibility, descMean);
+		CloudPoint cp(X(0), X(1), X(2), 0.0, 0.0, 0.0, meanCamCenter(0) - X(0), meanCamCenter(1) - X(1), meanCamCenter(2) - X(2), reprj_err, visibility, descMean);
 		pcloud.push_back(cp);
 	}
 	cv::Scalar mse = cv::mean(reproj_error);
@@ -473,7 +464,7 @@ double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> & curKeyfra
                        refKeyframe->getDescriptors(),
                        curKeyframe->getDescriptors(),
                        matches,
-                       std::make_pair(refKeyframe->m_idx,curKeyframe->m_idx),
+                       std::make_pair(refKeyframe->getId(),curKeyframe->getId()),
                        refKeyframe->getPose(),
                        curKeyframe->getPose(),
                        pcloud);

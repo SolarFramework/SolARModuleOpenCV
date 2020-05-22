@@ -53,8 +53,28 @@
 *.autosave
 
 # Visual Studio files
-.vs*
-x64*
+*.ib_pdb_index
+*.idb
+*.ilk
+*.pdb
+*.sln
+*.suo
+*.vcproj
+*vcproj.*.*.user
+*.ncb
+*.sdf
+*.opensdf
+*.vcxproj
+*vcxproj.*
+x64/
+.vs/
+*.bat
+*remakeninfo.txt
+Debug/
+Release/
+*-packagedependencies.*
+*-packagedependencies-win.*
+*.pc
 
 # generated documentation
 doc/ 
