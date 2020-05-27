@@ -28,73 +28,32 @@ namespace OPENCV {
 SolAR2D3DCorrespondencesFinderOpencv::SolAR2D3DCorrespondencesFinderOpencv():ComponentBase(xpcf::toUUID<SolAR2D3DCorrespondencesFinderOpencv>())
 {
     declareInterface<api::solver::pose::I2D3DCorrespondencesFinder>(this);
-
+	declareInjectable<IPointCloudManager>(m_pointCloudManager);
     LOG_DEBUG("SolAR2D3DCorrespondencesFinder constructor");
 }
 
-//SolAR2D3DCorrespondencesFinderOpencv::~SolAR2D3DCorrespondencesFinderOpencv(){
-//}
+FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(const SRef<Frame> lastFrame, const SRef<Frame> currentFrame, const std::vector<DescriptorMatch>& current_matches, std::vector<Point3Df>& shared_3dpoint, std::vector<Point2Df>& shared_2dpoint, std::vector<DescriptorMatch>& found_matches, std::vector<DescriptorMatch>& remaining_matches)
+{
+	const std::map<uint32_t, uint32_t> &mapVisibility = lastFrame->getVisibility();
+	const std::vector<Keypoint> &current_kpoints = currentFrame->getKeypoints();
 
-FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(const SRef<Keyframe> referenceKeyframe,
-                                                                const SRef<Frame> currentFrame,
-                                                                const std::vector<DescriptorMatch> & current_matches,
-																const SRef<IPointCloudManager>& worldMap,
-                                                                std::vector<Point3Df> & shared_3dpoint,
-                                                                std::vector<Point2Df> & shared_2dpoint,
-                                                                std::vector<DescriptorMatch> & found_matches,
-                                                                std::vector<DescriptorMatch> & remaining_matches){
-
-
-        const std::map<uint32_t, uint32_t> keyframeVisibility = referenceKeyframe->getVisibility();
-        const std::vector<Keypoint> current_kpoints =  currentFrame->getKeypoints();				 
-				 
-        for (int j = 0; j < current_matches.size(); ++j){
-			SRef<CloudPoint> point3D;
-			std::map<unsigned int, unsigned int>::const_iterator it= keyframeVisibility.find(current_matches[j].getIndexInDescriptorA());
-			if ((it != keyframeVisibility.end()) && (worldMap->getPoint(it->second, point3D) == FrameworkReturnCode::_SUCCESS)) {
-				shared_3dpoint.push_back(Point3Df(point3D->getX(), point3D->getY(), point3D->getZ()));
-				shared_2dpoint.push_back(Point2Df(current_kpoints[current_matches[j].getIndexInDescriptorB()].getX(),
-					current_kpoints[current_matches[j].getIndexInDescriptorB()].getY()));
-				found_matches.push_back(current_matches[j]);
-			}
-			else {
-				remaining_matches.push_back(current_matches[j]);
-			}
-		}
-
-    return FrameworkReturnCode::_SUCCESS;
-}
-
-FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(	const SRef<Frame> lastFrame,
-																const SRef<Frame> currentFrame,
-                                                                const std::vector<DescriptorMatch> & current_matches,
-																const SRef<IPointCloudManager>& worldMap,
-                                                                std::vector<Point3Df> & shared_3dpoint,
-                                                                std::vector<Point2Df> & shared_2dpoint,
-																std::vector<DescriptorMatch> & found_matches,
-																std::vector<DescriptorMatch> & remaining_matches) {
-
-	const std::map<unsigned int, unsigned int> mapVisibility = lastFrame->getVisibility();
-    const std::map<unsigned int, unsigned int> cpVisibility = lastFrame->getReferenceKeyframe()->getVisibility();
-    const std::vector<Keypoint> current_kpoints = currentFrame->getKeypoints();				
-
-	for (int j = 0; j < current_matches.size(); ++j){
+	for (int j = 0; j < current_matches.size(); ++j) {
 		SRef<CloudPoint> point3D;
 		std::map<unsigned int, unsigned int>::const_iterator it_cp = mapVisibility.find(current_matches[j].getIndexInDescriptorA());
-		if ((it_cp != mapVisibility.end()) && (worldMap->getPoint(it_cp->second, point3D) == FrameworkReturnCode::_SUCCESS)) {
-			//newMapVisibility[current_matches[j].getIndexInDescriptorB()] = it_cp->second;
-            shared_3dpoint.push_back(Point3Df(point3D->getX(), point3D->getY(), point3D->getZ()));
-            shared_2dpoint.push_back(Point2Df(current_kpoints[current_matches[j].getIndexInDescriptorB()].getX(),
-                current_kpoints[current_matches[j].getIndexInDescriptorB()].getY()));
-			found_matches.push_back(DescriptorMatch(current_matches[j].getIndexInDescriptorA(), current_matches[j].getIndexInDescriptorB(), current_matches[j].getMatchingScore()));
+		if ((it_cp != mapVisibility.end()) && (m_pointCloudManager->getPoint(it_cp->second, point3D) == FrameworkReturnCode::_SUCCESS)) {
+			shared_3dpoint.push_back(Point3Df(point3D->getX(), point3D->getY(), point3D->getZ()));
+			shared_2dpoint.push_back(Point2Df(current_kpoints[current_matches[j].getIndexInDescriptorB()].getX(),
+				current_kpoints[current_matches[j].getIndexInDescriptorB()].getY()));
+			found_matches.push_back(current_matches[j]);
 		}
 		else {
-			remaining_matches.push_back(DescriptorMatch(current_matches[j].getIndexInDescriptorA(), current_matches[j].getIndexInDescriptorB(), current_matches[j].getMatchingScore()));
+			remaining_matches.push_back(current_matches[j]);
 		}
 	}
 
 	return FrameworkReturnCode::_SUCCESS;
 }
+
 }
 }
 }
