@@ -160,10 +160,10 @@ cv::Mat_<double> SolARSVDTriangulationOpencv::LinearLSTriangulation(const cv::Po
 
 
 
-double SolARSVDTriangulationOpencv::getReprojectionErrorCloud(const std::vector<CloudPoint> & original){
+double SolARSVDTriangulationOpencv::getReprojectionErrorCloud(const std::vector<SRef<CloudPoint>> & original){
     double err = 0.f;
     for(auto const & cloudpoint : original){
-        err += cloudpoint.getReprojError();
+        err += cloudpoint->getReprojError();
     }
     return (err/=double(original.size()));
 }
@@ -175,7 +175,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
                                                 const std::pair<unsigned int,unsigned int> & working_views,
                                                 const Transform3Df & poseView1,
                                                 const Transform3Df & poseView2,
-                                                std::vector<CloudPoint> & pcloud){
+                                                std::vector<SRef<CloudPoint>> & pcloud){
 	pcloud.clear();
 
     Transform3Df poseView1Inverse = poseView1.inverse();
@@ -234,7 +234,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
 
         visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
         visibility[working_views.second] = matches[i].getIndexInDescriptorB();
-		CloudPoint cp(X(0), X(1), X(2), 0.0, 0.0, 0.0, meanCamCenter(0) - X(0), meanCamCenter(1) - X(1), meanCamCenter(2) - X(2), reprj_err, visibility);
+		SRef<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2), 0.0, 0.0, 0.0, meanCamCenter(0) - X(0), meanCamCenter(1) - X(1), meanCamCenter(2) - X(2), reprj_err, visibility);
         pcloud.push_back(cp);
     }
     cv::Scalar mse = cv::mean(reproj_error);
@@ -247,7 +247,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
                                                 const std::pair<unsigned int,unsigned int> & working_views,
                                                 const Transform3Df & poseView1,
                                                 const Transform3Df & poseView2,
-                                                std::vector<CloudPoint> & pcloud){
+                                                std::vector<SRef<CloudPoint>> & pcloud){
 	pcloud.clear();
 
     Transform3Df poseView1Inverse = poseView1.inverse();
@@ -317,7 +317,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
         visibility[working_views.first]  = matches[i].getIndexInDescriptorA();
         visibility[working_views.second] = matches[i].getIndexInDescriptorB();		
 
-		CloudPoint cp(X(0), X(1), X(2), 0.0, 0.0, 0.0, meanCamCenter(0) - X(0), meanCamCenter(1) - X(1), meanCamCenter(2) - X(2), reprj_err, visibility);
+		SRef<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2), 0.0, 0.0, 0.0, meanCamCenter(0) - X(0), meanCamCenter(1) - X(1), meanCamCenter(2) - X(2), reprj_err, visibility);
         pcloud.push_back(cp);
     }
     cv::Scalar mse = cv::mean(reproj_error);
@@ -333,7 +333,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 												const std::pair<unsigned int, unsigned int>& working_views, 
 												const Transform3Df & poseView1, 
 												const Transform3Df & poseView2, 
-												std::vector<CloudPoint>& pcloud)
+												std::vector<SRef<CloudPoint>>& pcloud)
 {
 	pcloud.clear();
 	Transform3Df poseView1Inverse = poseView1.inverse();
@@ -445,7 +445,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 		SRef<DescriptorBuffer> descMean = xpcf::utils::make_shared<DescriptorBuffer>(cvDescMean.data, descriptor1->getDescriptorType(), descriptor1->getDescriptorDataType(), descriptor1->getNbElements(), 1);
 
 		// make a new cloud point
-		CloudPoint cp(X(0), X(1), X(2), 0.0, 0.0, 0.0, meanCamCenter(0) - X(0), meanCamCenter(1) - X(1), meanCamCenter(2) - X(2), reprj_err, visibility, descMean);
+		SRef<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>(X(0), X(1), X(2), 0.0, 0.0, 0.0, meanCamCenter(0) - X(0), meanCamCenter(1) - X(1), meanCamCenter(2) - X(2), reprj_err, visibility, descMean);
 		pcloud.push_back(cp);
 	}
 	cv::Scalar mse = cv::mean(reproj_error);
@@ -455,7 +455,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 
 double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> & curKeyframe,
                                                 const std::vector<DescriptorMatch> & matches,
-                                                std::vector<CloudPoint> & pcloud) {
+                                                std::vector<SRef<CloudPoint>> & pcloud) {
 
     SRef<Keyframe> refKeyframe = curKeyframe->getReferenceKeyframe();
 
