@@ -38,7 +38,6 @@ namespace OPENCV {
 * @class SolARSVDTriangulationOpencv
 * @brief <B>Triangulates a set of corresponding 2D-2D points correspondences with known respective camera poses based on opencv SVD.</B>
 * <TT>UUID: 85274ecd-2914-4f12-96de-37c6040633a4</TT>
-*
 */
 
 class SOLAROPENCV_EXPORT_API SolARSVDTriangulationOpencv : public org::bcom::xpcf::ComponentBase,
@@ -92,7 +91,8 @@ public:
 							const cv::Mat & pose1Inv, const cv::Mat & pose2Inv,
 							const cv::Mat & proj1, const cv::Mat & proj2,
 							const cv::Mat & F12,
-							Edge3Df & line3D, double & error);
+							Edge3Df & line3D,
+							double & error);
 
     /// @brief triangulate pairs of points 2d captured from two views with differents poses (with respect to the camera instrinsic parameters).
     /// @param[in] pointsView1, set of 2D points seen in view_1.
@@ -164,31 +164,40 @@ public:
 	/// @param[in] matches, the matches between the keylines detected in each view.
 	/// @param[in] pose1, camera pose of the first view.
 	/// @param[in] pose2, camera pose of the second view.
-	/// @param[out] lines3D, set of triangulated 3D lines.
-	/// @param[out] indices, set of indices to recover the 2D keylines from which the 3D line was triangulated.
+	/// @param[out] linecloud, set of triangulated 3D lines.
 	/// @return the mean re-projection error
 	double triangulate( const std::vector<Keyline> & keylines1,
 						const std::vector<Keyline> & keylines2,
+						const SRef<DescriptorBuffer>& descriptor1,
+						const SRef<DescriptorBuffer>& descriptor2,
 						const std::vector<DescriptorMatch> & matches,
+						const std::pair<unsigned, unsigned>& working_views,
 						const Transform3Df & pose1,
 						const Transform3Df & pose2,
-						std::vector<Edge3Df> & lines3D,
-						std::vector<int> & indices) override;
+						std::vector<CloudLine> & lineCloud) override;
 
     void unloadComponent () override final;
 
  private:
+	// Compute the distance of the given point from the line.
 	double distancePointLine2D(const cv::Mat & line, const cv::Mat & point);
 	
+	// Solve for a 3D point triangulated from two 3D segments l1 & l2, given its 2D reprojection on l1.
 	bool solvePoint3DLine(	const cv::Mat & l1, const cv::Mat & l2,
 							const cv::Mat & proj1, const cv::Mat & proj2,
 							const cv::Mat & point2D,
 							cv::Mat & point3D,
 							double & error);
 
+	// Retrieve the mean descriptor between two features index1 & index2.
+	SRef<DescriptorBuffer> getMeanDescriptor(	const SRef<DescriptorBuffer> descriptor1,
+												const SRef<DescriptorBuffer> descriptor2,
+												const unsigned index1,
+												const unsigned index2);
+
     // Camera calibration matrix
     cv::Mat_<double> m_camMatrix;
-    // inverse of the Camera calibration matrix
+    // Inverse of the Camera calibration matrix
     cv::Mat_<double> m_Kinv;
     // Camera distortion parameters
     cv::Mat_<double> m_camDistorsion;

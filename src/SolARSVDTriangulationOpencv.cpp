@@ -533,11 +533,13 @@ double SolARSVDTriangulationOpencv::triangulate(const SRef<Keyframe> & curKeyfra
 
 double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keyline>& keylines1,
 												const std::vector<Keyline>& keylines2,
+												const SRef<DescriptorBuffer>& descriptor1,
+												const SRef<DescriptorBuffer>& descriptor2,
 												const std::vector<DescriptorMatch>& matches,
+												const std::pair<unsigned, unsigned>& working_views,
 												const Transform3Df & pose1,
 												const Transform3Df & pose2,
-												std::vector<Edge3Df>& lines3D,
-												std::vector<int>& indices)
+												std::vector<CloudLine>& lineCloud)
 {
 	// Compute Projection matrices
 	cv::Matx44d Pose1(	pose1(0, 0), pose1(0, 1), pose1(0, 2), pose1(0, 3),
@@ -561,34 +563,45 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keyline>& keyl
 
 	// Compute fundamental matrix
 	cv::Mat pose12 = pose1Inv * P2;
-	cv::Mat R12 = (cv::Mat_<double>(3, 3) << pose12.at<double>(0, 0), pose12.at<double>(0, 1), pose12.at<double>(0, 2),
-		pose12.at<double>(1, 0), pose12.at<double>(1, 1), pose12.at<double>(1, 2),
-		pose12.at<double>(2, 0), pose12.at<double>(2, 1), pose12.at<double>(2, 2));
-	cv::Mat T12 = (cv::Mat_<double>(3, 1) << pose12.at<double>(0, 3), pose12.at<double>(1, 3), pose12.at<double>(2, 3));
+	cv::Mat R12 = (cv::Mat_<double>(3, 3) <<	pose12.at<double>(0, 0), pose12.at<double>(0, 1), pose12.at<double>(0, 2),
+												pose12.at<double>(1, 0), pose12.at<double>(1, 1), pose12.at<double>(1, 2),
+												pose12.at<double>(2, 0), pose12.at<double>(2, 1), pose12.at<double>(2, 2));
+	cv::Mat T12 = (cv::Mat_<double>(3, 1) <<	pose12.at<double>(0, 3), pose12.at<double>(1, 3), pose12.at<double>(2, 3));
 
-	cv::Mat T12x = (cv::Mat_<double>(3, 3) << 0, -T12.at<double>(2), T12.at<double>(1),
-		T12.at<double>(2), 0, -T12.at<double>(0),
-		-T12.at<double>(1), T12.at<double>(0), 0);
+	cv::Mat T12x = (cv::Mat_<double>(3, 3) <<	 0,					-T12.at<double>(2),  T12.at<double>(1),
+												 T12.at<double>(2),  0,					-T12.at<double>(0),
+												-T12.at<double>(1),  T12.at<double>(0),  0);
 	cv::Mat F12 = m_camMatrix.t().inv() * T12x * R12 * m_camMatrix.inv();
 
 	// Triangulate lines
 	double error, meanError;
+	unsigned index1, index2;
 	Keyline kl1, kl2;
 	Edge3Df line3D;
 	bool check;
 	for (unsigned i = 0; i < matches.size(); i++)
 	{
-		kl1 = keylines1[matches[i].getIndexInDescriptorA()];
-		kl2 = keylines2[matches[i].getIndexInDescriptorB()];
+		index1 = matches[i].getIndexInDescriptorA();
+		index2 = matches[i].getIndexInDescriptorB();
+
+		kl1 = keylines1[index1];
+		kl2 = keylines2[index2];
 		check = lineTriangulation(kl1, kl2, pose1Inv, pose2Inv, Proj1, Proj2, F12, line3D, error);
 		if (check && (error < MAX_ERROR_TRIANGULATION))
 		{
-			lines3D.push_back(line3D);
-			indices.push_back(i);
+			std::map<unsigned int, unsigned int> visibility;
+
+			visibility[working_views.first] = index1;
+			visibility[working_views.second] = index2;
+
+			SRef<DescriptorBuffer> descMean = getMeanDescriptor(descriptor1, descriptor2, index1, index2);
+
+			CloudLine cl(line3D, error, visibility, descMean);
+			lineCloud.push_back(cl);
 			meanError += error;
 		}
 	}
-	meanError /= indices.size();
+	meanError /= lineCloud.size();
 	return meanError;
 }
 
@@ -627,6 +640,42 @@ bool SolARSVDTriangulationOpencv::solvePoint3DLine( const cv::Mat & l1, const cv
 	cv::Mat point3D_proj2 = proj2 * point3D;
 	error = (distancePointLine2D(l1, point3D_proj1) + distancePointLine2D(l2, point3D_proj2)) / 2;
 	return true;
+}
+
+SRef<DescriptorBuffer> SolARSVDTriangulationOpencv::getMeanDescriptor(const SRef<DescriptorBuffer> descriptor1, const SRef<DescriptorBuffer> descriptor2, const unsigned index1, const unsigned index2)
+{
+	// Calculate the mean of two features
+	cv::Mat cvDescMean;
+
+	if (descriptor1->getDescriptorDataType() == DescriptorDataType::TYPE_8U)
+	{
+		DescriptorView8U desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_8U>(index1);
+		DescriptorView8U desc_2 = descriptor2->getDescriptor<DescriptorDataType::TYPE_8U>(index2);
+
+		cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
+		cvDesc1.data = (uchar*)desc_1.data();
+
+		cv::Mat cvDesc2(1, desc_2.length(), desc_2.type());
+		cvDesc2.data = (uchar*)desc_2.data();
+
+		cvDescMean = cvDesc1 / 2 + cvDesc2 / 2;
+	}
+	else
+	{
+		DescriptorView32F desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_32F>(index1);
+		DescriptorView32F desc_2 = descriptor2->getDescriptor<DescriptorDataType::TYPE_32F>(index2);
+
+		cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
+		cvDesc1.data = (uchar*)desc_1.data();
+
+		cv::Mat cvDesc2(1, desc_2.length(), desc_2.type());
+		cvDesc2.data = (uchar*)desc_2.data();
+
+		cvDescMean = cvDesc1 / 2 + cvDesc2 / 2;
+	}
+
+	SRef<DescriptorBuffer> descMean = xpcf::utils::make_shared<DescriptorBuffer>(cvDescMean.data, descriptor1->getDescriptorType(), descriptor1->getDescriptorDataType(), descriptor1->getNbElements(), 1);
+	return descMean;
 }
 
 void SolARSVDTriangulationOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
