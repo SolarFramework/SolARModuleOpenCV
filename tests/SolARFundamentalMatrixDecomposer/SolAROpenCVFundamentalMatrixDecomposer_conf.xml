@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<xpcf-registry>
+<xpcf-registry autoAlias="true">
         <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.8.1/lib/x86_64/shared">
          <component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" name="SolARCameraOpencv" description="SolARCameraOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
@@ -15,10 +15,10 @@
         </component>		
     </module>
 	
-	<configuration>
-		<component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4"> <!-- SolARCameraOpencv -->
-			<property name="calibrationFile" type="string" value="../data/camera_calibration.yml"/>
+    <properties>
+        <configure component="SolARCameraOpencv">
+            <property name="calibrationFile" type="string" value="../../data/camera_calibration.yml"/>
 			<property name="deviceID" type="UnsignedInteger" value="0"/>
-		</component>	
-    </configuration>
+        </configure>
+    </properties>
 </xpcf-registry>
