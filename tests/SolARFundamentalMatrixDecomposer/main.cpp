@@ -95,7 +95,7 @@ int main() {
         std::vector<Point2Df>                       points_view2;
 
      // Initialization
-       fundamentalDecomposer->setCameraParameters(camera->getIntrinsicsParameters(), camera->getDistorsionParameters());
+       fundamentalDecomposer->setCameraParameters(camera->getIntrinsicsParameters(), camera->getDistortionParameters());
 
        const int nb_points = 6953;
        load_2dpoints(path_points1, nb_points, points_view1);
