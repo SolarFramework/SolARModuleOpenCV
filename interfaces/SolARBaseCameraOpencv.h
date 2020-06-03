@@ -64,16 +64,16 @@ public:
     /// @brief Set the camera parameters
     void setParameters(const CameraParameters & parameters) override;
     /// @return Return the camera parameters
-    CameraParameters getParameters() override;
+    const CameraParameters & getParameters() override;
     /// @brief Get the current resolutio nof the camera.
     ///[out]  width and height of the images grabbed from the camera.
     Sizei getResolution () override;
     /// @brief Get the current camera calibration parameters.
     ///[out] Calibration matrix containing the nine camera calibration parameters.
-    CamCalibration getIntrinsicsParameters() override;
+    const CamCalibration & getIntrinsicsParameters() override;
     /// @brief Get the current camera distortion parameters.
     ///[out] distortion matrix containing the five camera distortion parameters.
-    CamDistortion getDistortionParameters() override;
+    const CamDistortion & getDistortionParameters() override;
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
     void unloadComponent () override;

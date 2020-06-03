@@ -123,11 +123,11 @@ namespace OPENCV {
     }
 
     void SolARBaseCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){
-//        m_parameters.intrinsic = intrinsic_parameters;
+        m_parameters.intrinsic = intrinsic_parameters;
     }
 
      void SolARBaseCameraOpencv::setDistortionParameters(const CamDistortion & distortion_parameters){
-//           m_parameters.distortion = distortion_parameters;
+        m_parameters.distortion = distortion_parameters;
      }
 
 
@@ -136,7 +136,7 @@ namespace OPENCV {
         m_parameters = parameters;
      }
 
-     CameraParameters SolARBaseCameraOpencv::getParameters()
+     const CameraParameters & SolARBaseCameraOpencv::getParameters()
      {
         return m_parameters;
      }
@@ -146,11 +146,11 @@ namespace OPENCV {
          return m_parameters.resolution;
      }
 
-    CamCalibration SolARBaseCameraOpencv::getIntrinsicsParameters(){
+    const CamCalibration & SolARBaseCameraOpencv::getIntrinsicsParameters(){
         return m_parameters.intrinsic;
     }
 
-    CamDistortion SolARBaseCameraOpencv::getDistortionParameters(){
+    const CamDistortion & SolARBaseCameraOpencv::getDistortionParameters(){
         return m_parameters.distortion;
     }
 
