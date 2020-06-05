@@ -64,6 +64,7 @@ class SolAROpticalFlowPyrLKOpencv;
 class SolARPerspectiveControllerOpencv;
 class SolARProjectOpencv;
 class SolARUnprojectPlanarPointsOpencv;
+class SolARPoseEstimationPnPL;
 class SolARPoseEstimationPlanarPointsOpencv;
 class SolARPoseEstimationPnpOpencv;
 class SolARPoseEstimationSACPnpOpencv;
@@ -251,6 +252,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPerspectiveControllerO
                              "9c960f2a-cd6e-11e7-abc4-cec278b6b50a",
                              "SolARPerspectiveControllerOpencv",
                              "Extracts an unwrapped image from a specific region defined with 4 points.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPnPL,
+							 "19c2d03c-73d6-4f7c-a7cf-8c42bfa9b575",
+							 "SolARPoseEstimationOPnPL",
+							 "Finds the camera pose of 2D-3D points and lines correspondances based on the OPnPL algorithm.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARPoseEstimationPlanarPointsOpencv,
                              "9fbadf80-251f-4160-94f8-a64dc3d40a2f",
