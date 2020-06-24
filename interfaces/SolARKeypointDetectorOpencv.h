@@ -26,6 +26,7 @@
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
+#include "opencv2/xfeatures2d.hpp" // Define SIFT
 #include "features2d_akaze2.hpp"  // Define AKAZE2;
 
 
@@ -67,7 +68,7 @@ public:
     void detect (const SRef<Image> image, std::vector<Keypoint> & keypoints) override;
 
 private:
-    /// @brief the type of descriptor used for the extraction (AKAZE, AKAZE2, ORB, BRISK)
+    /// @brief the type of descriptor used for the extraction (SIFT, AKAZE, AKAZE2, ORB, BRISK)
     std::string m_type = "AKAZE2";
 
     /// @brief the ratio to apply to the size of the input image to compute the descriptor.

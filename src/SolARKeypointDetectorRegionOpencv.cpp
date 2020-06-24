@@ -23,19 +23,22 @@ XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetecto
 namespace xpcf = org::bcom::xpcf;
 
 using namespace cv;
+using namespace cv::xfeatures2d;
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-static std::map<std::string,IKeypointDetector::KeypointDetectorType> stringToType = {{"AKAZE",IKeypointDetector::KeypointDetectorType::AKAZE},
+static std::map<std::string,IKeypointDetector::KeypointDetectorType> stringToType = {{"SIFT",IKeypointDetector::KeypointDetectorType::SIFT},
+                                                                  {"AKAZE",IKeypointDetector::KeypointDetectorType::AKAZE},
                                                                   {"AKAZE2",IKeypointDetector::KeypointDetectorType::AKAZE2},
                                                                   {"ORB",IKeypointDetector::KeypointDetectorType::ORB},
                                                                   {"BRISK",IKeypointDetector::KeypointDetectorType::BRISK},
                                                                   {"FEATURE_TO_TRACK", IKeypointDetector::KeypointDetectorType::FEATURE_TO_TRACK}};
 
-static std::map<IKeypointDetector::KeypointDetectorType,std::string> typeToString = {{IKeypointDetector::KeypointDetectorType::AKAZE, "AKAZE"},
+static std::map<IKeypointDetector::KeypointDetectorType,std::string> typeToString = {{IKeypointDetector::KeypointDetectorType::SIFT, "SIFT"},
+                                                                  {IKeypointDetector::KeypointDetectorType::AKAZE, "AKAZE"},
                                                                   {IKeypointDetector::KeypointDetectorType::AKAZE2,"AKAZE2"},
                                                                   {IKeypointDetector::KeypointDetectorType::ORB,"ORB"},
                                                                   {IKeypointDetector::KeypointDetectorType::BRISK,"BRISK"},
@@ -88,6 +91,13 @@ void SolARKeypointDetectorRegionOpencv::setType(IKeypointDetector::KeypointDetec
         */
     m_type=typeToString.at(type);
     switch (type) {
+    case (IKeypointDetector::KeypointDetectorType::SIFT):
+       LOG_DEBUG("KeypointDetectorImp::setType(SIFT)");
+       if (m_threshold > 0)
+            m_detector = SIFT::create(m_nbDescriptors, 3, 0.04, m_threshold);
+       else
+            m_detector = SIFT::create(m_nbDescriptors);
+       break;
     case (IKeypointDetector::KeypointDetectorType::AKAZE):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
 		if (m_threshold > 0)
