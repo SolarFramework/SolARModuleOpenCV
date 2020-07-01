@@ -58,9 +58,9 @@ public:
     /// @brief Set the camera intrinsic parameters from a calibration matrix.
     ///[in] intrinsic_parameters: Calibration matrix containing the nine camera calibration parameters.
     void setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
-    /// @brief Set the camera distorsion parameters from a distorsion matrix.
-    ///[in] distorsion_parameters: Distorsion matrix containing the five camera distorsion parameters.
-    void setDistorsionParameters(const CamDistortion & distorsion_parameters) override;
+    /// @brief Set the camera distortion parameters from a distortion matrix.
+    ///[in] distortion_parameters: distortion matrix containing the five camera distortion parameters.
+    void setDistortionParameters(const CamDistortion & distortion_parameters) override;
     /// @brief Set the camera parameters
     void setParameters(const CameraParameters & parameters) override;
     /// @return Return the camera parameters
@@ -71,9 +71,9 @@ public:
     /// @brief Get the current camera calibration parameters.
     ///[out] Calibration matrix containing the nine camera calibration parameters.
     const CamCalibration & getIntrinsicsParameters() override;
-    /// @brief Get the current camera distorsion parameters.
-    ///[out] Distorsion matrix containing the five camera distorsion parameters.
-    const CamDistortion & getDistorsionParameters() override;
+    /// @brief Get the current camera distortion parameters.
+    ///[out] distortion matrix containing the five camera distortion parameters.
+    const CamDistortion & getDistortionParameters() override;
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
     void unloadComponent () override;

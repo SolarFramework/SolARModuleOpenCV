@@ -58,8 +58,6 @@ int calibratio_run(int cameraId) {
 
 	SRef<Image> inputImage;
 
-    auto cameraCalibration =xpcf::ComponentFactory::createInstance<SolARCameraCalibrationOpencv>()->bindTo<input::devices::ICameraCalibration>();
-
     std::string calib_config = std::string("SolAROpenCVCameraCalibration_config.yml");
 	std::ifstream ifs(calib_config.c_str());
 	if (!ifs) {
@@ -68,7 +66,9 @@ int calibratio_run(int cameraId) {
 		return -1;
 	}
 
-    std::string calib_output = std::string("../Data/camera_calibration.yml");
+    auto cameraCalibration =xpcf::ComponentFactory::createInstance<SolARCameraCalibrationOpencv>()->bindTo<input::devices::ICameraCalibration>();
+
+    std::string calib_output = std::string("../../Data/camera_calibration.yml");
 
 	if (cameraCalibration->setParameters(calib_config))
 	{

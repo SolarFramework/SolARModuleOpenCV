@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<xpcf-registry>
+<xpcf-registry autoAlias="true">
     
-	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$REMAKENROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.7.0/lib/x86_64/shared">
+        <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.8.1/lib/x86_64/shared">
         <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="SolARImageLoaderOpencv" description="SolARImageLoaderOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" name="IImageLoader" description="IImageLoader"/>
@@ -28,25 +28,25 @@
         </component>   	
     </module>
 	
-	<configuration>
-		<component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="image1"> <!-- SolARImageLoaderOpencv -->
+    <properties>
+        <configure component="SolARImageLoaderOpencv" name="image1">
 			<property name="filePath" type="string" value="../../data/notredame1.jpg"/>
-		</component>
-		<component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="image2"> <!-- SolARImageLoaderOpencv -->
+        </configure>
+        <configure component="SolARImageLoaderOpencv" name="image2">
 			<property name="filePath" type="string" value="../../data/notredame2.jpg"/>
-		</component>
-		<component uuid="e81c7e4e-7da6-476a-8eba-078b43071272"> <!-- SolARKeypointDetectorOpencv -->
+        </configure>
+        <configure component="SolARKeypointDetectorOpencv">
 			<property name="type" type="string" value="AKAZE2"/>
 			<property name="imageRatio" type="Float" value="0.5"/>
 			<property name="nbDescriptors" type="Integer" value="1000"/>
-        </component>
-		<component uuid="21238c00-26dd-11e8-b467-0ed5f89f718b"> <!-- SolARDescriptorsExtractorAKAZE2Opencv -->
+        </configure>
+        <configure component="SolARDescriptorsExtractorAKAZE2Opencv">
             <property name="threshold" type="Float" value="3e-4"/>
-        </component>
-		<component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9"> <!-- SolARDescriptorMatcherHammingBruteForceOpencv -->
+        </configure>
+        <configure component="SolARDescriptorMatcherHammingBruteForceOpencv">
 			<property name="distanceRatio" type="Float" value="0.9"/>
-		</component>
-		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9"> <!-- SolARMatchesOverlayOpencv -->
+        </configure>
+        <configure component="SolARMatchesOverlayOpencv">
             <property name="thickness" type="UnsignedInteger" value="1"/>
 			<property name="mode" type="string" value="RANDOM"/>
 			<property name="color"  type="UnsignedInteger">
@@ -55,12 +55,12 @@
 				<value>255</value>
 			</property>
 			<property name="maxMatches" type="UnsignedInteger" value="-1"/>	
-        </component>
-		<component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b"> <!-- SolARImageViewerOpencv -->
+        </configure>
+        <configure component="SolARImageViewerOpencv">
 			<property name="title" type="string" value="Matches (press esc key to exit)"/>
 			<property name="exitKey" type="Integer" value="27"/>
 			<property name="width" type="Integer" value="0"/>
 			<property name="height" type="Integer" value="0"/>
-		</component>	
-    </configuration>
+        </configure>
+    </properties>
 </xpcf-registry>

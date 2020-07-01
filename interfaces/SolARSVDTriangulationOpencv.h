@@ -57,7 +57,7 @@ public:
     /// @brief Convert  the point cloud to opencv structure for CV processing.
     /// @param[in] Set of triangulated 3d_points.
     /// @return Set of triangulated 3d_points expressed with opencv data structure.
-    double getReprojectionErrorCloud(const std::vector<CloudPoint> & original);
+    double getReprojectionErrorCloud(const std::vector<SRef<CloudPoint>> & original);
 
    /// @brief Triangulates two homogeneous 2d_points {u,v,1.0} in an iterative way based on SVD linear system solving.
     /// @param[in] First homogeneous 2d_point.
@@ -103,7 +103,7 @@ public:
                        const std::pair<unsigned int,unsigned int> & working_views,
                        const Transform3Df & poseView1,
                        const Transform3Df & poseView2,
-                       std::vector<CloudPoint> & pcloud) override;
+                       std::vector<SRef<CloudPoint>> & pcloud) override;
 
     /// @brief triangulate pairs of points 2d captured from two views with differents poses (with respect to the camera instrinsic parameters).
     /// @param[in] pointsView1, set of keypoints seen in view_1.
@@ -120,7 +120,7 @@ public:
                        const std::pair<unsigned int,unsigned int> & working_views,
                        const Transform3Df & poseView1,
                        const Transform3Df & poseView2,
-                       std::vector<CloudPoint> & pcloud) override;
+                       std::vector<SRef<CloudPoint>> & pcloud) override;
 
 	/// @brief triangulate pairs of points 2d captured from two views with differents poses (with respect to the camera instrinsic parameters).
 	/// @param[in] pointsView1, set of keypoints seen in view_1.
@@ -141,7 +141,7 @@ public:
 						const std::pair<unsigned int, unsigned int> & working_views,
 						const Transform3Df & poseView1,
 						const Transform3Df & poseView2,
-						std::vector<CloudPoint> & pcloud) override;
+						std::vector<SRef<CloudPoint>> & pcloud) override;
 
 	/// @brief triangulate pairs of points 2d captured from current keyframe with its reference keyframe using their poses (with respect to the camera instrinsic parameters).
 	/// @param[in] curKeyframe, current keyframe.
@@ -150,7 +150,7 @@ public:
 	/// @return the mean re-projection error (mean distance in pixels between the original 2D points and the projection of the reconstructed 3D points)
     double triangulate(	const SRef<Keyframe> & curKeyframe,
                         const std::vector<DescriptorMatch> & matches,
-                        std::vector<CloudPoint> & pcloud) override;
+                        std::vector<SRef<CloudPoint>> & pcloud) override;
 
     void unloadComponent () override final;
 

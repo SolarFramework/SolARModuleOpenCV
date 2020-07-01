@@ -1,11 +1,16 @@
-TARGET = SolAROpenCVFiducialMarker
-VERSION=0.7.0
-
-CONFIG += c++1z
+## remove Qt dependencies
+QT       -= core gui
 CONFIG -= qt
-CONFIG += console
+
+## global defintions : target lib name, version
+TARGET = SolAROpenCVFiducialMarker
+VERSION=0.8.1
 
 DEFINES += MYVERSION=$${VERSION}
+CONFIG += c++1z
+CONFIG += console
+
+include(findremakenrules.pri)
 
 CONFIG(debug,debug|release) {
     TARGETDEPLOYDIR = $${PWD}/../bin/Debug
@@ -19,7 +24,7 @@ CONFIG(release,debug|release) {
     DEFINES += NDEBUG=1
 }
 
-DEPENDENCIESCONFIG = shared install_recurse
+DEPENDENCIESCONFIG = sharedlib recursive install_recurse
 
 win32:CONFIG -= static
 win32:CONFIG += shared
@@ -28,7 +33,12 @@ win32:CONFIG += shared
 PROJECTCONFIG = QTVS
 
 #NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
-include ($$shell_quote($$shell_path($$(REMAKEN_RULES_ROOT)/qmake/templateappconfig.pri))) # Shell_quote & shell_path required for visual on windows
+include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/templateappconfig.pri)))  # Shell_quote & shell_path required for visual on windows
+
+#DEFINES += BOOST_ALL_NO_LIB
+DEFINES += BOOST_ALL_DYN_LINK
+DEFINES += BOOST_AUTO_LINK_NOMANGLE
+DEFINES += BOOST_LOG_DYN_LINK
 
 HEADERS += \
 
@@ -36,6 +46,8 @@ SOURCES += \
     main.cpp
 
 unix {
+    LIBS += -ldl
+    QMAKE_CXXFLAGS += -DBOOST_ALL_DYN_LINK
 }
 
 macx {
@@ -59,4 +71,4 @@ configfile.files = $${PWD}/SolAROpenCVFiducialMarker_conf.xml
 INSTALLS += configfile
 
 #NOTE : Must be placed at the end of the .pro
-include ($$shell_quote($$shell_path($$(REMAKEN_RULES_ROOT)/qmake/remaken_install_target.pri))) # Shell_quote & shell_path required for visual on windows
+include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/remaken_install_target.pri)))) # Shell_quote & shell_path required for visual on windows

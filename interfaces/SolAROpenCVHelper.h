@@ -123,7 +123,7 @@ FrameworkReturnCode SolAROpenCVHelper::convertCVMatToSolar(const cv::Mat& openCV
 template <class T,int Dim>
 FrameworkReturnCode SolAROpenCVHelper::convertCVMatToSolar(const cv::Mat& openCVMat, Transform<T,Dim> & solarTransform)
 {
-    if (openCVMat.cols != solarTransform.cols() || openCVMat.rows != solarTransform.rows() || openCVMat.type() != inferOpenCVType<T>()) {
+    if (openCVMat.cols != solarTransform.cols() || openCVMat.rows != solarTransform.rows()+1 || openCVMat.type() != inferOpenCVType<T>()) {
         return FrameworkReturnCode::_ERROR_;
     }
     Matrix<T, Dim+1 , Dim+1 > transform(reinterpret_cast<T*>( openCVMat.data));

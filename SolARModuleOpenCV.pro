@@ -6,7 +6,7 @@ CONFIG -= qt
 INSTALLSUBDIR = SolARBuild
 TARGET = SolARModuleOpenCV
 FRAMEWORK = $$TARGET
-VERSION=0.7.0
+VERSION=0.8.1
 
 DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
@@ -30,7 +30,7 @@ DEPENDENCIESCONFIG = shared recursive install_recurse
 PROJECTCONFIG = QTVS
 
 #NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
-include ($${REMAKEN_RULES_ROOT}/templatelibconfig.pri)  # Shell_quote & shell_path required for visual on windows
+include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/templatelibconfig.pri)))  # Shell_quote & shell_path required for visual on windows
 
 ## DEFINES FOR MSVC/INTEL C++ compilers
 msvc {
@@ -43,8 +43,8 @@ include (SolARModuleOpenCV.pri)
 
 unix:!android {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
-    QMAKE_LINK=clang++
-    QMAKE_CXX = clang++	
+#    QMAKE_LINK=clang++
+#    QMAKE_CXX = clang++
 }
 
 macx {
@@ -80,4 +80,9 @@ OTHER_FILES += \
     packagedependencies.txt
 
 #NOTE : Must be placed at the end of the .pro
-include ($${REMAKEN_RULES_ROOT}/remaken_install_target.pri)))) # Shell_quote & shell_path required for visual on windows
+include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/remaken_install_target.pri)))) # Shell_quote & shell_path required for visual on windows
+
+DISTFILES += \
+    packagedependencies-linux.txt \
+    packagedependencies-mac.txt \
+    packagedependencies-win.txt

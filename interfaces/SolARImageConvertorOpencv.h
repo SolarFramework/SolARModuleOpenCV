@@ -26,7 +26,7 @@
 #include "SolAROpencvAPI.h"
 #include <string>
 
-#include "opencv/cv.h"
+//#include "opencv/cv.h"
 #include "opencv2/imgproc/imgproc.hpp"
 
 namespace SolAR {

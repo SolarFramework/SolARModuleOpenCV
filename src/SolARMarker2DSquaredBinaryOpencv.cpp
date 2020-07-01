@@ -47,7 +47,7 @@ namespace OPENCV {
 
         if (m_filePath.empty())
         {
-            LOG_ERROR("Binary Marker file path has not be defined", m_filePath)
+            LOG_ERROR("Binary Marker file path has not been defined", m_filePath)
             return FrameworkReturnCode::_ERROR_;
         }
 
