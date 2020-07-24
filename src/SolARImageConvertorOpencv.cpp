@@ -28,9 +28,12 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARImageConvertorOpencv::SolARImageConvertorOpencv():ComponentBase(xpcf::toUUID<SolARImageConvertorOpencv>())
+SolARImageConvertorOpencv::SolARImageConvertorOpencv():ConfigurableBase(xpcf::toUUID<SolARImageConvertorOpencv>())
 {
     declareInterface<api::image::IImageConvertor>(this);
+	declareProperty("colorMap", m_colorMap);
+	declareProperty("equalizeLUT", m_equalizeLUT);
+	LOG_DEBUG("SolARImageConvertorOpencv constructor"); 
 }
 
 
@@ -42,11 +45,6 @@ SolARImageConvertorOpencv::~SolARImageConvertorOpencv()
 static std::map<std::pair<Image::ImageLayout,Image::ImageLayout>,int> convertMapInfos = {{{Image::ImageLayout::LAYOUT_RGB,Image::ImageLayout::LAYOUT_GREY},cv::COLOR_RGB2GRAY},
                                                                                        {{Image::ImageLayout::LAYOUT_BGR,Image::ImageLayout::LAYOUT_GREY},cv::COLOR_BGR2GRAY}};
 
-inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, SRef<Image> imgDst)
-{
-    // TODO : handle safe mode if missing map entry
-    return convertMapInfos.at(std::make_pair<Image::ImageLayout,Image::ImageLayout>(imgSrc->getImageLayout(),imgDst->getImageLayout()));
-}
 
 inline int deduceOpenCVConversionMode(SRef<Image> imgSrc, Image::ImageLayout dstLayout)
 {
@@ -70,59 +68,37 @@ FrameworkReturnCode SolARImageConvertorOpencv::convert(const SRef<Image> imgSrc,
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARImageConvertorOpencv::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout, const float scale)
-{
-	if (imgDst == nullptr)
-		imgDst = xpcf::utils::make_shared<Image>(destLayout, imgSrc->getPixelOrder(), imgSrc->getDataType());
-
-	imgDst->setSize(imgSrc->getWidth(), imgSrc->getHeight());
-
-	cv::Mat imgSource, imgConverted;
-	SolAROpenCVHelper::mapToOpenCV(imgSrc, imgSource);
-	SolAROpenCVHelper::mapToOpenCV(imgDst, imgConverted);
-
-	/************* TEMPORARY HACK *************/
-	// TODO : the 16bit -> 8bit conversion with scaling should be moved to the image viewer
-	// because the conversion is only made for viewing purposes
-	bool processed = false;
-	if (imgSrc->getImageLayout() != destLayout)
-	{
-		cv::cvtColor(imgSource, imgConverted, deduceOpenCVConversionMode(imgSrc, destLayout), scale);
-		processed = true;
-	}
-	if (scale != 1.f)
-	{
-		cv::Mat imgTmp(imgSource.rows,
-			imgSource.cols,
-			CV_32F);
-
-		processed ? imgConverted.convertTo(imgTmp, CV_32F, scale) :
-			imgSource.convertTo(imgTmp, CV_32F, scale);
-		imgTmp.convertTo(imgConverted, imgConverted.type());
-	}
-	/******************************************/
-
-	return FrameworkReturnCode::_SUCCESS;
-}
-
 FrameworkReturnCode SolARImageConvertorOpencv::convert(const SRef<Image> imgSrc, SRef<Image>& imgDst)
 {
    if (imgDst == nullptr)
    {
-       LOG_ERROR("The imgDst has not been instantiated before calling convert method. Pleae, instantiate it or call the convert method that takes in argument the layout of the output image.")
+       LOG_ERROR("The imgDst has not been instantiated before calling convert method. Please, instantiate it or call the convert method that takes in argument the layout of the output image.")
        return FrameworkReturnCode::_ERROR_;
    }
    return convert(imgSrc,imgDst,imgDst->getImageLayout());
 }
 
-FrameworkReturnCode SolARImageConvertorOpencv::convert(const SRef<Image> imgSrc, SRef<Image>& imgDst,const float scale)
+FrameworkReturnCode SolARImageConvertorOpencv::convertLookUpTable(const SRef<Image> imgSrc, SRef<Image> & imgDst)
 {
 	if (imgDst == nullptr)
-	{
-		LOG_ERROR("The imgDst has not been instantiated before calling convert method. Pleae, instantiate it or call the convert method that takes in argument the layout of the output image.")
-			return FrameworkReturnCode::_ERROR_;
+		imgDst = xpcf::utils::make_shared<Image>(Image::LAYOUT_RGB, Image::PER_CHANNEL, Image::DataType::TYPE_8U);
+
+	imgDst->setSize(imgSrc->getWidth(), imgSrc->getHeight());
+
+	cv::Mat imgSource, imgColored;
+	cv::Mat imgTmp(imgSrc->getHeight(), imgSrc->getWidth(), CV_8UC1, imgSrc->data()); ;
+	SolAROpenCVHelper::mapToOpenCV(imgSrc, imgSource);
+	SolAROpenCVHelper::mapToOpenCV(imgDst, imgColored);	
+
+	if (imgSource.type() != CV_8U) {
+		LOG_ERROR("Only CV_8UC1 and CV_8UC3 can be used");
+		return FrameworkReturnCode::_ERROR_;
 	}
-	return convert(imgSrc, imgDst, imgDst->getImageLayout(),scale);
+
+	if(m_equalizeLUT) cv::equalizeHist(imgSource, imgTmp);
+	cv::applyColorMap(imgTmp, imgColored, m_colorMap);
+
+	return FrameworkReturnCode::_SUCCESS;
 }
 
 }
