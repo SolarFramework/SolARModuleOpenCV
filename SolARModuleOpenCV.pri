@@ -17,6 +17,7 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARMarker2DSquaredBinaryOpencv.h \
     interfaces/SolARContoursFilterBinaryMarkerOpencv.h \
     interfaces/SolARDescriptorsExtractorSBPatternOpencv.h \
+    interfaces/SolARDescriptorsExtractorSIFTOpencv.h \
     interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
     interfaces/SolARDescriptorsExtractorAKAZE2Opencv.h \
     interfaces/SolARDescriptorsExtractorORBOpencv.h \
@@ -74,6 +75,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARMarker2DSquaredBinaryOpencv.cpp \
     src/SolARContoursFilterBinaryMarkerOpencv.cpp \
     src/SolARDescriptorsExtractorSBPatternOpencv.cpp \
+    src/SolARDescriptorsExtractorSIFTOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZEOpencv.cpp \
     src/SolARDescriptorsExtractorORBOpencv.cpp \
     src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
