@@ -56,17 +56,28 @@ int main(int argc,char** argv)
     // declare and create components
     LOG_INFO("Start creating components");
 
-    SRef<image::IImageLoader> imageLoaderImage1 = xpcfComponentManager->resolve<image::IImageLoader>();
-    imageLoaderImage1->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVDescriptorMatcher_config.xml", "image1"); //Temporary solution pending xpcf 2.3.0
-    SRef<image::IImageLoader> imageLoaderImage2 = xpcfComponentManager->resolve<image::IImageLoader>();
-    imageLoaderImage2->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVDescriptorMatcher_config.xml", "image2"); //Temporary solution pending xpcf 2.3.0
-    SRef<features::IKeypointDetector> keypointsDetector = xpcfComponentManager->resolve<features::IKeypointDetector>();
-    SRef<features::IDescriptorsExtractor> extractorAKAZE2 = xpcfComponentManager->resolve<features::IDescriptorsExtractor>();
-    SRef<features::IDescriptorMatcher> matcher = xpcfComponentManager->resolve<features::IDescriptorMatcher>();
-    SRef<display::IMatchesOverlay> overlay = xpcfComponentManager->resolve<display::IMatchesOverlay>();
-    SRef<display::IImageViewer> viewer = xpcfComponentManager->resolve<display::IImageViewer>();
+    SRef<image::IImageLoader> imageLoaderImage1 = xpcfComponentManager->resolve<image::IImageLoader>("image1");
+    SRef<image::IImageLoader> imageLoaderImage2 = xpcfComponentManager->resolve<image::IImageLoader>("image2");
 
-    if (!imageLoaderImage1  || !imageLoaderImage2 || !keypointsDetector || !extractorAKAZE2 || !matcher || !overlay || !viewer)
+    SRef<features::IKeypointDetector> keypointsDetectorAKAZE = xpcfComponentManager->resolve<features::IKeypointDetector>("AKAZEDetector");
+    SRef<features::IKeypointDetector> keypointsDetectorORB = xpcfComponentManager->resolve<features::IKeypointDetector>("ORBDetector");
+    SRef<features::IKeypointDetector> keypointsDetectorSIFT = xpcfComponentManager->resolve<features::IKeypointDetector>("SIFTDetector");
+
+    SRef<features::IDescriptorsExtractor> extractorAKAZE = xpcfComponentManager->resolve<features::IDescriptorsExtractor>("AKAZEDesc");
+    SRef<features::IDescriptorsExtractor> extractorORB = xpcfComponentManager->resolve<features::IDescriptorsExtractor>("ORBDesc");
+    SRef<features::IDescriptorsExtractor> extractorSIFT = xpcfComponentManager->resolve<features::IDescriptorsExtractor>("SIFTDesc");
+
+    SRef<features::IDescriptorMatcher> matcher = xpcfComponentManager->resolve<features::IDescriptorMatcher>();
+    SRef<features::IDescriptorMatcher> matcherBinary = xpcfComponentManager->resolve<features::IDescriptorMatcher>("BinaryMatcher");
+
+    SRef<display::IMatchesOverlay> overlay = xpcfComponentManager->resolve<display::IMatchesOverlay>();
+
+    SRef<display::IImageViewer> viewerAKAZE = xpcfComponentManager->resolve<display::IImageViewer>("AKAZEViewer");
+    SRef<display::IImageViewer> viewerORB = xpcfComponentManager->resolve<display::IImageViewer>("ORBViewer");
+    SRef<display::IImageViewer> viewerSIFT = xpcfComponentManager->resolve<display::IImageViewer>("SIFTViewer");
+
+    if (!imageLoaderImage1  || !imageLoaderImage2 || !keypointsDetectorAKAZE || !keypointsDetectorORB || !keypointsDetectorSIFT || !extractorAKAZE || !extractorORB
+     || !extractorSIFT || !matcher || !matcherBinary || !overlay || !viewerAKAZE || !viewerORB || !viewerSIFT )
     {
         LOG_ERROR("One or more component creations have failed");
         return -1;
@@ -81,7 +92,7 @@ int main(int argc,char** argv)
     std::vector<DescriptorMatch>    matches;
     std::vector<SRef<Point2Df>>     matchedKeypoints1;
     std::vector<SRef<Point2Df>>     matchedKeypoints2;
-    SRef<Image>                     viewerImage;
+    SRef<Image>                     viewerImageAKAZE, viewerImageORB, viewerImageSIFT;
 
  // Start
     // Get the first image (the path of this image is defined in the conf_DetectorMatcher.xml)
@@ -98,28 +109,71 @@ int main(int argc,char** argv)
         return 0;
     }
 
+
+    // AKAZE
+    // --------
     // Detect the keypoints of the first image
-    keypointsDetector->detect(image1, keypoints1);
+    keypointsDetectorAKAZE->detect(image1, keypoints1);
 
     // Detect the keypoints of the second image
-    keypointsDetector->detect(image2, keypoints2);
+    keypointsDetectorAKAZE->detect(image2, keypoints2);
 
     // Compute the AKAZE descriptor for each keypoint extracted from the first image
-    extractorAKAZE2->extract(image1, keypoints1, descriptors1);
+    extractorAKAZE->extract(image1, keypoints1, descriptors1);
 
     // Compute the AKAZE descriptor for each keypoint extracted from the second image
-    extractorAKAZE2->extract(image2, keypoints2, descriptors2);
+    extractorAKAZE->extract(image2, keypoints2, descriptors2);
+
+    // Compute the matches between the keypoints of the first image and the keypoints of the second image
+    matcherBinary->match(descriptors1, descriptors2, matches);
+
+    // Draw the matches in a dedicated image
+    overlay->draw(image1, image2, viewerImageAKAZE, keypoints1, keypoints2, matches);
+
+    // ORB
+    // --------
+    // Detect the keypoints of the first image
+    keypointsDetectorORB->detect(image1, keypoints1);
+
+    // Detect the keypoints of the second image
+    keypointsDetectorORB->detect(image2, keypoints2);
+
+    // Compute the ORB descriptor for each keypoint extracted from the first image
+    extractorORB->extract(image1, keypoints1, descriptors1);
+
+    // Compute the ORB descriptor for each keypoint extracted from the second image
+    extractorORB->extract(image2, keypoints2, descriptors2);
+
+    // Compute the matches between the keypoints of the first image and the keypoints of the second image
+    matcherBinary->match(descriptors1, descriptors2, matches);
+
+    // Draw the matches in a dedicated image
+    overlay->draw(image1, image2, viewerImageORB, keypoints1, keypoints2, matches);
+
+    // SIFT
+    // --------
+    // Detect the keypoints of the first image
+    keypointsDetectorSIFT->detect(image1, keypoints1);
+
+    // Detect the keypoints of the second image
+    keypointsDetectorSIFT->detect(image2, keypoints2);
+
+    // Compute the SIFT descriptor for each keypoint extracted from the first image
+    extractorSIFT->extract(image1, keypoints1, descriptors1);
+
+    // Compute the SIFT descriptor for each keypoint extracted from the second image
+    extractorSIFT->extract(image2, keypoints2, descriptors2);
 
     // Compute the matches between the keypoints of the first image and the keypoints of the second image
     matcher->match(descriptors1, descriptors2, matches);
 
     // Draw the matches in a dedicated image
-    overlay->draw(image1, image2, viewerImage, keypoints1, keypoints2, matches);
+    overlay->draw(image1, image2, viewerImageSIFT, keypoints1, keypoints2, matches);
 
     while (true)
     {
         // Display the image with matches in a viewer. If escape key is pressed, exit the loop.
-        if (viewer->display(viewerImage) == FrameworkReturnCode::_STOP)
+        if (viewerAKAZE->display(viewerImageAKAZE) == FrameworkReturnCode::_STOP || viewerORB->display(viewerImageORB) == FrameworkReturnCode::_STOP || viewerSIFT->display(viewerImageSIFT) == FrameworkReturnCode::_STOP )
         {
             LOG_INFO("End of DescriptorMatcherOpenCVTest");
             break;
