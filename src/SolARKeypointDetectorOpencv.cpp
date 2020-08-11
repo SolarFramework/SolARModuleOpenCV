@@ -23,8 +23,9 @@ XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetecto
 namespace xpcf = org::bcom::xpcf;
 
 using namespace cv;
-using namespace cv::xfeatures2d;
-
+#if ((CV_VERSION_MAJOR < 4 ) || (CV_VERSION_MINOR < 4 ))
+    using namespace cv::xfeatures2d;
+#endif
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
