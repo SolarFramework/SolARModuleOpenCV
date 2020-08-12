@@ -26,7 +26,9 @@
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
-#include "opencv2/xfeatures2d.hpp" // Define SIFT
+#if ((CV_VERSION_MAJOR < 4 ) || (CV_VERSION_MINOR < 4 ))
+    #include "opencv2/xfeatures2d.hpp" // Define SIFT
+#endif
 #include "features2d_akaze2.hpp"  // Define AKAZE2;
 
 namespace SolAR {

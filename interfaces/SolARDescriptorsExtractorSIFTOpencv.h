@@ -26,7 +26,9 @@
 
 //opencv headers
 #include "opencv2/opencv.hpp"
-#include "opencv2/xfeatures2d.hpp"
+#if ((CV_VERSION_MAJOR < 4 ) || (CV_VERSION_MINOR < 4 ))
+    #include "opencv2/xfeatures2d.hpp"
+#endif
 
 //solar headers
 #include "api/features/IDescriptorsExtractor.h"
