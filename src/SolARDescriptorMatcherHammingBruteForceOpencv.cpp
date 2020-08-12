@@ -46,41 +46,6 @@ bool sortByDistanceBFM(const std::pair<int,float> &lhs, const std::pair<int,floa
     return lhs.second < rhs.second;
 }
 
-/*
-DescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(SRef<DescriptorBuffer>& descriptors1,SRef<DescriptorBuffer>& descriptors2,std::vector<std::vector< cv::DMatch >>& matches,int nbOfMatches)
-{
-    matches.clear();
-
-    // check if the descriptors type match
-    if (descriptors1->getDescriptorDataType() != descriptors2->getDescriptorDataType() ){
-            return DescriptorMatcher::DESCRIPTORS_DONT_MATCH;
-     }
-
-    if(descriptors1->getNbDescriptors()==0 || descriptors2->getNbDescriptors()==0){
-        return DescriptorMatcher::DESCRIPTOR_EMPTY;
-    }
-
-    // to prevent pb in knn search
-    nbOfMatches=cv::min(nbOfMatches,(int)descriptors2->getNbDescriptors());
-
-    //since it is an openCV implementation we need to convert back the descriptors from SolAR to Opencv
-
-    uint32_t type_conversion= SolAROpenCVHelper::deduceOpenDescriptorCVType(descriptors1->getDescriptorDataType());
-
-    cv::Mat cvDescriptor1(descriptors1->getNbDescriptors(), descriptors1->getNbElements(), type_conversion);
-    cvDescriptor1.data=(uchar*)descriptors1->data();
-
-    cv::Mat cvDescriptor2(descriptors2->getNbDescriptors(), descriptors2->getNbElements(), type_conversion);
-    cvDescriptor2.data=(uchar*)descriptors2->data();
-
-    cv::BFMatcher nnn_matcher(cv::NORM_HAMMING);
-
-    nnn_matcher.knnMatch(cvDescriptor1, cvDescriptor2, matches,2);
-
-    return DescriptorMatcher::DESCRIPTORS_MATCHER_OK;
-
-}
-*/
 IDescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
        SRef<DescriptorBuffer> desc1,SRef<DescriptorBuffer> desc2, std::vector<DescriptorMatch>& matches){
  
@@ -104,26 +69,35 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match
     std::vector< std::vector<cv::DMatch> > nn_matches;
     
     matcher.knnMatch(cvDescriptor1, cvDescriptor2, nn_matches,2);
-    
+	std::map<uint32_t, std::map<uint32_t, float>> matches21;
     matches.clear();
     for(unsigned i = 0; i < nn_matches.size(); i++) {
-        if (nn_matches[i].size()==1)
-            matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
-        else if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
-                 matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
+        if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
+			matches21[nn_matches[i][0].trainIdx][nn_matches[i][0].queryIdx] = nn_matches[i][0].distance;
         }
     }
-  
-     return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;
+	// get best matches to descriptors 2
+	for (auto it_des2 : matches21) {
+		uint32_t idxDes2 = it_des2.first;
+		std::map<uint32_t, float> infoMatch = it_des2.second;
+		uint32_t bestIdxDes1;
+		float bestDistance = FLT_MAX;
+		for (auto it_des1 : infoMatch)
+			if (it_des1.second < bestDistance) {
+				bestDistance = it_des1.second;
+				bestIdxDes1 = it_des1.first;
+			}
+		matches.push_back(DescriptorMatch(bestIdxDes1, idxDes2, bestDistance));
+	}
+    return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;
 }
  
 IDescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match(
        const SRef<DescriptorBuffer> descriptors1,
        const std::vector<SRef<DescriptorBuffer>>& descriptors2,
         std::vector<DescriptorMatch>& matches
-        ) {
- 
- 
+        ) 
+{ 
     if (descriptors1->getNbDescriptors() ==0 || descriptors2.size()== 0)
         return IDescriptorMatcher::RetCode::DESCRIPTOR_EMPTY;
  
@@ -161,17 +135,29 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherHammingBruteForceOpencv::match
     cv::BFMatcher matcher(cv::NormTypes::NORM_HAMMING, true);
     std::vector< std::vector<cv::DMatch> > nn_matches;
     matcher.knnMatch(cvDescriptors1, cvDescriptors2, nn_matches, 2);
-
-     matches.clear();
-    for(unsigned i = 0; i < nn_matches.size(); i++) {
-    
-             if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
-                  
-                 matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx, nn_matches[i][0].distance ));
-             }
+	std::map<uint32_t, std::map<uint32_t, float>> matches21;
+	matches.clear();
+    for(unsigned i = 0; i < nn_matches.size(); i++) {    
+        if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {                  
+			matches21[nn_matches[i][0].trainIdx][nn_matches[i][0].queryIdx] = nn_matches[i][0].distance;
+        }
     }
-    return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;
- 
+
+	// get best matches to descriptors 2
+	for (auto it_des2 : matches21) {
+		uint32_t idxDes2 = it_des2.first;
+		std::map<uint32_t, float> infoMatch = it_des2.second;
+		uint32_t bestIdxDes1;
+		float bestDistance = FLT_MAX;
+		for (auto it_des1 : infoMatch)
+			if (it_des1.second < bestDistance) {
+				bestDistance = it_des1.second;
+				bestIdxDes1 = it_des1.first;
+			}
+		matches.push_back(DescriptorMatch(bestIdxDes1, idxDes2, bestDistance));
+	}
+
+    return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK; 
 }
 
 }
