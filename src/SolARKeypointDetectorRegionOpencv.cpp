@@ -23,19 +23,24 @@ XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARKeypointDetecto
 namespace xpcf = org::bcom::xpcf;
 
 using namespace cv;
+#if ((CV_VERSION_MAJOR < 4 ) || (CV_VERSION_MINOR < 4 ))
+    using namespace cv::xfeatures2d;
+#endif
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-static std::map<std::string,IKeypointDetector::KeypointDetectorType> stringToType = {{"AKAZE",IKeypointDetector::KeypointDetectorType::AKAZE},
+static std::map<std::string,IKeypointDetector::KeypointDetectorType> stringToType = {{"SIFT",IKeypointDetector::KeypointDetectorType::SIFT},
+                                                                  {"AKAZE",IKeypointDetector::KeypointDetectorType::AKAZE},
                                                                   {"AKAZE2",IKeypointDetector::KeypointDetectorType::AKAZE2},
                                                                   {"ORB",IKeypointDetector::KeypointDetectorType::ORB},
                                                                   {"BRISK",IKeypointDetector::KeypointDetectorType::BRISK},
                                                                   {"FEATURE_TO_TRACK", IKeypointDetector::KeypointDetectorType::FEATURE_TO_TRACK}};
 
-static std::map<IKeypointDetector::KeypointDetectorType,std::string> typeToString = {{IKeypointDetector::KeypointDetectorType::AKAZE, "AKAZE"},
+static std::map<IKeypointDetector::KeypointDetectorType,std::string> typeToString = {{IKeypointDetector::KeypointDetectorType::SIFT, "SIFT"},
+                                                                  {IKeypointDetector::KeypointDetectorType::AKAZE, "AKAZE"},
                                                                   {IKeypointDetector::KeypointDetectorType::AKAZE2,"AKAZE2"},
                                                                   {IKeypointDetector::KeypointDetectorType::ORB,"ORB"},
                                                                   {IKeypointDetector::KeypointDetectorType::BRISK,"BRISK"},
@@ -88,6 +93,13 @@ void SolARKeypointDetectorRegionOpencv::setType(IKeypointDetector::KeypointDetec
         */
     m_type=typeToString.at(type);
     switch (type) {
+    case (IKeypointDetector::KeypointDetectorType::SIFT):
+       LOG_DEBUG("KeypointDetectorImp::setType(SIFT)");
+       if (m_threshold > 0)
+            m_detector = SIFT::create(m_nbDescriptors, 3, 0.04, m_threshold);
+       else
+            m_detector = SIFT::create(m_nbDescriptors);
+       break;
     case (IKeypointDetector::KeypointDetectorType::AKAZE):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
 		if (m_threshold > 0)
@@ -200,11 +212,13 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const st
 			return false;
 	};
 
+    int kpID = 0;
+
     for(std::vector<cv::KeyPoint>::iterator itr=kpts.begin();itr!=kpts.end();++itr){
         Point2f ptToCheck = (*itr).pt * ratioInv;
         if (checkInside(contours, ptToCheck)) {
             Keypoint kpa;
-            kpa.init((*itr).pt.x*ratioInv, (*itr).pt.y*ratioInv, (*itr).size, (*itr).angle, (*itr).response, (*itr).octave, (*itr).class_id);
+            kpa.init(kpID++, (*itr).pt.x*ratioInv, (*itr).pt.y*ratioInv, (*itr).size, (*itr).angle, (*itr).response, (*itr).octave, (*itr).class_id);
 			keypoints.push_back(kpa);
 		}
     }

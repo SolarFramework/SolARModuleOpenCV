@@ -31,7 +31,7 @@ namespace OPENCV {
         declareInterface<api::input::devices::ICamera>(this);
         declareProperty("calibrationFile", m_calibrationFile);
         m_is_resolution_set = false;
-        m_parameters.distorsion = CamDistortion::Zero();
+        m_parameters.distortion = CamDistortion::Zero();
         m_parameters.intrinsic = CamCalibration::Identity();
     }
 
@@ -89,10 +89,10 @@ namespace OPENCV {
                 return xpcf::_FAIL;
             }
 
-            if (distortion_parameters.rows == m_parameters.distorsion.rows() && distortion_parameters.cols == m_parameters.distorsion.cols())
+            if (distortion_parameters.rows == m_parameters.distortion.rows() && distortion_parameters.cols == m_parameters.distortion.cols())
                 for (int i = 0; i < distortion_parameters.rows; i++)
                     for (int j = 0; j < distortion_parameters.cols; j++)
-                        m_parameters.distorsion(i,j) = distortion_parameters.at<double>(i,j);
+                        m_parameters.distortion(i,j) = distortion_parameters.at<double>(i,j);
             else
             {
                 LOG_ERROR("SolARBaseCameraOpencv::loadCameraParameters: Camera distortion matrix should be a 5x1 Matrix")
@@ -123,11 +123,11 @@ namespace OPENCV {
     }
 
     void SolARBaseCameraOpencv::setIntrinsicParameters(const CamCalibration & intrinsic_parameters){
-//        m_parameters.intrinsic = intrinsic_parameters;
+        m_parameters.intrinsic = intrinsic_parameters;
     }
 
-     void SolARBaseCameraOpencv::setDistorsionParameters(const CamDistortion & distorsion_parameters){
-//           m_parameters.distorsion = distorsion_parameters;
+     void SolARBaseCameraOpencv::setDistortionParameters(const CamDistortion & distortion_parameters){
+        m_parameters.distortion = distortion_parameters;
      }
 
 
@@ -150,8 +150,8 @@ namespace OPENCV {
         return m_parameters.intrinsic;
     }
 
-    const CamDistortion & SolARBaseCameraOpencv::getDistorsionParameters(){
-        return m_parameters.distorsion;
+    const CamDistortion & SolARBaseCameraOpencv::getDistortionParameters(){
+        return m_parameters.distortion;
     }
 
 }

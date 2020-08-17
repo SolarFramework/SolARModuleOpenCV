@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<xpcf-registry>
+<xpcf-registry autoAlias="true">
     
         <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.8.0/lib/x86_64/shared">
         <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="SolARImageLoaderOpencv" description="SolARImageLoaderOpencv">
@@ -14,7 +14,19 @@
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" name="IDescriptorsExtractor" description="IDescriptorsExtractor"/>
         </component>
+        <component uuid="0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a" name="SolARDescriptorsExtractorORBOpencv" description="SolARDescriptorsExtractorORBOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" name="IDescriptorsExtractor" description="IDescriptorsExtractor"/>
+        </component>
+        <component uuid="3787eaa6-d0a0-11e7-8fab-cec278b6b50a" name="SolARDescriptorsExtractorSIFTOpencv" description="SolARDescriptorsExtractorSIFTOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" name="IDescriptorsExtractor" description="IDescriptorsExtractor"/>
+        </component>
 		<component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9" name="SolARDescriptorMatcherHammingBruteForceOpencv" description="SolARDescriptorMatcherHammingBruteForceOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
+        </component>
+        <component uuid="7823dac8-1597-41cf-bdef-59aa22f3d40a" name="SolARDescriptorMatcherKNNOpencv" description="SolARDescriptorMatcherKNNOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
         </component>
@@ -27,26 +39,59 @@
                 <interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
         </component>   	
     </module>
+
+    <factory>
+        <bindings>
+            <bind interface="IImageLoader" to="SolARImageLoaderOpencv" name="image1" properties="image1"/>
+            <bind interface="IImageLoader" to="SolARImageLoaderOpencv" name="image2" properties="image2"/>
+            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="AKAZEDesc" properties="AKAZEDescProperties" />
+            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="ORBDesc" properties="ORBDescProperties"/>
+            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="SIFTDesc" properties="SIFTDescProperties"/>
+            <bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorAKAZE2Opencv" name="AKAZEDesc" />
+            <bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorORBOpencv" name="ORBDesc" />
+            <bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorSIFTOpencv" name="SIFTDesc" />
+            <bind interface="IDescriptorMatcher" to="SolARDescriptorMatcherKNNOpencv" />
+            <bind interface="IDescriptorMatcher" to="SolARDescriptorMatcherHammingBruteForceOpencv" name="BinaryMatcher" />
+            <bind interface="IImageViewer" to="SolARImageViewerOpencv" name="AKAZEViewer" properties="AKAZEViewerProperties" />
+            <bind interface="IImageViewer" to="SolARImageViewerOpencv" name="ORBViewer" properties="ORBViewerProperties" />
+            <bind interface="IImageViewer" to="SolARImageViewerOpencv" name="SIFTViewer" properties="SIFTViewerProperties" />
+        </bindings>
+    </factory>
 	
-	<configuration>
-		<component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="image1"> <!-- SolARImageLoaderOpencv -->
+    <properties>
+        <configure component="SolARImageLoaderOpencv" name="image1">
 			<property name="filePath" type="string" value="../../data/notredame1.jpg"/>
-		</component>
-		<component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="image2"> <!-- SolARImageLoaderOpencv -->
+        </configure>
+        <configure component="SolARImageLoaderOpencv" name="image2">
 			<property name="filePath" type="string" value="../../data/notredame2.jpg"/>
-		</component>
-		<component uuid="e81c7e4e-7da6-476a-8eba-078b43071272"> <!-- SolARKeypointDetectorOpencv -->
+        </configure>
+        <configure component="SolARKeypointDetectorOpencv" name="AKAZEDescProperties">
 			<property name="type" type="string" value="AKAZE2"/>
 			<property name="imageRatio" type="Float" value="0.5"/>
 			<property name="nbDescriptors" type="Integer" value="1000"/>
-        </component>
-		<component uuid="21238c00-26dd-11e8-b467-0ed5f89f718b"> <!-- SolARDescriptorsExtractorAKAZE2Opencv -->
+        </configure>
+        <configure component="SolARKeypointDetectorOpencv" name="ORBDescProperties">
+            <property name="type" type="string" value="ORB"/>
+            <property name="imageRatio" type="Float" value="0.5"/>
+            <property name="nbDescriptors" type="Integer" value="1000"/>
+        </configure>
+        <configure component="SolARKeypointDetectorOpencv" name="SIFTDescProperties">
+            <property name="type" type="string" value="SIFT"/>
+            <property name="imageRatio" type="Float" value="0.5"/>
+            <property name="nbDescriptors" type="Integer" value="1000"/>
+        </configure>
+        <configure component="SolARKeypointDetectorOpencv">
+            <property name="type" type="string" value="AKAZE2"/>
+            <property name="imageRatio" type="Float" value="0.5"/>
+            <property name="nbDescriptors" type="Integer" value="1000"/>
+        </configure>
+        <configure component="SolARDescriptorsExtractorAKAZE2Opencv">
             <property name="threshold" type="Float" value="3e-4"/>
-        </component>
-		<component uuid="d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9"> <!-- SolARDescriptorMatcherHammingBruteForceOpencv -->
+        </configure>
+        <configure component="SolARDescriptorMatcherHammingBruteForceOpencv">
 			<property name="distanceRatio" type="Float" value="0.9"/>
-		</component>
-		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9"> <!-- SolARMatchesOverlayOpencv -->
+        </configure>
+        <configure component="SolARMatchesOverlayOpencv">
             <property name="thickness" type="UnsignedInteger" value="1"/>
 			<property name="mode" type="string" value="RANDOM"/>
 			<property name="color"  type="UnsignedInteger">
@@ -55,12 +100,24 @@
 				<value>255</value>
 			</property>
 			<property name="maxMatches" type="UnsignedInteger" value="-1"/>	
-        </component>
-		<component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b"> <!-- SolARImageViewerOpencv -->
-			<property name="title" type="string" value="Matches (press esc key to exit)"/>
+        </configure>
+        <configure component="SolARImageViewerOpencv" name="AKAZEViewerProperties">
+            <property name="title" type="string" value="Matches AKAZE2 (press esc key to exit)"/>
 			<property name="exitKey" type="Integer" value="27"/>
 			<property name="width" type="Integer" value="0"/>
 			<property name="height" type="Integer" value="0"/>
-		</component>	
-    </configuration>
+        </configure>
+        <configure component="SolARImageViewerOpencv" name="ORBViewerProperties">
+            <property name="title" type="string" value="Matches ORB (press esc key to exit)"/>
+            <property name="exitKey" type="Integer" value="27"/>
+            <property name="width" type="Integer" value="0"/>
+            <property name="height" type="Integer" value="0"/>
+        </configure>
+        <configure component="SolARImageViewerOpencv" name="SIFTViewerProperties">
+            <property name="title" type="string" value="Matches SIFT (press esc key to exit)"/>
+            <property name="exitKey" type="Integer" value="27"/>
+            <property name="width" type="Integer" value="0"/>
+            <property name="height" type="Integer" value="0"/>
+        </configure>
+    </properties>
 </xpcf-registry>

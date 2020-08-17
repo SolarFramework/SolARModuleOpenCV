@@ -79,12 +79,27 @@ namespace SolAR {
 
         std::vector< std::vector<cv::DMatch> > nn_matches;
         m_matcher.knnMatch(cvDescriptor1, cvDescriptor2, nn_matches,2);
-
+		std::map<uint32_t, std::map<uint32_t, float>> matches21;
         for(unsigned i = 0; i < nn_matches.size(); i++) {
             if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
-                matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
+				matches21[nn_matches[i][0].trainIdx][nn_matches[i][0].queryIdx] = nn_matches[i][0].distance;
             }
         }
+
+		// get best matches to descriptors 2
+		for (auto it_des2 : matches21) {
+			uint32_t idxDes2 = it_des2.first;
+			std::map<uint32_t, float> infoMatch = it_des2.second;
+			uint32_t bestIdxDes1;
+			float bestDistance = FLT_MAX;
+			for (auto it_des1: infoMatch)
+				if (it_des1.second < bestDistance) {
+					bestDistance = it_des1.second;
+					bestIdxDes1 = it_des1.first;
+				}
+			matches.push_back(DescriptorMatch(bestIdxDes1, idxDes2, bestDistance));
+		}
+
         return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;
 
     }
@@ -135,13 +150,25 @@ namespace SolAR {
 
         std::vector< std::vector<cv::DMatch> > nn_matches;
         m_matcher.knnMatch(cvDescriptors1, cvDescriptors2, nn_matches,nbOfMatches);
-
+		std::map<uint32_t, std::map<uint32_t, float>> matches21;
         for(unsigned i = 0; i < nn_matches.size(); i++) {
             if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
-                matches.push_back(DescriptorMatch(nn_matches[i][0].queryIdx, nn_matches[i][0].trainIdx,nn_matches[i][0].distance ));
+				matches21[nn_matches[i][0].trainIdx][nn_matches[i][0].queryIdx] = nn_matches[i][0].distance;
             }
         }
-
+		// get best matches to descriptors 2
+		for (auto it_des2 : matches21) {
+			uint32_t idxDes2 = it_des2.first;
+			std::map<uint32_t, float> infoMatch = it_des2.second;
+			uint32_t bestIdxDes1;
+			float bestDistance = FLT_MAX;
+			for (auto it_des1 : infoMatch)
+				if (it_des1.second < bestDistance) {
+					bestDistance = it_des1.second;
+					bestIdxDes1 = it_des1.first;
+				}
+			matches.push_back(DescriptorMatch(bestIdxDes1, idxDes2, bestDistance));
+		}
         return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK;
 
     }
