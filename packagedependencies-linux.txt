@@ -1,2 +1,1 @@
-libgtk-3-dev|3.22.30|gtk+-3.0|apt-get@system|apt-get
-opencv|4.3.0|opencv|conan|conan-community|default|contrib=True#harfbuzz=False#gflags=False#glog=False#gtk=3
+opencv|4.4.0|opencv|conan-solar@conan|conan-solar|default|gapi=False
