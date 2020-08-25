@@ -1,1 +1,1 @@
-opencv|4.1.1|opencv|thirdParties@github|https://github.com/SolarFramework/binaries/releases/download
+opencv|4.4.0|opencv|conan-solar@conan|conan-solar|default|shared=True#gapi=False#tiff=False

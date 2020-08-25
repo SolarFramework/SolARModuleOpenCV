@@ -86,4 +86,5 @@ include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/remaken_install
 DISTFILES += \
     packagedependencies-linux.txt \
     packagedependencies-mac.txt \
-    packagedependencies-win.txt
+    packagedependencies-win.txt \
+    packagedependencies-android.txt
