@@ -1,7 +1,7 @@
 SolArModulePipeline {
     moduleName="SolARModuleOpenCV"
-    runTests=true
-    makeTarget="install_deps"
-    android=true
     dirName="SolARBuild"
+    makeTarget="install_deps"
+    runTests=true
+    android=true
 }
