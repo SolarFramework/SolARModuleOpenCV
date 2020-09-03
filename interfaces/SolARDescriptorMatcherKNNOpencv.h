@@ -84,7 +84,8 @@ public:
 		const std::vector<SRef<DescriptorBuffer>> & descriptors,
 		const SRef<Frame> frame,
 		std::vector<DescriptorMatch> &matches,
-		const float radius = 3.f
+		const float radius = 0.f,
+		const float matchingDistanceMax = 0.f
 	) override;
 
 
@@ -95,6 +96,9 @@ private:
     /// But here, we can also retain the second match if its distance or score is greater than the score of the best match * m_distanceRatio.
     float m_distanceRatio = 0.75f;
 
+	float m_radius = 5.f;
+
+	float m_matchingDistanceMax = 500.f;
 
     int m_id;
     cv::FlannBasedMatcher m_matcher;
