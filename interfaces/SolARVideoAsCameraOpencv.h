@@ -48,8 +48,11 @@ public:
     void unloadComponent () override final;
 
 private:
-    /// @brief Path to the video file which will be streamed as a camera capture
+    // @brief Path to the video file which will be streamed as a camera capture
     std::string m_videoPath = "";
+
+	// @brief time delay camera between two images
+	int m_delayTime = 30;
 
 };
 
