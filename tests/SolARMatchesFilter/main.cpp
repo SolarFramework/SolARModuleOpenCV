@@ -62,19 +62,15 @@ int main(int argc, char **argv)
     // declare and create components
     LOG_INFO("Start creating components");
 
-    SRef<image::IImageLoader>               image1Loader = xpcfComponentManager->resolve<image::IImageLoader>();
-    image1Loader->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVMatchesFilter_conf.xml", "image1");
-    SRef<image::IImageLoader>               image2Loader = xpcfComponentManager->resolve<image::IImageLoader>();
-    image2Loader->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVMatchesFilter_conf.xml", "image2");
+    SRef<image::IImageLoader>               image1Loader = xpcfComponentManager->resolve<image::IImageLoader>("image1");
+    SRef<image::IImageLoader>               image2Loader = xpcfComponentManager->resolve<image::IImageLoader>("image2");
     SRef<features::IKeypointDetector>       keypointsDetector = xpcfComponentManager->resolve<features::IKeypointDetector>();
     SRef<features::IDescriptorsExtractor>   extractorAKAZE2 = xpcfComponentManager->resolve<features::IDescriptorsExtractor>();
     SRef<features::IDescriptorMatcher>      matcher = xpcfComponentManager->resolve<features::IDescriptorMatcher>();
     SRef<features::IMatchesFilter>          matchesFilterGeometric = xpcfComponentManager->resolve<features::IMatchesFilter>();
     SRef<display::IMatchesOverlay>          overlayMatches = xpcfComponentManager->resolve<display::IMatchesOverlay>();
-    SRef<display::IImageViewer>             viewerWithoutFilter = xpcfComponentManager->resolve<display::IImageViewer>();
-    viewerWithoutFilter->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVMatchesFilter_conf.xml","withoutFilter");
-    SRef<display::IImageViewer>             viewerWithFilter = xpcfComponentManager->resolve<display::IImageViewer>();
-    viewerWithFilter->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVMatchesFilter_conf.xml","withFilter");
+    SRef<display::IImageViewer>             viewerWithoutFilter = xpcfComponentManager->resolve<display::IImageViewer>("withoutFilter");
+    SRef<display::IImageViewer>             viewerWithFilter = xpcfComponentManager->resolve<display::IImageViewer>("withFilter");
 
     /* we need to check that components are well created*/
     if (!image1Loader || !image2Loader || !keypointsDetector || !extractorAKAZE2 || !matcher ||

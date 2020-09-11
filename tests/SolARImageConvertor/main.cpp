@@ -23,9 +23,6 @@
 #include "xpcf/xpcf.h"
 #include "core/Log.h"
 
-// ADD MODULES TRAITS HEADERS HERE
-#include "SolARModuleOpencv_traits.h"
-
 // ADD COMPONENTS HEADERS HERE
 #include "api/image/IImageLoader.h"
 #include "api/image/IImageConvertor.h"
@@ -36,7 +33,6 @@ using namespace std;
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
-using namespace SolAR::MODULES::OPENCV;
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -66,7 +62,7 @@ int main(int argc, char **argv)
     auto imageLoader = xpcfComponentManager->resolve<image::IImageLoader>();
     auto convertor = xpcfComponentManager->resolve<image::IImageConvertor>();
     auto viewer = xpcfComponentManager->resolve<display::IImageViewer>();
-	auto viewerLUT = xpcfComponentManager->create<SolARImageViewerOpencv>("LUT")->bindTo<display::IImageViewer>();
+	auto viewerLUT = xpcfComponentManager->resolve<display::IImageViewer>("LUT");
 
     if (!imageLoader || !convertor || !viewer || !viewerLUT)
     {

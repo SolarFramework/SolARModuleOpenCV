@@ -55,10 +55,8 @@ int main(int argc, char *argv[])
         LOG_INFO("Start creating components");
 
         SRef<image::IImageLoader> imageLoader = xpcfComponentManager->resolve<image::IImageLoader>();
-        SRef<display::IImageViewer> viewerConfImage = xpcfComponentManager->resolve<display::IImageViewer>(); //create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>("confImage")->bindTo<display::IImageViewer>();
-        viewerConfImage->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVImageLoader_conf.xml", "confImage"); //Temporary solution pending xpcf 2.3.0
-        SRef<display::IImageViewer> viewerParamImage = xpcfComponentManager->resolve<display::IImageViewer>(); //create<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>("paramImage")->bindTo<display::IImageViewer>();
-        viewerParamImage->bindTo<xpcf::IConfigurable>()->configure("SolAROpenCVImageLoader_conf.xml", "paramImage"); //Temporary solution pending xpcf 2.3.0
+        SRef<display::IImageViewer> viewerConfImage = xpcfComponentManager->resolve<display::IImageViewer>("confImage");
+        SRef<display::IImageViewer> viewerParamImage = xpcfComponentManager->resolve<display::IImageViewer>("paramImage");
 
         if (!imageLoader || !viewerConfImage || !viewerParamImage)
         {
