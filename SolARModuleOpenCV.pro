@@ -24,7 +24,7 @@ CONFIG(release,debug|release) {
     DEFINES += NDEBUG=1
 }
 
-DEPENDENCIESCONFIG = shared recursive install_recurse
+DEPENDENCIESCONFIG = shared install_recurse
 
 ## Configuration for Visual Studio to install binaries and dependencies. Work also for QT Creator by replacing QMAKE_INSTALL
 PROJECTCONFIG = QTVS
@@ -64,7 +64,6 @@ win32 {
 }
 
 android {
-    QMAKE_LFLAGS += -nostdlib++
     ANDROID_ABIS="arm64-v8a"
 }
 
