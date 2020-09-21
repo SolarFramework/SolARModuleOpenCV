@@ -1,11 +1,3 @@
-*.user
-
-*-Debug
-
-*-Release
-
-*.vcxproj*
-
 # Prerequisites
 *.d
 
@@ -14,8 +6,7 @@
 *.lo
 *.o
 *.obj
-
-.\build
+build/
 
 # Precompiled Headers
 *.gch
@@ -36,22 +27,6 @@
 *.a
 *.lib
 
-# Executables
-*.exe
-*.out
-*.app
-
-#others
-*.*pre1
-*.rej
-*.stash
-*.rc
-*.res
-*.exp
-*.ilk
-*.pdb
-*.autosave
-
 # Visual Studio files
 *.ib_pdb_index
 *.idb
@@ -61,6 +36,9 @@
 *.suo
 *.vcproj
 *vcproj.*.*.user
+*.vcxproj*
+*.user
+*.user.*
 *.ncb
 *.sdf
 *.opensdf
@@ -74,29 +52,39 @@ Debug/
 Release/
 *-packagedependencies.*
 *-packagedependencies-win.*
+*-packagedependencies-linux.*
+*-packagedependencies-unix.*
+*-packagedependencies-android.*
 *.pc
+*-Debug
+*-Release
 
-# generated documentation
+# Executables
+*.exe
+*.out
+*.app
+
+# Generated documentation
 doc/ 
+doxygen/
 
+# Tests builds
+tests/bin
+
+# Others
+*.*pre1
+*.rej
+*.stash
+*.rc
+*.res
+*.exp
+*.ilk
+*.pdb
+*.autosave
+*.project
+*.props
 *.log
 *.tlog
 *.TMP
 *.tmp
-
-tests/bin
-
-build/
-
-*InstallDependencies.bat
-*debug.bat
-*release.bat
-*remakeninfo.txt
-*.pc
-
-interfaces/SolARModuleOpencv_traits.h.bak
-interfaces/SolAROpticalFlowPyrLKOpencv.h.bak
-interfaces/SolARPoseFinderFrom2D2DOpencv.h.bak
-Makefile
-Makefile.Debug
-Makefile.Release
+.git Merge

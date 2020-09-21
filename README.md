@@ -1,8 +1,6 @@
 # SolARModuleOpenCV
 
 [![License](https://img.shields.io/github/license/SolARFramework/SolARModuleOpencv?style=flat-square&label=License)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Build Status](http://argo.ci.b-com.com/buildStatus/icon?job=SolAR-Modules%2FSolARModuleOpenCV%2Fmaster&style=flat-square&subject=Master)](http://argo.ci.b-com.com/job/SolAR-Modules/job/SolARModuleOpenCV/job/master/)
-[![Build Status](http://argo.ci.b-com.com/buildStatus/icon?job=SolAR-Modules%2FSolARModuleOpenCV%2Fdevelop&style=flat-square&subject=Dev)](http://argo.ci.b-com.com/job/SolAR-Modules/job/SolARModuleOpenCV/job/develop/)
 
 **SolARModuleOpenCV** is a module based on [OpenCV](https://opencv.org/), which is a library of programming functions mainly aimed at real-time computer vision. The library is cross-platform and free for use under the open-source [BSD license](http://www.linfo.org/bsdlicense.html).
 
