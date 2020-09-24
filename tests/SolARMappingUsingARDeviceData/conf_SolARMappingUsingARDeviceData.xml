@@ -202,6 +202,7 @@
 			<bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorAKAZE2Opencv" />
 			<bind interface="IDescriptorMatcher" to="SolARDescriptorMatcherKNNOpencv" />
 			<bind name="Matcher-Mapping" interface="IDescriptorMatcher" to="SolARDescriptorMatcherKNNOpencv" />
+			<bind name="Matcher-Fiducial" interface="IDescriptorMatcher" to="SolARDescriptorMatcherRadiusOpencv" />
 			<bind interface="IMapper" to="SolARMapper" scope="Singleton"/>
 			<bind interface="IPointCloudManager" to="SolARPointCloudManager" scope="Singleton"/>
 			<bind interface="IKeyframesManager" to="SolARKeyframesManager" scope="Singleton"/>
@@ -213,7 +214,7 @@
     <properties>
         <configure component="SolARDeviceDataLoader">
 			<property name="calibrationFile" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\hololens_calibration.yml"/>
-			<property name="pathToData" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\short_test_08092020"/>
+			<property name="pathToData" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\one_lab_scale_24092020_092335"/>
 			<property name="delayTime" type="Integer" value="10"/>
 		</configure>
 		<configure component="SolARSLAMMapping">
@@ -235,7 +236,7 @@
 			<property name="imageRatio" type="Float" value="1.0"/>
 			<property name="nbDescriptors" type="Integer" value="2000"/>
 			<property name="nbOctaves" type="Integer" value="3"/>
-			<property name="threshold" type="Float" value="0.0005"/>
+			<property name="threshold" type="Float" value="0.00001"/>
 		</configure>
 		<configure component="SolARDescriptorsExtractorAKAZEOpencv">
 			<property name="threshold" type="Float" value="3e-4"/>
@@ -271,17 +272,17 @@
 		<configure component="SolARMapFilter">
 			<property name="reprojErrorThreshold" type="float" value="3.0"/>
 			<property name="minTriangulationAngle" type="float" value="0.005"/>
-			<property name="maxTriangulationAngle" type="float" value="0.5"/>
+			<property name="maxTriangulationAngle" type="float" value="1.0"/>
 			<property name="cheiralityCheck" type="integer" value ="1"/>
 		</configure>
 		<configure component="SolARKeyframeSelector">
-			<property name="minNbMatchesIsKeyframe" type="Integer" value="10"/>
-			<property name="minMeanDistanceIsKeyframe" type="Float" value="0.03"/>			
+			<property name="minNbMatchesIsKeyframe" type="Integer" value="5"/>
+			<property name="minMeanDistanceIsKeyframe" type="Float" value="0.04"/>			
 		</configure>
 		<configure component="SolARKeyframeRetrieverFBOW">
 			<property name="VOCpath" type="String" value="akaze.fbow"/>
-			<property name="threshold" type="Float" value="0.01"/>
-			<property name="level" type="Integer" value="4"/>
+			<property name="threshold" type="Float" value="0.03"/>
+			<property name="level" type="Integer" value="6"/>
 			<property name="matchingDistanceRatio" type="Float" value="0.9"/>
 			<property name="matchingDistanceMax" type="Float" value="1000"/>
 		</configure>
@@ -314,11 +315,13 @@
 			</property>
 		</configure>
 		<configure component="SolAROptimizationG2O">
-			<property name="nbIterations" type="Integer" value="10"/>
+			<property name="nbIterationsLocal" type="Integer" value="10"/>
+			<property name="nbIterationsGlobal" type="Integer" value="20"/>
 			<property name="setVerbose" type="Integer" value="0"/>
 			<property name="nbMaxFixedKeyframes" type="Integer" value="20"/>
 			<property name="errorOutlier" type="Float" value="3.0"/>
 			<property name="useSpanningTree" type="Integer" value="0"/>
+			<property name="isRobust" type="Integer" value="1"/>
 		</configure>
 		<configure component="SolARImageViewerOpencv">
 			<property name="title" type="string" value="Sample AR Device Loader"/>
@@ -338,9 +341,9 @@
 				<value>0.0</value>
 			</property>
 			<property name="size" type="Float">
-				<value>0.1</value>
-				<value>0.1</value>
-				<value>0.1</value>
+				<value>0.185</value>
+				<value>0.185</value>
+				<value>0.185</value>
 			</property>
 		</configure>
 		<configure component="SolAR3DPointsViewerOpengl">
@@ -382,6 +385,30 @@
 			</property>
 			<property name="zoomSensitivity" type="Float" value="10.0"/>
 			<property name="exitKey" type="Integer" value="27"/>
+		</configure>
+		<configure component="SolARFiducialMarkerPoseEstimator">
+			<property name="nbThreshold" type="Integer" value="3"/>
+			<property name="minThreshold" type="Integer" value="-1"/>
+			<property name="maxThreshold" type="Integer" value="220"/>
+		</configure>
+		<configure component="SolARMarker2DSquaredBinaryOpencv">
+				<property name="filePath" type="string" value="fiducialMarker.yml" description="Path of the .yml file describing the fiducial marker."/>
+		</configure>	
+		<configure component="SolARImageFilterBinaryOpencv">
+			<property name="min" type="Integer" value="-1" description="minimum threshold (-1 to automatically compute it on the global image"/>
+			<property name="max" type="Integer" value="255" description="maximum threshold"/>
+		</configure>
+		<configure component="SolARContoursExtractorOpencv">
+			<property name="minContourEdges" type="Integer" value="4" description="Minimum number of edge to validate a contour (default = 4)" />
+		</configure>
+		<configure component="SolARContoursFilterBinaryMarkerOpencv">
+			<property name="epsilon" type="Float" value="0.05" description="The maximum distance between the original curve and its approximation (default = 0.05)"/>
+			<property name="minContourLength" type="Float" value="20.0" description="The minimum length of an edge of the contour in pixels to be considered as valid (default = 20)."/>
+			<property name="minDistanceBetweenContourCorners" type="Float" value="10.0" description="The minimum average distance in pixels between corners of a contour and the same corners of another contour to consider the contour as valid (default = 10)"/>
+		</configure>
+		<configure component="SolARPerspectiveControllerOpencv">
+			<property name="outputImageWidth" type="Integer" value="640" description="The width in pixels of the corrected image."/>
+			<property name="outputImageHeight" type="Integer" value="480" description="The width in pixels of the corrected image."/>
 		</configure>
     </properties>
 </xpcf-registry>

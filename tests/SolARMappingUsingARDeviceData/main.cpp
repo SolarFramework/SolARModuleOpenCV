@@ -40,12 +40,14 @@
 #include "api/loop/ILoopCorrector.h"
 #include "api/slam/IBootstrapper.h"
 #include "api/slam/IMapping.h"
+#include "api/solver/pose/IFiducialMarkerPose.h"
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
-
 namespace xpcf  = org::bcom::xpcf;
+
+#define INDEX_USE_CAMERA 0
 
 int main(int argc, char *argv[])
 {
@@ -91,6 +93,7 @@ int main(int argc, char *argv[])
 		auto loopDetector = xpcfComponentManager->resolve<loop::ILoopClosureDetector>();
 		auto loopCorrector = xpcfComponentManager->resolve<loop::ILoopCorrector>();
 		auto mapping = xpcfComponentManager->resolve<slam::IMapping>();
+		auto fiducialMarkerPoseEstimator = xpcfComponentManager->resolve<solver::pose::IFiducialMarkerPose>();
 		LOG_INFO("Components created!");
 
 		LOG_INFO("Start AR device loader");
@@ -110,9 +113,12 @@ int main(int argc, char *argv[])
 		loopDetector->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		loopCorrector->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		mapping->setCameraParameters(camParams.intrinsic, camParams.distortion);
+		fiducialMarkerPoseEstimator->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		LOG_DEBUG("Loaded intrinsics \n{}\n\n{}", camParams.intrinsic, camParams.distortion);
 
-		// Bootstrap
+		// Correct pose and Bootstrap
+		Transform3Df T_M_W = Transform3Df::Identity();
+		bool isFoundTransform = false;
 		SRef<Keyframe> keyframe1, keyframe2;
 		if (mapper->loadFromFile() == FrameworkReturnCode::_SUCCESS) {
 			LOG_INFO("Load map done!");
@@ -131,12 +137,30 @@ int main(int argc, char *argv[])
 					LOG_ERROR("Error during capture");
 					break;
 				}
-				std::vector<Keypoint> keypoints;
-				SRef<Image> image = images[0];
+				SRef<Image> image = images[INDEX_USE_CAMERA];
+				Transform3Df pose = poses[INDEX_USE_CAMERA];
+
+				// find T_W_M
+				if (!isFoundTransform) {
+					if (imageViewer->display(image) == SolAR::FrameworkReturnCode::_STOP)
+						break;
+					Transform3Df T_M_C;
+					if (fiducialMarkerPoseEstimator->estimate(image, T_M_C) == FrameworkReturnCode::_SUCCESS) {
+						T_M_W = T_M_C * pose.inverse();
+						isFoundTransform = true;
+					}
+					else
+						continue;
+				}				
+
+				// correct pose
+				pose = T_M_W * pose;
+
+				std::vector<Keypoint> keypoints;				
 				keypointsDetector->detect(image, keypoints);
 				SRef<DescriptorBuffer> descriptors;
 				descriptorExtractor->extract(image, keypoints, descriptors);
-				SRef<Frame> frame = xpcf::utils::make_shared<Frame>(keypoints, descriptors, image, poses[0]);				
+				SRef<Frame> frame = xpcf::utils::make_shared<Frame>(keypoints, descriptors, image, pose);				
 
 				if (!initFrame1) {
 					initFrame1 = true;
@@ -193,6 +217,8 @@ int main(int argc, char *argv[])
 		SRef<Keyframe> refKeyframe = keyframe2;
 		while (true)
 		{
+			LOG_INFO("==========================================");
+			LOG_INFO("Ref keyframe id: {}", refKeyframe->getId());
 			// get data
 			std::vector<SRef<Image>> images;
 			std::vector<Transform3Df> poses;
@@ -201,20 +227,25 @@ int main(int argc, char *argv[])
 				LOG_ERROR("Error during capture");
 				break;
 			}
+			SRef<Image> image = images[INDEX_USE_CAMERA];
+			Transform3Df pose = poses[INDEX_USE_CAMERA];
 
-			// feature extraction image 0
+			// correct pose
+			pose = T_M_W * pose;
+
+			// feature extraction image
 			std::vector<Keypoint> keypoints;
-			SRef<Image> image = images[0];
 			keypointsDetector->detect(image, keypoints);
+			LOG_INFO("Number of keypoints: {}", keypoints.size());
 			SRef<DescriptorBuffer> descriptors;
 			descriptorExtractor->extract(image, keypoints, descriptors);
-			SRef<Frame> frame = xpcf::utils::make_shared<Frame>(keypoints, descriptors, image, refKeyframe, poses[0]);
-			framePoses.push_back(poses[0]);
+			SRef<Frame> frame = xpcf::utils::make_shared<Frame>(keypoints, descriptors, image, refKeyframe, pose);
+			framePoses.push_back(pose);
 			// feature matching to reference keyframe
 			std::vector<DescriptorMatch> matches;
 			matcher->match(refKeyframe->getDescriptors(), descriptors, matches);
 			matchesFilter->filter(matches, matches, refKeyframe->getKeypoints(), keypoints);
-			matchesFilter->filter(matches, matches, refKeyframe->getKeypoints(), keypoints, refKeyframe->getPose(), frame->getPose(), camParams.intrinsic);
+			LOG_INFO("Number of matches: {}", matches.size());
 
 			// update visibilities of current frame
 			std::map<uint32_t, uint32_t> newMapVisibility;
