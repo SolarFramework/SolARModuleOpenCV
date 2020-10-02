@@ -17,6 +17,10 @@
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" name="IDescriptorsExtractor" description="IDescriptorsExtractor"/>
 		</component>
+		<component uuid="3787eaa6-d0a0-11e7-8fab-cec278b6b50a" name="SolARDescriptorsExtractorSIFTOpencv" description="SolARDescriptorsExtractorSIFTOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" name="IDescriptorsExtractor" description="IDescriptorsExtractor"/>
+        </component>
 		<component uuid="7823dac8-1597-41cf-bdef-59aa22f3d40a" name="SolARDescriptorMatcherKNNOpencv" description="SolARDescriptorMatcherKNNOpencv">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
@@ -200,6 +204,7 @@
 	<factory>
 		<bindings>
 			<bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorAKAZE2Opencv" />
+			<!--bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorSIFTOpencv"/-->
 			<bind interface="IDescriptorMatcher" to="SolARDescriptorMatcherKNNOpencv" />
 			<bind name="Matcher-Mapping" interface="IDescriptorMatcher" to="SolARDescriptorMatcherKNNOpencv" />
 			<bind name="Matcher-Fiducial" interface="IDescriptorMatcher" to="SolARDescriptorMatcherRadiusOpencv" />
@@ -214,11 +219,11 @@
     <properties>
         <configure component="SolARDeviceDataLoader">
 			<property name="calibrationFile" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\hololens_calibration.yml"/>
-			<property name="pathToData" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\one_lab_scale_24092020_092335"/>
-			<property name="delayTime" type="Integer" value="10"/>
+			<property name="pathToData" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\three_room_scale_24092020_090023"/>
+			<property name="delayTime" type="Integer" value="1"/>
 		</configure>
 		<configure component="SolARSLAMMapping">
-			<property name="minWeightNeighbor" type="Float" value="20.0"/>
+			<property name="minWeightNeighbor" type="Float" value="15.0"/>
 			<property name="minTrackedPoints" type="Integer" value="100"/>
 		</configure>
 		<configure component="SolARMapper">
@@ -235,8 +240,8 @@
 			<property name="type" type="string" value="AKAZE2"/>
 			<property name="imageRatio" type="Float" value="1.0"/>
 			<property name="nbDescriptors" type="Integer" value="2000"/>
-			<property name="nbOctaves" type="Integer" value="3"/>
-			<property name="threshold" type="Float" value="0.00001"/>
+			<property name="nbOctaves" type="Integer" value="4"/>
+			<property name="threshold" type="Float" value="0.0001"/>
 		</configure>
 		<configure component="SolARDescriptorsExtractorAKAZEOpencv">
 			<property name="threshold" type="Float" value="3e-4"/>
@@ -247,9 +252,13 @@
 		<configure component="SolARDescriptorsExtractorORBOpencv">
 			<property name="threshold" type="Float" value="3e-4"/>
 		</configure>
+		<configure component="SolARDescriptorsExtractorSIFTOpencv">
+            <property name="nbFeatures" type="Integer" value="2000"/>
+            <property name="nbOctaveLayers" type="Integer" value="4"/>
+        </configure>
 		<configure component="SolARDescriptorMatcherKNNOpencv">
 			<property name="distanceRatio" type="Float" value="0.8"/>
-			<property name="radius" type="Float" value="10"/>
+			<property name="radius" type="Float" value="15"/>
 			<property name="matchingDistanceMax" type="Float" value="600"/>
 		</configure>
 		<configure component="SolARDescriptorMatcherHammingBruteForceOpencv">
@@ -260,7 +269,7 @@
 		</configure>
 		<configure component="SolARGeometricMatchesFilterOpencv">
 			<property name="confidence" type="Float" value="0.99"/>
-			<property name="outlierDistanceRatio" type="Float" value="0.005"/>
+			<property name="outlierDistanceRatio" type="Float" value="0.003"/>
 			<property name="epilinesDistance" type="Float" value="3.0"/>
 		</configure>
 		<configure component="SolARPoseEstimationSACPnpOpencv">
@@ -271,7 +280,7 @@
 		</configure>
 		<configure component="SolARMapFilter">
 			<property name="reprojErrorThreshold" type="float" value="3.0"/>
-			<property name="minTriangulationAngle" type="float" value="0.005"/>
+			<property name="minTriangulationAngle" type="float" value="0.02"/>
 			<property name="maxTriangulationAngle" type="float" value="1.0"/>
 			<property name="cheiralityCheck" type="integer" value ="1"/>
 		</configure>
@@ -282,9 +291,9 @@
 		<configure component="SolARKeyframeRetrieverFBOW">
 			<property name="VOCpath" type="String" value="akaze.fbow"/>
 			<property name="threshold" type="Float" value="0.03"/>
-			<property name="level" type="Integer" value="6"/>
+			<property name="level" type="Integer" value="4"/>
 			<property name="matchingDistanceRatio" type="Float" value="0.9"/>
-			<property name="matchingDistanceMax" type="Float" value="1000"/>
+			<property name="matchingDistanceMax" type="Float" value="600"/>
 		</configure>
 		<configure component="SolAR3DTransformEstimationSACFrom3D3D">
 			<property name="iterationsCount" type="Integer" value="500"/>
@@ -321,13 +330,13 @@
 			<property name="nbMaxFixedKeyframes" type="Integer" value="20"/>
 			<property name="errorOutlier" type="Float" value="3.0"/>
 			<property name="useSpanningTree" type="Integer" value="0"/>
-			<property name="isRobust" type="Integer" value="1"/>
+			<property name="isRobust" type="Integer" value="0"/>
 		</configure>
 		<configure component="SolARImageViewerOpencv">
 			<property name="title" type="string" value="Sample AR Device Loader"/>
 			<property name="exitKey" type="Integer" value="27"/>
-			<property name="width" type="Integer" value="0"/>
-			<property name="height" type="Integer" value="0"/>
+			<property name="width" type="Integer" value="700"/>
+			<property name="height" type="Integer" value="400"/>
 		</configure>
 		<configure component="SolAR3DOverlayBoxOpencv">
 			<property name="position" type="Float">

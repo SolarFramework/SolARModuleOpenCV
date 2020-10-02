@@ -32,6 +32,7 @@
 #include "api/solver/map/ITriangulator.h"
 #include "api/solver/map/IMapFilter.h"
 #include "api/solver/map/IBundler.h"
+#include "api/geom/IProject.h"
 #include "api/reloc/IKeyframeRetriever.h"
 #include "api/storage/ICovisibilityGraph.h"
 #include "api/storage/IKeyframesManager.h"
@@ -87,6 +88,7 @@ int main(int argc, char *argv[])
 		auto matcher = xpcfComponentManager->resolve<features::IDescriptorMatcher>();
 		auto keyframeSelector = xpcfComponentManager->resolve<solver::map::IKeyframeSelector>();
 		auto triangulator = xpcfComponentManager->resolve<api::solver::map::ITriangulator>();
+		auto projector = xpcfComponentManager->resolve<api::geom::IProject>();
 		auto mapFilter = xpcfComponentManager->resolve<api::solver::map::IMapFilter>();
 		auto bundler = xpcfComponentManager->resolve<api::solver::map::IBundler>();
 		auto matchesFilter = xpcfComponentManager->resolve<features::IMatchesFilter>(); ;
@@ -114,6 +116,7 @@ int main(int argc, char *argv[])
 		loopCorrector->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		mapping->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		fiducialMarkerPoseEstimator->setCameraParameters(camParams.intrinsic, camParams.distortion);
+		projector->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		LOG_DEBUG("Loaded intrinsics \n{}\n\n{}", camParams.intrinsic, camParams.distortion);
 
 		// Correct pose and Bootstrap
@@ -200,7 +203,7 @@ int main(int argc, char *argv[])
 							keyframeRetriever->addKeyframe(keyframe1);
 							keyframeRetriever->addKeyframe(keyframe2);
 							// apply bundle adjustement 
-							double bundleReprojError = bundler->bundleAdjustment(camParams.intrinsic, camParams.distortion);
+							//double bundleReprojError = bundler->bundleAdjustment(camParams.intrinsic, camParams.distortion);
 							bootstrapOk = true;
 						}
 						else {
@@ -212,9 +215,17 @@ int main(int argc, char *argv[])
 		}
 		LOG_INFO("Number of initial point cloud: {}", pointCloudManager->getNbPoints());
 
+		std::vector<SRef<CloudPoint>> localMap;
+		// update local point cloud
+		auto updateLocalMap=[&](const SRef<Keyframe> &referenceKeyframe){
+			localMap.clear();			
+			mapper->getLocalPointCloud(referenceKeyframe, 10, localMap);
+		};
+
         // Mapping
 		std::vector<Transform3Df>   framePoses;
 		SRef<Keyframe> refKeyframe = keyframe2;
+		updateLocalMap(refKeyframe);
 		while (true)
 		{
 			LOG_INFO("==========================================");
@@ -241,16 +252,24 @@ int main(int argc, char *argv[])
 			descriptorExtractor->extract(image, keypoints, descriptors);
 			SRef<Frame> frame = xpcf::utils::make_shared<Frame>(keypoints, descriptors, image, refKeyframe, pose);
 			framePoses.push_back(pose);
-			// feature matching to reference keyframe
+			// feature matching to reference keyframe			
 			std::vector<DescriptorMatch> matches;
 			matcher->match(refKeyframe->getDescriptors(), descriptors, matches);
 			matchesFilter->filter(matches, matches, refKeyframe->getKeypoints(), keypoints);
-			LOG_INFO("Number of matches: {}", matches.size());
+			//matchesFilter->filter(matches, matches, refKeyframe->getKeypoints(), keypoints, refKeyframe->getPose(), pose, camParams.intrinsic);
+			float maxMatchDistance = -FLT_MAX;
+			for (const auto &it : matches) {
+				float score = it.getMatchingScore();
+				if (score > maxMatchDistance)
+					maxMatchDistance = score;
+			}
 
-			// update visibilities of current frame
-			std::map<uint32_t, uint32_t> newMapVisibility;
+			// Find 2D-3D correspondences
+			std::map<unsigned int, unsigned int> newMapVisibility;
 			std::map<uint32_t, uint32_t> refKfVisibility = refKeyframe->getVisibility();
 			std::vector<Point2Df> pts2d;
+			std::vector<Point3Df> pts3d;
+			std::set<uint32_t> idxCPSeen;
 			for (auto &it_match : matches) {
 				int idKpFrame = it_match.getIndexInDescriptorB();
 				int idKpRefKf = it_match.getIndexInDescriptorA();
@@ -258,6 +277,41 @@ int main(int argc, char *argv[])
 				if (itCP != refKfVisibility.end()) {
 					newMapVisibility[idKpFrame] = itCP->second;
 					pts2d.push_back(Point2Df(keypoints[idKpFrame].getX(), keypoints[idKpFrame].getY()));
+					idxCPSeen.insert(itCP->second);
+				}
+			}			
+			LOG_INFO("Number of matches: {}", matches.size());
+			LOG_INFO("Max matching score distance: {}", maxMatchDistance);
+			LOG_INFO("Number of 2D-3D corr: {}", newMapVisibility.size());
+
+			// Find more 2D-3D correspondences by projecting local map
+			//  projection points
+			std::vector<SRef<CloudPoint>> localMapUnseen;
+			for (auto &it_cp : localMap)
+				if (idxCPSeen.find(it_cp->getId()) == idxCPSeen.end())
+					localMapUnseen.push_back(it_cp);
+			LOG_INFO("Local map points: {}", localMap.size());
+			LOG_INFO("Local unseen map points: {}", localMapUnseen.size());
+			std::vector< Point2Df > projected2DPts;
+			projector->project(localMapUnseen, projected2DPts, pose);
+
+			// find more inlier matches
+			std::vector<SRef<DescriptorBuffer>> desAllLocalMap;
+			for (auto &it_cp : localMap) {
+				desAllLocalMap.push_back(it_cp->getDescriptor());
+			}
+			std::vector<DescriptorMatch> allMatches;
+			matcher->matchInRegion(projected2DPts, desAllLocalMap, frame, allMatches, 0, maxMatchDistance);
+			LOG_INFO("Number of matches reprojection: {}", allMatches.size());
+			// find visibility of new frame					
+			for (auto &it_match : allMatches) {
+				int idx_2d = it_match.getIndexInDescriptorB();
+				int idx_3d = it_match.getIndexInDescriptorA();
+				auto it2d = newMapVisibility.find(idx_2d);
+				if (it2d != newMapVisibility.end()) {
+					pts2d.push_back(Point2Df(keypoints[idx_2d].getX(), keypoints[idx_2d].getY()));
+					pts3d.push_back(Point3Df(localMap[idx_3d]->getX(), localMap[idx_3d]->getY(), localMap[idx_3d]->getZ()));
+					newMapVisibility[idx_2d] = localMap[idx_3d]->getId();
 				}
 			}
 			frame->addVisibilities(newMapVisibility);
@@ -270,7 +324,11 @@ int main(int argc, char *argv[])
 			// update reference keyframe
 			if (keyframe) {
 				refKeyframe = keyframe;
+				updateLocalMap(refKeyframe);
 			}
+
+			// map pruning
+			mapper->pruning(localMap);
 
 			// draw pose
 			SRef<Image> displayImage = image->copy();
@@ -290,7 +348,7 @@ int main(int argc, char *argv[])
 			std::vector<SRef<CloudPoint>> pointCloud;
 			pointCloudManager->getAllPoints(pointCloud);
 			// display point cloud 
-			if (viewer3D->display(pointCloud, frame->getPose(), keyframePoses, framePoses) == FrameworkReturnCode::_STOP)
+			if (viewer3D->display(pointCloud, frame->getPose(), keyframePoses, framePoses, localMap) == FrameworkReturnCode::_STOP)
 				break;
         }
     }

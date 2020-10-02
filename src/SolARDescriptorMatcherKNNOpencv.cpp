@@ -227,7 +227,7 @@ namespace SolAR {
 			if ((points2D[idx].getX() > 0) && (points2D[idx].getX() < imgWidth) && (points2D[idx].getY() > 0) && (points2D[idx].getY() < imgHeight)) {
 				std::vector<float> dists;
 				std::vector<float> query = { points2D[idx].getX(), points2D[idx].getY() };
-				kdtree.radiusSearch(query, idxCandidates, dists, radiusValue, 10);
+				kdtree.radiusSearch(query, idxCandidates, dists, radiusValue, 30);
 			}
 
 			if (idxCandidates.size() > 0) {
@@ -235,6 +235,8 @@ namespace SolAR {
 				float bestDist2 = std::numeric_limits<float>::max();
 				int bestIdx = -1;
 				for (auto &it_des: idxCandidates) {
+					if (it_des == 0)
+						continue;
 					float dist = cv::norm(it, cvDescriptorFrame.row(it_des), cv::NORM_L2);
 					if (dist < bestDist)
 					{
@@ -247,7 +249,6 @@ namespace SolAR {
 						bestDist2 = dist;
 					}
 				}
-
 				if ((bestIdx != -1) && (bestDist < matchingDistanceMaxValue) && (bestDist < m_distanceRatio * bestDist2) && (checkMatches[bestIdx])) {
 					matches.push_back(DescriptorMatch(idx, bestIdx, bestDist));
 					checkMatches[bestIdx] = false;

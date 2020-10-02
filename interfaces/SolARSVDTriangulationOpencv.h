@@ -26,6 +26,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include "datastructure/DescriptorBuffer.h"
+#include "api/geom/IProject.h"
 
 #include <vector>
 
@@ -49,33 +50,33 @@ public:
     ///@brief SolARSVDTriangulationOpencv destructor.
    ~SolARSVDTriangulationOpencv() override;
 
-    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
+    /// @brief this method is used to set intrinsic parameters and distortion of the camera
     /// @param[in] Camera calibration matrix parameters.
-    /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams)  override;
+    /// @param[in] Camera distortion parameters.
+    void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distortionParams)  override;
 
     /// @brief Convert  the point cloud to opencv structure for CV processing.
     /// @param[in] Set of triangulated 3d_points.
     /// @return Set of triangulated 3d_points expressed with opencv data structure.
-    double getReprojectionErrorCloud(const std::vector<SRef<CloudPoint>> & original);
+    float getReprojectionErrorCloud(const std::vector<SRef<CloudPoint>> & original);
 
    /// @brief Triangulates two homogeneous 2d_points {u,v,1.0} in an iterative way based on SVD linear system solving.
     /// @param[in] First homogeneous 2d_point.
     /// @param[in] Second homogeneous 2d_point.
     /// @return Triangulated homogeneous 3d_point.
-    cv::Mat_<double> iterativeLinearTriangulation(const cv::Point3d & u1,
-                                                  const cv::Mat & P1,
-                                                  const cv::Point3d & u2,
-                                                  const cv::Mat & P2);
+    cv::Mat iterativeLinearTriangulation(const cv::Point3f & u1,
+                                        const cv::Mat & P1,
+                                        const cv::Point3f & u2,
+                                        const cv::Mat & P2);
 
     /// @brief Triangulates two homogeneous 2d_points {u,v,1.0} based on SVD linear system solving (AX=0) from "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997.
     /// @param[in] First homogeneous 2d_point.
     /// @param[in] Second homogeneous 2d_point.
     /// @return Triangulated homogeneous 3d_point.
-    cv::Mat_<double> linearTriangulation(const cv::Point3d & u1,
-                                         const cv::Mat & P1,
-                                         const cv::Point3d & u2,
-                                         const cv::Mat & P2);
+    cv::Mat linearTriangulation(const cv::Point3f & u1,
+                                const cv::Mat & P1,
+                                const cv::Point3f & u2,
+                                const cv::Mat & P2);
 
     /// @brief triangulate pairs of points 2d captured from two views with differents poses (with respect to the camera instrinsic parameters).
     /// @param[in] pointsView1, set of 2D points seen in view_1.
@@ -145,12 +146,11 @@ public:
 
  private:
     // Camera calibration matrix
-    cv::Mat_<double> m_camMatrix;
-    // inverse of the Camera calibration matrix
-    cv::Mat_<double> m_Kinv;
+    cv::Mat m_camMatrix;
     // Camera distortion parameters
-    cv::Mat_<double> m_camDistorsion;
-
+    cv::Mat m_camDistortion;
+	// projector
+	SRef<api::geom::IProject> m_projector;
 };
 
 }
