@@ -100,3 +100,4 @@ interfaces/SolARPoseFinderFrom2D2DOpencv.h.bak
 Makefile
 Makefile.Debug
 Makefile.Release
+*aps
