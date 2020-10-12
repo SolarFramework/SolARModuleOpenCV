@@ -29,7 +29,6 @@
 #include "api/features/IMatchesFilter.h"
 #include "api/solver/map/IMapper.h"
 #include "api/solver/map/IKeyframeSelector.h"
-#include "api/solver/map/ITriangulator.h"
 #include "api/solver/map/IMapFilter.h"
 #include "api/solver/map/IBundler.h"
 #include "api/geom/IProject.h"
@@ -88,7 +87,6 @@ int main(int argc, char *argv[])
 		auto descriptorExtractor = xpcfComponentManager->resolve<features::IDescriptorsExtractor>();
 		auto matcher = xpcfComponentManager->resolve<features::IDescriptorMatcher>();
 		auto keyframeSelector = xpcfComponentManager->resolve<solver::map::IKeyframeSelector>();
-		auto triangulator = xpcfComponentManager->resolve<api::solver::map::ITriangulator>();
 		auto projector = xpcfComponentManager->resolve<api::geom::IProject>();
 		auto mapFilter = xpcfComponentManager->resolve<api::solver::map::IMapFilter>();
 		auto bundler = xpcfComponentManager->resolve<api::solver::map::IBundler>("BundleFixedKeyframes");
@@ -112,7 +110,6 @@ int main(int argc, char *argv[])
 		CameraParameters camParams;
 		camParams = arDevice->getParameters(0);
 		overlay3D->setCameraParameters(camParams.intrinsic, camParams.distortion);
-		triangulator->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		loopDetector->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		loopCorrector->setCameraParameters(camParams.intrinsic, camParams.distortion);
 		bootstrapper->setCameraParameters(camParams.intrinsic, camParams.distortion);

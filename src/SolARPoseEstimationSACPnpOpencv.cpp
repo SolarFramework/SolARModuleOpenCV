@@ -55,16 +55,14 @@ SolARPoseEstimationSACPnpOpencv::~SolARPoseEstimationSACPnpOpencv(){
 
 }
 
-FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector<Point2Df> & imagePoints,
+FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<Point2Df> & imagePoints,
                                                             const std::vector<Point3Df> & worldPoints,
-                                                            std::vector<Point2Df>&imagePoints_inlier,
-                                                            std::vector<Point3Df>&worldPoints_inlier,
+															std::vector<uint32_t> & inliers,
                                                             Transform3Df & pose,
                                                             const Transform3Df initialPose) {
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
-    std::vector<int> inliers;
 
     int method;
     auto itr = convertPnPSACMethod.find(m_method);
@@ -112,12 +110,11 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate( const std::vector
      std::vector<cv::Point2f> projected3D;
      cv::projectPoints(worldCVPoints, raux, taux, m_camMatrix, m_camDistorsion, projected3D);
 
-     for (int i = 0; i<projected3D.size(); i++) {
-         double err_reprj = norm(projected3D[i]-imageCVPoints[i]);
-         if (err_reprj <m_reprojError) {
-             worldPoints_inlier.push_back(worldPoints[i]);
-             imagePoints_inlier.push_back(imagePoints[i]);
-
+	 inliers.clear();
+     for (int i = 0; i < projected3D.size(); i++) {
+		 double err_reprj = norm(projected3D[i] - imageCVPoints[i]);
+         if (err_reprj < m_reprojError) {
+			 inliers.push_back(i);
              in2d.push_back(cv::Point2f(imagePoints[i].getX(),imagePoints[i].getY()));
              in3d.push_back(cv::Point3f(worldPoints[i].getX(),worldPoints[i].getY(),worldPoints[i].getZ()));
          }

@@ -47,8 +47,7 @@ SolARPoseEstimationPlanarPointsOpencv::~SolARPoseEstimationPlanarPointsOpencv(){
 
 FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::vector<Point2Df> & imagePoints,
                                                                     const std::vector<Point3Df> & worldPoints,
-                                                                    std::vector<Point2Df> &imagePoints_inlier,
-                                                                    std::vector<Point3Df> &worldPoints_inlier,
+																	std::vector<uint32_t> & inliers,
                                                                     Transform3Df & pose,
                                                                     const Transform3Df initialPose) {
 
@@ -76,21 +75,19 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
     cv::Mat status;
     cv::Mat oHw = findHomography(worldCVPoints, correctedImageCVPoints, cv::RANSAC, m_reprojErrorThreshold, status);
 
-    imagePoints_inlier.clear();
-    worldPoints_inlier.clear();
+	inliers.clear();
     std::vector<cv::Point2f> tmp_cvImagePoints, tmp_cvWorldPoints;
     for (int i = 0; i < status.rows; ++i)
     {
         if (status.at<uchar>(i, 0) == 1)
         {
-            imagePoints_inlier.push_back(imagePoints[i]);
-            worldPoints_inlier.push_back(worldPoints[i]);
+			inliers.push_back(i);
             tmp_cvImagePoints.push_back(correctedImageCVPoints[i]);
             tmp_cvWorldPoints.push_back(worldCVPoints[i]);
         }
     }
 
-    if (imagePoints_inlier.size() < m_minNbInliers){
+    if (inliers.size() < m_minNbInliers){
         return FrameworkReturnCode::_ERROR_;
     }
 
