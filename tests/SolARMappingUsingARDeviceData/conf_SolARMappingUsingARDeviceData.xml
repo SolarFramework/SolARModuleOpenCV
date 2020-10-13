@@ -251,11 +251,12 @@
 			<property name="covisibilityGraphFileName" type="string" value="covisibility_graph.bin"/>
 			<property name="keyframeRetrieverFileName" type="string" value="keyframe_retriever.bin"/>
 			<property name="reprojErrorThreshold" type="float" value="10.0"/>
+			<property name="thresConfidence" type="float" value="0.5"/>
 		</configure>
 		<configure component="SolARKeypointDetectorOpencv">
 			<property name="type" type="string" value="AKAZE2"/>
 			<property name="imageRatio" type="Float" value="1.0"/>
-			<property name="nbDescriptors" type="Integer" value="1500"/>
+			<property name="nbDescriptors" type="Integer" value="2000"/>
 			<property name="nbOctaves" type="Integer" value="4"/>
 			<property name="threshold" type="Float" value="0.0001"/>
 		</configure>
@@ -274,7 +275,7 @@
         </configure>
 		<configure component="SolARDescriptorMatcherKNNOpencv">
 			<property name="distanceRatio" type="Float" value="0.8"/>
-			<property name="radius" type="Float" value="20"/>
+			<property name="radius" type="Float" value="15"/>
 			<property name="matchingDistanceMax" type="Float" value="600"/>
 		</configure>
 		<configure component="SolARDescriptorMatcherHammingBruteForceOpencv">
@@ -372,7 +373,7 @@
 			<property name="nbIterationsGlobal" type="Integer" value="20"/>
 			<property name="setVerbose" type="Integer" value="0"/>
 			<property name="nbMaxFixedKeyframes" type="Integer" value="20"/>
-			<property name="errorOutlier" type="Float" value="4.0"/>
+			<property name="errorOutlier" type="Float" value="5.0"/>
 			<property name="useSpanningTree" type="Integer" value="0"/>
 			<property name="isRobust" type="Integer" value="0"/>
 			<property name="fixedMap" type="Integer" value="0"/>
@@ -383,7 +384,7 @@
 			<property name="nbIterationsGlobal" type="Integer" value="20"/>
 			<property name="setVerbose" type="Integer" value="0"/>
 			<property name="nbMaxFixedKeyframes" type="Integer" value="20"/>
-			<property name="errorOutlier" type="Float" value="4.0"/>
+			<property name="errorOutlier" type="Float" value="5.0"/>
 			<property name="useSpanningTree" type="Integer" value="0"/>
 			<property name="isRobust" type="Integer" value="0"/>
 			<property name="fixedMap" type="Integer" value="0"/>

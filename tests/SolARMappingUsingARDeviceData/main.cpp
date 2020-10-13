@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
 		auto projector = xpcfComponentManager->resolve<api::geom::IProject>();
 		auto mapFilter = xpcfComponentManager->resolve<api::solver::map::IMapFilter>();
 		auto bundler = xpcfComponentManager->resolve<api::solver::map::IBundler>("BundleFixedKeyframes");
+		auto globalBundler = xpcfComponentManager->resolve<api::solver::map::IBundler>();
 		auto matchesFilter = xpcfComponentManager->resolve<features::IMatchesFilter>();
 		auto loopDetector = xpcfComponentManager->resolve<loop::ILoopClosureDetector>();
 		auto loopCorrector = xpcfComponentManager->resolve<loop::ILoopCorrector>();
@@ -237,14 +238,12 @@ int main(int argc, char *argv[])
 
 			// Project ref cloud point seen to current frame to define inliers/outliers
 			std::vector< Point2Df > refCPSeenProj;
-			int countInliers = 0;
 			projector->project(refCPSeen, refCPSeenProj, pose);
 			std::vector<Point2Df> pts2d_inliers, pts2d_outliers;
 			for (int i = 0; i < refCPSeenProj.size(); ++i) {
 				float dis = (pts2d[i] - refCPSeenProj[i]).norm();
 				if (dis < reprojErrorThreshold) {
 					refCPSeen[i]->updateConfidence(true);
-					countInliers++;
 					newMapVisibility[idxKp_idxCP[i].first] = idxKp_idxCP[i].second;
 					pts2d_inliers.push_back(pts2d[i]);
 				}
@@ -253,7 +252,7 @@ int main(int argc, char *argv[])
 					pts2d_outliers.push_back(pts2d[i]);
 				}
 			}
-			LOG_INFO("Number of inliers / outliers: {} / {}", countInliers, pts2d.size() - countInliers);
+			LOG_INFO("Number of inliers / outliers: {} / {}", pts2d_inliers.size(), pts2d_outliers.size());
 
 			// Find more visibilities by projecting the rest of local map
 			//  projection points
@@ -277,7 +276,7 @@ int main(int argc, char *argv[])
 				int idx_3d = it_match.getIndexInDescriptorA();
 				auto it2d = newMapVisibility.find(idx_2d);
 				if (it2d == newMapVisibility.end()) {
-					pts2d.push_back(Point2Df(keypoints[idx_2d].getX(), keypoints[idx_2d].getY()));
+					pts2d_inliers.push_back(Point2Df(keypoints[idx_2d].getX(), keypoints[idx_2d].getY()));
 					newMapVisibility[idx_2d] = localMapUnseen[idx_3d]->getId();
 				}
 			}
@@ -316,11 +315,14 @@ int main(int argc, char *argv[])
 						// performs loop correction 						
 						Transform3Df keyframeOldPose = keyframe->getPose();
 						loopCorrector->correct(keyframe, detectedLoopKeyframe, sim3Transform, duplicatedPointsIndices);
-						Transform3Df transform = keyframe->getPose() * keyframeOldPose.inverse();
-						T_M_W = transform * T_M_W;
+						// loop optimization
+						globalBundler->bundleAdjustment(camParams.intrinsic, camParams.distortion);						
 						// map pruning
 						mapper->pruning();
 						countNewKeyframes = 0;
+						// update pose correction
+						Transform3Df transform = keyframe->getPose() * keyframeOldPose.inverse();
+						T_M_W = transform * T_M_W;
 					}
 				}
 			}			
@@ -350,6 +352,11 @@ int main(int argc, char *argv[])
 			if (viewer3D->display(pointCloud, frame->getPose(), keyframePoses, framePoses, localMap) == FrameworkReturnCode::_STOP)
 				break;
         }
+
+		// global bundle adjustment
+		globalBundler->bundleAdjustment(camParams.intrinsic, camParams.distortion);
+		// map pruning
+		mapper->pruning();
 
 		LOG_INFO("Nb of keyframes / cloud points: {} / {}", keyframesManager->getNbKeyframes(), pointCloudManager->getNbPoints());
 		// display
