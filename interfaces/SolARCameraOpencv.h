@@ -46,14 +46,15 @@ public:
     /// @brief Fill the SRef img buffer with a last image captured by the camera device.
     /// @return FrameworkReturnCode to track sucessful or failing event.
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
+
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
     void unloadComponent () override final;
 
  private:
 
-     /// @brief The ID of the camera to capture with
-     uint32_t m_deviceID;
+    /// @brief The ID of the camera to capture with
+    uint32_t m_deviceID;
 };
 
 }

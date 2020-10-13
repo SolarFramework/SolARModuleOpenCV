@@ -34,6 +34,7 @@ namespace OPENCV {
 
     SolARCameraOpencv::~SolARCameraOpencv()
     {
+
     }
 
 
@@ -75,7 +76,6 @@ namespace OPENCV {
             return FrameworkReturnCode::_ERROR_;
         }
     }
-
 }
 }
 }

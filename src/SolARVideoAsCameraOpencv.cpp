@@ -35,7 +35,6 @@ namespace SolAR {
     }
 
 
-
     FrameworkReturnCode SolARVideoAsCameraOpencv::getNextImage(SRef<Image> & img)
     {
 
@@ -77,8 +76,7 @@ namespace SolAR {
             return FrameworkReturnCode::_ERROR_;
         }
     }
-
-    }
+        }
     }
 }
 

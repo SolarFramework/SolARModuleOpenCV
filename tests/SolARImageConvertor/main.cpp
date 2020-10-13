@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
+#include <iostream>
+#include <string>
+#include <vector>
+#include <boost/log/core.hpp>
+
+ // ADD XPCF HEADERS HERE
 #include "xpcf/xpcf.h"
+#include "core/Log.h"
+
+// ADD COMPONENTS HEADERS HERE
 #include "api/image/IImageLoader.h"
 #include "api/image/IImageConvertor.h"
 #include "api/display/IImageViewer.h"
-#include "core/Log.h"
 
-#include <iostream>
-#include <boost/log/core.hpp>
-#include <map>
 
 using namespace std;
 using namespace SolAR;
@@ -54,11 +59,12 @@ int main(int argc, char **argv)
 
 
     // components declarations and creation
-    SRef<image::IImageLoader> imageLoader = xpcfComponentManager->resolve<image::IImageLoader>();
-    SRef<image::IImageConvertor> convertor = xpcfComponentManager->resolve<image::IImageConvertor>();
-    SRef<display::IImageViewer> viewer = xpcfComponentManager->resolve<display::IImageViewer>();
+    auto imageLoader = xpcfComponentManager->resolve<image::IImageLoader>();
+    auto convertor = xpcfComponentManager->resolve<image::IImageConvertor>();
+    auto viewer = xpcfComponentManager->resolve<display::IImageViewer>();
+	auto viewerLUT = xpcfComponentManager->resolve<display::IImageViewer>("LUT");
 
-    if (!imageLoader || !convertor || !viewer)
+    if (!imageLoader || !convertor || !viewer || !viewerLUT)
     {
         LOG_ERROR("One or more component creations have failed");
         return -1;
@@ -66,6 +72,7 @@ int main(int argc, char **argv)
 
     SRef<Image> image;
     SRef<Image> convertedImage;
+	SRef<Image> convertedImageLUT;
 
 
     // Start
@@ -77,10 +84,12 @@ int main(int argc, char **argv)
     }
 
     convertor->convert(image, convertedImage, Image::LAYOUT_GREY);
+	convertor->convertLookUpTable(convertedImage, convertedImageLUT);
 
     while (true)
     {
-        if (viewer->display(convertedImage) == FrameworkReturnCode::_STOP)
+        if (viewer->display(convertedImage) == FrameworkReturnCode::_STOP ||
+			viewerLUT->display(convertedImageLUT) == FrameworkReturnCode::_STOP)
         {
             std::cout << "end of ImageConvertor test" << std::endl;
             break;

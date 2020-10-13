@@ -43,7 +43,6 @@ public:
     /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
     FrameworkReturnCode start() override;
 
-
     FrameworkReturnCode getNextImage(SRef<Image> & img) override;
 
     //params getCameraIntrinsics() override;

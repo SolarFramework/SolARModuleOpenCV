@@ -22,7 +22,7 @@
 // Definition of SolARImageConvertorOpencv Class //
 // part of Solar namespace //
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 
@@ -41,18 +41,22 @@ namespace OPENCV {
  *
  */
 
-class SOLAROPENCV_EXPORT_API SolARImageConvertorOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARImageConvertorOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::image::IImageConvertor {
 public:
     SolARImageConvertorOpencv();
     ~SolARImageConvertorOpencv();
 
-    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst) override;
-    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
+    FrameworkReturnCode convert(const SRef<Image> imgSrc, SRef<Image>& imgDst) override;
+    FrameworkReturnCode convert(const SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
+	FrameworkReturnCode convertLookUpTable(const SRef<Image> imgSrc, SRef<Image> & imgDst) override;
 
     void unloadComponent () override final;
 
 private:
+	//@brief color map used, list of GNU Octave/MATLAB equivalent colormaps available https://docs.opencv.org/4.1.1/d3/d50/group__imgproc__colormap.html
+	int m_colorMap = cv::COLORMAP_JET; 
+	int m_equalizeLUT = false;
 };
 
 }

@@ -68,7 +68,6 @@ namespace OPENCV {
             return FrameworkReturnCode::_ERROR_;
         }
     }
-
 }
 }
 }

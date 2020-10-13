@@ -30,12 +30,19 @@
                 <interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
         </component>
     </module>
-	
+    <factory>
+        <bindings>
+            <bind name="image1" interface="IImageLoader" to="SolARImageLoaderOpencv" properties="image1_prop"/>
+            <bind name="image2" interface="IImageLoader" to="SolARImageLoaderOpencv" properties="image2_prop"/>
+            <bind name="withoutFilter" interface="IImageViewer" to="SolARImageViewerOpencv" properties="withoutFilter_prop"/>
+            <bind name="withFilter" interface="IImageViewer" to="SolARImageViewerOpencv" properties="withFilter_prop"/>
+        </bindings>
+    </factory>
     <properties>
-        <configure component="SolARImageLoaderOpencv" name="image1">
+        <configure component="SolARImageLoaderOpencv" name="image1_prop">
             <property name="filePath" type="string" value="../../data/image1.png"/>
         </configure>
-        <configure component="SolARImageLoaderOpencv" name="image2">
+        <configure component="SolARImageLoaderOpencv" name="image2_prop">
             <property name="filePath" type="string" value="../../data/image2.png"/>
         </configure>
         <configure component="SolARKeypointDetectorOpencv">
@@ -63,13 +70,13 @@
             </property>
             <property name="maxMatches" type="UnsignedInteger" value="-1"/>
         </configure>
-        <configure component="SolARImageViewerOpencv" name="withoutFilter">
+        <configure component="SolARImageViewerOpencv" name="withoutFilter_prop">
             <property name="title" type="string" value="matches without filter (press esc key to exit)"/>
             <property name="exitKey" type="Integer" value="27"/>
             <property name="width" type="Integer" value="1536"/>
             <property name="height" type="Integer" value="512"/>
         </configure>
-        <configure component="SolARImageViewerOpencv" name="withFilter">
+        <configure component="SolARImageViewerOpencv" name="withFilter_prop">
             <property name="title" type="string" value="matches with filter (press esc key to exit)"/>
             <property name="exitKey" type="Integer" value="27"/>
             <property name="width" type="Integer" value="1536"/>

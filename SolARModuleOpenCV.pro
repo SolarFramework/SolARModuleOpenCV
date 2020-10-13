@@ -24,7 +24,7 @@ CONFIG(release,debug|release) {
     DEFINES += NDEBUG=1
 }
 
-DEPENDENCIESCONFIG = shared recursive install_recurse
+DEPENDENCIESCONFIG = shared install_recurse
 
 ## Configuration for Visual Studio to install binaries and dependencies. Work also for QT Creator by replacing QMAKE_INSTALL
 PROJECTCONFIG = QTVS
@@ -64,7 +64,6 @@ win32 {
 }
 
 android {
-    QMAKE_LFLAGS += -nostdlib++
     ANDROID_ABIS="arm64-v8a"
 }
 
@@ -78,12 +77,13 @@ INSTALLS += header_files
 INSTALLS += xpcf_xml_files
 
 OTHER_FILES += \
-    packagedependencies.txt
+    packagedependencies.txt \
+    packagedependencies-linux.txt \
+    packagedependencies-mac.txt \
+    packagedependencies-win.txt \
+    packagedependencies-android.txt
 
 #NOTE : Must be placed at the end of the .pro
 include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/remaken_install_target.pri)))) # Shell_quote & shell_path required for visual on windows
 
-DISTFILES += \
-    packagedependencies-linux.txt \
-    packagedependencies-mac.txt \
-    packagedependencies-win.txt
+

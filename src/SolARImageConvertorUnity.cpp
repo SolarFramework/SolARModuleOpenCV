@@ -56,6 +56,12 @@ FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<I
    return FrameworkReturnCode::_SUCCESS;
 }
 
+
+FrameworkReturnCode SolARImageConvertorUnity::convertLookUpTable(const SRef<Image> imgSrc, SRef<Image> & imgDst)
+{
+	return FrameworkReturnCode::_NOT_IMPLEMENTED;
+}
+
 }
 }
 }  // end of namespace Solar

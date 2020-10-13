@@ -33,13 +33,18 @@ static std::map<int,std::pair<Image::ImageLayout,Image::DataType>> cv2solarTypeC
 
 
 
-static std::map<std::tuple<uint32_t,std::size_t,uint32_t>,int> solar2cvTypeConvertMap {{std::make_tuple(8,1,3),CV_8UC3},{std::make_tuple(8,1,1),CV_8UC1}};
+static std::map<std::tuple<uint32_t,std::size_t,uint32_t>,int> solar2cvTypeConvertMap {
+    {std::make_tuple(8,1,3),CV_8UC3},
+    {std::make_tuple(8,1,1),CV_8UC1},
+    {std::make_tuple(16,1,1), CV_16UC1}};
 
 inline int deduceOpenCVType(SRef<Image> img)
 {
     // TODO : handle safe mode if missing map entry
     // is it ok when destLayout != img->ImageLayout ?
-    return solar2cvTypeConvertMap.at(std::forward_as_tuple(img->getNbBitsPerComponent(),1,img->getNbChannels()));
+    return solar2cvTypeConvertMap.at(
+                std::forward_as_tuple(img->getNbBitsPerComponent(),1,img->getNbChannels())
+                );
 }
 
 SolARImageViewerOpencv::SolARImageViewerOpencv():ConfigurableBase(xpcf::toUUID<SolARImageViewerOpencv>())
@@ -78,7 +83,13 @@ static FrameworkReturnCode safeErrorCodeConvert(int errCode)
 
 FrameworkReturnCode SolARImageViewerOpencv::display(SRef<Image> img)
 {
-    char key=' ';
+   char key=0;
+   return displayKey(img, key);
+}
+
+FrameworkReturnCode SolARImageViewerOpencv::displayKey(SRef<Image> img, char& key)
+{
+    key=0;
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
     cv::namedWindow( m_title,0); // Create a window for display.
     if (m_isFirstDisplay)
