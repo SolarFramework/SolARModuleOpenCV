@@ -44,9 +44,9 @@
         <bindings>
             <bind interface="IImageLoader" to="SolARImageLoaderOpencv" name="image1" properties="image1"/>
             <bind interface="IImageLoader" to="SolARImageLoaderOpencv" name="image2" properties="image2"/>
-            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="AKAZEDesc" properties="AKAZEDescProperties" />
-            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="ORBDesc" properties="ORBDescProperties"/>
-            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="SIFTDesc" properties="SIFTDescProperties"/>
+            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="AKAZEDetector" properties="AKAZEDescProperties" />
+            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="ORBDetector" properties="ORBDescProperties"/>
+            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="SIFTDetector" properties="SIFTDescProperties"/>
             <bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorAKAZE2Opencv" name="AKAZEDesc" />
             <bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorORBOpencv" name="ORBDesc" />
             <bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorSIFTOpencv" name="SIFTDesc" />
