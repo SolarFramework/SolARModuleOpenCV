@@ -25,6 +25,7 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
     interfaces/SolARDescriptorMatcherKNNOpencv.h \
     interfaces/SolARDescriptorMatcherRadiusOpencv.h \
+    interfaces/SolARFiducialMarkerLoaderOpencv.h \
     interfaces/SolARFundamentalMatrixEstimationOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
     interfaces/SolARPoseEstimationPlanarPointsOpencv.h \
@@ -81,6 +82,7 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \
+    src/SolARFiducialMarkerLoaderOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolAR2DOverlayOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
