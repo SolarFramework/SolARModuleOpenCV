@@ -81,13 +81,13 @@ static FrameworkReturnCode safeErrorCodeConvert(int errCode)
 }
 
 
-FrameworkReturnCode SolARImageViewerOpencv::display(SRef<Image> img)
+FrameworkReturnCode SolARImageViewerOpencv::display(const SRef<Image> img)
 {
    char key=0;
    return displayKey(img, key);
 }
 
-FrameworkReturnCode SolARImageViewerOpencv::displayKey(SRef<Image> img, char& key)
+FrameworkReturnCode SolARImageViewerOpencv::displayKey(const SRef<Image> img, char& key)
 {
     key=0;
     cv::Mat imgSource(img->getHeight(),img->getWidth(),deduceOpenCVType(img), img->data());
