@@ -80,6 +80,9 @@ private:
     /// @brief the number of descriptors that are selected. If negative, all extracted descriptors are selected
     int m_nbDescriptors = 10000;
 
+	/// @brief the number of octaves
+	int m_nbOctaves = 4;
+
 	/// @brief the threshold of detector to accept a keypoint
 	float m_threshold = 1e-3;
 

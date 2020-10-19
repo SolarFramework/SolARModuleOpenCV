@@ -45,19 +45,17 @@ public:
     ///@brief SolARPoseEstimationSACPnpOpencv destructor;
     ~SolARPoseEstimationSACPnpOpencv() override;
 
-    /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
-    /// @param[in] imagePoints, set of 2d_points seen in view_1.
-    /// @param[in]  worldPoints, set of 3d_points corresponding to view_1.
-    /// @param[out] imagePoints_inlier, image 2d points that are inliers
-    /// @param[out] worldPoints_inlier, world 3d points that are inliers.
-    /// @param[out] pose, camera pose (pose the camera defined in world corrdinate system) expressed as a Transform3D.
-    /// @param[in] initialPose (Optional), a tranfsform3D to initialize the pose (reducing the convergence time and improving its success). If your world points are planar, do not use this argument.
-    FrameworkReturnCode estimate(const std::vector<Point2Df> & imagePoints,
-                             const std::vector<Point3Df> & worldPoints,
-                             std::vector<Point2Df>&imagePoints_inlier,
-                             std::vector<Point3Df>&worldPoints_inlier,
-                             Transform3Df & pose,
-                             const Transform3Df initialPose = Transform3Df::Identity()) override;
+	/// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
+	/// @param[in] imagePoints, set of 2d_points seen in view_1.
+	/// @param[in]  worldPoints, set of 3d_points corresponding to view_1.
+	/// @param[out] inliers: indices of inlier correspondences.
+	/// @param[out] pose, camera pose (pose of the camera defined in world corrdinate system) expressed as a Transform3D.
+	/// @param[in] initialPose (Optional), a transform3D to initialize the pose (reducing the convergence time and improving its success).
+	FrameworkReturnCode estimate(const std::vector<Point2Df> & imagePoints,
+								const std::vector<Point3Df> & worldPoints,
+								std::vector<uint32_t> & inliers,
+								Transform3Df & pose,
+								const Transform3Df initialPose = Transform3Df::Identity()) override;
 
 
     /// @brief this method is used to set intrinsic parameters and distorsion of the camera

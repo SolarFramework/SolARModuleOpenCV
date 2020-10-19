@@ -30,12 +30,14 @@ namespace OPENCV {
     {
         declareInterface<api::input::devices::ICamera>(this);
         declareProperty("imagesDirectoryPath", m_ImagesDirectoryPath);
+        declareProperty("delayTime", m_delayTime);
     }  
 
     FrameworkReturnCode SolARImagesAsCameraOpencv::getNextImage(SRef<Image> & img)
     {
 
         cv::Mat cvFrame;
+		std::this_thread::sleep_for(std::chrono::milliseconds(m_delayTime));
         m_capture >> cvFrame;
         if(!cvFrame.data)
             return FrameworkReturnCode::_ERROR_LOAD_IMAGE;

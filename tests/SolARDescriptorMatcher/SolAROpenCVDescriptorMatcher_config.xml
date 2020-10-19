@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry autoAlias="true">
     
-        <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.8.0/lib/x86_64/shared">
+        <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.8.1/lib/x86_64/shared">
         <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="SolARImageLoaderOpencv" description="SolARImageLoaderOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" name="IImageLoader" description="IImageLoader"/>
@@ -44,9 +44,9 @@
         <bindings>
             <bind interface="IImageLoader" to="SolARImageLoaderOpencv" name="image1" properties="image1"/>
             <bind interface="IImageLoader" to="SolARImageLoaderOpencv" name="image2" properties="image2"/>
-            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="AKAZEDesc" properties="AKAZEDescProperties" />
-            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="ORBDesc" properties="ORBDescProperties"/>
-            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="SIFTDesc" properties="SIFTDescProperties"/>
+            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="AKAZEDetector" properties="AKAZEDescProperties" />
+            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="ORBDetector" properties="ORBDescProperties"/>
+            <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv" name="SIFTDetector" properties="SIFTDescProperties"/>
             <bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorAKAZE2Opencv" name="AKAZEDesc" />
             <bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorORBOpencv" name="ORBDesc" />
             <bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorSIFTOpencv" name="SIFTDesc" />
