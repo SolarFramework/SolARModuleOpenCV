@@ -62,6 +62,7 @@
 #include "SolARVideoAsCameraOpencv.h"
 #include "SolARImagesAsCameraOpencv.h"
 #include "SolARDeviceDataLoader.h"
+#include "SolARMapFusionOpencv.h"
 
 namespace xpcf=org::bcom::xpcf;
 
@@ -251,6 +252,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
 	{
 		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDeviceDataLoader>(componentUUID, interfaceRef);
 	}
+	if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+	{
+		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMapFusionOpencv>(componentUUID, interfaceRef);
+	}
 
     return errCode;
 }
@@ -301,4 +306,5 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImagesAsCameraOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDeviceDataLoader)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapFusionOpencv)
 XPCF_END_COMPONENTS_DECLARATION
