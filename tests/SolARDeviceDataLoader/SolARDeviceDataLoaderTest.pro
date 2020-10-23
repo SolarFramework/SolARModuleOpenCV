@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARDeviceDataLoaderTest
-VERSION=
+VERSION=0.8.1
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
