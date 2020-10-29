@@ -57,6 +57,10 @@
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
       <interface uuid="2e2bde18-ce39-11e7-abc4-cec278b6b50a" name="IDescriptorsExtractor" description="IDescriptorsExtractorSBPattern"/>
     </component>
+    <component uuid="d0116ed2-45d7-455d-8011-57959da1b0fa" name="SolARFiducialMarkerLoaderOpencv" description="Loads a fiducial marker from a description file.">
+      <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+      <interface uuid="8e54d5d0-f7a3-4d62-b012-728e5704b46a" name="ITrackableLoader" description="Loads a general Trackable object."/>
+    </component>
     <component uuid="31188e79-6bd5-43df-9633-6d6c5d7afb5c" name="SolARFundamentalMatrixDecompisitionValidationOpencv" description="SolARFundamentalMatrixDecompisitionValidationOpencv">
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
       <interface uuid="0f715b50-e0e5-4508-aaf0-cb252ea59ad4" name="IFundamentalMatrixDecompositionValidation" description="IFundamentalMatrixDecompositionValidation"/>

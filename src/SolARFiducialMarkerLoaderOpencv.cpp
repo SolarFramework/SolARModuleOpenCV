@@ -28,32 +28,43 @@ namespace OPENCV {
 
     SolARFiducialMarkerLoaderOpencv::SolARFiducialMarkerLoaderOpencv():ConfigurableBase(xpcf::toUUID<SolARFiducialMarkerLoaderOpencv>())
     {
-        declareInterface<api::input::files::ITrackableLoader>(this);
         LOG_DEBUG("SolARFiducialMarkerLoaderOpencv constructor")
+        declareInterface<api::input::files::ITrackableLoader>(this);
         declareProperty("filePath", m_filePath);
     }
 
     SolARFiducialMarkerLoaderOpencv::~SolARFiducialMarkerLoaderOpencv()
     {
-        LOG_DEBUG(" SolARFiducialMarkerLoaderOpencv Destructor")
+        LOG_DEBUG(" SolARFiducialMarkerLoaderOpencv destructor")
     }
 
-    FrameworkReturnCode SolARFiducialMarkerLoaderOpencv::loadTrackable(const std::string & filePath, Trackable & trackableObject)
+    Trackable * SolARFiducialMarkerLoaderOpencv::loadTrackable()
     {
+        FiducialMarker *fiducialMarker = nullptr; // Fiducial Marker instance returned
         SquaredBinaryPattern binaryPattern; // Binary pattern of the fiducial marker
         Sizef markerSize; // Size of the fiducial image
         cv::Mat cv_pattern;
 
-        // try to read the configuration file
+        LOG_DEBUG("SolARFiducialMarkerLoaderOpencv::loadTrackable");
+
+        if (m_filePath.empty())
+        {
+            LOG_ERROR("Fiducial marker definition file path has not been defined");
+            return fiducialMarker;
+        }
+
+        LOG_DEBUG("Load fiducial configuration file: {}", m_filePath);
+
         cv::FileStorage fs(m_filePath, cv::FileStorage::READ);
 
         if (!fs.isOpened())
         {
             LOG_ERROR("Binary Fiducial Marker file {} cannot be loaded", m_filePath)
-            return FrameworkReturnCode::_ERROR_;
+            return fiducialMarker;
         }
 
-        // Extract data from configuration file
+        LOG_DEBUG("Extract data from configuration file");
+
         fs["MarkerWidth"] >> markerSize.width;
         fs["MarkerHeight"] >> markerSize.height;
         fs["Pattern"] >> cv_pattern;
@@ -65,7 +76,7 @@ namespace OPENCV {
         if (nbRows== 0 || nbCols ==0)
         {
             LOG_ERROR("In Binary Fiducial Marker file {}, the pattern matrix is empty", m_filePath)
-            return FrameworkReturnCode::_ERROR_;
+            return fiducialMarker;
         }
 
         // Reconstruct the binary pattern
@@ -80,9 +91,12 @@ namespace OPENCV {
         binaryPattern.setPatternMatrix(sfpm);
 
         // Create the new FiducialMarker object (kinf of Trackable object)
-        trackableObject = FiducialMarker(binaryPattern, markerSize);
+        fiducialMarker = new FiducialMarker(binaryPattern, markerSize);
 
-        return FrameworkReturnCode::_SUCCESS;
+        LOG_DEBUG("Fiducial marker uuid / width / height = {} / {} / {}",
+                  fiducialMarker->getUUID(), fiducialMarker->getWidth(), fiducialMarker->getHeight());
+
+        return fiducialMarker;
     }
 
 }
