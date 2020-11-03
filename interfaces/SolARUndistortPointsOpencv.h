@@ -48,18 +48,18 @@ public:
     void unloadComponent () override final;
     FrameworkReturnCode undistort(const std::vector<Point2Df> & inputPoints, std::vector<Point2Df> & outputPoints) override;
 
-    /// @brief Set the distorsion intrinsic camera parameters
-    void setDistorsionParameters(const CamDistortion & distorsion_parameters) override;
+    /// @brief Set the distortion intrinsic camera parameters
+    void setDistortionParameters(const CamDistortion & distortion_parameters) override;
         /// @brief Set the intrinsic camera parameters
     void setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
     
 
 private:
     CamCalibration m_intrinsic_parameters;
-    CamDistortion m_distorsion_parameters;
+    CamDistortion m_distortion_parameters;
 
     cv::Mat m_camMatrix;
-    cv::Mat m_camDistorsion;
+    cv::Mat m_camDistortion;
 };
 
 }

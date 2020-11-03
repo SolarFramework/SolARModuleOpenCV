@@ -50,9 +50,11 @@ public:
     void unloadComponent () override final;
 
 private:
-    /// @brief Path to the images which will be used as a camera capture
+    // @brief Path to the images which will be used as a camera capture
     std::string m_ImagesDirectoryPath = "";
     std::vector<std::string> imagePaths;           //will contained the path of the images to us
+	// @brief time delay camera between two images
+	int m_delayTime = 30;
 
 };
 

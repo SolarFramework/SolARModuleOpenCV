@@ -3,7 +3,7 @@ QT       -= core gui
 CONFIG -= qt
 
 ## global defintions : target lib name, version
-TARGET = SolAROpenCVMatchesFilter
+TARGET = SolARDeviceDualMarkerCalibrationTest
 VERSION=0.8.1
 
 DEFINES += MYVERSION=$${VERSION}
@@ -61,11 +61,10 @@ win32 {
     # Windows Kit (msvc2013 64)
     LIBS += -L$$(WINDOWSSDKDIR)lib/winv6.3/um/x64 -lshell32 -lgdi32 -lComdlg32
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
-
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $${PWD}/SolAROpenCVMatchesFilter_conf.xml
+configfile.files = $${PWD}/conf_SolARDeviceDualMarkerCalibrationTest.xml
 INSTALLS += configfile
 
 DISTFILES += \

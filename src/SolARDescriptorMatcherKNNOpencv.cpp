@@ -32,6 +32,8 @@ namespace SolAR {
     {
         declareInterface<IDescriptorMatcher>(this);
         declareProperty("distanceRatio", m_distanceRatio);
+        declareProperty("radius", m_radius);
+        declareProperty("matchingDistanceMax", m_matchingDistanceMax);
         LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv constructor")
     }
 
@@ -173,11 +175,11 @@ namespace SolAR {
 
     }
 
-	IDescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::matchInRegion(const std::vector<Point2Df>& points2D, const std::vector<SRef<DescriptorBuffer>>& descriptors, const SRef<Frame> frame, std::vector<DescriptorMatch>& matches, const float radius)
+	IDescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::matchInRegion(const std::vector<Point2Df>& points2D, const std::vector<SRef<DescriptorBuffer>>& descriptors, const SRef<Frame> frame, std::vector<DescriptorMatch>& matches, const float radius, const float matchingDistanceMax)
 	{
-
 		matches.clear();
-
+		float radiusValue = radius > 0 ? radius : m_radius;
+		float matchingDistanceMaxValue = matchingDistanceMax > 0 ? matchingDistanceMax : m_matchingDistanceMax;
 		SRef<DescriptorBuffer> descriptorFrame = frame->getDescriptors();
 
 		if (descriptors.size() == 0 || descriptorFrame->getNbDescriptors() == 0)
@@ -220,19 +222,21 @@ namespace SolAR {
 		// Match each descriptor to descriptors of frame in a corresponding region
 		std::vector<bool> checkMatches(keypointsFrame.size(), true);
 		int idx = 0;
-		for (auto &it : cvDescriptors) {
+		for (const auto &it : cvDescriptors) {
 			std::vector<int> idxCandidates;
 			if ((points2D[idx].getX() > 0) && (points2D[idx].getX() < imgWidth) && (points2D[idx].getY() > 0) && (points2D[idx].getY() < imgHeight)) {
 				std::vector<float> dists;
 				std::vector<float> query = { points2D[idx].getX(), points2D[idx].getY() };
-				kdtree.radiusSearch(query, idxCandidates, dists, radius, 10);
+				kdtree.radiusSearch(query, idxCandidates, dists, radiusValue, 30);
 			}
 
-			if (idxCandidates.size() > 1) {
+			if (idxCandidates.size() > 0) {
 				float bestDist = std::numeric_limits<float>::max();
 				float bestDist2 = std::numeric_limits<float>::max();
 				int bestIdx = -1;
 				for (auto &it_des: idxCandidates) {
+					if (it_des == 0)
+						continue;
 					float dist = cv::norm(it, cvDescriptorFrame.row(it_des), cv::NORM_L2);
 					if (dist < bestDist)
 					{
@@ -245,8 +249,7 @@ namespace SolAR {
 						bestDist2 = dist;
 					}
 				}
-
-				if ((bestIdx != -1) && (bestDist < m_distanceRatio * bestDist2) && (checkMatches[bestIdx])) {
+				if ((bestIdx != -1) && (bestDist < matchingDistanceMaxValue) && (bestDist < m_distanceRatio * bestDist2) && (checkMatches[bestIdx])) {
 					matches.push_back(DescriptorMatch(idx, bestIdx, bestDist));
 					checkMatches[bestIdx] = false;
 				}

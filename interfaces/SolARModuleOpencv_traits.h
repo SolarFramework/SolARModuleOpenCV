@@ -75,6 +75,8 @@ class SolARSVDTriangulationOpencv;
 class SolAR2D3DCorrespondencesFinderOpencv;
 class SolARUndistortPointsOpencv;
 class SolARVideoAsCameraOpencv;
+class SolARDeviceDataLoader;
+class SolARMapFusionOpencv;
 }
 }
 }
@@ -313,5 +315,14 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv,
                              "fa4a780a-9720-11e8-9eb6-529269fb1459",
                              "SolARVideoAsCameraOpencv",
                              "Grabs the images from a video file.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDeviceDataLoader,
+							"4b5576c1-4c44-4835-a405-c8de2d4f85b0",
+							"SolARDeviceDataLoader",
+							"Load AR device data including images, poses, timestamp.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMapFusionOpencv,
+							"bc661909-0185-40a4-a5e6-e52280e7b338",
+							"SolARMapFusionOpencv",
+							"Merge local map or floating map in the global map.")
 
 #endif // SOLARMODULEOPENCV_TRAITS_H

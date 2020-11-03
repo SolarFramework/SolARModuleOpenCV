@@ -55,7 +55,9 @@ HEADERS += interfaces/SolARCameraOpencv.h \
     interfaces/SolARHomographyMatrixDecomposerOpencv.h \
     interfaces/SolARPoseFinderFrom2D2DOpencv.h \
     interfaces/SolARMatchesOverlayOpencv.h \
-    interfaces/SolARUndistortPointsOpencv.h 
+    interfaces/SolARDeviceDataLoader.h \
+    interfaces/SolARUndistortPointsOpencv.h \
+    interfaces/SolARMapFusionOpencv.h
 
 SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARBaseCameraOpencv.cpp \
@@ -110,4 +112,6 @@ SOURCES += src/SolARModuleOpencv.cpp \
     src/SolARHomographyMatrixDecomposerOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
     src/SolARMatchesOverlayOpencv.cpp \
-    src/SolARUndistortPointsOpencv.cpp
+    src/SolARDeviceDataLoader.cpp \
+    src/SolARUndistortPointsOpencv.cpp \
+    src/SolARMapFusionOpencv.cpp

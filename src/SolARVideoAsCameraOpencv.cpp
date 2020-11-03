@@ -30,6 +30,7 @@ namespace SolAR {
     {
         declareInterface<api::input::devices::ICamera>(this);
         declareProperty("videoPath", m_videoPath);
+		declareProperty("delayTime", m_delayTime);
         m_is_resolution_set = false;
     }
 
@@ -38,6 +39,7 @@ namespace SolAR {
     {
 
         cv::Mat cvFrame;
+		std::this_thread::sleep_for(std::chrono::milliseconds(m_delayTime));
         m_capture >> cvFrame;
         if (cvFrame.empty() || !cvFrame.data)
         {

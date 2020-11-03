@@ -33,7 +33,7 @@ namespace OPENCV {
 
         //internal data for matrix
         m_camMatrix.create(3, 3, CV_32FC1);
-        m_camDistorsion.create(5, 1, CV_32FC1);
+        m_camDistortion.create(5, 1, CV_32FC1);
 
     }
 
@@ -51,7 +51,7 @@ namespace OPENCV {
         ptvec[k].y = inputPoints[k].getY();
     }
     
-      cv::undistortPoints(ptvec,out_ptvec, m_camMatrix, m_camDistorsion);
+      cv::undistortPoints(ptvec,out_ptvec, m_camMatrix, m_camDistortion);
 
     for(unsigned int k = 0 ; k < out_ptvec.size() ; k++){
         outputPoints[k] = Point2Df( out_ptvec[k].x, out_ptvec[k].y );
@@ -73,14 +73,14 @@ namespace OPENCV {
         this->m_camMatrix.at<float>(2, 2) = m_intrinsic_parameters(2, 2);
     }
 
-    void SolARUndistortPointsOpencv::setDistorsionParameters(const CamDistortion & distorsion_parameters){
-         m_distorsion_parameters = distorsion_parameters;
+    void SolARUndistortPointsOpencv::setDistortionParameters(const CamDistortion & distortion_parameters){
+         m_distortion_parameters = distortion_parameters;
 
-         this->m_camDistorsion.at<float>(0, 0) = m_distorsion_parameters(0);
-         this->m_camDistorsion.at<float>(1, 0) = m_distorsion_parameters(1);
-         this->m_camDistorsion.at<float>(2, 0) = m_distorsion_parameters(2);
-         this->m_camDistorsion.at<float>(3, 0) = m_distorsion_parameters(3);
-         this->m_camDistorsion.at<float>(4, 0) = m_distorsion_parameters(4);
+         this->m_camDistortion.at<float>(0, 0) = m_distortion_parameters(0);
+         this->m_camDistortion.at<float>(1, 0) = m_distortion_parameters(1);
+         this->m_camDistortion.at<float>(2, 0) = m_distortion_parameters(2);
+         this->m_camDistortion.at<float>(3, 0) = m_distortion_parameters(3);
+         this->m_camDistortion.at<float>(4, 0) = m_distortion_parameters(4);
     }
 
     

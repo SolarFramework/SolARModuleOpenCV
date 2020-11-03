@@ -32,7 +32,7 @@ SolAR2D3DCorrespondencesFinderOpencv::SolAR2D3DCorrespondencesFinderOpencv():Com
     LOG_DEBUG("SolAR2D3DCorrespondencesFinder constructor");
 }
 
-FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(const SRef<Frame> lastFrame, const SRef<Frame> currentFrame, const std::vector<DescriptorMatch>& current_matches, std::vector<Point3Df>& shared_3dpoint, std::vector<Point2Df>& shared_2dpoint, std::vector<DescriptorMatch>& found_matches, std::vector<DescriptorMatch>& remaining_matches)
+FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(const SRef<Frame> &lastFrame, const SRef<Frame> &currentFrame, const std::vector<DescriptorMatch>& current_matches, std::vector<Point3Df>& shared_3dpoint, std::vector<Point2Df>& shared_2dpoint, std::vector<std::pair<uint32_t, SRef<CloudPoint>>> &corres2D3D, std::vector<DescriptorMatch>& found_matches, std::vector<DescriptorMatch>& remaining_matches)
 {
 	const std::map<uint32_t, uint32_t> &mapVisibility = lastFrame->getVisibility();
 	const std::vector<Keypoint> &current_kpoints = currentFrame->getKeypoints();
@@ -45,6 +45,7 @@ FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(const SRef<Frame>
 			shared_2dpoint.push_back(Point2Df(current_kpoints[current_matches[j].getIndexInDescriptorB()].getX(),
 				current_kpoints[current_matches[j].getIndexInDescriptorB()].getY()));
 			found_matches.push_back(current_matches[j]);
+			corres2D3D.push_back(std::make_pair(current_matches[j].getIndexInDescriptorB(), point3D));
 		}
 		else {
 			remaining_matches.push_back(current_matches[j]);

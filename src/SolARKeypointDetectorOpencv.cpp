@@ -52,6 +52,7 @@ SolARKeypointDetectorOpencv::SolARKeypointDetectorOpencv():ConfigurableBase(xpcf
     declareProperty("imageRatio", m_imageRatio);
     declareProperty("nbDescriptors", m_nbDescriptors);
     declareProperty("threshold", m_threshold);
+    declareProperty("nbOctaves", m_nbOctaves);
     declareProperty("type", m_type);
     LOG_DEBUG("SolARKeypointDetectorOpencv constructor");
 }
@@ -96,35 +97,35 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
      case (KeypointDetectorType::SIFT):
         LOG_DEBUG("KeypointDetectorImp::setType(SIFT)");
         if (m_threshold > 0)
-                m_detector = SIFT::create(m_nbDescriptors, 3, 0.04, m_threshold);
+                m_detector = SIFT::create(m_nbDescriptors, m_nbOctaves, 0.04, m_threshold);
         else
             m_detector = SIFT::create(m_nbDescriptors);
           break;
 	case (KeypointDetectorType::AKAZE):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
 		if (m_threshold > 0)
-            m_detector = AKAZE::create(cv::AKAZE::DESCRIPTOR_MLDB, 0, 3, m_threshold);
+            m_detector = AKAZE::create(cv::AKAZE::DESCRIPTOR_MLDB, 0, 3, m_threshold, m_nbOctaves);
 		else
 			m_detector = AKAZE::create();
 		break;
 	case (KeypointDetectorType::AKAZE2):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE2)");
 		if (m_threshold > 0)
-			m_detector = AKAZE2::create(5, 0, 3, m_threshold);
+            m_detector = AKAZE2::create(5, 0, 3, m_threshold, m_nbOctaves);
 		else
 			m_detector = AKAZE2::create();
 		break;
 	case (KeypointDetectorType::ORB):
         LOG_DEBUG("KeypointDetectorImp::setType(ORB)");
 		if (m_nbDescriptors > 0)
-			m_detector=ORB::create(m_nbDescriptors);
+			m_detector=ORB::create(m_nbDescriptors, 1.2, m_nbOctaves);
 		else
 			m_detector = ORB::create();
         break;
     case (KeypointDetectorType::BRISK):
         LOG_DEBUG("KeypointDetectorImp::setType(BRISK)");
 		if (m_threshold > 0)
-			m_detector = BRISK::create((int)m_threshold);
+			m_detector = BRISK::create((int)m_threshold, m_nbOctaves);
 		else
 			m_detector=BRISK::create();
         break;
@@ -178,8 +179,22 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
                 setType(stringToType.at(this->m_type));
             }
             m_detector->detect(img_1, kpts, Mat());
-            if (m_nbDescriptors >= 0)
-                kptsFilter.retainBest(kpts,m_nbDescriptors);
+			// group keypoints according to octave
+			std::map<int, std::vector<cv::KeyPoint>> kpOctaves;
+			for (const auto &it : kpts)
+				kpOctaves[it.octave].push_back(it);
+			int nbOctaves = kpOctaves.size();
+			int nbKpPerOctave = m_nbDescriptors / nbOctaves;
+			kpts.clear();
+			// get best feature per octave
+			for (auto it = kpOctaves.rbegin(); it != kpOctaves.rend(); it++) {
+				nbOctaves--;
+				if (nbOctaves != 0)
+					kptsFilter.retainBest(it->second, nbKpPerOctave);
+				else
+					kptsFilter.retainBest(it->second, m_nbDescriptors - kpts.size());
+				kpts.insert(kpts.end(), it->second.begin(), it->second.end());
+			}
         }
     }
     catch (Exception& e)
