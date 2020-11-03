@@ -113,11 +113,6 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	m_estimator3D->estimate(firstPts3D, secondPts3D, transform2, inliers);	
 	if (inliers.size() == 0)
 		return FrameworkReturnCode::_ERROR_;
-	Eigen::Matrix3f scale;
-	Eigen::Matrix3f rot;
-	transform2.computeScalingRotation(&scale, &rot);
-	transform2.linear() = rot;
-	transform2.translation() = transform2.translation() / scale(0, 0);
 
 	/// Apply transform2 and refine transform
 	m_transform3D->transform(transform2, map);
@@ -126,16 +121,65 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	/// get best matches
 	nbMatches = inliers.size();
 	error = 0.f;
-	std::vector < std::pair<SRef<CloudPoint>, SRef<CloudPoint>>> duplicatedCPsFiltered; // first is local CP, second is global CP
+	std::vector < std::pair<uint32_t, uint32_t>> duplicatedIndiceCPsFiltered; // first is indice of local CP, second is indice of global CP
 	for (const auto &it : inliers) {
-		duplicatedCPsFiltered.push_back(duplicatedCPs[it]);
+		duplicatedIndiceCPsFiltered.push_back(std::make_pair(duplicatedCPs[it].first->getId(), duplicatedCPs[it].second->getId()));
 		Point3Df pt1(duplicatedCPs[it].first->getX(), duplicatedCPs[it].first->getY(), duplicatedCPs[it].first->getZ());
 		Point3Df pt2(duplicatedCPs[it].second->getX(), duplicatedCPs[it].second->getY(), duplicatedCPs[it].second->getZ());
 		error += (pt1 - pt2).norm();
 	}
 	error /= nbMatches;
 
-	/// Merge local map in global map
+	/// fuse local map into global map
+	fuseMap(duplicatedIndiceCPsFiltered, map, globalMap);
+
+	return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper>& globalMap, Transform3Df & transform, const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, const bool & isRefineTransform)
+{
+	uint32_t nbMatches;
+	float error;
+	if (isRefineTransform)
+		return this->merge(map, globalMap, transform, nbMatches, error);
+	// transform map
+	m_transform3D->transform(transform, map);
+	// fuse local map into global map
+	fuseMap(cpOverlapIndices, map, globalMap);
+	return FrameworkReturnCode::_SUCCESS;
+}
+
+void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, SRef<IMapper>& map, SRef<IMapper>& globalMap)
+{
+	// get map
+	SRef<IPointCloudManager> pointcloudManager, globalPointcloudManager;
+	SRef<IKeyframesManager> keyframeMananger, globalKeyframeMananger;
+	SRef<ICovisibilityGraph> covisibilityGraph, globalCovisibilityGraph;
+	SRef<api::reloc::IKeyframeRetriever> keyframeRetriever, globalKeyframeRetriever;
+	map->getPointCloudManager(pointcloudManager);
+	map->getKeyframesManager(keyframeMananger);
+	map->getCovisibilityGraph(covisibilityGraph);
+	map->getKeyframeRetriever(keyframeRetriever);
+	globalMap->getPointCloudManager(globalPointcloudManager);
+	globalMap->getKeyframesManager(globalKeyframeMananger);
+	globalMap->getCovisibilityGraph(globalCovisibilityGraph);
+	globalMap->getKeyframeRetriever(globalKeyframeRetriever);
+	std::vector<SRef<CloudPoint>> cloudPoints, globalCloudPoints;
+	std::vector<SRef<Keyframe>> keyframes, globalKeyframes;
+	pointcloudManager->getAllPoints(cloudPoints);
+	keyframeMananger->getAllKeyframes(keyframes);
+	globalPointcloudManager->getAllPoints(globalCloudPoints);
+	globalKeyframeMananger->getAllKeyframes(globalKeyframes);
+
+	// get duplicated cloud points
+	std::vector < std::pair<SRef<CloudPoint>, SRef<CloudPoint>>> duplicatedCPsFiltered; // first is local CP, second is global CP
+	for (const auto &it : cpOverlapIndices) {
+		SRef<CloudPoint> localCP, globalCP;
+		pointcloudManager->getPoint(it.first, localCP);
+		globalPointcloudManager->getPoint(it.second, globalCP);
+		duplicatedCPsFiltered.push_back(std::make_pair(localCP, globalCP));
+	}
+
 	// add point cloud of local map to global map
 	std::map<uint32_t, uint32_t> idxCPOldNew;
 	for (const auto &cp : cloudPoints) {
@@ -147,6 +191,15 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	// add keyframes of local map to global map
 	std::map<uint32_t, uint32_t> idxKfOldNew;
 	for (const auto &kf : keyframes) {
+		// unscale keyframe pose
+		Transform3Df kfPose = kf->getPose();
+		Eigen::Matrix3f scale;
+		Eigen::Matrix3f rot;
+		kfPose.computeScalingRotation(&scale, &rot);
+		kfPose.linear() = rot;
+		kfPose.translation() = kfPose.translation() / scale(0, 0);
+		kf->setPose(kfPose);
+
 		uint32_t idxOld = kf->getId();
 		globalKeyframeMananger->addKeyframe(kf);
 		idxKfOldNew[idxOld] = kf->getId();
@@ -154,7 +207,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 
 	// update visibilities of point cloud
 	for (const auto &cp : cloudPoints) {
-		std::map<uint32_t, uint32_t> visibilities = cp->getVisibility();		
+		std::map<uint32_t, uint32_t> visibilities = cp->getVisibility();
 		for (const auto &vi : visibilities) {
 			cp->removeVisibility(vi.first, vi.second);
 			cp->addVisibility(idxKfOldNew[vi.first], vi.second);
@@ -208,8 +261,6 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 		// suppress cp1
 		globalPointcloudManager->suppressPoint(cp1->getId());
 	}
-
-	return FrameworkReturnCode::_SUCCESS;
 }
 
 }
