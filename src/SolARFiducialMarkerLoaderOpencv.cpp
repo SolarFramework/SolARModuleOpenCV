@@ -91,10 +91,10 @@ namespace OPENCV {
         binaryPattern.setPatternMatrix(sfpm);
 
         // Create the new FiducialMarker object (kinf of Trackable object)
-        fiducialMarker = new FiducialMarker(binaryPattern, markerSize);
+        fiducialMarker = new FiducialMarker(m_filePath, markerSize, binaryPattern);
 
-        LOG_DEBUG("Fiducial marker uuid / width / height = {} / {} / {}",
-                  fiducialMarker->getUUID(), fiducialMarker->getWidth(), fiducialMarker->getHeight());
+        LOG_DEBUG("Fiducial marker url / width / height / pattern size = {} / {} / {} / {}",
+                  fiducialMarker->getURL(), fiducialMarker->getWidth(), fiducialMarker->getHeight(), fiducialMarker->getPattern().getSize());
 
         return fiducialMarker;
     }
