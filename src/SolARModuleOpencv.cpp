@@ -261,7 +261,6 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
 	{
 		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMapFusionOpencv>(componentUUID, interfaceRef);
 	}
-
     return errCode;
 }
 
