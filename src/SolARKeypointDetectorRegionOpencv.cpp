@@ -164,8 +164,11 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const st
     // instantiation of an opencv image from an input IImage
     cv::Mat opencvImage = SolAROpenCVHelper::mapToOpenCV(image);
 
-    cv::Mat img_1;
-    cvtColor( opencvImage, img_1, COLOR_BGR2GRAY );
+	cv::Mat img_1;
+	if (opencvImage.channels() != 1)
+		cvtColor(opencvImage, img_1, COLOR_BGR2GRAY);
+	else
+		img_1 = opencvImage;
     cv::resize(img_1, img_1, Size(img_1.cols*m_imageRatio,img_1.rows*m_imageRatio), 0, 0);
 	
     try
@@ -214,11 +217,16 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const st
 
     int kpID = 0;
 
-    for(std::vector<cv::KeyPoint>::iterator itr=kpts.begin();itr!=kpts.end();++itr){
-        Point2f ptToCheck = (*itr).pt * ratioInv;
+    for(const auto &keypoint: kpts){
+        Point2f ptToCheck = keypoint.pt * ratioInv;
         if (checkInside(contours, ptToCheck)) {
             Keypoint kpa;
-            kpa.init(kpID++, (*itr).pt.x*ratioInv, (*itr).pt.y*ratioInv, (*itr).size, (*itr).angle, (*itr).response, (*itr).octave, (*itr).class_id);
+			float px = keypoint.pt.x*ratioInv;
+			float py = keypoint.pt.y*ratioInv;
+			cv::Vec3b bgr{ 0, 0, 0 };
+			if (opencvImage.channels() == 3)
+				bgr = opencvImage.at<cv::Vec3b>((int)py, (int)px);
+			kpa.init(kpID++, px, py, bgr[2], bgr[1], bgr[0], keypoint.size, keypoint.angle, keypoint.response, keypoint.octave, keypoint.class_id);
 			keypoints.push_back(kpa);
 		}
     }
