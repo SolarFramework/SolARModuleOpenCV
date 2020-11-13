@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARDeviceDualMarkerCalibrationTest
-VERSION=0.8.1
+VERSION=0.9.0
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
