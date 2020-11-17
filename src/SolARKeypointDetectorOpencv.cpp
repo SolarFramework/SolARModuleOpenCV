@@ -184,16 +184,18 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
 			for (const auto &it : kpts)
 				kpOctaves[it.octave].push_back(it);
 			int nbOctaves = kpOctaves.size();
-			int nbKpPerOctave = m_nbDescriptors / nbOctaves;
-			kpts.clear();
-			// get best feature per octave
-			for (auto it = kpOctaves.rbegin(); it != kpOctaves.rend(); it++) {
-				nbOctaves--;
-				if (nbOctaves != 0)
-					kptsFilter.retainBest(it->second, nbKpPerOctave);
-				else
-					kptsFilter.retainBest(it->second, m_nbDescriptors - kpts.size());
-				kpts.insert(kpts.end(), it->second.begin(), it->second.end());
+			if (nbOctaves > 0) {
+				int nbKpPerOctave = m_nbDescriptors / nbOctaves;
+				kpts.clear();
+				// get best feature per octave
+				for (auto it = kpOctaves.rbegin(); it != kpOctaves.rend(); it++) {
+					nbOctaves--;
+					if (nbOctaves != 0)
+						kptsFilter.retainBest(it->second, nbKpPerOctave);
+					else
+						kptsFilter.retainBest(it->second, m_nbDescriptors - kpts.size());
+					kpts.insert(kpts.end(), it->second.begin(), it->second.end());
+				}
 			}
         }
     }
