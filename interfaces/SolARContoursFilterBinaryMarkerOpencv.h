@@ -48,15 +48,15 @@ public:
 private:    
     /// @brief The maximum distance between the original curve and its approximation.
     /// This filter first simplifies the contour if its curve is low. The simplified contour will not be more than epsilon pixels away from the original contour.
-    float m_epsilon = 0.05;
+    float m_epsilon = 0.05f;
 
     /// @brief The minimum length of an edge of a contour in pixels after simplification.
     /// Any simplified contour which will have at least one edge that will have a length in pixel less than this value will be removed from the input filters
-    float m_minContourLength = 20.0;
+    float m_minContourLength = 20.0f;
 
     /// @brief The minimum average distance in pixels between corners of a contour and the same corners of another contour
     /// If the corners are too close from the same corners of another contour, the contour with the lower perimeter is removed
-    float m_minDistanceBetweenContourCorners = 10.0;
+    float m_minDistanceBetweenContourCorners = 10.0f;
 };
 
 }

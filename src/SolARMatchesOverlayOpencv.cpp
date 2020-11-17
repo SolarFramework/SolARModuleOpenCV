@@ -126,7 +126,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
     }
     else
     {
-        nbPoints = matches.size();
+        nbPoints = static_cast<int>(matches.size());
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
@@ -264,7 +264,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
     }
     else
     {
-        nbPoints = matches.size();
+        nbPoints = static_cast<int>(matches.size());
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
@@ -400,7 +400,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
     }
     else
     {
-        nbPoints = matches.size();
+        nbPoints = static_cast<int>(matches.size());
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 
@@ -536,7 +536,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
     }
     else
     {
-        nbPoints = matches.size();
+        nbPoints = static_cast<int>(matches.size());
         if (m_maxMatches >= 0)
             nbPoints = std::min((int)m_maxMatches, nbPoints);
 

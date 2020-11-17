@@ -68,7 +68,7 @@ namespace OPENCV {
             return FrameworkReturnCode::_SUCCESS;
         }
 
-        pattern_descriptors = xpcf::utils::make_shared<DescriptorBuffer>(DescriptorType::SBPATTERN, DescriptorDataType::TYPE_8U, m_patternSize*m_patternSize, recognizedPatterns.size()*4);
+        pattern_descriptors = xpcf::utils::make_shared<DescriptorBuffer>(DescriptorType::SBPATTERN, DescriptorDataType::TYPE_8U, m_patternSize*m_patternSize, static_cast<uint32_t>(recognizedPatterns.size()*4));
         int descriptor_size = pattern_descriptors->getDescriptorByteSize();
 
         for (i = 0; i < recognizedPatterns.size(); i++)

@@ -49,7 +49,7 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
                                                                     const std::vector<Point3Df> & worldPoints,
 																	std::vector<uint32_t> & inliers,
                                                                     Transform3Df & pose,
-                                                                    const Transform3Df initialPose) {
+                                                                    [[maybe_unused]] const Transform3Df initialPose) {
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point2f> worldCVPoints;

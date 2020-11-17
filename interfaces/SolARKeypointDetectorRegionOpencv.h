@@ -86,7 +86,7 @@ private:
     int m_nbDescriptors = 10000;
 
 	/// @brief the threshold of detector to accept a keypoint
-	float m_threshold = 1e-3;
+    float m_threshold = 1e-3f;
 
     int m_id;
     cv::Ptr<cv::Feature2D> m_detector;

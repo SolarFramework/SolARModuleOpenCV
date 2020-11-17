@@ -104,7 +104,6 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Po
 
     LOG_INFO("Estimated pose of poseView2: \n {}", poseView2.matrix());
 
-    int nbInliers = 0;
     std::vector<DescriptorMatch> inlierMatches_output;
     if (inlierMatches.empty()) // set the inliers matches among all input 2D points return by recoverPose
     {
@@ -184,7 +183,6 @@ FrameworkReturnCode SolARPoseFinderFrom2D2DOpencv::estimate(const std::vector<Ke
     SolAROpenCVHelper::convertCVMatToSolar(cvTransform, view2Transform);
     poseView2 = view2Transform * poseView1Inverse ;
 
-    int nbInliers = 0;
     std::vector<DescriptorMatch> inlierMatches_output;
     if (inlierMatches.empty()) // set the inliers matches among all input 2D points return by recoverPose
     {

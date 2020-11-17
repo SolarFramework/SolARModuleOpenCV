@@ -103,7 +103,7 @@ private:
     int m_maxSearchIterations = 20;
 
     // The desired accuracy of the search window before algorithm stops.
-    float m_searchWindowAccuracy = 0.03;
+    float m_searchWindowAccuracy = 0.03f;
 
 
     FrameworkReturnCode estimate(const SRef<Image> previousImage,
