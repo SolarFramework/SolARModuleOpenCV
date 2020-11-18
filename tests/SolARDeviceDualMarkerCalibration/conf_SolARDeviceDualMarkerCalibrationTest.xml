@@ -78,13 +78,15 @@
 	<factory>
 		<bindings>
 			<bind name="Matcher-Fiducial" interface="IDescriptorMatcher" to="SolARDescriptorMatcherRadiusOpencv" />
+			<bind interface="IMarker2DSquaredBinary" to="SolARMarker2DSquaredBinaryOpencv" name="marker1" properties="marker1"/>		
+			<bind interface="IMarker2DSquaredBinary" to="SolARMarker2DSquaredBinaryOpencv" name="marker2" properties="marker2"/>
 		</bindings>
 	</factory>
 	
     <properties>
         <configure component="SolARDeviceDataLoader">
-			<property name="calibrationFile" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\hololens_calibration.yml"/>
-			<property name="pathToData" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\short_test_24092020_pose_checking_with_fiducial"/>
+			<property name="calibrationFile" type="string" value="\\filer.b-com.local\share\project\ARTWIN\Data\CALIBRATION_FILES\hololens_calibration.yml"/>
+			<property name="pathToData" type="string" value="\\filer.b-com.local\share\project\ARTWIN\Data\SOLAR_DEVICE_RECORDINGS\oo_desktop_A_14102020_130351"/>
 			<property name="delayTime" type="Integer" value="100"/>
 		</configure>
 		<configure component="SolARImageViewerOpencv">
@@ -150,13 +152,21 @@
 			<property name="zoomSensitivity" type="Float" value="10.0"/>
 			<property name="exitKey" type="Integer" value="27"/>
 		</configure>    
-		<configure component="SolARFiducialMarkerPoseEstimator">
+		<configure component="SolARFiducialMarkerPoseEstimator" name="fiducialMarkerPoseEstimator1">
 			<property name="nbThreshold" type="Integer" value="3"/>
 			<property name="minThreshold" type="Integer" value="-1"/>
 			<property name="maxThreshold" type="Integer" value="220"/>
 		</configure>
-		<configure component="SolARMarker2DSquaredBinaryOpencv">
-				<property name="filePath" type="string" value="fiducialMarker.yml" description="Path of the .yml file describing the fiducial marker."/>
+		<configure component="SolARFiducialMarkerPoseEstimator" name="fiducialMarkerPoseEstimator2">
+			<property name="nbThreshold" type="Integer" value="3"/>
+			<property name="minThreshold" type="Integer" value="-1"/>
+			<property name="maxThreshold" type="Integer" value="220"/>
+		</configure>		
+		<configure component="SolARMarker2DSquaredBinaryOpencv" name="marker1">
+				<property name="filePath" type="string" value="\\filer.b-com.local\share\project\ARTWIN\Data\FIDUCIAL_MARKERS\marker1.yml" description="Path of the .yml file describing the fiducial marker."/>
+		</configure>			
+		<configure component="SolARMarker2DSquaredBinaryOpencv" name="marker2">
+				<property name="filePath" type="string" value="\\filer.b-com.local\share\project\ARTWIN\Data\FIDUCIAL_MARKERS\marker2.yml" description="Path of the .yml file describing the fiducial marker."/>
 		</configure>	
 		<configure component="SolARImageFilterBinaryOpencv">
 			<property name="min" type="Integer" value="-1" description="minimum threshold (-1 to automatically compute it on the global image"/>

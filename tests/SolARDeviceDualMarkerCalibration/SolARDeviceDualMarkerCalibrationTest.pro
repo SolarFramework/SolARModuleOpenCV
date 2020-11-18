@@ -3,8 +3,8 @@ QT       -= core gui
 CONFIG -= qt
 
 ## global defintions : target lib name, version
-TARGET = SolARMappingUsingARDeviceData
-VERSION=0.8.1
+TARGET = SolARDeviceDualMarkerCalibrationTest
+VERSION=0.9.0
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
@@ -64,7 +64,7 @@ win32 {
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $${PWD}/conf_SolARMappingUsingARDeviceData.xml
+configfile.files = $${PWD}/conf_SolARDeviceDualMarkerCalibrationTest.xml
 INSTALLS += configfile
 
 DISTFILES += \

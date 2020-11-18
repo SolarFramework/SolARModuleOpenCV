@@ -30,6 +30,7 @@
 #include "SolARDescriptorsExtractorAKAZE2Opencv.h"
 #include "SolARDescriptorsExtractorORBOpencv.h"
 #include "SolARDescriptorsExtractorSBPatternOpencv.h"
+#include "SolARFiducialMarkerLoaderOpencv.h"
 #include "SolARFundamentalMatrixEstimationOpencv.h"
 #include "SolARGeometricMatchesFilterOpencv.h"
 #include "SolARHomographyEstimationOpencv.h"
@@ -62,6 +63,7 @@
 #include "SolARVideoAsCameraOpencv.h"
 #include "SolARImagesAsCameraOpencv.h"
 #include "SolARDeviceDataLoader.h"
+#include "SolARMapFusionOpencv.h"
 
 namespace xpcf=org::bcom::xpcf;
 
@@ -122,6 +124,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv>(componentUUID,interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARFiducialMarkerLoaderOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
@@ -251,7 +257,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
 	{
 		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDeviceDataLoader>(componentUUID, interfaceRef);
 	}
-
+	if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+	{
+		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMapFusionOpencv>(componentUUID, interfaceRef);
+	}
     return errCode;
 }
 
@@ -270,6 +279,7 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorORBOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSBPatternOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARFiducialMarkerLoaderOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv)
@@ -301,4 +311,5 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolAR2D3DCorrespondencesFinderOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImagesAsCameraOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDeviceDataLoader)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapFusionOpencv)
 XPCF_END_COMPONENTS_DECLARATION

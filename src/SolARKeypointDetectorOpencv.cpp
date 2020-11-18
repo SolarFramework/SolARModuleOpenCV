@@ -183,17 +183,19 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
 			std::map<int, std::vector<cv::KeyPoint>> kpOctaves;
 			for (const auto &it : kpts)
 				kpOctaves[it.octave].push_back(it);
-            int nbOctaves = static_cast<int>(kpOctaves.size());
-            int nbKpPerOctave = m_nbDescriptors / nbOctaves;
-			kpts.clear();
-			// get best feature per octave
-			for (auto it = kpOctaves.rbegin(); it != kpOctaves.rend(); it++) {
-				nbOctaves--;
-				if (nbOctaves != 0)
-					kptsFilter.retainBest(it->second, nbKpPerOctave);
-				else
-                    kptsFilter.retainBest(it->second, m_nbDescriptors - static_cast<int>(kpts.size()));
-				kpts.insert(kpts.end(), it->second.begin(), it->second.end());
+			int nbOctaves = static_cast<int>(kpOctaves.size());
+			if (nbOctaves > 0) {
+				int nbKpPerOctave = m_nbDescriptors / nbOctaves;
+				kpts.clear();
+				// get best feature per octave
+				for (auto it = kpOctaves.rbegin(); it != kpOctaves.rend(); it++) {
+					nbOctaves--;
+					if (nbOctaves != 0)
+						kptsFilter.retainBest(it->second, nbKpPerOctave);
+					else
+						kptsFilter.retainBest(it->second, m_nbDescriptors - static_cast<int>(kpts.size()));
+					kpts.insert(kpts.end(), it->second.begin(), it->second.end());
+				}
 			}
         }
     }
@@ -205,10 +207,15 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
     }
 
     int kpID=0;
-    for(auto keypoint : kpts){
+    for(const auto& keypoint : kpts){
        Keypoint kpa;
-       kpa.init(kpID++, keypoint.pt.x*ratioInv, keypoint.pt.y*ratioInv, keypoint.size, keypoint.angle, keypoint.response, keypoint.octave, keypoint.class_id) ;
-       keypoints.push_back(kpa);
+	   float px = keypoint.pt.x*ratioInv;
+	   float py = keypoint.pt.y*ratioInv;
+	   cv::Vec3b bgr{ 0, 0, 0 };
+	   if (opencvImage.channels() == 3)
+		   bgr = opencvImage.at<cv::Vec3b>((int)py, (int)px);
+       kpa.init(kpID++, px, py, bgr[2], bgr[1], bgr[0], keypoint.size, keypoint.angle, keypoint.response, keypoint.octave, keypoint.class_id) ;
+       keypoints.push_back(kpa);	   
     }
 }
 

@@ -114,7 +114,7 @@ namespace OPENCV {
 		}
 		else
 		{
-			LOG_ERROR("Cannot open camera calibration file");
+            LOG_ERROR("Cannot open camera calibration file: {}", m_calibrationFile);
 			return xpcf::_FAIL;
 		}		
 

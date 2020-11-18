@@ -284,9 +284,9 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 	// Get position of keypoints
     unsigned int pts_size = static_cast<unsigned int>(matches.size());
 	std::vector<cv::Point2f> pts1, pts2;
-    for (unsigned int i = 0; i < pts_size; ++i) {
-		Keypoint kp1 = keypointsView1[matches[i].getIndexInDescriptorA()];
-		Keypoint kp2 = keypointsView2[matches[i].getIndexInDescriptorB()];
+	for (unsigned int i = 0; i < pts_size; ++i) {
+		const Keypoint &kp1 = keypointsView1[matches[i].getIndexInDescriptorA()];
+		const Keypoint &kp2 = keypointsView2[matches[i].getIndexInDescriptorB()];
 		pts1.push_back(cv::Point2f(kp1.getX(), kp1.getY()));
 		pts2.push_back(cv::Point2f(kp2.getX(), kp2.getY()));
 	}
@@ -356,12 +356,20 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 
 			cvDescMean = cvDesc1 / 2 + cvDesc2 / 2;
 		}
-
 		SRef<DescriptorBuffer> descMean = xpcf::utils::make_shared<DescriptorBuffer>(cvDescMean.data, descriptor1->getDescriptorType(), descriptor1->getDescriptorDataType(), descriptor1->getNbElements(), 1);
 
+		// rgb mean
+		const Keypoint &kp1 = keypointsView1[matches[i].getIndexInDescriptorA()];
+		const Keypoint &kp2 = keypointsView2[matches[i].getIndexInDescriptorB()];
+		Vector3f rgbMean = (kp1.getRGB() + kp2.getRGB()) / 2.f / 255.f;
+
+		// view direction
+		Vector3f viewNor(meanCamCenter(0) - pts3D[i].getX(), meanCamCenter(1) - pts3D[i].getY(), meanCamCenter(2) - pts3D[i].getZ());
+		viewNor = viewNor / viewNor.norm();
+
 		// make a new cloud point
-		SRef<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>(pts3D[i].getX(), pts3D[i].getY(), pts3D[i].getZ(), 0.0, 0.0, 0.0, meanCamCenter(0) - pts3D[i].getX(),
-			meanCamCenter(1) - pts3D[i].getY(), meanCamCenter(2) - pts3D[i].getZ(), reprj_err, visibility, descMean);
+		SRef<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>(pts3D[i].getX(), pts3D[i].getY(), pts3D[i].getZ(), rgbMean[0], rgbMean[1], rgbMean[2], 
+			viewNor[0], viewNor[1], viewNor[2], reprj_err, visibility, descMean);
 		pcloud.push_back(cp);
 	}
 	cv::Scalar mse = cv::mean(reproj_error);

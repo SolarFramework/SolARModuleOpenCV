@@ -42,6 +42,7 @@ class SolARDescriptorsExtractorAKAZE2Opencv;
 class SolARDescriptorsExtractorAKAZEOpencv;
 class SolARDescriptorsExtractorORBOpencv;
 class SolARDescriptorsExtractorSBPatternOpencv;
+class SolARFiducialMarkerLoaderOpencv;
 class SolARFundamentalMatrixEstimationOpencv;
 class SolARGeometricMatchesFilterOpencv;
 class SolARHomographyEstimationOpencv;
@@ -75,6 +76,7 @@ class SolAR2D3DCorrespondencesFinderOpencv;
 class SolARUndistortPointsOpencv;
 class SolARVideoAsCameraOpencv;
 class SolARDeviceDataLoader;
+class SolARMapFusionOpencv;
 }
 }
 }
@@ -153,6 +155,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSB
                              "d25625ba-ce3a-11e7-abc4-cec278b6b50a",
                              "SolARDescriptorsExtractorSBPatternOpencv",
                              "Extracts the descriptor corresponding to a squared binary marker pattern.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARFiducialMarkerLoaderOpencv,
+                             "d0116ed2-45d7-455d-8011-57959da1b0fa",
+                             "SolARFiducialMarkerLoaderOpencv",
+                             "Loads a fiducial marker from a description file.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv,
                              "79b29b50-cf4d-441e-b5de-1de829b91c41",
@@ -313,5 +320,9 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDeviceDataLoader,
 							"4b5576c1-4c44-4835-a405-c8de2d4f85b0",
 							"SolARDeviceDataLoader",
 							"Load AR device data including images, poses, timestamp.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMapFusionOpencv,
+							"bc661909-0185-40a4-a5e6-e52280e7b338",
+							"SolARMapFusionOpencv",
+							"Merge local map or floating map in the global map.")
 
 #endif // SOLARMODULEOPENCV_TRAITS_H
