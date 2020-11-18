@@ -119,7 +119,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	transform = transform2 * transform;
 
 	/// get best matches
-	nbMatches = inliers.size();
+    nbMatches = static_cast<uint32_t>(inliers.size());
 	error = 0.f;
 	std::vector < std::pair<uint32_t, uint32_t>> duplicatedIndiceCPsFiltered; // first is indice of local CP, second is indice of global CP
 	for (const auto &it : inliers) {

@@ -88,7 +88,7 @@ private:
 	void fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>&cpOverlapIndices, SRef<IMapper> &map, SRef<IMapper> &globalMap);
 
 private:
-	float													m_radius = 0.3;
+    float													m_radius = 0.3f;
 	SRef<api::geom::I3DTransform>							m_transform3D;
 	SRef<api::features::IDescriptorMatcher>					m_matcher;
 	SRef<api::solver::pose::I3DTransformSACFinderFrom3D3D>	m_estimator3D;
