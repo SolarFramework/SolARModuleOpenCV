@@ -49,9 +49,9 @@ class SOLAROPENCV_EXPORT_API SolARFiducialMarkerLoaderOpencv : public org::bcom:
         void unloadComponent () override;
 
         /// @brief Loads a specific trackable object and its features.
-        /// @return Trackable * : the trackable object created from the description file
-        /// or nullptr if an error occurs
-        virtual Trackable * loadTrackable() override;
+        /// @return SRef<Trackable> : the trackable object created from the description file
+        /// or 0 if an error occurs
+        virtual SRef<Trackable> loadTrackable() override;
 
      private:
         /// @brief the path to the file describing the fiducial marker

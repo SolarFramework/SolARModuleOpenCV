@@ -38,9 +38,9 @@ namespace OPENCV {
         LOG_DEBUG(" SolARFiducialMarkerLoaderOpencv destructor")
     }
 
-    Trackable * SolARFiducialMarkerLoaderOpencv::loadTrackable()
+    SRef<Trackable> SolARFiducialMarkerLoaderOpencv::loadTrackable()
     {
-        FiducialMarker *fiducialMarker = nullptr; // Fiducial Marker instance returned
+        SRef<FiducialMarker> fiducialMarker = 0; // Fiducial Marker instance returned
         SquaredBinaryPattern binaryPattern; // Binary pattern of the fiducial marker
         Sizef markerSize; // Size of the fiducial image
         cv::Mat cv_pattern;
@@ -91,7 +91,7 @@ namespace OPENCV {
         binaryPattern.setPatternMatrix(sfpm);
 
         // Create the new FiducialMarker object (kinf of Trackable object)
-        fiducialMarker = new FiducialMarker(m_filePath, markerSize, binaryPattern);
+        fiducialMarker = SRef<FiducialMarker>(new FiducialMarker(m_filePath, markerSize, binaryPattern));
 
         LOG_DEBUG("Fiducial marker url / width / height / pattern size = {} / {} / {} / {}",
                   fiducialMarker->getURL(), fiducialMarker->getWidth(), fiducialMarker->getHeight(), fiducialMarker->getPattern().getSize());
