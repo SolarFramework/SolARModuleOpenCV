@@ -63,14 +63,14 @@ public:
      private:
 
         /// @brief The desirable level of confidence (propability) that the estimated matrix is correct.
-        float m_confidence = 0.99;
+        float m_confidence = 0.99f;
 
         ///  @brief threshold to define which point are ouliers
         ///  Here we are using a RANSAC method to keep only inliers matches.
         ///  This attribute is the ratio between the maximum distance in pixels between source points and the maximum distance in pixels to the epipolar line for which point is considered as a outlier.
         ///  The higher is this ratio, the more you will keep inliers to estimate your 2D transform, but the less this estimation will be correct.
         ///  By default, this value is set to the one proposed by [Snavely07 4.1]
-        float m_outlierDistanceRatio = 0.006;
+        float m_outlierDistanceRatio = 0.006f;
 
 		///  @brief threshold to valid matches based on distance to epilines
 		float m_epilinesDistance = 10.f;

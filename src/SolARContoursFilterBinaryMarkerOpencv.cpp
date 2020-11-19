@@ -107,7 +107,7 @@ namespace OPENCV {
                 distSquared /= 4;
                 if (distSquared < minSquaredDistance)
                 {
-                    tooNearCandidates.push_back(std::pair<int, int>(i, j));
+                    tooNearCandidates.push_back(std::pair<int, int>(static_cast<int>(i), static_cast<int>(j)));
                 }
             }
         }

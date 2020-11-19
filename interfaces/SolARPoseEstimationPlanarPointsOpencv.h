@@ -71,7 +71,7 @@ private:
     int m_minNbInliers = 10;
 
     /// @brief Inlier threshold value used by the RANSAC procedure. The parameter value is the maximum allowed distance between the observed and computed point projections to consider it an inlier.
-    float m_reprojErrorThreshold = 0.1;
+    float m_reprojErrorThreshold = 0.1f;
 
 
     cv::Mat m_camMatrix;

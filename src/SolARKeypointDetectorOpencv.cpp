@@ -118,7 +118,7 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
 	case (KeypointDetectorType::ORB):
         LOG_DEBUG("KeypointDetectorImp::setType(ORB)");
 		if (m_nbDescriptors > 0)
-			m_detector=ORB::create(m_nbDescriptors, 1.2, m_nbOctaves);
+            m_detector=ORB::create(m_nbDescriptors, 1.2f, m_nbOctaves);
 		else
 			m_detector = ORB::create();
         break;
@@ -183,7 +183,7 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
 			std::map<int, std::vector<cv::KeyPoint>> kpOctaves;
 			for (const auto &it : kpts)
 				kpOctaves[it.octave].push_back(it);
-			int nbOctaves = kpOctaves.size();
+			int nbOctaves = static_cast<int>(kpOctaves.size());
 			if (nbOctaves > 0) {
 				int nbKpPerOctave = m_nbDescriptors / nbOctaves;
 				kpts.clear();
@@ -193,7 +193,7 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
 					if (nbOctaves != 0)
 						kptsFilter.retainBest(it->second, nbKpPerOctave);
 					else
-						kptsFilter.retainBest(it->second, m_nbDescriptors - kpts.size());
+						kptsFilter.retainBest(it->second, m_nbDescriptors - static_cast<int>(kpts.size()));
 					kpts.insert(kpts.end(), it->second.begin(), it->second.end());
 				}
 			}

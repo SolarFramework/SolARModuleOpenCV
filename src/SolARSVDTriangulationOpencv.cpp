@@ -127,9 +127,9 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
 		poseView2Inverse(2, 0), poseView2Inverse(2, 1), poseView2Inverse(2, 2), poseView2Inverse(2, 3));
 
 	// Get position of keypoints
-	unsigned int pts_size = matches.size();
+    unsigned int pts_size = static_cast<unsigned int>(matches.size());
 	std::vector<cv::Point2f> pts1, pts2;
-	for (int i = 0; i < pts_size; ++i) {
+    for (unsigned int i = 0; i < pts_size; ++i) {
 		Point2Df kp1 = pointsView1[matches[i].getIndexInDescriptorA()];
 		Point2Df kp2 = pointsView2[matches[i].getIndexInDescriptorB()];
 		pts1.push_back(cv::Point2f(kp1.getX(), kp1.getY()));
@@ -146,7 +146,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
 
 	// Triangulation
 	std::vector<Point3Df> pts3D;
-	for (int i = 0; i < pts_size; i++) {
+    for (unsigned int i = 0; i < pts_size; i++) {
 		cv::Point2f ptUn1 = ptsUn1[i];
 		cv::Point2f ptUn2 = ptsUn2[i];
 		cv::Point3f u1(ptUn1.x, ptUn1.y, 1.0);
@@ -162,7 +162,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
 
 	// Create cloud points
 	std::vector<float> reproj_error;
-	for (int i = 0; i < pts_size; ++i) {
+    for (unsigned int i = 0; i < pts_size; ++i) {
 		// Compute reprojection error
 		cv::Point2f pt1 = pts1[i];
 		cv::Point2f pt1_reproj = cv::Point2f(ptsIn1[i].getX(), ptsIn1[i].getY());
@@ -203,9 +203,9 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
 		poseView2Inverse(2, 0), poseView2Inverse(2, 1), poseView2Inverse(2, 2), poseView2Inverse(2, 3));
 
 	// Get position of keypoints
-	unsigned int pts_size = matches.size();
+    unsigned int pts_size = static_cast<unsigned int>(matches.size());
 	std::vector<cv::Point2f> pts1, pts2;
-	for (int i = 0; i < pts_size; ++i) {
+    for (unsigned int i = 0; i < pts_size; ++i) {
 		Keypoint kp1 = keypointsView1[matches[i].getIndexInDescriptorA()];
 		Keypoint kp2 = keypointsView2[matches[i].getIndexInDescriptorB()];
 		pts1.push_back(cv::Point2f(kp1.getX(), kp1.getY()));
@@ -222,7 +222,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
 
 	// Triangulation
 	std::vector<Point3Df> pts3D;
-	for (int i = 0; i < pts_size; i++) {
+    for (unsigned int i = 0; i < pts_size; i++) {
 		cv::Point2f ptUn1 = ptsUn1[i];
 		cv::Point2f ptUn2 = ptsUn2[i];
 		cv::Point3f u1(ptUn1.x, ptUn1.y, 1.0);
@@ -238,7 +238,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
 
 	// Create cloud points
 	std::vector<float> reproj_error;
-	for (int i = 0; i < pts_size; ++i) {
+    for (unsigned int i = 0; i < pts_size; ++i) {
 		// Compute reprojection error
 		cv::Point2f pt1 = pts1[i];
 		cv::Point2f pt1_reproj = cv::Point2f(ptsIn1[i].getX(), ptsIn1[i].getY());
@@ -282,9 +282,9 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 		poseView2Inverse(2, 0), poseView2Inverse(2, 1), poseView2Inverse(2, 2), poseView2Inverse(2, 3));
 
 	// Get position of keypoints
-	unsigned int pts_size = matches.size();
+    unsigned int pts_size = static_cast<unsigned int>(matches.size());
 	std::vector<cv::Point2f> pts1, pts2;
-	for (int i = 0; i < pts_size; ++i) {
+	for (unsigned int i = 0; i < pts_size; ++i) {
 		const Keypoint &kp1 = keypointsView1[matches[i].getIndexInDescriptorA()];
 		const Keypoint &kp2 = keypointsView2[matches[i].getIndexInDescriptorB()];
 		pts1.push_back(cv::Point2f(kp1.getX(), kp1.getY()));
@@ -301,7 +301,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 
 	// Triangulation
 	std::vector<Point3Df> pts3D;
-	for (int i = 0; i < pts_size; i++) {
+    for (unsigned int i = 0; i < pts_size; i++) {
 		cv::Point2f ptUn1 = ptsUn1[i];
 		cv::Point2f ptUn2 = ptsUn2[i];
 		cv::Point3f u1(ptUn1.x, ptUn1.y, 1.0);
@@ -317,7 +317,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 
 	// Create cloud points
 	std::vector<float> reproj_error;
-	for (int i = 0; i < pts_size; ++i) {
+    for (unsigned int i = 0; i < pts_size; ++i) {
 		// Compute reprojection error
 		cv::Point2f pt1 = pts1[i];
 		cv::Point2f pt1_reproj = cv::Point2f(ptsIn1[i].getX(), ptsIn1[i].getY());
