@@ -49,7 +49,7 @@ SolARDescriptorsExtractorAKAZE2Opencv::~SolARDescriptorsExtractorAKAZE2Opencv()
 xpcf::XPCFErrorCode SolARDescriptorsExtractorAKAZE2Opencv::onConfigured()
 {
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZE2Opencv onConfigured");
-    if (m_extractor->empty())
+    if (m_extractor.empty())
         return xpcf::_FAIL;
     m_extractor->setThreshold(m_threshold);
     return xpcf::_SUCCESS;
