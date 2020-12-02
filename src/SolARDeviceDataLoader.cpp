@@ -51,7 +51,7 @@ namespace OPENCV {
 		if (m_calibrationFile.empty())
 		{
 			LOG_ERROR("Camera Calibration file path is empty");
-			return xpcf::_FAIL;
+			return xpcf::XPCFErrorCode::_FAIL;
 		}
 		cv::FileStorage fs(m_calibrationFile, cv::FileStorage::READ);
 		cv::Mat intrinsic_parameters;
@@ -79,7 +79,7 @@ namespace OPENCV {
 				if (intrinsic_parameters.empty())
 				{
 					LOG_ERROR("No intrinsics found in calibration file");
-					return xpcf::_FAIL;
+					return xpcf::XPCFErrorCode::_FAIL;
 				}
 
 				if (intrinsic_parameters.rows == camParams.intrinsic.rows() && intrinsic_parameters.cols == camParams.intrinsic.cols())
@@ -89,13 +89,13 @@ namespace OPENCV {
 				else
 				{
 					LOG_ERROR("Camera Calibration should be a 3x3 Matrix");
-					return xpcf::_FAIL;
+					return xpcf::XPCFErrorCode::_FAIL;
 				}
 
 				if (distortion_parameters.empty())
 				{
 					LOG_ERROR("No distortion parameters found in calibration file");
-					return xpcf::_FAIL;
+					return xpcf::XPCFErrorCode::_FAIL;
 				}
 
 				if (distortion_parameters.rows == camParams.distortion.rows() && distortion_parameters.cols == camParams.distortion.cols())
@@ -105,20 +105,20 @@ namespace OPENCV {
 				else
 				{
 					LOG_ERROR("Camera distortion matrix should be a 5x1 Matrix");
-					return xpcf::_FAIL;
+					return xpcf::XPCFErrorCode::_FAIL;
 				}
 				m_camParameters.push_back(camParams);
 				LOG_DEBUG("Loaded {} intrinsics", i);
 			}
-			return xpcf::_SUCCESS;
+			return xpcf::XPCFErrorCode::_SUCCESS;
 		}
 		else
 		{
             LOG_ERROR("Cannot open camera calibration file: {}", m_calibrationFile);
-			return xpcf::_FAIL;
+			return xpcf::XPCFErrorCode::_FAIL;
 		}		
 
-		return xpcf::_SUCCESS;
+		return xpcf::XPCFErrorCode::_SUCCESS;
 	}
 
 	FrameworkReturnCode SolARDeviceDataLoader::start()

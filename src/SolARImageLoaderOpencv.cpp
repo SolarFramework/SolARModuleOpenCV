@@ -63,9 +63,9 @@ xpcf::XPCFErrorCode SolARImageLoaderOpencv::onConfigured()
 
     // Load the image when its path has been read
     if (reloadImage() == FrameworkReturnCode::_SUCCESS)
-        return xpcf::_SUCCESS;
+        return xpcf::XPCFErrorCode::_SUCCESS;
     else
-        return xpcf::_FAIL;
+        return xpcf::XPCFErrorCode::_FAIL;
 }
 
 FrameworkReturnCode SolARImageLoaderOpencv::reloadImage()

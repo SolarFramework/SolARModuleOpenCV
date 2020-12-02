@@ -50,9 +50,9 @@ xpcf::XPCFErrorCode SolARDescriptorsExtractorAKAZE2Opencv::onConfigured()
 {
     LOG_DEBUG(" SolARDescriptorsExtractorAKAZE2Opencv onConfigured");
     if (m_extractor.empty())
-        return xpcf::_FAIL;
+        return xpcf::XPCFErrorCode::_FAIL;
     m_extractor->setThreshold(m_threshold);
-    return xpcf::_SUCCESS;
+    return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
 void SolARDescriptorsExtractorAKAZE2Opencv::extract(const SRef<Image> image, const std::vector<Keypoint> & keypoints, SRef<DescriptorBuffer> & descriptors)

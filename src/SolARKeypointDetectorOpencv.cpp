@@ -68,7 +68,7 @@ xpcf::XPCFErrorCode SolARKeypointDetectorOpencv::onConfigured()
     if (stringToType.find(m_type) != stringToType.end())
     {
         setType(stringToType.at(m_type));
-         return xpcf::_SUCCESS;
+         return xpcf::XPCFErrorCode::_SUCCESS;
     }
     else
     {
