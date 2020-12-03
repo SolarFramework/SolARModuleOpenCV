@@ -22,15 +22,15 @@
         </configure>
         <configure component="SolARImageViewerOpencv" name="confImage_prop">
 			<property name="title" type="string" value="Image from the configuration file (press esc key to exit)"/>
-			<property name="exitKey" type="Integer" value="27"/>
-			<property name="width" type="Integer" value="0"/>
-			<property name="height" type="Integer" value="0"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
         </configure>
         <configure component="SolARImageViewerOpencv" name="paramImage_prop">
 			<property name="title" type="string" value="Image from the exe parameter (press esc key to exit)"/>
-			<property name="exitKey" type="Integer" value="27"/>
-			<property name="width" type="Integer" value="0"/>
-			<property name="height" type="Integer" value="0"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
         </configure>
     </properties>
 </xpcf-registry>

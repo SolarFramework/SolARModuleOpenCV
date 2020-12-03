@@ -26,20 +26,20 @@
 			<property name="filePath" type="string" value="../../data/notredame1.jpg"/>
 		</configure>
 		<configure component="SolARImageConvertorOpencv">
-			<property name="colorMap" type="Integer" value="2"/>
-			<property name="equalizeLUT" type="Integer" value="0"/>
+            <property name="colorMap" type="int" value="2"/>
+            <property name="equalizeLUT" type="int" value="0"/>
 		</configure>
 		<configure component="SolARImageViewerOpencv">
 			<property name="title" type="string" value="Image Conversion (press esc key to exit)"/>
-			<property name="exitKey" type="Integer" value="27"/>
-			<property name="width" type="Integer" value="0"/>
-			<property name="height" type="Integer" value="0"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
 		</configure>
 		<configure component="SolARImageViewerOpencv" name="LUT">
 			<property name="title" type="string" value="Image Conversion LUT (press esc key to exit)"/>
-			<property name="exitKey" type="Integer" value="27"/>
-			<property name="width" type="Integer" value="0"/>
-			<property name="height" type="Integer" value="0"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
 		</configure>
     </properties>
 </xpcf-registry>

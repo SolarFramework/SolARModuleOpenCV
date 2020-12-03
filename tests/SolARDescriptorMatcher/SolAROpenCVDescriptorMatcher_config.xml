@@ -67,57 +67,57 @@
         </configure>
         <configure component="SolARKeypointDetectorOpencv" name="AKAZEDescProperties">
 			<property name="type" type="string" value="AKAZE2"/>
-			<property name="imageRatio" type="Float" value="0.5"/>
-			<property name="nbDescriptors" type="Integer" value="1000"/>
+            <property name="imageRatio" type="float" value="0.5"/>
+            <property name="nbDescriptors" type="int" value="1000"/>
         </configure>
         <configure component="SolARKeypointDetectorOpencv" name="ORBDescProperties">
             <property name="type" type="string" value="ORB"/>
-            <property name="imageRatio" type="Float" value="0.5"/>
-            <property name="nbDescriptors" type="Integer" value="1000"/>
+            <property name="imageRatio" type="float" value="0.5"/>
+            <property name="nbDescriptors" type="int" value="1000"/>
         </configure>
         <configure component="SolARKeypointDetectorOpencv" name="SIFTDescProperties">
             <property name="type" type="string" value="SIFT"/>
-            <property name="imageRatio" type="Float" value="0.5"/>
-            <property name="nbDescriptors" type="Integer" value="1000"/>
+            <property name="imageRatio" type="float" value="0.5"/>
+            <property name="nbDescriptors" type="int" value="1000"/>
         </configure>
         <configure component="SolARKeypointDetectorOpencv">
             <property name="type" type="string" value="AKAZE2"/>
-            <property name="imageRatio" type="Float" value="0.5"/>
-            <property name="nbDescriptors" type="Integer" value="1000"/>
+            <property name="imageRatio" type="float" value="0.5"/>
+            <property name="nbDescriptors" type="int" value="1000"/>
         </configure>
         <configure component="SolARDescriptorsExtractorAKAZE2Opencv">
-            <property name="threshold" type="Float" value="3e-4"/>
+            <property name="threshold" type="float" value="3e-4"/>
         </configure>
         <configure component="SolARDescriptorMatcherHammingBruteForceOpencv">
-			<property name="distanceRatio" type="Float" value="0.9"/>
+            <property name="distanceRatio" type="float" value="0.9"/>
         </configure>
         <configure component="SolARMatchesOverlayOpencv">
-            <property name="thickness" type="UnsignedInteger" value="1"/>
+            <property name="thickness" type="uint" value="1"/>
 			<property name="mode" type="string" value="RANDOM"/>
-			<property name="color"  type="UnsignedInteger">
+            <property name="color"  type="uint">
 				<value>0</value>
 				<value>0</value>
 				<value>255</value>
 			</property>
-			<property name="maxMatches" type="UnsignedInteger" value="-1"/>	
+            <property name="maxMatches" type="uint" value="-1"/>
         </configure>
         <configure component="SolARImageViewerOpencv" name="AKAZEViewerProperties">
             <property name="title" type="string" value="Matches AKAZE2 (press esc key to exit)"/>
-			<property name="exitKey" type="Integer" value="27"/>
-			<property name="width" type="Integer" value="0"/>
-			<property name="height" type="Integer" value="0"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
         </configure>
         <configure component="SolARImageViewerOpencv" name="ORBViewerProperties">
             <property name="title" type="string" value="Matches ORB (press esc key to exit)"/>
-            <property name="exitKey" type="Integer" value="27"/>
-            <property name="width" type="Integer" value="0"/>
-            <property name="height" type="Integer" value="0"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
         </configure>
         <configure component="SolARImageViewerOpencv" name="SIFTViewerProperties">
             <property name="title" type="string" value="Matches SIFT (press esc key to exit)"/>
-            <property name="exitKey" type="Integer" value="27"/>
-            <property name="width" type="Integer" value="0"/>
-            <property name="height" type="Integer" value="0"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
         </configure>
     </properties>
 </xpcf-registry>

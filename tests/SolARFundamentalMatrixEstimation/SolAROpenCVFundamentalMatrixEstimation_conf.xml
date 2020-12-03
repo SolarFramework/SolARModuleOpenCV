@@ -14,7 +14,7 @@
     <properties>
         <configure component="SolARCameraOpencv">
             <property name="calibrationFile" type="string" value="../../data/camera_calibration.yml"/>
-			<property name="deviceID" type="UnsignedInteger" value="0"/>
+            <property name="deviceID" type="uint" value="0"/>
         </configure>
     </properties>
 </xpcf-registry>
