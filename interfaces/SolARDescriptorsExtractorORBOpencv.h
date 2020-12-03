@@ -18,11 +18,12 @@
 #define SOLARDESCRIPTORSEXTRACTOORBROPENCV_H
 
 #include "api/features/IDescriptorsExtractor.h"
+#include <string>
 
 // Definition of SolARDescriptorExtractorOpencv Class //
 // part of SolAR namespace //
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
@@ -42,12 +43,15 @@ namespace OPENCV {
  *
  */
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorORBOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorORBOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorsExtractor {
 public:
     SolARDescriptorsExtractorORBOpencv();
     ~SolARDescriptorsExtractorORBOpencv() override;
+
+    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
     void unloadComponent () override final;
+
     std::string getTypeString() override { return std::string("DescriptorsExtractorType::ORB"); }
     /// @brief Extracts a set of descriptors from a given image around a set of keypoints based on ORB algorithm
     /// "ORB: an efficient alternative to SIFT or SURF"
@@ -59,6 +63,18 @@ public:
                   SRef<DescriptorBuffer> & descriptors) override;
 private:
     cv::Ptr<cv::Feature2D> m_extractor;
+
+
+// For more information concerning the OR configuration parameters: https://docs.opencv.org/3.4/db/d95/classcv_1_1ORB.html
+    int m_nbFeatures = 500;
+    float m_scaleFactor = 1.2f;
+    int m_nbLevels = 8;
+    int m_edgeThreshold = 31;
+    int m_firstLevel=0;
+    int m_WTAK = 2;
+    std::string m_scoreType = "Harris"; // Accepted values: Harris or Fast
+    int m_patchSize = 31;
+    int m_fastThreshold = 20;
 };
 
 }
