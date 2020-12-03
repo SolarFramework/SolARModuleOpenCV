@@ -34,7 +34,7 @@ namespace OPENCV {
 /**
  * @class SolAR3DOverlayBoxOpencv
  * @brief <B>Draws a 3D box on an image.</B>
- * <TT>UUID: 2db01f59-9793-4cd5-8e13-b25d0ed5735</TT>
+ * <TT>UUID: 2db01f59-9793-4cd5-8e13-b25d0ed5735b</TT>
  *
  */
 
