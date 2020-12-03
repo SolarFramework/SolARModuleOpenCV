@@ -35,36 +35,36 @@
     <properties>
         <configure component="SolARCameraOpencv">
 			<property name="calibrationFile" type="string" value="../../data/camera_calibration.yml"/>
-			<property name="deviceID" type="UnsignedInteger" value="0"/>
+            <property name="deviceID" type="uint" value="0"/>
         </configure>
         <configure component="SolAROpticalFlowPyrLKOpencv">
-			<property name="searchWinWidth" type="Integer" value="21"/>
-			<property name="searchWinHeight" type="Integer" value="21"/>
-			<property name="maxLevel" type="Integer" value="3"/>
-			<property name="minEigenThreshold" type="Double" value="-1.0"/>
-			<property name="maxSearchIterations" type="Integer" value="20"/>
-			<property name="searchWindowAccuracy" type="Float" value="0.03"/>
+            <property name="searchWinWidth" type="int" value="21"/>
+            <property name="searchWinHeight" type="int" value="21"/>
+            <property name="maxLevel" type="int" value="3"/>
+            <property name="minEigenThreshold" type="double" value="-1.0"/>
+            <property name="maxSearchIterations" type="int" value="20"/>
+            <property name="searchWindowAccuracy" type="float" value="0.03"/>
         </configure>
         <configure component="SolARKeypointDetectorOpencv">
 			<property name="type" type="string" value="AKAZE2"/>
-			<property name="imageRatio" type="Float" value="0.5"/>
-			<property name="nbDescriptors" type="Integer" value="1000"/>
+            <property name="imageRatio" type="float" value="0.5"/>
+            <property name="nbDescriptors" type="int" value="1000"/>
         </configure>
         <configure component="SolARMatchesOverlayOpencv">
-            <property name="thickness" type="UnsignedInteger" value="1"/>
+            <property name="thickness" type="uint" value="1"/>
 			<property name="mode" type="string" value="COLOR"/>
-			<property name="color"  type="UnsignedInteger">
+            <property name="color"  type="uint">
 				<value>0</value>
 				<value>255</value>
 				<value>0</value>
 			</property>
-			<property name="maxMatches" type="UnsignedInteger" value="-1"/>	
+            <property name="maxMatches" type="uint" value="-1"/>
         </configure>
         <configure component="SolARImageViewerOpencv">
 			<property name="title" type="string" value="Matches (press esc key to exit)"/>
-			<property name="exitKey" type="Integer" value="27"/>
-			<property name="width" type="Integer" value="0"/>
-			<property name="height" type="Integer" value="0"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
         </configure>
     </properties>
 </xpcf-registry>
