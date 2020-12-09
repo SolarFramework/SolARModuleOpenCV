@@ -44,8 +44,7 @@ class SOLAROPENCV_EXPORT_API SolAR3DOverlayBoxOpencv : public org::bcom::xpcf::C
 public:
     SolAR3DOverlayBoxOpencv();
 
-
-    ///@brief draw  a projection of 3D box based on 3D pose on an image.
+    /// @brief draw  a projection of 3D box based on 3D pose on an image.
     /// @param[in] pose: 3D camera pose expressed in the world coordinate.
     /// @param[in,out] displayImage The image on which the projection of a 3D box will be drawn.
     void draw(const Transform3Df & pose, SRef<Image> displayImage) override;
@@ -59,6 +58,22 @@ public:
     void unloadComponent () override final;
 
 private:
+	/// @brief Convert a vector of 3 integers into a cv::Scalar, defining RGB color values
+	/// @params[in] colorVec A std::vector<int> with the R, G and B color values
+	/// @return A cv::Scalar with the R, G and B color values
+	cv::Scalar toColorCV(std::vector<int> colorVec);
+
+	/// @brief Whether or not to check for chirality before projecting 3D points
+	/// When chirality is set to true, only points with z coordinate in
+	/// [m_nearPlane, m_farPlane] relative to the camera perspective will be displayed.
+	int m_chiralityCheck = 1;
+
+	/// @brief Near plane of the camera view frustrum
+	float m_nearPlane = 0.0f;
+
+	/// @brief Far plane of the camera view frustrum
+	float m_farPlane = 100.0f;
+
     /// @brief position of the center of the bottom face of the Box defined in world unit
     std::vector<float> m_position = {0.0,0.0,0.0};
 
@@ -68,12 +83,21 @@ private:
     /// @brief size of the box define in world unit
     std::vector<float> m_size = {1.0,1.0,1.0};
 
-
     cv::Mat m_camMatrix;
     cv::Mat m_camDistorsion;
 
-    cv::Mat m_parallelepiped; // volume to display
+	/// @brief Volume to display
+	cv::Mat m_parallelepiped;
+	cv::Mat m_pointsToProject;
 
+	/// @brief BGR color of the corners of the cube to draw
+	std::vector<int> m_colorCorner = { 128, 0, 128 };
+	/// @brief BGR color of the front face of the cube to draw
+	std::vector<int> m_colorFront = { 255, 0, 0 };
+	/// @brief BGR color of the back face of the cube to draw
+	std::vector<int> m_colorBack = { 0, 255, 0 };
+	/// @brief BGR color of the side faces of the cube to draw
+	std::vector<int> m_colorSide = { 0, 0, 255 };
 };
 
 }

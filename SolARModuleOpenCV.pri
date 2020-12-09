@@ -42,6 +42,7 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolAROpticalFlowPyrLKOpencv.h \
     interfaces/SolARPerspectiveControllerOpencv.h \
     interfaces/SolARPoseEstimationPlanarPointsOpencv.h \
+    interfaces/SolARPoseEstimationPnPL.h \
     interfaces/SolARPoseEstimationPnpOpencv.h \
     interfaces/SolARPoseEstimationSACPnpOpencv.h \
     interfaces/SolARPoseFinderFrom2D2DOpencv.h \
@@ -105,6 +106,7 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolAROpticalFlowPyrLKOpencv.cpp \
     src/SolARPerspectiveControllerOpencv.cpp \
     src/SolARPoseEstimationPlanarPointsOpencv.cpp \
+    src/SolARPoseEstimationPnPL.cpp \
     src/SolARPoseEstimationPnpOpencv.cpp \
     src/SolARPoseEstimationSACPnpOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
@@ -114,7 +116,3 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARUndistortPointsOpencv.cpp \
     src/SolARUnprojectplanarPointsOpencv.cpp \
     src/SolARVideoAsCameraOpencv.cpp
-
-
-
-

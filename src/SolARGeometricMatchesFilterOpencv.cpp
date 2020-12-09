@@ -47,7 +47,6 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
                                                const std::vector<Keypoint> & inputKeyPointsA,
                                                const std::vector<Keypoint> & inputKeyPointsB)
 {
-
     std::vector<DescriptorMatch>tempMatches;
     std::vector<uchar> status(inputKeyPointsA.size());
     std::vector<cv::Point2f> pts1, pts2;
@@ -63,9 +62,7 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
             assert(inputMatches[i].getIndexInDescriptorB() < inputKeyPointsB.size());
             pts2.push_back(cv::Point2f(inputKeyPointsB[inputMatches[i].getIndexInDescriptorB()].getX(),
                                        inputKeyPointsB[inputMatches[i].getIndexInDescriptorB()].getY()));
-
         }
-
 
         cv::Mat F;
         {
@@ -82,6 +79,45 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
     }
     outputMatches = tempMatches;
     return;
+}
+
+void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch> & inputMatches,
+											   std::vector<DescriptorMatch> & outputMatches,
+											   const std::vector<Keyline> & inputKeylinesA,
+											   const std::vector<Keyline> & inputKeylinesB)
+{
+	std::vector<DescriptorMatch>tempMatches;
+	std::vector<uchar> status(inputKeylinesA.size());
+	std::vector<cv::Point2f> pts1, pts2;
+
+	if (inputMatches.size()) {
+
+		// get Align matches
+		for (unsigned int i = 0; i < inputMatches.size(); i++) {
+			assert(inputMatches[i].getIndexInDescriptorA() < inputKeylinesA.size());
+			pts1.push_back(cv::Point2f(inputKeylinesA[inputMatches[i].getIndexInDescriptorA()].getX(),
+				inputKeylinesA[inputMatches[i].getIndexInDescriptorA()].getY()));
+
+			assert(inputMatches[i].getIndexInDescriptorB() < inputKeylinesB.size());
+			pts2.push_back(cv::Point2f(inputKeylinesB[inputMatches[i].getIndexInDescriptorB()].getX(),
+				inputKeylinesB[inputMatches[i].getIndexInDescriptorB()].getY()));
+		}
+
+		cv::Mat F;
+		{
+			double minVal, maxVal;
+			cv::minMaxIdx(pts1, &minVal, &maxVal);
+			F = cv::findFundamentalMat(pts1, pts2, cv::FM_RANSAC, m_outlierDistanceRatio * maxVal, m_confidence, status);
+		}
+
+		for (unsigned int i = 0; i < status.size(); i++) {
+			if (status[i]) {
+				tempMatches.push_back(inputMatches[i]);
+			}
+		}
+	}
+	outputMatches = tempMatches;
+	return;
 }
 
 void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch>& inputMatches, std::vector<DescriptorMatch>& outputMatches, const std::vector<Keypoint>& inputKeyPoints1, const std::vector<Keypoint>& inputKeyPoints2, const Transform3Df & pose1, const Transform3Df & pose2, const CamCalibration & intrinsicParams)

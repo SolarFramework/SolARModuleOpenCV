@@ -278,7 +278,11 @@ void compute_scharr_derivative_kernelsV2(cv::OutputArray _kx, cv::OutputArray _k
 
     // The standard Scharr kernel
     if (scale == 1) {
+#if CV_VERSION_MAJOR >= 4 // Only in OpenCV 4
         getDerivKernels(_kx, _ky, dx, dy, FILTER_SCHARR, true, CV_32F);
+#else
+		getDerivKernels(_kx, _ky, dx, dy, CV_SCHARR, true, CV_32F);
+#endif
         return;
     }
 

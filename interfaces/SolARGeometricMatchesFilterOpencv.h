@@ -42,6 +42,16 @@ public:
                     const std::vector<Keypoint> & inputKeyPointsA,
                     const std::vector<Keypoint> & inputKeyPointsB) override;
 
+		/// @brief filter matches based fundamental matrix assumptions. This filter removes all outliers matches which give high reprojection error.
+		/// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".
+		/// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
+		/// @param[in] Original keylines associated to desc_1.
+		/// @param[in] Original keylines associated to desc_2.
+		void filter(const std::vector<DescriptorMatch> & inputMatches,
+					std::vector<DescriptorMatch> & outputMatches,
+					const std::vector<Keyline> & inputKeylinesA,
+					const std::vector<Keyline> & inputKeylinesB) override;
+
 		/// @brief filter matches based fundamental matrix calculated from camera matrices
 		/// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".
 		/// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
@@ -57,6 +67,7 @@ public:
 							const Transform3Df &pose1,
 							const Transform3Df &pose2,
 							const CamCalibration &intrinsicParams) override;
+
 
         void unloadComponent () override final;
 

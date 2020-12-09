@@ -26,6 +26,7 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
+#if CV_VERSION_MAJOR >= 4 // Only in OpenCV 4
 const static std::map<std::string,int> convertPnPSACMethod = {{"ITERATIVE", cv::SOLVEPNP_ITERATIVE},
                                                               {"P3P", cv::SOLVEPNP_P3P},
                                                               {"AP3P", cv::SOLVEPNP_AP3P},
@@ -35,6 +36,7 @@ const static std::map<std::string,int> convertPnPSACMethod = {{"ITERATIVE", cv::
                                                               {"IPPE", cv::SOLVEPNP_IPPE},
                                                               {"IPPE SQUARE", cv::SOLVEPNP_IPPE_SQUARE},
                                                              };
+#endif
 
 SolARPoseEstimationSACPnpOpencv::SolARPoseEstimationSACPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationSACPnpOpencv>())
 {
@@ -64,12 +66,14 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
 
+#if CV_VERSION_MAJOR >= 4 // Only in OpenCV 4
     int method;
     auto itr = convertPnPSACMethod.find(m_method);
     if (itr != convertPnPSACMethod.end())
         method = itr->second;
     else
         method = cv::SOLVEPNP_ITERATIVE;
+#endif
 
     Transform3Df initialPoseInverse = initialPose.inverse();
 
@@ -86,8 +90,8 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
     }
      cv::Mat Rvec;
      cv::Mat_<float> Tvec;
-     cv::Mat raux, taux, r33;
-     cv::Mat inliers_cv;
+     cv::Mat raux, taux, r33;     
+	 cv::Mat inliers_cv;
 
      // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
      if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
@@ -98,12 +102,21 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
 		 taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
 		 cv::Rodrigues(r33, raux);
 
+#if CV_VERSION_MAJOR >= 4 // Only in OpenCV 4
          cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, true,
                                m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
      }
      else
          cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, false,
                                m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
+#else
+		 cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, true,
+			 m_iterationsCount, m_reprojError, m_confidence, inliers_cv);
+	 }
+	 else
+		 cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, false,
+			 m_iterationsCount, m_reprojError, m_confidence, inliers_cv);
+#endif
 
      std::vector<cv::Point3f>in3d;
      std::vector<cv::Point2f>in2d;
@@ -125,7 +138,11 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
          return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
      }
 
+#if CV_VERSION_MAJOR >= 4 // Only in OpenCV 4
      cv::solvePnP(in3d, in2d, m_camMatrix, m_camDistorsion, raux,taux, true, method);
+#else
+	 cv::solvePnP(in3d, in2d, m_camMatrix, m_camDistorsion, raux, taux, true);
+#endif
 
     raux.convertTo(Rvec, CV_32F);
     taux.convertTo(Tvec, CV_32F);
@@ -150,6 +167,17 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
     pose = pose.inverse();
 
     return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<Point2Df> & imagePoints,
+															const std::vector<Point3Df> & worldPoints,
+															std::vector<Point2Df>&imagePoints_inlier,
+															std::vector<Point3Df>&worldPoints_inlier,
+															Transform3Df & pose,
+															const Transform3Df initialPose) 
+{
+	std::vector<bool> inliers;
+	return estimate(imagePoints, worldPoints, imagePoints_inlier, worldPoints_inlier, inliers, pose, initialPose);
 }
 
 
