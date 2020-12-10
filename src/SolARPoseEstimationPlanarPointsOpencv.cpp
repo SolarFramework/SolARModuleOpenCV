@@ -130,17 +130,6 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::vector<Point2Df> & imagePoints,
-																	const std::vector<Point3Df> & worldPoints,
-																	std::vector<Point2Df> &imagePoints_inlier,
-																	std::vector<Point3Df> &worldPoints_inlier,	
-																	Transform3Df & pose,
-																	const Transform3Df initialPose) 
-{
-	std::vector<bool> inliers;
-	return estimate(imagePoints, worldPoints, imagePoints_inlier, worldPoints_inlier, inliers, pose, initialPose);
-}
-
 void SolARPoseEstimationPlanarPointsOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
 
     this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
