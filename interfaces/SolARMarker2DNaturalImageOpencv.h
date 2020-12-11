@@ -24,7 +24,6 @@
 #include "opencv2/opencv.hpp"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -44,25 +43,25 @@ public:
     void unloadComponent () override final;
 
     FrameworkReturnCode loadMarker() override;
-    FrameworkReturnCode getImage(SRef<Image> & img) override;
+    FrameworkReturnCode getImage(SRef<datastructure::Image> & img) override;
 
     /// @brief Provide the position of 2D corners in image coordinate system
     /// @param[out] imageCorners the 2D corners of the marker in image coordinate system
     /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
-    FrameworkReturnCode getImageCorners(std::vector<Point2Df> & imageCorners) const override;
+    FrameworkReturnCode getImageCorners(std::vector<datastructure::Point2Df> & imageCorners) const override;
 
     /// @brief Provide the position of 3D corners in world coordinate system
     /// @param[out] worldCorners the 3D corners of the marker in world coordinate system
     /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
-    FrameworkReturnCode getWorldCorners(std::vector<Point3Df> & worldCorners) const override;
+    FrameworkReturnCode getWorldCorners(std::vector<datastructure::Point3Df> & worldCorners) const override;
 
     void setSize (const float & width, const float & height) override { m_size.width = width; m_size.height = height; }
     float getWidth() const override { return m_size.width; }
     float getHeight() const override { return m_size.height; }
-    const Sizef & getSize() const override { return m_size; }
+    const datastructure::Sizef & getSize() const override { return m_size; }
 
 private:
-    Sizef m_size;
+    datastructure::Sizef m_size;
     cv::Mat m_ocvImage;
 
     /// @brief the path to the file describing the 2D Squared binary marker

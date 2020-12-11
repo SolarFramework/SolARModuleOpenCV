@@ -31,7 +31,6 @@
 #include <vector>
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -53,12 +52,12 @@ public:
     /// @brief this method is used to set intrinsic parameters and distortion of the camera
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distortion parameters.
-    void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distortionParams)  override;
+    void setCameraParameters(const datastructure::CamCalibration & intrinsicParams, const datastructure::CamDistortion & distortionParams)  override;
 
     /// @brief Convert  the point cloud to opencv structure for CV processing.
     /// @param[in] Set of triangulated 3d_points.
     /// @return Set of triangulated 3d_points expressed with opencv data structure.
-    float getReprojectionErrorCloud(const std::vector<SRef<CloudPoint>> & original);
+    float getReprojectionErrorCloud(const std::vector<SRef<datastructure::CloudPoint>> & original);
 
    /// @brief Triangulates two homogeneous 2d_points {u,v,1.0} in an iterative way based on SVD linear system solving.
     /// @param[in] First homogeneous 2d_point.
@@ -87,13 +86,13 @@ public:
     /// @param[in] poseView2, camera pose in the world coordinates system of the view_2 expressed as a Transform3D..
     /// @param[out] pcloud, Set of triangulated 3d_points.
     /// @return the mean re-projection error (mean distance in pixels between the original 2D points and the projection of the reconstructed 3D points)
-    double triangulate(const std::vector<Point2Df> & pt2d_1,
-                       const std::vector<Point2Df> & pt2d_2,
-                       const std::vector<DescriptorMatch> & matches,
+    double triangulate(const std::vector<datastructure::Point2Df> & pt2d_1,
+                       const std::vector<datastructure::Point2Df> & pt2d_2,
+                       const std::vector<datastructure::DescriptorMatch> & matches,
                        const std::pair<unsigned int,unsigned int> & working_views,
-                       const Transform3Df & poseView1,
-                       const Transform3Df & poseView2,
-                       std::vector<SRef<CloudPoint>> & pcloud) override;
+                       const datastructure::Transform3Df & poseView1,
+                       const datastructure::Transform3Df & poseView2,
+                       std::vector<SRef<datastructure::CloudPoint>> & pcloud) override;
 
     /// @brief triangulate pairs of points 2d captured from two views with differents poses (with respect to the camera instrinsic parameters).
     /// @param[in] pointsView1, set of keypoints seen in view_1.
@@ -104,13 +103,13 @@ public:
     /// @param[in] poseView2, Camera pose in the world coordinates system of the view_2 expressed as a Transform3D..
     /// @param[out] pcloud, Set of triangulated 3d_points.
     /// @return the mean re-projection error (mean distance in pixels between the original 2D points and the projection of the reconstructed 3D points)
-    double triangulate(const std::vector<Keypoint> & keypointsView1,
-                       const std::vector<Keypoint> & keypointsView2,
-                       const std::vector<DescriptorMatch> & matches,
+    double triangulate(const std::vector<datastructure::Keypoint> & keypointsView1,
+                       const std::vector<datastructure::Keypoint> & keypointsView2,
+                       const std::vector<datastructure::DescriptorMatch> & matches,
                        const std::pair<unsigned int,unsigned int> & working_views,
-                       const Transform3Df & poseView1,
-                       const Transform3Df & poseView2,
-                       std::vector<SRef<CloudPoint>> & pcloud) override;
+                       const datastructure::Transform3Df & poseView1,
+                       const datastructure::Transform3Df & poseView2,
+                       std::vector<SRef<datastructure::CloudPoint>> & pcloud) override;
 
 	/// @brief triangulate pairs of points 2d captured from two views with differents poses (with respect to the camera instrinsic parameters).
 	/// @param[in] pointsView1, set of keypoints seen in view_1.
@@ -123,24 +122,24 @@ public:
 	/// @param[in] poseView2, Camera pose in the world coordinates system of the view_2 expressed as a Transform3D..
 	/// @param[out] pcloud, Set of triangulated 3d_points.
 	/// @return the mean re-projection error (mean distance in pixels between the original 2D points and the projection of the reconstructed 3D points)
-	double triangulate(	const std::vector<Keypoint> & keypointsView1,
-						const std::vector<Keypoint> & keypointsView2,
-						const SRef<DescriptorBuffer> & descriptor1,
-						const SRef<DescriptorBuffer> & descriptor2,
-						const std::vector<DescriptorMatch> & matches,
+	double triangulate(	const std::vector<datastructure::Keypoint> & keypointsView1,
+						const std::vector<datastructure::Keypoint> & keypointsView2,
+						const SRef<datastructure::DescriptorBuffer> & descriptor1,
+						const SRef<datastructure::DescriptorBuffer> & descriptor2,
+						const std::vector<datastructure::DescriptorMatch> & matches,
 						const std::pair<unsigned int, unsigned int> & working_views,
-						const Transform3Df & poseView1,
-						const Transform3Df & poseView2,
-						std::vector<SRef<CloudPoint>> & pcloud) override;
+						const datastructure::Transform3Df & poseView1,
+						const datastructure::Transform3Df & poseView2,
+						std::vector<SRef<datastructure::CloudPoint>> & pcloud) override;
 
 	/// @brief triangulate pairs of points 2d captured from current keyframe with its reference keyframe using their poses (with respect to the camera instrinsic parameters).
 	/// @param[in] curKeyframe, current keyframe.
 	/// @param[in] matches, the matches between the keypoints of the view1 and the keypoints of the view 2.
 	/// @param[out] pcloud, Set of triangulated 3d_points.
 	/// @return the mean re-projection error (mean distance in pixels between the original 2D points and the projection of the reconstructed 3D points)
-    double triangulate(	const SRef<Keyframe> & curKeyframe,
-                        const std::vector<DescriptorMatch> & matches,
-                        std::vector<SRef<CloudPoint>> & pcloud) override;
+    double triangulate(	const SRef<datastructure::Keyframe> & curKeyframe,
+                        const std::vector<datastructure::DescriptorMatch> & matches,
+                        std::vector<SRef<datastructure::CloudPoint>> & pcloud) override;
 
     void unloadComponent () override final;
 

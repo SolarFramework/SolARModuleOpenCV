@@ -23,6 +23,7 @@ namespace xpcf = org::bcom::xpcf;
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDeviceDataLoader)
 
 namespace SolAR {
+    using namespace datastructure;
     namespace MODULES {
     namespace OPENCV {
 

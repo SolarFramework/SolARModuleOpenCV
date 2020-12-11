@@ -24,6 +24,8 @@ XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMapFusionOpencv
 
 namespace SolAR {
 using namespace datastructure;
+using namespace api::solver::map;
+using namespace api::storage;
 namespace MODULES {
 namespace OPENCV {
 

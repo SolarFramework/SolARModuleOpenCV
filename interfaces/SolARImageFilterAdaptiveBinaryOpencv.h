@@ -28,7 +28,6 @@
 #include <vector>
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -46,7 +45,7 @@ public:
     SolARImageFilterAdaptiveBinaryOpencv();
    ~SolARImageFilterAdaptiveBinaryOpencv();
 
-    FrameworkReturnCode filter(const SRef<Image>input, SRef<Image>& output) override;
+    FrameworkReturnCode filter(const SRef<datastructure::Image>input, SRef<datastructure::Image>& output) override;
 
     void unloadComponent () override final;
 

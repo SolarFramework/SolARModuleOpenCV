@@ -28,7 +28,6 @@
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -54,26 +53,26 @@ public:
 
     /// @brief Set the size of the grabbed image from the camera.
     ///[in] resolution: the width and height of the output grabbed image.
-    void setResolution(const Sizei & resolution) override;
+    void setResolution(const datastructure::Sizei & resolution) override;
     /// @brief Set the camera intrinsic parameters from a calibration matrix.
     ///[in] intrinsic_parameters: Calibration matrix containing the nine camera calibration parameters.
-    void setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
+    void setIntrinsicParameters(const datastructure::CamCalibration & intrinsic_parameters) override;
     /// @brief Set the camera distortion parameters from a distortion matrix.
     ///[in] distortion_parameters: distortion matrix containing the five camera distortion parameters.
-    void setDistortionParameters(const CamDistortion & distortion_parameters) override;
+    void setDistortionParameters(const datastructure::CamDistortion & distortion_parameters) override;
     /// @brief Set the camera parameters
-    void setParameters(const CameraParameters & parameters) override;
+    void setParameters(const datastructure::CameraParameters & parameters) override;
     /// @return Return the camera parameters
-    const CameraParameters & getParameters() override;
+    const datastructure::CameraParameters & getParameters() override;
     /// @brief Get the current resolutio nof the camera.
     ///[out]  width and height of the images grabbed from the camera.
-    Sizei getResolution () override;
+    datastructure::Sizei getResolution () override;
     /// @brief Get the current camera calibration parameters.
     ///[out] Calibration matrix containing the nine camera calibration parameters.
-    const CamCalibration & getIntrinsicsParameters() override;
+    const datastructure::CamCalibration & getIntrinsicsParameters() override;
     /// @brief Get the current camera distortion parameters.
     ///[out] distortion matrix containing the five camera distortion parameters.
-    const CamDistortion & getDistortionParameters() override;
+    const datastructure::CamDistortion & getDistortionParameters() override;
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
     void unloadComponent () override;
@@ -83,7 +82,7 @@ public:
      std::string m_calibrationFile = "";
      cv::VideoCapture m_capture;
      bool m_is_resolution_set;
-     CameraParameters m_parameters;
+     datastructure::CameraParameters m_parameters;
 };
 
 }

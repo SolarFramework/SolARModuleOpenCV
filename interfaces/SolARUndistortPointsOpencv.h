@@ -27,7 +27,6 @@
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -46,17 +45,17 @@ public:
     ~SolARUndistortPointsOpencv() = default;
 
     void unloadComponent () override final;
-    FrameworkReturnCode undistort(const std::vector<Point2Df> & inputPoints, std::vector<Point2Df> & outputPoints) override;
+    FrameworkReturnCode undistort(const std::vector<datastructure::Point2Df> & inputPoints, std::vector<datastructure::Point2Df> & outputPoints) override;
 
     /// @brief Set the distortion intrinsic camera parameters
-    void setDistortionParameters(const CamDistortion & distortion_parameters) override;
+    void setDistortionParameters(const datastructure::CamDistortion & distortion_parameters) override;
         /// @brief Set the intrinsic camera parameters
-    void setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
+    void setIntrinsicParameters(const datastructure::CamCalibration & intrinsic_parameters) override;
     
 
 private:
-    CamCalibration m_intrinsic_parameters;
-    CamDistortion m_distortion_parameters;
+    datastructure::CamCalibration m_intrinsic_parameters;
+    datastructure::CamDistortion m_distortion_parameters;
 
     cv::Mat m_camMatrix;
     cv::Mat m_camDistortion;

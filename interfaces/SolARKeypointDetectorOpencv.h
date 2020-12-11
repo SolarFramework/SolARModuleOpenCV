@@ -34,8 +34,6 @@
 
 
 namespace SolAR {
-using namespace datastructure;
-using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
@@ -47,7 +45,7 @@ namespace OPENCV {
  */
 
 class SOLAROPENCV_EXPORT_API SolARKeypointDetectorOpencv : public org::bcom::xpcf::ConfigurableBase,
-        public IKeypointDetector {
+        public api::features::IKeypointDetector {
 public:
 
     SolARKeypointDetectorOpencv();
@@ -67,7 +65,7 @@ public:
     /// @brief This method detects keypoints in an input Image
     /// @param[in] image input image on which we are extracting keypoints.
     /// @param[out] keypoints The keypoints detected from the image passed as first argument.
-    void detect (const SRef<Image> image, std::vector<Keypoint> & keypoints) override;
+    void detect (const SRef<datastructure::Image> image, std::vector<datastructure::Keypoint> & keypoints) override;
 
 private:
     /// @brief the type of descriptor used for the extraction (SIFT, AKAZE, AKAZE2, ORB, BRISK)
@@ -92,7 +90,7 @@ private:
 
 };
 
-extern int deduceOpenCVType(SRef<Image> img);
+extern int deduceOpenCVType(SRef<datastructure::Image> img);
 
 }
 }

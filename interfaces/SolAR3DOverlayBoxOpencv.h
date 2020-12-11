@@ -27,7 +27,6 @@
 #include "xpcf/component/ConfigurableBase.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -48,12 +47,12 @@ public:
     ///@brief draw  a projection of 3D box based on 3D pose on an image.
     /// @param[in] pose: 3D camera pose expressed in the world coordinate.
     /// @param[in,out] displayImage The image on which the projection of a 3D box will be drawn.
-    void draw(const Transform3Df & pose, SRef<Image> displayImage) override;
+    void draw(const datastructure::Transform3Df & pose, SRef<datastructure::Image> displayImage) override;
 
     /// @brief this method is used to set intrinsic parameters and distorsion of the camera
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const CamCalibration & intrinsic_parameters, const CamDistortion & distorsion_parameters);
+    void setCameraParameters(const datastructure::CamCalibration & intrinsic_parameters, const datastructure::CamDistortion & distorsion_parameters);
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
     void unloadComponent () override final;

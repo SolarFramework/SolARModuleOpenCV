@@ -29,7 +29,6 @@
 #include "datastructure/DescriptorBuffer.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -42,31 +41,31 @@ namespace OPENCV {
 class SOLAROPENCV_EXPORT_API SolAROpenCVHelper {
 public:
     template <class T,int Rows, int Cols>
-    static FrameworkReturnCode convertCVMatToSolar(const cv::Mat& openCVMat, Matrix<T, Rows , Cols, 1 > & solarMat);
+    static FrameworkReturnCode convertCVMatToSolar(const cv::Mat& openCVMat, datastructure::Matrix<T, Rows , Cols, 1 > & solarMat);
     template <class T,int Dim>
-    static FrameworkReturnCode convertCVMatToSolar(const cv::Mat& openCVMat, Transform<T,Dim> & solarTransform);
+    static FrameworkReturnCode convertCVMatToSolar(const cv::Mat& openCVMat, datastructure::Transform<T,Dim> & solarTransform);
 
     template <class T,int Rows, int Cols>
-    static cv::Mat mapToOpenCV (const Matrix<T, Rows , Cols >&  solarMat);
+    static cv::Mat mapToOpenCV (const datastructure::Matrix<T, Rows , Cols >&  solarMat);
 
     template <class T,int Dim>
-    static cv::Mat mapToOpenCV (const Transform<T,Dim>&  solarTransform);
+    static cv::Mat mapToOpenCV (const datastructure::Transform<T,Dim>&  solarTransform);
 
-    static std::vector<cv::Point2i> convertToOpenCV (const Contour2Di &contour);
-    static std::vector<cv::Point2f> convertToOpenCV (const Contour2Df &contour);
+    static std::vector<cv::Point2i> convertToOpenCV (const datastructure::Contour2Di &contour);
+    static std::vector<cv::Point2f> convertToOpenCV (const datastructure::Contour2Df &contour);
 
-    static FrameworkReturnCode convertToSolar(cv::Mat&  imgSrc, SRef<Image>& imgDest);
+    static FrameworkReturnCode convertToSolar(cv::Mat&  imgSrc, SRef<datastructure::Image>& imgDest);
 
-    static void mapToOpenCV (SRef<Image> imgSrc, cv::Mat& imgDest);
+    static void mapToOpenCV (SRef<datastructure::Image> imgSrc, cv::Mat& imgDest);
 
-    static cv::Mat mapToOpenCV (SRef<Image> imgSrc);
-    static uint32_t deduceOpenDescriptorCVType(DescriptorDataType querytype);
+    static cv::Mat mapToOpenCV (SRef<datastructure::Image> imgSrc);
+    static uint32_t deduceOpenDescriptorCVType(datastructure::DescriptorDataType querytype);
 
     static void drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Point2f& p2, cv::Scalar color, int thickness);
 
 	template <class T> inline static constexpr int inferOpenCVType();
  
-    static int deduceOpenCVType(SRef<Image> img);
+    static int deduceOpenCVType(SRef<datastructure::Image> img);
 
 };
 
@@ -109,31 +108,31 @@ template <> constexpr int SolAROpenCVHelper::inferOpenCVType<char>()
 }
 
 template <class T,int Rows, int Cols>
-FrameworkReturnCode SolAROpenCVHelper::convertCVMatToSolar(const cv::Mat& openCVMat, Matrix<T, Rows , Cols > & solarMat)
+FrameworkReturnCode SolAROpenCVHelper::convertCVMatToSolar(const cv::Mat& openCVMat, datastructure::Matrix<T, Rows , Cols > & solarMat)
 {
     if (openCVMat.cols != Cols || openCVMat.rows != Rows || openCVMat.type() != inferOpenCVType<T>()) {
         return FrameworkReturnCode::_ERROR_;
     }
-    Matrix<T, Rows , Cols > mat(reinterpret_cast<T*>( openCVMat.data));
+    datastructure::Matrix<T, Rows , Cols > mat(reinterpret_cast<T*>( openCVMat.data));
     solarMat = mat;
 
     return FrameworkReturnCode::_SUCCESS;
 }
 
 template <class T,int Dim>
-FrameworkReturnCode SolAROpenCVHelper::convertCVMatToSolar(const cv::Mat& openCVMat, Transform<T,Dim> & solarTransform)
+FrameworkReturnCode SolAROpenCVHelper::convertCVMatToSolar(const cv::Mat& openCVMat, datastructure::Transform<T,Dim> & solarTransform)
 {
     if (openCVMat.cols != solarTransform.cols() || openCVMat.rows != solarTransform.rows()+1 || openCVMat.type() != inferOpenCVType<T>()) {
         return FrameworkReturnCode::_ERROR_;
     }
-    Matrix<T, Dim+1 , Dim+1 > transform(reinterpret_cast<T*>( openCVMat.data));
+    datastructure::Matrix<T, Dim+1 , Dim+1 > transform(reinterpret_cast<T*>( openCVMat.data));
     solarTransform = transform;
 
     return FrameworkReturnCode::_SUCCESS;
 }
 
 template <class T, int Rows, int Cols>
-cv::Mat SolAROpenCVHelper::mapToOpenCV (const Matrix<T, Rows , Cols>&  solarMat)
+cv::Mat SolAROpenCVHelper::mapToOpenCV (const datastructure::Matrix<T, Rows , Cols>&  solarMat)
 {
     int type = inferOpenCVType<T>(); // typeid ??
     cv::Mat mat(solarMat.rows(),solarMat.cols(),type,(void *)solarMat.data());
@@ -141,7 +140,7 @@ cv::Mat SolAROpenCVHelper::mapToOpenCV (const Matrix<T, Rows , Cols>&  solarMat)
 }
 
 template <class T,int Dim>
-cv::Mat SolAROpenCVHelper::mapToOpenCV (const Transform<T,Dim>&  solarTransform)
+cv::Mat SolAROpenCVHelper::mapToOpenCV (const datastructure::Transform<T,Dim>&  solarTransform)
 {
     int type = inferOpenCVType<T>(); // typeid ??
     cv::Mat mat(Dim+1,Dim+1,type,(void *)solarTransform.data());

@@ -22,7 +22,6 @@
 #include "SolARBaseCameraOpencv.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -45,7 +44,7 @@ public:
 
     /// @brief Fill the SRef img buffer with a last image captured by the camera device.
     /// @return FrameworkReturnCode to track sucessful or failing event.
-    FrameworkReturnCode getNextImage(SRef<Image> & img) override;
+    FrameworkReturnCode getNextImage(SRef<datastructure::Image> & img) override;
 
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
