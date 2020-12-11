@@ -29,20 +29,6 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-struct SolverParams
-{
-	double cutoff_threshold = 1e12;
-	int dim = 40;
-	cv::Mat reorder;
-	cv::Mat II;
-	cv::Mat JJ;
-	cv::Mat mon;
-	cv::Mat T;
-	cv::Mat Tid;
-	cv::Mat P, R, E;
-	cv::Mat ind;	
-};
-
 /**
 * @class SolARPoseEstimationPnPL
 * @brief <B>Finds the camera pose of 2D-3D points and lines correspondances based on the PnPL algorithm.</B>
@@ -59,8 +45,6 @@ public:
 	/// @brief SolARPoseEstimationOPnPL destructor
 	~SolARPoseEstimationPnPL();
 
-	org::bcom::xpcf::XPCFErrorCode onConfigured() override;
-
 	/// @brief Estimates camera pose from a set of 2D image points and 2D lines and their corresponding 3D world points and lines.
 	/// @param[in] imagePoints: set of 2D points.
 	/// @param[in] worldPoints: set of 3D points.
@@ -68,12 +52,12 @@ public:
 	/// @param[in] worldLines: set of 3D lines.
 	/// @param[out] pose: camera pose (pose of the camera defined in world coordinate system) expressed as a <Transform3Df>.
 	/// @param[in] initialPose: (optional) a <Transform3Df> to initialize the pose (reducing convergence time and improving success rate).
-	FrameworkReturnCode estimate(const std::vector<Point2Df> & imagePoints,
-								 const std::vector<Point3Df> & worldPoints,
-								 const std::vector<Edge2Df> & imageLines,
-								 const std::vector<Edge3Df> & worldLines,
-								 Transform3Df & pose,
-								 const Transform3Df initialPose = Transform3Df::Identity()) override;
+	FrameworkReturnCode estimate(	const std::vector<Point2Df> & imagePoints,
+									const std::vector<Point3Df> & worldPoints,
+									const std::vector<Edge2Df> & imageLines,
+									const std::vector<Edge3Df> & worldLines,
+									Transform3Df & pose,
+									const Transform3Df & initialPose = Transform3Df::Identity()) override;
 
 	/// @brief Estimates camera pose from a set of 2D image points and 2D lines and their corresponding 3D world points and lines,
 	/// and performing RANSAC estimation iteratively to deduce inliers.
@@ -100,7 +84,7 @@ public:
 										std::vector<bool> & pointInliers,
 										std::vector<bool> & lineInliers,
 										Transform3Df & pose,
-										const Transform3Df initialPose = Transform3Df::Identity()) override;
+										const Transform3Df & initialPose = Transform3Df::Identity()) override;
 
 	/// @brief this method is used to set intrinsic parameters and distortion of the camera
 	/// @param[in] Camera calibration matrix parameters.
@@ -111,29 +95,20 @@ public:
 	void unloadComponent() override final;
 
 private:
-	// OPnPL
+	// PnPL classic approach
+	bool pnpl_main(	const std::vector<Point3Df> & pt3d,
+					const std::vector<Point2Df> & pt2d,
+					const std::vector<Edge3Df> & ln3d,
+					const std::vector<Edge2Df> & ln2d,
+					cv::Mat & R0, cv::Mat & t0);
+
+	// [WIP] OPnPL
 	bool opnpl_main1(	const std::vector<Point3Df> & pt3d,
 						const std::vector<Point2Df> & pt2d,
 						const std::vector<Edge3Df> & ln3d,
 						const std::vector<Edge2Df> & ln2d,
 						cv::Mat & R0, cv::Mat & t0,
 						float error);
-
-	// PnPL classic approach
-	bool pnpl_main(	const std::vector<Point3Df> & pt3d,
-					const std::vector<Point2Df> & pt2d,
-					const std::vector<Edge3Df> & ln3d,
-					const std::vector<Edge2Df> & ln2d,
-					cv::Mat & R0, cv::Mat & t0,
-					float error);
-
-	// (WIP) implementation of the Gröbner basis solver for the OPnPL method
-	bool solver_pfold(const cv::Mat & C0, cv::Mat & sols);
-	// QR Decomp -> not optimized for sparse matrices
-	void houseHolderQR(const cv::Mat & A, cv::Mat & Q, cv::Mat & R);
-
-	// Load Gröbner solver parameters from config file
-	FrameworkReturnCode loadSolverParams();
 
 	float getPointReprojError(const Point2Df pt2D, const Point3Df pt3D, const cv::Mat& R, const cv::Mat& t);
 
@@ -144,8 +119,6 @@ private:
 	float algebraicPointLineError(const Point3Df P, const cv::Point3f line2DCoeffs, const cv::Matx34f Pose);
 	float algebraicLineSegmentError(const Edge3Df line3D, const Edge2Df line2D, const cv::Matx34f Pose);
 	float lineSegmentError(const std::vector<Edge3Df> lines3D, const std::vector<Edge2Df> lines2D, const Transform3Df pose);
-
-	SolverParams m_solverParams;
 
 	cv::Mat m_camMatrix;
 	cv::Mat m_camDistortion;

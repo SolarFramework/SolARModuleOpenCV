@@ -29,12 +29,11 @@ XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARPoseEstimationP
 
 namespace xpcf = org::bcom::xpcf;
 
-#define USE_MATLAB_SOLVER 0
-
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
+
 	SolARPoseEstimationPnPL::SolARPoseEstimationPnPL() : ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnPL>())
 	{
 		declareInterface<api::solver::pose::I3DTransformFinderFrom2D3DPointLine>(this);
@@ -46,110 +45,20 @@ namespace OPENCV {
 
 	SolARPoseEstimationPnPL::~SolARPoseEstimationPnPL() { }
 
-	xpcf::XPCFErrorCode SolARPoseEstimationPnPL::onConfigured()
-	{
-		if (loadSolverParams() == FrameworkReturnCode::_SUCCESS)
-			return xpcf::_SUCCESS;
-
-		return xpcf::_FAIL;
-	}
-
 	FrameworkReturnCode SolARPoseEstimationPnPL::estimate( const std::vector<Point2Df>& imagePoints,
 															const std::vector<Point3Df>& worldPoints,
 															const std::vector<Edge2Df>& imageLines,
 															const std::vector<Edge3Df>& worldLines,
 															Transform3Df & pose,
-															const Transform3Df initialPose)
+															const Transform3Df & initialPose)
 	{
 		if (worldPoints.size() != imagePoints.size() ||
 			worldLines.size()  != imageLines.size()  ||
 			worldPoints.size() + worldLines.size() < 6)
 		{
-			LOG_WARNING("world/image points and lines must be valid ( equal and > to 6)");
+			LOG_WARNING("world/image points and lines sizes must be valid ( equals and more than 6 in total)");
 			return FrameworkReturnCode::_ERROR_; // vector of 2D and 3D points must have same size
 		}
-
-#if USE_MATLAB_SOLVER
-		// Saving input data to a .m MATLAB script
-		std::ofstream file;
-		file.open("data.m");
-		cv::Mat u;
-
-		file << "u=[" << "\n";
-		for (auto pt2D : imagePoints)
-		{
-			u = (cv::Mat_<float>(3, 1, CV_32F) << pt2D.getX(), pt2D.getY(), 1.0f);
-			u = m_Kinv * u;
-			file << u.at<float>(0) << ", " << u.at<float>(1) << "\n";
-		}
-		file << "]; u = u'; " << "\n";
-		file << "U=[" << "\n";
-		for (auto pt3D : worldPoints)
-		{
-			u = (cv::Mat_<float>(3, 1, CV_32F) << pt3D.getX(), pt3D.getY(), pt3D.getZ());
-			file << u.at<float>(0) << ", " << u.at<float>(1) << ", " << u.at<float>(2) << "\n";
-		}
-		file << "]; U = U'; " << "\n";
-		file << "xs=[" << "\n";
-		for (auto ln2D : imageLines)
-		{
-			u = (cv::Mat_<float>(3, 1, CV_32F) << ln2D.p1.getX(), ln2D.p1.getY(), 1.0f);
-			u = m_Kinv * u;
-			file << u.at<float>(0) << ", " << u.at<float>(1) << "\n";
-		}
-		file << "]; xs = xs'; " << "\n";
-		file << "xe=[" << "\n";
-		for (auto ln2D : imageLines)
-		{
-			cv::Mat u = (cv::Mat_<float>(3, 1, CV_32F) << ln2D.p2.getX(), ln2D.p2.getY(), 1.0f);
-			u = m_Kinv * u;
-			file << u.at<float>(0) << ", " << u.at<float>(1) << "\n";
-		}
-		file << "]; xe = xe'; " << "\n";
-		file << "Xs=[" << "\n";
-		for (auto ln3D : worldLines)
-		{
-			u = (cv::Mat_<float>(3, 1, CV_32F) << ln3D.p1.getX(), ln3D.p1.getY(), ln3D.p1.getZ());
-			file << u.at<float>(0) << ", " << u.at<float>(1) << ", " << u.at<float>(2) << "\n";
-		}
-		file << "]; Xs = Xs'; " << "\n";
-		file << "Xe=[" << "\n";
-		for (auto ln3D : worldLines)
-		{
-			u = (cv::Mat_<float>(3, 1, CV_32F) << ln3D.p2.getX(), ln3D.p2.getY(), ln3D.p2.getZ());
-			file << u.at<float>(0) << ", " << u.at<float>(1) << ", " << u.at<float>(2) << "\n";
-		}
-		file << "]; Xe = Xe'; " << "\n";
-		file.close();
-		// Execute OPnPL function from MATLAB
-		int result;
-		system("matlab_script.sh") >> result;
-		// Read pose output file
-		std::ifstream infile;
-		infile.open("output.txt");
-		std::vector<std::string> lines;
-		int i = 0;
-		while (!infile.eof())
-		{
-			std::string ln;
-			std::getline(infile, ln);
-			lines.push_back(ln);
-		}
-		infile.close();
-		std::cout << "PnPL time: " << lines[3] << "ms\n";
-		// Retrieve pose
-		for (int row = 0; row < 3; row++)
-		{
-			std::vector<std::string> tmp, res;
-			boost::split(tmp, lines[8 + row], [](char c) {return c == ' ';});
-			for (unsigned i = 0; i < tmp.size(); i++)
-				if (!tmp[i].empty()) res.push_back(tmp[i]);
-			for (int col = 0; col < 4; col++)
-				pose(row, col) = std::atof(res[col].c_str());
-		}
-		pose = pose.inverse();
-		return FrameworkReturnCode::_SUCCESS;
-#endif
 		// Normalize 3D lines
 		std::vector<Edge3Df> lines3D = worldLines;
 		Point3Df Xd, Xe;
@@ -161,12 +70,9 @@ namespace OPENCV {
 			lines3D[i].p2 = Xe;
 		}
 
-		float error;
 		cv::Mat R0, t0;
-		if (!pnpl_main(worldPoints, imagePoints, worldLines, imageLines, R0, t0, error))
+		if (!pnpl_main(worldPoints, imagePoints, worldLines, imageLines, R0, t0))
 			return FrameworkReturnCode::_ERROR_;
-
-		LOG_DEBUG("error: {}", error);
 		
 		for (int row = 0; row < 3; row++)
 		{
@@ -190,7 +96,7 @@ namespace OPENCV {
 																	std::vector<bool>& pointInliers,
 																	std::vector<bool>& lineInliers,
 																	Transform3Df & pose,
-																	const Transform3Df initialPose)
+																	const Transform3Df & initialPose)
 	{
 		// RANSAC params
 		int iterationsCount = 20;
@@ -209,7 +115,6 @@ namespace OPENCV {
 		int it = 0;
 		float bestReprojError(INFINITY);
 		bool success(false);
-		float reproj_error(0.f);
 		float error, global_error;
 		cv::Mat R0, t0;
 		cv::Mat R(3, 3, CV_32F);
@@ -220,7 +125,7 @@ namespace OPENCV {
 		while (it++ < iterationsCount)
 		{
 			if (it % 10 == 0)
-				LOG_INFO("PnPL it: {}", it);
+				LOG_DEBUG("PnPL it: {}", it);
 			// Select n random values from data
 			std::iota(indicesPt.begin(), indicesPt.end(), 0);
 			std::iota(indicesLn.begin(), indicesLn.end(), 0);
@@ -234,7 +139,7 @@ namespace OPENCV {
 				ln3dInliers.push_back(worldLines[indicesLn[i]]);
 			}
 			// Estimate pose
-			if (!pnpl_main(pt3dInliers, pt2dInliers, ln3dInliers, ln2dInliers, R, t, reproj_error))
+			if (!pnpl_main(pt3dInliers, pt2dInliers, ln3dInliers, ln2dInliers, R, t))
 				continue;
 			// Compute reproj_error for each point/line
 			for (int i = minRequiredData; i < imagePoints.size(); i++)
@@ -263,7 +168,7 @@ namespace OPENCV {
 			if (pt2dInliers.size() + ln2dInliers.size() > minNbInliers)
 			{
 				// Estimate pose with all potential inliers
-				if (!pnpl_main(pt3dInliers, pt2dInliers, ln3dInliers, ln2dInliers, R, t, reproj_error))
+				if (!pnpl_main(pt3dInliers, pt2dInliers, ln3dInliers, ln2dInliers, R, t))
 					continue;
 				// Compute reproj error for other inliers
 				global_error = 0.f;
@@ -279,13 +184,13 @@ namespace OPENCV {
 					bestReprojError = global_error;
 					R0 = R;
 					t0 = t;
-					LOG_INFO("new R0 {}", R0);
-					LOG_INFO("new t0 {}", t0);
+					LOG_DEBUG("new R0 {}", R0);
+					LOG_DEBUG("new t0 {}", t0);
 				}
 			}
 		}
 
-		LOG_INFO("bestReprojError: {}", bestReprojError);
+		LOG_DEBUG("bestReprojError: {}", bestReprojError);
 
 		if (!success)
 		{
@@ -301,7 +206,7 @@ namespace OPENCV {
 		pointInliers.clear();
 		lineInliers.clear();
 
-		if (!pnpl_main(worldPoints, imagePoints, worldLines, imageLines, R0, t0, reproj_error))
+		if (!pnpl_main(worldPoints, imagePoints, worldLines, imageLines, R0, t0))
 			return FrameworkReturnCode::_ERROR_;
 
 		for (int i = 0; i < imagePoints.size(); i++)
@@ -334,37 +239,109 @@ namespace OPENCV {
 			return FrameworkReturnCode::_ERROR_;
 		}
 
+		// Compute pose using only inliers
+		if (!pnpl_main(worldPoints_inliers, imagePoints_inliers, worldLines_inliers, imageLines_inliers, R0, t0))
+			return FrameworkReturnCode::_ERROR_;
+		
+		for (int row = 0; row < 3; row++)
+		{
+			for (int col = 0; col < 3; col++)
+				pose(row, col) = R0.at<float>(row, col);
+			pose(row, 3) = t0.at<float>(row);
+		}
+		pose = pose.inverse();
+
 		LOG_INFO("PnPL: nbInliers: {}/{} points, {}/{} lines", imagePoints_inliers.size(), imagePoints.size(), imageLines_inliers.size(), imageLines.size());
 		return FrameworkReturnCode::_SUCCESS;
 	}
 
 
 	void SolARPoseEstimationPnPL::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distortionParams)
-{
-	//TODO.. check to inverse
-	this->m_camDistortion.at<float>(0, 0) = distortionParams(0);
-	this->m_camDistortion.at<float>(1, 0) = distortionParams(1);
-	this->m_camDistortion.at<float>(2, 0) = distortionParams(2);
-	this->m_camDistortion.at<float>(3, 0) = distortionParams(3);
-	this->m_camDistortion.at<float>(4, 0) = distortionParams(4);
+	{
+		this->m_camDistortion.at<float>(0, 0) = distortionParams(0);
+		this->m_camDistortion.at<float>(1, 0) = distortionParams(1);
+		this->m_camDistortion.at<float>(2, 0) = distortionParams(2);
+		this->m_camDistortion.at<float>(3, 0) = distortionParams(3);
+		this->m_camDistortion.at<float>(4, 0) = distortionParams(4);
+		this->m_camMatrix.at<float>(0, 0) = intrinsicParams(0, 0);
+		this->m_camMatrix.at<float>(0, 1) = intrinsicParams(0, 1);
+		this->m_camMatrix.at<float>(0, 2) = intrinsicParams(0, 2);
+		this->m_camMatrix.at<float>(1, 0) = intrinsicParams(1, 0);
+		this->m_camMatrix.at<float>(1, 1) = intrinsicParams(1, 1);
+		this->m_camMatrix.at<float>(1, 2) = intrinsicParams(1, 2);
+		this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2, 0);
+		this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2, 1);
+		this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2, 2);
 
-	this->m_camMatrix.at<float>(0, 0) = intrinsicParams(0, 0);
-	this->m_camMatrix.at<float>(0, 1) = intrinsicParams(0, 1);
-	this->m_camMatrix.at<float>(0, 2) = intrinsicParams(0, 2);
-	this->m_camMatrix.at<float>(1, 0) = intrinsicParams(1, 0);
-	this->m_camMatrix.at<float>(1, 1) = intrinsicParams(1, 1);
-	this->m_camMatrix.at<float>(1, 2) = intrinsicParams(1, 2);
-	this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2, 0);
-	this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2, 1);
-	this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2, 2);
+		cv::invert(m_camMatrix, m_Kinv);
+	}
 
-	cv::invert(m_camMatrix, m_Kinv);
-}
+	bool SolARPoseEstimationPnPL::pnpl_main(const std::vector<Point3Df>& pt3d, const std::vector<Point2Df>& pt2d, const std::vector<Edge3Df>& ln3d, const std::vector<Edge2Df>& ln2d, cv::Mat & R0, cv::Mat & t0)
+	{
+		int Np = pt2d.size();
+		int Nl = ln2d.size();
+
+		cv::Mat A(2 * (Np + Nl), 12, CV_32F);
+
+		// Points
+		cv::Mat ui(3, 1, CV_32F);
+		float u, v, X, Y, Z;
+		for (int i = 0; i < Np; i++)
+		{
+			ui = (cv::Mat_<float>(3, 1) << pt2d[i].getX(), pt2d[i].getY(), 1);
+			ui = m_Kinv * ui; ui /= cv::norm(ui);
+			u = ui.at<float>(0); v = ui.at<float>(1);
+			X = pt3d[i].getX(); Y = pt3d[i].getY(); Z = pt3d[i].getZ();
+
+			// [ r11, r12, r13, r21, r22, r23, r31, r32, r33, t1, t2, t3]
+			A.row(2 * i) = (cv::Mat_<float>(1, 12, CV_32F) << -X, -Y, -Z, 0, 0, 0, u * X, u * Y, u * Z, -1, 0, u);
+			A.row(2 * i + 1) = (cv::Mat_<float>(1, 12, CV_32F) << 0, 0, 0, -X, -Y, -Z, v * X, v * Y, v * Z, 0, -1, v);
+		}
+		// Lines
+		cv::Mat s(3, 1, CV_32F), e(3, 1, CV_32F), l(3, 1, CV_32F);
+		float l1, l2, l3;
+		float Xs, Ys, Zs, Xe, Ye, Ze;
+		for (int i = 0; i < Nl; i++)
+		{
+			s = (cv::Mat_<float>(3, 1, CV_32F) << ln2d[i].p1.getX(), ln2d[i].p1.getY(), 1);
+			e = (cv::Mat_<float>(3, 1, CV_32F) << ln2d[i].p2.getX(), ln2d[i].p2.getY(), 1);
+			l = s.cross(e); l /= cv::norm(l);
+			l1 = l.at<float>(0); l2 = l.at<float>(1); l3 = l.at<float>(2);
+			Xs = ln3d[i].p1.getX(); Ys = ln3d[i].p1.getY(); Zs = ln3d[i].p1.getZ();
+			Xe = ln3d[i].p2.getX(); Ye = ln3d[i].p2.getY(); Ze = ln3d[i].p2.getZ();
+
+			// [ r11, r12, r13, r21, r22, r23, r31, r32, r33, t1, t2, t3]
+			A.row(2 * (Np + i)) = (cv::Mat_<float>(1, 12, CV_32F) << l1 * Xs, l1 * Ys, l1 * Zs, l2 * Xs, l2 * Ys, l2 * Zs, l3 * Xs, l3 * Ys, l3 * Zs, l1, l2, l3);
+			A.row(2 * (Np + i) + 1) = (cv::Mat_<float>(1, 12, CV_32F) << l1 * Xe, l1 * Ye, l1 * Ze, l2 * Xe, l2 * Ye, l2 * Ze, l3 * Xe, l3 * Ye, l3 * Ze, l1, l2, l3);
+		}
+		// Solve with SVD
+		cv::Mat W, U, V, S;
+		cv::SVD::compute(A, W, U, V);
+		S = V.row(11).t();
+		//cv::SVD::solveZ(A, S);
+		if (std::isnan(S.at<float>(0)) || S.at<float>(0) == 0)
+			return false;
+		// Retrieve pose
+		cv::Mat rotMat(3, 3, CV_32F);
+		for (int row = 0; row < 3; row++)
+			for (int col = 0; col < 3; col++)
+				rotMat.at<float>(row, col) = S.at<float>(3 * row + col);
+		// Normalize rotMat
+		cv::Mat Rvec;
+		cv::Rodrigues(rotMat, Rvec);
+		cv::Rodrigues(Rvec, rotMat);
+		R0 = rotMat;
+		// Translation vector
+		cv::Mat Tvec = (cv::Mat_<float>(3, 1, CV_32F) << S.at<float>(9), S.at<float>(10), S.at<float>(11));
+		t0 = Tvec;
+
+		return true;
+	}
 
 	/* 
+	 * [WIP] OPnPL
 	 * Vakhitov, Alexander & Funke, Jan & Moreno-Noguer, Francesc. (2016). Accurate and Linear Time Pose Estimation from Points and Lines.
 	 * Adapted from the MATLAB code provided here under MIT License: https://github.com/alexandervakhitov/pnpl
-	 * /!\ WIP /!\
 	 */
 	bool SolARPoseEstimationPnPL::opnpl_main1(	const std::vector<Point3Df> & pt3d,
 												const std::vector<Point2Df> &  pt2d,
@@ -571,10 +548,6 @@ namespace OPENCV {
 		cv::vconcat(C, D, coeffs2);
 		cv::vconcat(coeffs1, coeffs2, coeffs);
 		cv::Mat sols;
-		//main_solver_pfold(coeffs, sols);
-
-		
-
 
 		cv::Mat An(1, 24, CV_32F), Bn(1, 24, CV_32F), Cn(1, 24, CV_32F), Dn(1, 24, CV_32F);
 		for (int i = 0; i < 24; i++)
@@ -585,35 +558,34 @@ namespace OPENCV {
 			Dn.at<float>(i) = D.at<float>(23 - i);
 		}
 
-
 		// Polynomial solver
 		cv::Mat XX, YY, ZZ, TT;
 		//cv::Mat roots;
 		int max_iter = 300;
-		double solver_error_A = cv::solvePoly(A, XX, max_iter);
-		double solver_error_B = cv::solvePoly(B, YY, max_iter);
-		double solver_error_C = cv::solvePoly(C, ZZ, max_iter);
-		double solver_error_D = cv::solvePoly(D, TT, max_iter);
+		cv::solvePoly(A, XX, max_iter);
+		cv::solvePoly(B, YY, max_iter);
+		cv::solvePoly(C, ZZ, max_iter);
+		cv::solvePoly(D, TT, max_iter);
 		//cv::SVD::compute(A, wA, uA, vtA);
 		//cv::SVD::compute(B, wB, uB, vtB);
 		//cv::SVD::compute(C, wC, uC, vtC);
 		//cv::SVD::compute(D, wD, uD, vtD);
 		//cv::Mat wA, uA, vtA, wB, uB, vtB, wC, uC, vtC, wD, uD, vtD;
 		//cv::SVD::solveZ(M, SOL);
-		////LOG_INFO("A\n{}, X\n{}", M, SOL);
-		////cv::Mat SOL = vtA.row(3).t();
-		//LOG_INFO("X\n{}", SOL);
-		//LOG_INFO("a:{}, b:{}, c:{}, d:{}", SOL.at<float>(10), SOL.at<float>(17), SOL.at<float>(21), SOL.at<float>(23));
+		//LOG_INFO("A\n{}, X\n{}", M, SOL);
+		//cv::Mat SOL = vtA.row(3).t();
+		//LOG_DEBUG("X\n{}", SOL);
+		//LOG_DEBUG("a:{}, b:{}, c:{}, d:{}", SOL.at<float>(10), SOL.at<float>(17), SOL.at<float>(21), SOL.at<float>(23));
 
-		//LOG_INFO("A\n{}, w\n{}, u\n{}, vt\n{}", A, wA, uA, vtA);
-		//LOG_INFO("B\n{}, w\n{}, u\n{}, vt\n{}", B, wB, uB, vtB);
-		//LOG_INFO("C\n{}, w\n{}, u\n{}, vt\n{}", C, wC, uC, vtC);
-		//LOG_INFO("D\n{}, w\n{}, u\n{}, vt\n{}", D, wD, uD, vtD);
+		//LOG_DEBUG("A\n{}, w\n{}, u\n{}, vt\n{}", A, wA, uA, vtA);
+		//LOG_DEBUG("B\n{}, w\n{}, u\n{}, vt\n{}", B, wB, uB, vtB);
+		//LOG_DEBUG("C\n{}, w\n{}, u\n{}, vt\n{}", C, wC, uC, vtC);
+		//LOG_DEBUG("D\n{}, w\n{}, u\n{}, vt\n{}", D, wD, uD, vtD);
 
-		//LOG_INFO("XX: {}", XX);
-		//LOG_INFO("YY: {}", YY);
-		//LOG_INFO("ZZ: {}", ZZ);
-		//LOG_INFO("TT: {}", TT);
+		//LOG_DEBUG("XX: {}", XX);
+		//LOG_DEBUG("YY: {}", YY);
+		//LOG_DEBUG("ZZ: {}", ZZ);
+		//LOG_DEBUG("TT: {}", TT);
 
 		// Remove repetitive solutions (equals or opposites) and keep only real
 		std::vector<float> XX_f, YY_f, ZZ_f, TT_f;
@@ -662,7 +634,6 @@ namespace OPENCV {
 		// TODO refine solutions
 
 		// Retrieve pose [R t]
-		float a, b, c, d;
 		error = FLT_MAX;
 		//for (int i = 0; i < XX.rows; i++)
 		for (auto a : XX_f)
@@ -726,311 +697,6 @@ namespace OPENCV {
 		//LOG_INFO("R0, t0: {}, {}", R0, t0);
 		LOG_INFO("error: {}", error);
 		return true;
-	}
-
-	bool SolARPoseEstimationPnPL::pnpl_main(const std::vector<Point3Df>& pt3d, const std::vector<Point2Df>& pt2d, const std::vector<Edge3Df>& ln3d, const std::vector<Edge2Df>& ln2d, cv::Mat & R0, cv::Mat & t0, float error)
-	{
-		int Np = pt2d.size();
-		int Nl = ln2d.size();
-
-		cv::Mat A(2 * (Np + Nl), 12, CV_32F);
-
-		// Points
-		cv::Mat ui(3, 1, CV_32F);
-		float u, v, X, Y, Z;
-		for (int i = 0; i < Np; i++)
-		{
-			ui = (cv::Mat_<float>(3, 1) << pt2d[i].getX(), pt2d[i].getY(), 1);
-			ui = m_Kinv * ui; ui /= cv::norm(ui);
-			u = ui.at<float>(0); v = ui.at<float>(1);
-			X = pt3d[i].getX(); Y = pt3d[i].getY(); Z = pt3d[i].getZ();
-
-			// [ r11, r12, r13, r21, r22, r23, r31, r32, r33, t1, t2, t3]
-			A.row(2 * i)		= (cv::Mat_<float>(1, 12, CV_32F) << -X, -Y, -Z,  0,  0,  0, u * X, u * Y, u * Z, -1,  0, u);
-			A.row(2 * i + 1)	= (cv::Mat_<float>(1, 12, CV_32F) <<  0,  0,  0, -X, -Y, -Z, v * X, v * Y, v * Z,  0, -1, v);
-		}
-		// Lines
-		cv::Mat s(3, 1, CV_32F), e(3, 1, CV_32F), l(3, 1, CV_32F);
-		float l1, l2, l3;
-		float Xs, Ys, Zs, Xe, Ye, Ze;
-		for (int i = 0; i < Nl; i++)
-		{
-			s = (cv::Mat_<float>(3, 1, CV_32F) << ln2d[i].p1.getX(), ln2d[i].p1.getY(), 1);
-			e = (cv::Mat_<float>(3, 1, CV_32F) << ln2d[i].p2.getX(), ln2d[i].p2.getY(), 1);
-			l = s.cross(e); l /= cv::norm(l);
-			l1 = l.at<float>(0); l2 = l.at<float>(1); l3 = l.at<float>(2);
-			Xs = ln3d[i].p1.getX(); Ys = ln3d[i].p1.getY(); Zs = ln3d[i].p1.getZ();
-			Xe = ln3d[i].p2.getX(); Ye = ln3d[i].p2.getY(); Ze = ln3d[i].p2.getZ();
-
-			// [ r11, r12, r13, r21, r22, r23, r31, r32, r33, t1, t2, t3]
-			A.row(2 * (Np + i))		= (cv::Mat_<float>(1, 12, CV_32F) << l1 * Xs, l1 * Ys, l1 * Zs, l2 * Xs, l2 * Ys, l2 * Zs, l3 * Xs, l3 * Ys, l3 * Zs, l1, l2, l3);
-			A.row(2 * (Np + i) + 1) = (cv::Mat_<float>(1, 12, CV_32F) << l1 * Xe, l1 * Ye, l1 * Ze, l2 * Xe, l2 * Ye, l2 * Ze, l3 * Xe, l3 * Ye, l3 * Ze, l1, l2, l3);
-		}
-		// Solve with SVD
-		cv::Mat W, U, V, S;
-		cv::SVD::compute(A, W, U, V);
-		S = V.row(11).t();
-		//cv::SVD::solveZ(A, S);
-		if (std::isnan(S.at<float>(0)) || S.at<float>(0) == 0)
-			return false;
-		// Retrieve pose
-		cv::Mat rotMat(3, 3, CV_32F);
-		for (int row = 0; row < 3; row++)
-			for (int col = 0; col < 3; col++)
-				rotMat.at<float>(row, col) = S.at<float>(3 * row + col);
-		// Normalize rotMat
-		cv::Mat Rvec;
-		cv::Rodrigues(rotMat, Rvec);
-		cv::Rodrigues(Rvec, rotMat);
-		R0 = rotMat;
-		// Translation vector
-		cv::Mat Tvec = (cv::Mat_<float>(3, 1, CV_32F) << S.at<float>(9), S.at<float>(10), S.at<float>(11));
-		t0 = Tvec;
-
-		// Compute reprojection error
-		//float reproj_error(0.f);
-		//for (int i = 0; i < pt2d.size(); i++)
-		//	reproj_error += getPointReprojError(pt2d[i], pt3d[i], R0, t0);
-		//for (int i = 0; i < ln2d.size(); i++)
-		//	reproj_error += getLineReprojError(ln2d[i], ln3d[i], R0, t0);
-
-		//error = reproj_error / float(Np + Nl);
-
-		return true;
-	}
-
-	bool SolARPoseEstimationPnPL::solver_pfold(const cv::Mat & C0, cv::Mat & sols)
-	{
-		// Reorder
-		cv::Mat C; C.create(4, 24, CV_32F);
-		for (int i = 0; i < C.rows; i++)
-			for (int j = 0; j < C.cols; j++)
-				C.at<float>(i, j) = C0.at<float>(i, m_solverParams.reorder.at<float>(j));
-		int p = C.rows;
-		int nmon = m_solverParams.mon.cols;
-		int r = m_solverParams.dim;
-		// Sparse matrix
-		cv::Mat Ct = C.t();
-		cv::Mat vv; vv.create(8352, 1, CV_32F);
-		int idx;
-		for (int i = 0; i < 8352; i++)
-		{
-			idx = m_solverParams.T.at<float>(i);
-			vv.at<float>(i) = Ct.at<float>(idx % Ct.rows, int(idx / Ct.rows));
-		}
-		int size[] = { 8352, 8352 };
-		cv::Mat Csparse; Csparse.create(2, size, CV_32F);
-		for (int i = 0; i < size[0]; i++)
-			Csparse.at<float>(m_solverParams.II.at<float>(i), m_solverParams.JJ.at<float>(i)) = vv.at<float>(i);
-		// Modulo Matrix
-		//// Reorder according to E, R, P
-		cv::Mat tmp, V;
-		cv::hconcat(m_solverParams.E, m_solverParams.R, V);
-		cv::hconcat(V, m_solverParams.P, V);
-		cv::Mat C1; C1.create(8352, 8352, CV_32F);
-		for (int i = 0; i < C1.rows; i++)
-			for (int j = 0; j < C1.cols; j++)
-			{
-				if (j < V.cols)
-					C1.at<float>(i, j) = Csparse.at<float>(i, V.at<float>(j));
-				else
-					C1.at<float>(i, j) = Csparse.at<float>(i, j);
-			}
-		//LOG_INFO("C1.row(0):\n{}", C1.row(0));
-
-		//// Eliminate excessive monomials
-		cv::Mat CE = C1.colRange(0, m_solverParams.E.cols);
-		LOG_DEBUG("{}", CE.cols);
-		//cv::Mat Q, R;
-		//houseHolderQR(CE, Q, R);
-		//LOG_INFO("Q.row(0):\n{}", Q.row(0));
-		//LOG_INFO("R.row(0):\n{}", R.row(0));
-
-		//// EIGEN
-
-		Eigen::SparseMatrix<float> A(CE.rows, CE.cols);
-		float v;
-		for (int i = 0; i < CE.rows; i++)
-			for (int j = 0; j < CE.cols; j++)
-			{
-				v = CE.at<float>(i, j);
-				if (v != 0)	A.insert(i, j) = v;
-			}
-		A.makeCompressed();
-		Eigen::SparseQR < Eigen::SparseMatrix<float>, Eigen::COLAMDOrdering<int> > QR;
-		LOG_DEBUG("computing QR");
-		QR.compute(A);
-		LOG_DEBUG("QR.matrixQ() ({}, {})", QR.matrixQ().rows(), QR.matrixQ().cols());
-		LOG_DEBUG("QR.matrixR() ({}, {})", QR.matrixR().rows(), QR.matrixR().cols());
-		Eigen::SparseMatrix<float> Qs;
-		Eigen::SparseMatrix<float, Eigen::RowMajor> Rs;
-		Qs = QR.matrixQ(); Rs = QR.matrixR();
-		cv::Mat Q(CE.rows, CE.rows, CV_32F), R(CE.rows, CE.cols, CV_32F);
-		for (int i = 0; i < CE.rows; i++)
-			for (int j = 0; j < CE.rows; j++)
-			{
-				if (j < CE.cols)
-					R.at<float>(i, j) = Rs.coeff(i, j);
-				Q.at<float>(i, j) = Qs.coeff(i, j);
-			}
-		LOG_DEBUG("Q.row(0):\n{}", Q.row(0));
-		LOG_DEBUG("R.row(0):\n{}", R.row(0));
-
-		//////
-		return false;
-	}
-
-	// QR Decomp -> not optimized for sparse matrices
-	void SolARPoseEstimationPnPL::houseHolderQR(const cv::Mat & A, cv::Mat & Q, cv::Mat & R)
-	{
-		int m = A.rows; int n = A.cols;
-		int size[] = { m, n };
-		int sizeQ[] = { m, m };
-		Q.create(m, n, CV_32F);
-		R.create(m, n, CV_32F);
-
-		// array of factor Q1, Q2, ... Qm
-		std::vector<cv::SparseMat> qv(m);
-		// temp array
-		cv::SparseMat z(A);
-		cv::SparseMat z1; z1.create(2, size, CV_32F);
-		LOG_INFO("ok");
-
-		float a;
-		cv::Mat e, x; e.create(1, m, CV_32F); x.create(1, m, CV_32F);
-		for (int k = 0; k < n && k < m - 1; k++)
-		{
-			LOG_INFO("k:{}", k);
-			// compute minor
-			for (int i = 0; i < k; i++)
-				z1.ref<float>(i, i) = 1.0f;
-			for (int i = k; i < m; i++)
-				for (int j = k; j < n; j++)
-					z1.ref<float>(i, j) = z.ref<float>(i, j);
-
-			// extract k-th column into x
-			for (int i = 0; i < m; i++)
-				x.at<float>(i) = z1.ref<float>(i, k);
-
-			a = cv::norm(x);
-			if (A.at<float>(k, k) > 0) a = -a;
-
-			for (int i = 0; i < m; i++)
-				e.at<float>(i) = (i == k) ? 1 : 0;
-
-			// e = x + a*e
-			for (int i = 0; i < m; i++)
-				e.at<float>(i) = x.at<float>(i) + a * e.at<float>(i);
-
-			// e = e / ||e||
-			e /= cv::norm(e);
-
-			LOG_INFO("yes");
-	
-			// qv[k] = I - 2 *e*e^T
-			qv[k].create(2, sizeQ, CV_32F);
-			for (int i = 0; i < m; i++)
-				for (int j = 0; j < m; j++)
-					qv[k].ref<float>(i, j) = -2 * e.at<float>(i) * e.at<float>(j);
-			for (int i = 0; i < m; i++)
-				qv[k].ref<float>(i, i) += 1;
-			LOG_INFO("oh");
-
-			// z = qv[k] * z1
-			for (int i = 0; i < m; i++)
-				for (int j = 0; j < n; j++)
-					for (int k = 0; k < m; k++)
-						z.ref<float>(i, j) += qv[k].ref<float>(i, k) * z1.ref<float>(k, j);
-		}
-		cv::SparseMat Qs = qv[0];
-		LOG_INFO("ok");
-		// after this loop, we will obtain Q (up to a transpose operation)
-		for (int i = 1; i < n && i < m - 1; i++)
-			for (int l = 0; l < m; l++)
-				for (int j = 0; j < m; j++)
-					for (int k = 0; k < m; k++)
-						Qs.ref<float>(l, j) += qv[i].ref<float>(l, k) * Qs.ref<float>(k, j);
-
-		Qs.convertTo(Q, CV_32F);
-		R = Q * A;
-		Q = Q.t();
-	}
-
-	// Load Gröbner solver parameters from config file
-	FrameworkReturnCode SolARPoseEstimationPnPL::loadSolverParams()
-	{
-		cv::FileStorage fs("solver.yml", cv::FileStorage::READ);
-		cv::Mat II, JJ, T, Tid, mon, P, R, E, ind, reorder;
-
-		if (fs.isOpened())
-		{
-			// II
-			fs["II"] >> II;
-			m_solverParams.II.create(II.rows, II.cols, CV_32F);
-			for (int i = 0; i < II.rows; i++)
-				for (int j = 0; j < II.cols; j++)
-					m_solverParams.II.at<float>(i, j) = (float)II.at<double>(i, j) - 1;
-			// JJ
-			fs["JJ"] >> JJ;
-			m_solverParams.JJ.create(JJ.rows, JJ.cols, CV_32F);
-			for (int i = 0; i < JJ.rows; i++)
-				for (int j = 0; j < JJ.cols; j++)
-					m_solverParams.JJ.at<float>(i, j) = (float)JJ.at<double>(i, j) - 1;
-			// T
-			fs["T"] >> T;
-			m_solverParams.T.create(T.rows, T.cols, CV_32F);
-			for (int i = 0; i < T.rows; i++)
-				for (int j = 0; j < T.cols; j++)
-					m_solverParams.T.at<float>(i, j) = (float)T.at<double>(i, j) - 1;
-			// Tid
-			fs["Tid"] >> Tid;
-			m_solverParams.Tid.create(Tid.rows, Tid.cols, CV_32F);
-			for (int i = 0; i < Tid.rows; i++)
-				for (int j = 0; j < Tid.cols; j++)
-					m_solverParams.Tid.at<float>(i, j) = (float)Tid.at<double>(i, j) - 1;
-			// mon
-			fs["mon"] >> mon;
-			m_solverParams.mon.create(mon.rows, mon.cols, CV_32F);
-			for (int i = 0; i < mon.rows; i++)
-				for (int j = 0; j < mon.cols; j++)
-					m_solverParams.mon.at<float>(i, j) = (float)mon.at<double>(i, j) - 1;
-			// P
-			fs["P"] >> P;
-			m_solverParams.P.create(P.rows, P.cols, CV_32F);
-			for (int i = 0; i < P.rows; i++)
-				for (int j = 0; j < P.cols; j++)
-					m_solverParams.P.at<float>(i, j) = (float)P.at<double>(i, j) - 1;
-			// R
-			fs["R"] >> R;
-			m_solverParams.R.create(R.rows, R.cols, CV_32F);
-			for (int i = 0; i < R.rows; i++)
-				for (int j = 0; j < R.cols; j++)
-					m_solverParams.R.at<float>(i, j) = (float)R.at<double>(i, j) - 1;
-			// E
-			fs["E"] >> E;
-			m_solverParams.E.create(E.rows, E.cols, CV_32F);
-			for (int i = 0; i < E.rows; i++)
-				for (int j = 0; j < E.cols; j++)
-					m_solverParams.E.at<float>(i, j) = (float)E.at<double>(i, j) - 1;
-			// ind
-			fs["ind"] >> ind;
-			m_solverParams.ind.create(ind.rows, ind.cols, CV_32F);
-			for (int i = 0; i < ind.rows; i++)
-				for (int j = 0; j < ind.cols; j++)
-					m_solverParams.ind.at<float>(i, j) = (float)ind.at<double>(i, j) - 1;
-			// reorder
-			fs["reorder"] >> reorder;
-			m_solverParams.reorder.create(reorder.rows, reorder.cols, CV_32F);
-			for (int i = 0; i < reorder.rows; i++)
-				for (int j = 0; j < reorder.cols; j++)
-					m_solverParams.reorder.at<float>(i, j) = (float)reorder.at<double>(i, j) - 1;
-		}
-		else
-		{
-			LOG_ERROR("SolARPoseEstimationPnPL::loadSolverParams: Cannot open solver params file");
-			return FrameworkReturnCode::_ERROR_;
-		}
-		return FrameworkReturnCode::_SUCCESS;
 	}
 
 	float SolARPoseEstimationPnPL::getPointReprojError(const Point2Df pt2D, const Point3Df pt3D, const cv::Mat& R, const cv::Mat& t)

@@ -24,7 +24,6 @@
 #include "api/solver/map/ITriangulator.h"
 #include "opencv2/opencv.hpp"
 #include <opencv2/imgproc.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
 #include "datastructure/DescriptorBuffer.h"
 #include "api/geom/IProject.h"
 
@@ -82,7 +81,7 @@ public:
 							const cv::Mat & proj1, const cv::Mat & proj2,
 							const cv::Mat & F12,
 							Edge3Df & line3D,
-							double & error);
+							float & error);
 
     /// @brief triangulate pairs of points 2d captured from two views with differents poses (with respect to the camera instrinsic parameters).
     /// @param[in] pointsView1, set of 2D points seen in view_1.
@@ -158,26 +157,26 @@ public:
 	/// @return the mean re-projection error
 	double triangulate( const std::vector<Keyline> & keylines1,
 						const std::vector<Keyline> & keylines2,
-						const SRef<DescriptorBuffer>& descriptor1,
-						const SRef<DescriptorBuffer>& descriptor2,
+						const SRef<DescriptorBuffer> & descriptor1,
+						const SRef<DescriptorBuffer> & descriptor2,
 						const std::vector<DescriptorMatch> & matches,
-						const std::pair<unsigned, unsigned>& working_views,
+						const std::pair<unsigned, unsigned> & working_views,
 						const Transform3Df & pose1,
 						const Transform3Df & pose2,
-						std::vector<CloudLine> & lineCloud) override;
+						std::vector<SRef<CloudLine>> & lineCloud) override;
 
     void unloadComponent () override final;
 
  private:
 	// Compute the distance of the given point from the line.
-	double distancePointLine2D(const cv::Mat & line, const cv::Mat & point);
+	float distancePointLine2D(const cv::Mat & line, const cv::Mat & point);
 	
 	// Solve for a 3D point triangulated from two 3D segments l1 & l2, given its 2D reprojection on l1.
 	bool solvePoint3DLine(	const cv::Mat & l1, const cv::Mat & l2,
 							const cv::Mat & proj1, const cv::Mat & proj2,
 							const cv::Mat & point2D,
 							cv::Mat & point3D,
-							double & error);
+							float & error);
 
 	// Retrieve the mean descriptor between two features index1 & index2.
 	SRef<DescriptorBuffer> getMeanDescriptor(	const SRef<DescriptorBuffer> descriptor1,
