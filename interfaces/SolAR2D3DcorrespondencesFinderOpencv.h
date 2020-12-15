@@ -35,14 +35,14 @@ public:
 	/// @param[out] corres2D3D: The pairs of 2D-3D correspondences. The first value is the index of keypoint in the current frame and the second one is the corresponding cloud point.
 	/// @param[out] found_matches: The matches between the current frame and its reference keyframe which have a 3 correspondant.
 	/// @param[out] remaining_matches: The matches between the current frame and its reference keyframe for which no 3D points have been found.
-	FrameworkReturnCode find(const SRef<datastructure::Frame> &lastFrame,
-							const SRef<datastructure::Frame> &currentFrame,
-							const std::vector<datastructure::DescriptorMatch> & current_matches,
-							std::vector<datastructure::Point3Df> & shared_3dpoint,
-							std::vector<datastructure::Point2Df> & shared_2dpoint,
-							std::vector<std::pair<uint32_t, SRef<datastructure::CloudPoint>>> &corres2D3D,
-							std::vector<datastructure::DescriptorMatch> & found_matches,
-							std::vector<datastructure::DescriptorMatch> & remaining_matches) override;
+    FrameworkReturnCode find(const SRef<datastructure::Frame> lastFrame,
+                             const SRef<datastructure::Frame> currentFrame,
+                             const std::vector<datastructure::DescriptorMatch> & current_matches,
+                             std::vector<datastructure::Point3Df> & shared_3dpoint,
+                             std::vector<datastructure::Point2Df> & shared_2dpoint,
+                             std::vector<std::pair<uint32_t, SRef<datastructure::CloudPoint>>> & corres2D3D,
+                             std::vector<datastructure::DescriptorMatch> & found_matches,
+                             std::vector<datastructure::DescriptorMatch> & remaining_matches) override;
 
     void unloadComponent () override final;
 

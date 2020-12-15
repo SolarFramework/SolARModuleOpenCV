@@ -44,7 +44,7 @@ SolARMapFusionOpencv::~SolARMapFusionOpencv()
 	LOG_DEBUG(" SolARMapFusionOpencv destructor")
 }
 
-FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper>& globalMap, Transform3Df & transform, uint32_t & nbMatches, float & error)
+FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper> globalMap, Transform3Df & transform, uint32_t & nbMatches, float & error)
 {
 	/// Transform local map to global map
 	m_transform3D->transform(transform, map);
@@ -138,7 +138,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper>& globalMap, Transform3Df & transform, const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, const bool & isRefineTransform)
+FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper> globalMap, Transform3Df & transform, const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, const bool & isRefineTransform)
 {
 	uint32_t nbMatches;
 	float error;
@@ -151,7 +151,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, SRef<IMapper>& map, SRef<IMapper>& globalMap)
+void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, SRef<IMapper> map, SRef<IMapper> globalMap)
 {
 	// get map
 	SRef<IPointCloudManager> pointcloudManager, globalPointcloudManager;

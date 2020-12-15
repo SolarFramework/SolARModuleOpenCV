@@ -56,11 +56,11 @@ public:
 	/// @param[out] nbMatches: the number of matched cloud points.
 	/// @param[error] error: the error of fusion process that is the mean of error distances of the matched cloud points.
 	/// @return FrameworkReturnCode::_SUCCESS_ if the fusion succeed, else FrameworkReturnCode::_ERROR.
-	FrameworkReturnCode merge(SRef<api::solver::map::IMapper> &map,
-							SRef<api::solver::map::IMapper> &globalMap,
-							datastructure::Transform3Df &transform,
-							uint32_t &nbMatches,
-							float &error) override;
+    FrameworkReturnCode merge(SRef<api::solver::map::IMapper> map,
+                              SRef<api::solver::map::IMapper> globalMap,
+                              datastructure::Transform3Df &transform,
+                              uint32_t &nbMatches,
+                              float &error) override;
 
 	/// @brief Merge a map in the global map. The map can be a local map (know transformation to the global map) or a floating map.
 	/// @param[in,out] map: local map or floating map to merge
@@ -69,11 +69,11 @@ public:
 	/// @param[in] cpOverlapIndices : pairs of detected overlap cloud points indices of floating map and global map.
 	/// @param[in] isRefineTransform : refine the 3D transformation if it's true.
 	/// @return FrameworkReturnCode::_SUCCESS_ if the fusion succeed, else FrameworkReturnCode::_ERROR.
-	FrameworkReturnCode merge(SRef<api::solver::map::IMapper> &map,
-							SRef<api::solver::map::IMapper> &globalMap,
-							datastructure::Transform3Df &transform,
-							const std::vector<std::pair<uint32_t, uint32_t>>&cpOverlapIndices,
-							const bool &isRefineTransform = false) override;
+    FrameworkReturnCode merge(SRef<api::solver::map::IMapper> map,
+                              SRef<api::solver::map::IMapper> globalMap,
+                              datastructure::Transform3Df &transform,
+                              const std::vector<std::pair<uint32_t, uint32_t>> & cpOverlapIndices,
+                              const bool &isRefineTransform = false) override;
 
 	void unloadComponent() override final;
 
@@ -82,7 +82,7 @@ private:
 	/// @param[in] cpOverlapIndices : pairs of detected overlap cloud points indices of floating map and global map.
 	/// @param[in,out] map: local map or floating map to merge
 	/// @param[in,out] globalMap: the global map		
-	void fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>&cpOverlapIndices, SRef<api::solver::map::IMapper> &map, SRef<api::solver::map::IMapper> &globalMap);
+    void fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>&cpOverlapIndices, SRef<api::solver::map::IMapper> map, SRef<api::solver::map::IMapper> globalMap);
 
 private:
     float													m_radius = 0.3f;
