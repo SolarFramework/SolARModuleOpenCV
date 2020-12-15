@@ -42,7 +42,6 @@ SolARMatchesOverlayOpencv::SolARMatchesOverlayOpencv():ConfigurableBase(xpcf::to
     LOG_DEBUG(" SolARMatchesOverlayOpencv constructor");
 }
 
-
 void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <Point2Df> & points_image1, const std::vector <Point2Df> & points_image2, const std::vector<DescriptorMatch> & matches)
 {
     if (outImage == nullptr)
