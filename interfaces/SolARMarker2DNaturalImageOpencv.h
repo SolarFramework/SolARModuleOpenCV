@@ -21,7 +21,6 @@
 
 #include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
-#include "opencv2/opencv.hpp"
 
 namespace SolAR {
 namespace MODULES {
@@ -43,7 +42,7 @@ public:
     void unloadComponent () override final;
 
     FrameworkReturnCode loadMarker() override;
-    FrameworkReturnCode getImage(SRef<datastructure::Image> & img) override;
+    FrameworkReturnCode getImage(SRef<datastructure::Image> img) const override;
 
     /// @brief Provide the position of 2D corners in image coordinate system
     /// @param[out] imageCorners the 2D corners of the marker in image coordinate system
@@ -62,7 +61,7 @@ public:
 
 private:
     datastructure::Sizef m_size;
-    cv::Mat m_ocvImage;
+    SRef<datastructure::Image> m_image;
 
     /// @brief the path to the file describing the 2D Squared binary marker
     std::string m_filePath ="";

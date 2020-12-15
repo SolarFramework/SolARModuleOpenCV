@@ -137,21 +137,23 @@ namespace OPENCV {
         m_parameters = parameters;
      }
 
-     const CameraParameters & SolARBaseCameraOpencv::getParameters()
+     const CameraParameters & SolARBaseCameraOpencv::getParameters() const
      {
         return m_parameters;
      }
 
-     Sizei SolARBaseCameraOpencv::getResolution()
+     Sizei SolARBaseCameraOpencv::getResolution() const
      {
          return m_parameters.resolution;
      }
 
-    const CamCalibration & SolARBaseCameraOpencv::getIntrinsicsParameters(){
+    const CamCalibration & SolARBaseCameraOpencv::getIntrinsicsParameters() const
+    {
         return m_parameters.intrinsic;
     }
 
-    const CamDistortion & SolARBaseCameraOpencv::getDistortionParameters(){
+    const CamDistortion & SolARBaseCameraOpencv::getDistortionParameters() const
+    {
         return m_parameters.distortion;
     }
 

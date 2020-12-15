@@ -71,7 +71,7 @@ public:
 	/// @brief Get the distortion and intrinsic camera parameters
 	/// @param[in] camera_id: The id of the camera.
 	/// @return the camera parameters
-	const datastructure::CameraParameters & getParameters(const int & camera_id) override;
+    const datastructure::CameraParameters & getParameters(const int & camera_id) const override;
 
 	/// @brief Set the distortion and intrinsic camera parameters
 	/// @param[in] camera_id: The id of the camera.

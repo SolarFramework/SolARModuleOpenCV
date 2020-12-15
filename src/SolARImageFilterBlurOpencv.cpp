@@ -44,7 +44,7 @@ SolARImageFilterBlurOpencv::~SolARImageFilterBlurOpencv(){
 
 FrameworkReturnCode SolARImageFilterBlurOpencv::filter(const SRef<Image>input, SRef<Image>& output){
 
-    if (output == nullptr)
+    if (!output)
         output = xpcf::utils::make_shared<Image> (input->getImageLayout(), input->getPixelOrder(), input->getDataType());
 
     output->setSize(input->getWidth(),input->getHeight());

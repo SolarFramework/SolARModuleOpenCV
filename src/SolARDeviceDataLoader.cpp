@@ -205,7 +205,7 @@ namespace SolAR {
         return FrameworkReturnCode();
     }
 
-    const CameraParameters & SolARDeviceDataLoader::getParameters(const int & camera_id)
+    const CameraParameters & SolARDeviceDataLoader::getParameters(const int & camera_id) const
     {
         return m_camParameters[camera_id];
     }

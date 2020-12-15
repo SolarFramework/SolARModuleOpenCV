@@ -18,6 +18,7 @@
 #include "SolARMarker2DNaturalImageOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
+#include "opencv2/opencv.hpp"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -67,36 +68,42 @@ namespace OPENCV {
 
         LOG_DEBUG("{}",imageFullPath)
 
-        m_ocvImage = cv::imread(imageFullPath.string(), cv::IMREAD_COLOR);
-        if(! m_ocvImage.data )  // Check for invalid input
+        cv::Mat ocvImage = cv::imread(imageFullPath.string(), cv::IMREAD_COLOR);
+        if(! ocvImage.data )  // Check for invalid input
         {
             LOG_ERROR("Error: Could not open or find the 2D natural image marker {}", m_filePath)
             return FrameworkReturnCode::_ERROR_LOAD_IMAGE;
         }
-
+        else
+        {
+           SolAROpenCVHelper::convertToSolar(ocvImage, m_image);
+        }
         return FrameworkReturnCode::_SUCCESS;
     }
 
-    FrameworkReturnCode SolARMarker2DNaturalImageOpencv::getImage(SRef<Image> & img)
+    FrameworkReturnCode SolARMarker2DNaturalImageOpencv::getImage(SRef<Image> img) const
     {
-        if(!m_ocvImage.data)
+        if (!m_image)
+        {
+            LOG_DEBUG("Marker image has not been loaded");
             return FrameworkReturnCode::_ERROR_LOAD_IMAGE;
-
-        return SolAROpenCVHelper::convertToSolar(m_ocvImage,img);
+        }
+        img = m_image;
+        return FrameworkReturnCode::_SUCCESS;
     }
 
     FrameworkReturnCode SolARMarker2DNaturalImageOpencv::getImageCorners(std::vector<Point2Df> & imageCorners) const
     {
         imageCorners.clear();
-        if (!m_ocvImage.data)
+        if (!m_image)
         {
             LOG_DEBUG("Marker image has not been loaded");
-            return FrameworkReturnCode::_ERROR_;
+            return FrameworkReturnCode::_ERROR_LOAD_IMAGE;
         }
         imageCorners.push_back(Point2Df(0.0f, 0.0f));
-        imageCorners.push_back(Point2Df(m_ocvImage.size().width, 0.0f));
-        imageCorners.push_back(Point2Df(m_ocvImage.size().width,m_ocvImage.size().height));
-        imageCorners.push_back(Point2Df(0.0f, m_ocvImage.size().height));
+        imageCorners.push_back(Point2Df(m_image->getWidth(), 0.0f));
+        imageCorners.push_back(Point2Df(m_image->getWidth(), m_image->getHeight()));
+        imageCorners.push_back(Point2Df(0.0f, m_image->getHeight()));
 
         return FrameworkReturnCode::_SUCCESS;
     }

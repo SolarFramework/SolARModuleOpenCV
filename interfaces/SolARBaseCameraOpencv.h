@@ -63,16 +63,16 @@ public:
     /// @brief Set the camera parameters
     void setParameters(const datastructure::CameraParameters & parameters) override;
     /// @return Return the camera parameters
-    const datastructure::CameraParameters & getParameters() override;
+    const datastructure::CameraParameters & getParameters() const override;
     /// @brief Get the current resolutio nof the camera.
     ///[out]  width and height of the images grabbed from the camera.
-    datastructure::Sizei getResolution () override;
+    datastructure::Sizei getResolution () const override;
     /// @brief Get the current camera calibration parameters.
     ///[out] Calibration matrix containing the nine camera calibration parameters.
-    const datastructure::CamCalibration & getIntrinsicsParameters() override;
+    const datastructure::CamCalibration & getIntrinsicsParameters() const override;
     /// @brief Get the current camera distortion parameters.
     ///[out] distortion matrix containing the five camera distortion parameters.
-    const datastructure::CamDistortion & getDistortionParameters() override;
+    const datastructure::CamDistortion & getDistortionParameters() const override;
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...
     void unloadComponent () override;

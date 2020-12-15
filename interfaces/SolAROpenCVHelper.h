@@ -54,7 +54,7 @@ public:
     static std::vector<cv::Point2i> convertToOpenCV (const datastructure::Contour2Di &contour);
     static std::vector<cv::Point2f> convertToOpenCV (const datastructure::Contour2Df &contour);
 
-    static FrameworkReturnCode convertToSolar(cv::Mat&  imgSrc, SRef<datastructure::Image>& imgDest);
+    static FrameworkReturnCode convertToSolar( cv::Mat&  imgSrc, SRef<datastructure::Image>& imgDest);
 
     static void mapToOpenCV (SRef<datastructure::Image> imgSrc, cv::Mat& imgDest);
 
