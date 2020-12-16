@@ -81,7 +81,7 @@ namespace OPENCV {
         return FrameworkReturnCode::_SUCCESS;
     }
 
-    FrameworkReturnCode SolARMarker2DNaturalImageOpencv::getImage(SRef<Image> img) const
+    FrameworkReturnCode SolARMarker2DNaturalImageOpencv::getImage(SRef<Image>& img) const
     {
         if (!m_image)
         {
