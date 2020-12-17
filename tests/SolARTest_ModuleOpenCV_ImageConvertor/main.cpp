@@ -48,9 +48,9 @@ int main(int argc, char **argv)
     /* this is needed in dynamic mode */
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-    if(xpcfComponentManager->load("SolAROpenCVImageConvertor_conf.xml")!=org::bcom::xpcf::_SUCCESS)
+    if(xpcfComponentManager->load("SolARTest_ModuleOpenCV_ImageConvertor_conf.xml")!=org::bcom::xpcf::_SUCCESS)
     {
-        LOG_ERROR("Failed to load the configuration file SolAROpenCVImageConvertor_conf.xml")
+        LOG_ERROR("Failed to load the configuration file SolARTest_ModuleOpenCV_ImageConvertor_conf.xml")
         return -1;
     }
 
