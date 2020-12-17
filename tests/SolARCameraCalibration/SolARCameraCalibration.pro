@@ -67,10 +67,6 @@ win32 {
 
 }
 
-ymlconfig.path = $${TARGETDEPLOYDIR}/
-ymlconfig.files = $$files($${PWD}/SolAROpenCVCameraCalibration_config.yml)
-INSTALLS += ymlconfig
-
 DISTFILES += \
     packagedependencies.txt
 
