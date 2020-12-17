@@ -3,7 +3,7 @@ QT       -= core gui
 CONFIG -= qt
 
 ## global defintions : target lib name, version
-TARGET = SolARDeviceDataLoaderTest
+TARGET = SolARTest_ModuleOpenCV_DeviceDataLoader
 VERSION=0.9.0
 
 DEFINES += MYVERSION=$${VERSION}
@@ -64,7 +64,7 @@ win32 {
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $${PWD}/conf_SolARDeviceDataLoaderTest.xml
+configfile.files = $${PWD}/SolARTest_ModuleOpenCV_DeviceDataLoader_conf.xml
 INSTALLS += configfile
 
 DISTFILES += \

@@ -24,8 +24,8 @@
 	
     <properties>
         <configure component="SolARDeviceDataLoader">
-			<property name="calibrationFile" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\hololens_calibration.yml"/>
-			<property name="pathToData" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\short_test_18092020"/>
+            <property name="calibrationFile" type="string" value="../../data/hololens_calibration.yml"/>
+            <property name="pathToData" type="string" value="../../data/short_test"/>
 			<property name="delayTime" type="Integer" value="100"/>
 		</configure>
 		<configure component="SolARImageViewerOpencv">
