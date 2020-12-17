@@ -3,7 +3,7 @@ QT       -= core gui
 CONFIG -= qt
 
 ## global defintions : target lib name, version
-TARGET = SolAROpenCVImageLoader
+TARGET = SolARTest_ModuleOpenCV_ImageLoader
 VERSION=0.9.0
 
 DEFINES += MYVERSION=$${VERSION}
@@ -64,7 +64,7 @@ win32 {
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $${PWD}/SolAROpenCVImageLoader_conf.xml
+configfile.files = $${PWD}/SolARTest_ModuleOpenCV_ImageLoader_conf.xml
 INSTALLS += configfile
 
 DISTFILES += \
