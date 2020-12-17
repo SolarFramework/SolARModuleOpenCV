@@ -19,6 +19,7 @@
 			<bind interface="IImageLoader" to="SolARImageLoaderOpencv"/>
 			<bind interface="IImageConvertor" to="SolARImageConvertorOpencv"/>
 			<bind interface="IImageViewer" to="SolARImageViewerOpencv"/>
+            <bind interface="IImageViewer" to="SolARImageViewerOpencv" name="LUT" properties="LUT"/>
 		</bindings>
 	</factory>
     <properties>
