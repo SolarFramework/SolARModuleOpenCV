@@ -83,8 +83,8 @@
 	
     <properties>
         <configure component="SolARDeviceDataLoader">
-			<property name="calibrationFile" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\hololens_calibration.yml"/>
-			<property name="pathToData" type="string" value="D:\Bcom\Argo\SolARFramework\datasets\bcom\hololens\short_test_24092020_pose_checking_with_fiducial"/>
+            <property name="calibrationFile" type="string" value="../../data/hololens_calibration.yml"/>
+            <property name="pathToData" type="string" value="../../data/loop_desktop_A"/>
 			<property name="delayTime" type="Integer" value="100"/>
 		</configure>
 		<configure component="SolARImageViewerOpencv">
@@ -156,7 +156,7 @@
 			<property name="maxThreshold" type="Integer" value="220"/>
 		</configure>
 		<configure component="SolARMarker2DSquaredBinaryOpencv">
-				<property name="filePath" type="string" value="fiducialMarker.yml" description="Path of the .yml file describing the fiducial marker."/>
+                <property name="filePath" type="string" value="../../data/fiducialMarkerA.yml" description="Path of the .yml file describing the fiducial marker."/>
 		</configure>	
 		<configure component="SolARImageFilterBinaryOpencv">
 			<property name="min" type="Integer" value="-1" description="minimum threshold (-1 to automatically compute it on the global image"/>
