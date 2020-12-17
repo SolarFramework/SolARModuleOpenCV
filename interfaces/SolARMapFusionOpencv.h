@@ -54,7 +54,7 @@ public:
 	/// @param[in,out] globalMap: the global map
 	/// @param[in,out] transform: the transformation to the global map (null for floating map). It can be refined by fusion process.
 	/// @param[out] nbMatches: the number of matched cloud points.
-	/// @param[error] error: the error of fusion process that is the mean of error distances of the matched cloud points.
+    /// @param[out] error: the error of fusion process that is the mean of error distances of the matched cloud points.
 	/// @return FrameworkReturnCode::_SUCCESS_ if the fusion succeed, else FrameworkReturnCode::_ERROR.
     FrameworkReturnCode merge(SRef<api::solver::map::IMapper> map,
                               SRef<api::solver::map::IMapper> globalMap,
@@ -73,7 +73,7 @@ public:
                               SRef<api::solver::map::IMapper> globalMap,
                               datastructure::Transform3Df &transform,
                               const std::vector<std::pair<uint32_t, uint32_t>> & cpOverlapIndices,
-                              const bool &isRefineTransform = false) override;
+                              bool isRefineTransform = false) override;
 
 	void unloadComponent() override final;
 
