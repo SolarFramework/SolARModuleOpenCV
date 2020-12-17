@@ -54,9 +54,9 @@ int main(int argc, char **argv)
     /* this is needed in dynamic mode */
     SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-    if(xpcfComponentManager->load("SolAROpenCVMatchesFilter_conf.xml")!=org::bcom::xpcf::_SUCCESS)
+    if(xpcfComponentManager->load("SolARTest_ModuleOpenCV_MatchesFilter_conf.xml")!=org::bcom::xpcf::_SUCCESS)
     {
-        LOG_ERROR("Failed to load the configuration file SolAROpenCVMatchesFilter_conf.xml", argv[1])
+        LOG_ERROR("Failed to load the configuration file SolARTest_ModuleOpenCV_MatchesFilter_conf.xml", argv[1])
         return -1;
     }
     // declare and create components
