@@ -42,7 +42,11 @@ public:
     void unloadComponent () override final;
 
     FrameworkReturnCode loadMarker() override;
-    FrameworkReturnCode getImage(SRef<datastructure::Image>& img) const override;
+
+    /// @brief get access to the image of the 2D natural marker
+    /// @param[in,out] img: a shared reference to the image
+    /// @return FrameworkReturnCode to track sucessful or failing event.
+    FrameworkReturnCode getImage(SRef<datastructure::Image> & img) const override;
 
     /// @brief Provide the position of 2D corners in image coordinate system
     /// @param[out] imageCorners the 2D corners of the marker in image coordinate system
