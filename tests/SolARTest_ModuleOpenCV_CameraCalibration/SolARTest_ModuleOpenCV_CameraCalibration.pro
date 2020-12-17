@@ -3,7 +3,7 @@ QT       -= core gui
 CONFIG -= qt
 
 ## global defintions : target lib name, version
-TARGET = SolAROpenCVCameraCalibration
+TARGET = SolARTest_ModuleOpenCV_CameraCalibration
 VERSION=0.9.0
 
 DEFINES += MYVERSION=$${VERSION}
