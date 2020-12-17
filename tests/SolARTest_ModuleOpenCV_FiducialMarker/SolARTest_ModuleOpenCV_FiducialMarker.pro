@@ -3,7 +3,7 @@ QT       -= core gui
 CONFIG -= qt
 
 ## global defintions : target lib name, version
-TARGET = SolAROpenCVFiducialMarker
+TARGET = SolARTest_ModuleOpenCV_FiducialMarker
 VERSION=0.9.0
 
 DEFINES += MYVERSION=$${VERSION}
@@ -67,7 +67,7 @@ win32 {
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $${PWD}/SolAROpenCVFiducialMarker_conf.xml
+configfile.files = $${PWD}/SolARTest_ModuleOpenCV_FiducialMarker_conf.xml
 INSTALLS += configfile
 
 DISTFILES += \
