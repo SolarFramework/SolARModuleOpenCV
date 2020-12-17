@@ -85,8 +85,8 @@
 	
     <properties>
         <configure component="SolARDeviceDataLoader">
-			<property name="calibrationFile" type="string" value="\\filer.b-com.local\share\project\ARTWIN\Data\CALIBRATION_FILES\hololens_calibration.yml"/>
-			<property name="pathToData" type="string" value="\\filer.b-com.local\share\project\ARTWIN\Data\SOLAR_DEVICE_RECORDINGS\oo_desktop_A_14102020_130351"/>
+            <property name="calibrationFile" type="string" value="../../data/hololens_calibration.yml"/>
+            <property name="pathToData" type="string" value="../../data/loop_desktop_A"/>
 			<property name="delayTime" type="Integer" value="100"/>
 		</configure>
 		<configure component="SolARImageViewerOpencv">
@@ -163,10 +163,10 @@
 			<property name="maxThreshold" type="Integer" value="220"/>
 		</configure>		
 		<configure component="SolARMarker2DSquaredBinaryOpencv" name="marker1">
-				<property name="filePath" type="string" value="\\filer.b-com.local\share\project\ARTWIN\Data\FIDUCIAL_MARKERS\marker1.yml" description="Path of the .yml file describing the fiducial marker."/>
+                <property name="filePath" type="string" value="../../data/fiducialMarkerA.yml" description="Path of the .yml file describing the fiducial marker."/>
 		</configure>			
 		<configure component="SolARMarker2DSquaredBinaryOpencv" name="marker2">
-				<property name="filePath" type="string" value="\\filer.b-com.local\share\project\ARTWIN\Data\FIDUCIAL_MARKERS\marker2.yml" description="Path of the .yml file describing the fiducial marker."/>
+                <property name="filePath" type="string" value="../../data/fiducialMarkerB.yml" description="Path of the .yml file describing the fiducial marker."/>
 		</configure>	
 		<configure component="SolARImageFilterBinaryOpencv">
 			<property name="min" type="Integer" value="-1" description="minimum threshold (-1 to automatically compute it on the global image"/>

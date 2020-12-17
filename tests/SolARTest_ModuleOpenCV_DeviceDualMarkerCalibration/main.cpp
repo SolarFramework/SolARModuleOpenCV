@@ -44,9 +44,9 @@ int main(int argc, char *argv[])
 		/* this is needed in dynamic mode */
 		SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
-        if (xpcfComponentManager->load("conf_SolARDeviceDualMarkerCalibrationTest.xml") != org::bcom::xpcf::_SUCCESS)
+        if (xpcfComponentManager->load("SolARTest_ModuleOpenCV_DeviceDualMarkerCalibration_conf.xml") != org::bcom::xpcf::_SUCCESS)
 		{
-            LOG_ERROR("Failed to load the configuration file conf_SolARDeviceDualMarkerCalibrationTest.xml")
+            LOG_ERROR("Failed to load the configuration file SolARTest_ModuleOpenCV_DeviceDualMarkerCalibration_conf.xml")
 				return -1;
 		}
 
