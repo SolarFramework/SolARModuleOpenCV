@@ -48,9 +48,9 @@ int main(int argc,char** argv)
 
     try {
 
-        if(xpcfComponentManager->load("SolAROpenCVOpticalFlow_conf.xml")!=org::bcom::xpcf::_SUCCESS)
+        if(xpcfComponentManager->load("SolARTest_ModuleOpenCV_OpticalFlow_conf.xml")!=org::bcom::xpcf::_SUCCESS)
         {
-            LOG_ERROR("Failed to load the configuration file SolAROpenCVOpticalFlow_conf.xml")
+            LOG_ERROR("Failed to load the configuration file SolARTest_ModuleOpenCV_OpticalFlow_conf.xml")
             return -1;
         }
 
