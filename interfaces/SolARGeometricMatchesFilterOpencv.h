@@ -13,7 +13,6 @@
 #include <vector>
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -37,10 +36,10 @@ public:
         /// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
         /// @param[in] Original keypoints associated to desc_1.
         /// @param[in] Original keypoints associated to desc_2.
-        void filter(const std::vector<DescriptorMatch> & inputMatches,
-                    std::vector<DescriptorMatch> & outputMatches,
-                    const std::vector<Keypoint> & inputKeyPointsA,
-                    const std::vector<Keypoint> & inputKeyPointsB) override;
+        void filter(const std::vector<datastructure::DescriptorMatch> & inputMatches,
+                    std::vector<datastructure::DescriptorMatch> & outputMatches,
+                    const std::vector<datastructure::Keypoint> & inputKeyPointsA,
+                    const std::vector<datastructure::Keypoint> & inputKeyPointsB) override;
 
 		/// @brief filter matches based fundamental matrix assumptions. This filter removes all outliers matches which give high reprojection error.
 		/// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".
@@ -60,13 +59,13 @@ public:
 		/// @param[in] camera pose 1.
 		/// @param[in] camera pose 2.
 		/// @param[in] camera's intrinsic parameters.
-		virtual void filter(const std::vector<DescriptorMatch> & inputMatches,
-							std::vector<DescriptorMatch> & outputMatches,
-							const std::vector<Keypoint> & inputKeyPoints1,
-							const std::vector<Keypoint> & inputKeyPoints2,
-							const Transform3Df &pose1,
-							const Transform3Df &pose2,
-							const CamCalibration &intrinsicParams) override;
+		virtual void filter(const std::vector<datastructure::DescriptorMatch> & inputMatches,
+							std::vector<datastructure::DescriptorMatch> & outputMatches,
+							const std::vector<datastructure::Keypoint> & inputKeyPoints1,
+							const std::vector<datastructure::Keypoint> & inputKeyPoints2,
+							const datastructure::Transform3Df &pose1,
+							const datastructure::Transform3Df &pose2,
+							const datastructure::CamCalibration &intrinsicParams) override;
 
 
         void unloadComponent () override final;

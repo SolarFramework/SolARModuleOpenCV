@@ -24,6 +24,8 @@ XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMapFusionOpencv
 
 namespace SolAR {
 using namespace datastructure;
+using namespace api::solver::map;
+using namespace api::storage;
 namespace MODULES {
 namespace OPENCV {
 
@@ -42,7 +44,7 @@ SolARMapFusionOpencv::~SolARMapFusionOpencv()
 	LOG_DEBUG(" SolARMapFusionOpencv destructor")
 }
 
-FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper>& globalMap, Transform3Df & transform, uint32_t & nbMatches, float & error)
+FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper> globalMap, Transform3Df & transform, uint32_t & nbMatches, float & error)
 {
 	/// Transform local map to global map
 	m_transform3D->transform(transform, map);
@@ -136,7 +138,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper>& globalMap, Transform3Df & transform, const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, const bool & isRefineTransform)
+FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper> globalMap, Transform3Df & transform, const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, bool isRefineTransform)
 {
 	uint32_t nbMatches;
 	float error;
@@ -149,7 +151,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, SRef<IMapper>& map, SRef<IMapper>& globalMap)
+void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, SRef<IMapper> map, SRef<IMapper> globalMap)
 {
 	// get map
 	SRef<IPointCloudManager> pointcloudManager, globalPointcloudManager;
@@ -254,7 +256,6 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 			// update covisibility graph
 			for (const auto &vi2 : visibilities2) {
 				uint32_t id_kf2 = vi2.first;
-				uint32_t id_kp2 = vi2.second;
 				globalCovisibilityGraph->increaseEdge(id_kf1, id_kf2, 1.0);
 			}
 		}

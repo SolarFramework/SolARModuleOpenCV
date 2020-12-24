@@ -22,7 +22,6 @@
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -40,8 +39,8 @@ public:
     SolARPerspectiveControllerOpencv();
     ~SolARPerspectiveControllerOpencv() = default;
 
-    FrameworkReturnCode correct(const SRef<Image> inputImg, const std::vector<Contour2Df> & contours, std::vector<SRef<Image>> & patches) override;
-    FrameworkReturnCode correct(const SRef<Image> inputImg, const Contour2Df & contour, SRef<Image> & patch) override;
+    FrameworkReturnCode correct(const SRef<datastructure::Image> inputImg, const std::vector<datastructure::Contour2Df> & contours, std::vector<SRef<datastructure::Image>> & patches) override;
+    FrameworkReturnCode correct(const SRef<datastructure::Image> inputImg, const datastructure::Contour2Df & contour, SRef<datastructure::Image> & patch) override;
 
     void unloadComponent () override final;
 

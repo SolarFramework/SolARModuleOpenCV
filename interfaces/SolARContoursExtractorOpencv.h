@@ -23,7 +23,6 @@
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -42,7 +41,7 @@ public:
     /// @brief Extracts an ensemble of contours from a given image.
     /// [in] inputImg: source image from which the contour will be extracted.
     ///[out] contours: ensemble of contours extracted.
-    FrameworkReturnCode extract(const SRef<Image> inputImg, std::vector<Contour2Df> & contours) override;
+    FrameworkReturnCode extract(const SRef<datastructure::Image> inputImg, std::vector<datastructure::Contour2Df> & contours) override;
 
     void unloadComponent () override final;
 

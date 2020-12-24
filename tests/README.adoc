@@ -2,3 +2,18 @@
 
 This application demonstrates the SolARContainerOpenCV container.
 
+Some tests requires to use other modules. To install them, run the following command:
+
+----
+remaken install packagedependencies.txt
+----
+
+and
+
+----
+remaken install packagedependencies.text -c debug
+----
+
+== SolARTest_ModuleOpencv_DeviceDualMarkerCalibration
+
+Download the loopDesktopA.zip file containing the image sequence from the https://artifact.b-com.com/solar-generic-local/captures/hololens/bcomLab/loopDesktopA.zip[solar artifactory] and unzip it in the "data" folder.

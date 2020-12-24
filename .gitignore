@@ -6,7 +6,7 @@
 *.lo
 *.o
 *.obj
-build/
+*build*
 
 # Precompiled Headers
 *.gch
@@ -89,3 +89,6 @@ tests/bin
 *.tmp
 .git Merge
 *aps
+
+# Tests Data
+tests/data/loop_desktop_A/*

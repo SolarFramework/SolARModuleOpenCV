@@ -23,6 +23,7 @@ namespace xpcf = org::bcom::xpcf;
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDeviceDataLoader)
 
 namespace SolAR {
+    using namespace datastructure;
     namespace MODULES {
     namespace OPENCV {
 
@@ -204,7 +205,7 @@ namespace SolAR {
         return FrameworkReturnCode();
     }
 
-    const CameraParameters & SolARDeviceDataLoader::getParameters(const int & camera_id)
+    const CameraParameters & SolARDeviceDataLoader::getParameters(const int & camera_id) const
     {
         return m_camParameters[camera_id];
     }

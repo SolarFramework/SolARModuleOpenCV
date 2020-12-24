@@ -25,7 +25,6 @@
 
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -47,7 +46,7 @@ public:
     ///
     /// \brief getImage method returns the image previously loaded when its configuration parameter path has been set
     ///
-    FrameworkReturnCode getImage(SRef<Image> & img);
+    FrameworkReturnCode getImage(SRef<datastructure::Image> & img);
 
     ///
     /// \brief reloadImage method load a image if as instance its path (set as a configuration parameter of the implemented component) has changed
@@ -58,7 +57,7 @@ private:
     /// @brief The path of the image to load
     std::string m_filePath = "";
 
-    SRef<Image> m_img;
+    SRef<datastructure::Image> m_img;
 };
 
 }

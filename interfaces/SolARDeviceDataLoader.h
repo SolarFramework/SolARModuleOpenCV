@@ -26,7 +26,6 @@
 #include "opencv2/opencv.hpp"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -67,28 +66,28 @@ public:
 	/// @param[out] poses: the associated poses.
 	/// @param[out] timestamp: the timestamp.
 	/// @return FrameworkReturnCode to track successful or failing event.
-	FrameworkReturnCode getData(std::vector<SRef<Image>> & images, std::vector<Transform3Df> & poses, std::chrono::system_clock::time_point &timestamp) override;
+	FrameworkReturnCode getData(std::vector<SRef<datastructure::Image>> & images, std::vector<datastructure::Transform3Df> & poses, std::chrono::system_clock::time_point &timestamp) override;
 
 	/// @brief Get the distortion and intrinsic camera parameters
 	/// @param[in] camera_id: The id of the camera.
 	/// @return the camera parameters
-	const CameraParameters & getParameters(const int & camera_id) override;
+    const datastructure::CameraParameters & getParameters(const int & camera_id) const override;
 
 	/// @brief Set the distortion and intrinsic camera parameters
 	/// @param[in] camera_id: The id of the camera.
 	/// @param[in] parameters: the camera parameters.
-	void setParameters(const int & camera_id, const CameraParameters & parameters) override;
+	void setParameters(const int & camera_id, const datastructure::CameraParameters & parameters) override;
 
  private:
-	 int									m_nbCameras;
-	 std::string							m_calibrationFile;
-	 std::string							m_pathToData;
-	 std::vector<CameraParameters>			m_camParameters;
-	 std::vector<std::string>				m_cameraNames;
-	 std::vector<cv::VideoCapture>			m_cameras;
-	 std::vector<std::ifstream>				m_poseFiles;
-	 std::ifstream							m_timestampFile;
-	 int									m_delayTime = 0;
+	 int											m_nbCameras;
+	 std::string									m_calibrationFile;
+	 std::string									m_pathToData;
+	 std::vector<datastructure::CameraParameters>	m_camParameters;
+	 std::vector<std::string>						m_cameraNames;
+	 std::vector<cv::VideoCapture>					m_cameras;
+	 std::vector<std::ifstream>						m_poseFiles;
+	 std::ifstream									m_timestampFile;
+	 int											m_delayTime = 0;
 };
 
 }

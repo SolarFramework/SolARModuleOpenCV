@@ -42,8 +42,7 @@ SolARMatchesOverlayOpencv::SolARMatchesOverlayOpencv():ConfigurableBase(xpcf::to
     LOG_DEBUG(" SolARMatchesOverlayOpencv constructor");
 }
 
-
-void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <Point2Df> & points_image1, const std::vector <Point2Df> & points_image2, const std::vector<DescriptorMatch> matches)
+void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <Point2Df> & points_image1, const std::vector <Point2Df> & points_image2, const std::vector<DescriptorMatch> & matches)
 {
     if (outImage == nullptr)
     {
@@ -181,7 +180,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
     }
 }
 
-void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <Keypoint> & points_image1, const std::vector<Keypoint> & points_image2, const std::vector<DescriptorMatch> matches)
+void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <Keypoint> & points_image1, const std::vector<Keypoint> & points_image2, const std::vector<DescriptorMatch> & matches)
 {
     if (outImage == nullptr)
     {
@@ -319,7 +318,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
     }
 }
 
-void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outImage, const std::vector <Point2Df> & points1, const std::vector <Point2Df> & points2, const std::vector<DescriptorMatch> matches)
+void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outImage, const std::vector <Point2Df> & points1, const std::vector <Point2Df> & points2, const std::vector<DescriptorMatch> & matches)
 {
     if (outImage == nullptr)
     {
@@ -455,7 +454,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
     }
 }
 
-void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outImage, const std::vector <Keypoint> & points1, const std::vector <Keypoint> & points2, const std::vector<DescriptorMatch> matches)
+void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outImage, const std::vector <Keypoint> & points1, const std::vector <Keypoint> & points2, const std::vector<DescriptorMatch> & matches)
 {
     if (outImage == nullptr)
     {

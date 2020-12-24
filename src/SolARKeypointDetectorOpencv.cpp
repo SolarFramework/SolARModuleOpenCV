@@ -28,6 +28,7 @@ using namespace cv;
 #endif
 namespace SolAR {
 using namespace datastructure;
+using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 

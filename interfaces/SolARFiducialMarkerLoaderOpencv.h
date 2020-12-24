@@ -27,7 +27,6 @@
 #include "opencv2/opencv.hpp"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -51,7 +50,7 @@ class SOLAROPENCV_EXPORT_API SolARFiducialMarkerLoaderOpencv : public org::bcom:
         /// @brief Loads a specific trackable object and its features.
         /// @return SRef<Trackable> : the trackable object created from the description file
         /// or 0 if an error occurs
-        virtual SRef<Trackable> loadTrackable() override;
+        virtual SRef<datastructure::Trackable> loadTrackable() override;
 
      private:
         /// @brief the path to the file describing the fiducial marker

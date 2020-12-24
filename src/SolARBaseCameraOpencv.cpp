@@ -23,6 +23,7 @@ namespace xpcf = org::bcom::xpcf;
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARBaseCameraOpencv)
 
 namespace SolAR {
+using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -136,21 +137,23 @@ namespace OPENCV {
         m_parameters = parameters;
      }
 
-     const CameraParameters & SolARBaseCameraOpencv::getParameters()
+     const CameraParameters & SolARBaseCameraOpencv::getParameters() const
      {
         return m_parameters;
      }
 
-     Sizei SolARBaseCameraOpencv::getResolution()
+     Sizei SolARBaseCameraOpencv::getResolution() const
      {
          return m_parameters.resolution;
      }
 
-    const CamCalibration & SolARBaseCameraOpencv::getIntrinsicsParameters(){
+    const CamCalibration & SolARBaseCameraOpencv::getIntrinsicsParameters() const
+    {
         return m_parameters.intrinsic;
     }
 
-    const CamDistortion & SolARBaseCameraOpencv::getDistortionParameters(){
+    const CamDistortion & SolARBaseCameraOpencv::getDistortionParameters() const
+    {
         return m_parameters.distortion;
     }
 

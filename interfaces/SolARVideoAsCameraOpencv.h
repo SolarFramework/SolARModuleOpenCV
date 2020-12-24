@@ -22,7 +22,6 @@
 #include "SolARBaseCameraOpencv.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -43,7 +42,7 @@ public:
     /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
     FrameworkReturnCode start() override;
 
-    FrameworkReturnCode getNextImage(SRef<Image> & img) override;
+    FrameworkReturnCode getNextImage(SRef<datastructure::Image> & img) override;
 
     void unloadComponent () override final;
 

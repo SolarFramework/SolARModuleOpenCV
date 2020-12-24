@@ -29,7 +29,6 @@
 #include "opencv2/imgproc/imgproc.hpp"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -46,9 +45,9 @@ public:
     SolARImageConvertorUnity();
     ~SolARImageConvertorUnity();
 
-    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst) override;
-    FrameworkReturnCode convert(SRef<Image> imgSrc, SRef<Image>& imgDst, Image::ImageLayout destLayout) override;
-	FrameworkReturnCode convertLookUpTable(const SRef<Image> imgSrc, SRef<Image> & imgDst) override;
+    FrameworkReturnCode convert(SRef<datastructure::Image> imgSrc, SRef<datastructure::Image>& imgDst) override;
+    FrameworkReturnCode convert(SRef<datastructure::Image> imgSrc, SRef<datastructure::Image>& imgDst, datastructure::Image::ImageLayout destLayout) override;
+	FrameworkReturnCode convertLookUpTable(const SRef<datastructure::Image> imgSrc, SRef<datastructure::Image> & imgDst) override;
 
 	void unloadComponent() override final;
 

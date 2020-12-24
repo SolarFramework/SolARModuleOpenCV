@@ -32,7 +32,6 @@
 #include "datastructure/Keypoint.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -58,9 +57,9 @@ public:
     /// [in] image: source image.
     /// [in] keypoints: set of keypoints.
     /// [out] decsriptors: se of computed descriptors.
-    void extract (const SRef<Image> image,
-                  const std::vector< Keypoint > &keypoints,
-                  SRef<DescriptorBuffer> & descriptors) override;
+    void extract (const SRef<datastructure::Image> image,
+                  const std::vector< datastructure::Keypoint > &keypoints,
+                  SRef<datastructure::DescriptorBuffer> & descriptors) override;
 private:
     cv::Ptr<cv::Feature2D> m_extractor;
 

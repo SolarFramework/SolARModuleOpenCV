@@ -26,7 +26,6 @@
 #include "opencv2/core.hpp"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -53,14 +52,14 @@ public:
     /// @param[in] targetPoints set of target 2d points.
     /// @param[out] Estimated Fundamental transform matrix.
     /// @return Transform2DFinder::RetCode::TRANSFORM2D_ESTIMATION_OK if succeed.
-    api::solver::pose::Transform2DFinder::RetCode find(const std::vector<Point2Df> & srcPoints,
-                                                   const std::vector<Point2Df> & dstPoints,
-                                                   Transform2Df & fundamental) override;
+    api::solver::pose::Transform2DFinder::RetCode find(const std::vector<datastructure::Point2Df> & srcPoints,
+                                                   const std::vector<datastructure::Point2Df> & dstPoints,
+                                                   datastructure::Transform2Df & fundamental) override;
 
     void unloadComponent () override final;
 
 private:
-    bool isFValid(const Transform2Df & F);
+    bool isFValid(const datastructure::Transform2Df & F);
 
     /// @brief The desirable level of confidence (propability) that the estimated matrix is correct.
     float m_confidenceLevel = 0.99f;
