@@ -54,6 +54,8 @@ SolARKeypointDetectorOpencv::SolARKeypointDetectorOpencv():ConfigurableBase(xpcf
     declareProperty("nbDescriptors", m_nbDescriptors);
     declareProperty("threshold", m_threshold);
     declareProperty("nbOctaves", m_nbOctaves);
+    declareProperty("nbGridWidth", m_nbGridWidth);
+    declareProperty("nbGridHeight", m_nbGridHeight);
     declareProperty("type", m_type);
     LOG_DEBUG("SolARKeypointDetectorOpencv constructor");
 }
@@ -95,13 +97,13 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
         */
     m_type=typeToString.at(type);
     switch (type) {
-     case (KeypointDetectorType::SIFT):
-        LOG_DEBUG("KeypointDetectorImp::setType(SIFT)");
-        if (m_threshold > 0)
-                m_detector = SIFT::create(m_nbDescriptors, m_nbOctaves, 0.04, m_threshold);
+	case (KeypointDetectorType::SIFT):
+		LOG_DEBUG("KeypointDetectorImp::setType(SIFT)");
+		if (m_threshold > 0)
+			m_detector = SIFT::create(0, m_nbOctaves, m_threshold, 10.0);
         else
-            m_detector = SIFT::create(m_nbDescriptors);
-          break;
+            m_detector = SIFT::create(4 * m_nbDescriptors);
+        break;
 	case (KeypointDetectorType::AKAZE):
 		LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
 		if (m_threshold > 0)
@@ -119,7 +121,7 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
 	case (KeypointDetectorType::ORB):
         LOG_DEBUG("KeypointDetectorImp::setType(ORB)");
 		if (m_nbDescriptors > 0)
-            m_detector=ORB::create(m_nbDescriptors, 1.2f, m_nbOctaves);
+            m_detector=ORB::create(100* m_nbDescriptors, 1.2f);
 		else
 			m_detector = ORB::create();
         break;
@@ -130,9 +132,6 @@ void SolARKeypointDetectorOpencv::setType(KeypointDetectorType type)
 		else
 			m_detector=BRISK::create();
         break;
-
-
-
     default :
         LOG_DEBUG("KeypointDetectorImp::setType(AKAZE)");
         m_detector=AKAZE::create();
@@ -180,22 +179,28 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
                 setType(stringToType.at(this->m_type));
             }
             m_detector->detect(img_1, kpts, Mat());
-			// group keypoints according to octave
-			std::map<int, std::vector<cv::KeyPoint>> kpOctaves;
-			for (const auto &it : kpts)
-				kpOctaves[it.octave].push_back(it);
-			int nbOctaves = static_cast<int>(kpOctaves.size());
-			if (nbOctaves > 0) {
-				int nbKpPerOctave = m_nbDescriptors / nbOctaves;
-				kpts.clear();
-				// get best feature per octave
-				for (auto it = kpOctaves.rbegin(); it != kpOctaves.rend(); it++) {
-					nbOctaves--;
-					if (nbOctaves != 0)
-						kptsFilter.retainBest(it->second, nbKpPerOctave);
-					else
-						kptsFilter.retainBest(it->second, m_nbDescriptors - static_cast<int>(kpts.size()));
-					kpts.insert(kpts.end(), it->second.begin(), it->second.end());
+			// fix scale
+			for (auto& keypoint : kpts) {
+				keypoint.pt.x = keypoint.pt.x * ratioInv;
+				keypoint.pt.y = keypoint.pt.y * ratioInv;
+			}
+			// group keypoints according to cells of the grid
+			std::map<int, std::vector<cv::KeyPoint>> gridKps;
+			for (const auto &it : kpts) {
+				int id_width = static_cast<int>(std::floor(it.pt.x * m_nbGridWidth / image->getWidth()));
+				int id_height = static_cast<int>(std::floor(it.pt.y * m_nbGridHeight / image->getHeight()));
+				gridKps[id_height * m_nbGridWidth + id_width].push_back(it);
+			}
+			// get best feature per cell
+			kpts.clear();
+			int nbCells = static_cast<int>(gridKps.size());
+			if (nbCells > 0) {
+				int countCell(0);				
+				for (auto& it: gridKps) {
+					int nbKpPerCell = static_cast<int>((m_nbDescriptors - kpts.size()) / (nbCells - countCell));
+					kptsFilter.retainBest(it.second, nbKpPerCell);
+					kpts.insert(kpts.end(), it.second.begin(), it.second.end());
+					countCell++;
 				}
 			}
         }
@@ -210,8 +215,8 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
     int kpID=0;
     for(const auto& keypoint : kpts){
        Keypoint kpa;
-	   float px = keypoint.pt.x*ratioInv;
-	   float py = keypoint.pt.y*ratioInv;
+	   float px = keypoint.pt.x;
+	   float py = keypoint.pt.y;
 	   cv::Vec3b bgr{ 0, 0, 0 };
 	   if (opencvImage.channels() == 3)
 		   bgr = opencvImage.at<cv::Vec3b>((int)py, (int)px);
