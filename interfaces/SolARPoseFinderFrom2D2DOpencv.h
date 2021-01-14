@@ -37,8 +37,22 @@ namespace OPENCV {
 * knowing the pose of the first camera. To do so, the component needs to know the intrinsic parameter of the camera.
 * During the essential matrix estimation, the OpenCV method filters the matches based on a RANSAC approach by removing those that are to distant to the epipolar line.
 * The estimation of the pose of the second camera is based on the recoverPose method of OpenCV which decomposes the essential matrix and selects among the four solutions the one that have the most important number of 3D points in front of the camera (cheirality check).
+* 
+* @SolARComponentPropertiesBegin
+* @SolARComponentProperty{ outlierDistanceRatio,
+*                          here we are using a RANSAC method to remove outlier.<br>
+*                           This attribute is the ratio between the maximum distance in pixels between source points and
+*                           the maximum distance in pixels to the epipolar line for which point is considered as a outlier.<br>
+*                           The higher is this ratio\, the more you will keep inliers to estimate your 2D transform\, but
+*                           the less this estimation will be correct.<br>
+*                           By default\, this value is set to the one proposed by [Snavely07 4.1]<br>,
+*                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 0.006f }}
+* @SolARComponentProperty{ outlierDistanceRatio,
+*                          the probability that the algorithm produces a useful result,
+*                          @SolARComponentPropertyDescNum{ float, [0..1], 0.99f }}
+* @SolARComponentPropertiesEnd
+* 
 */
-
 
 class SOLAROPENCV_EXPORT_API SolARPoseFinderFrom2D2DOpencv : public org::bcom::xpcf::ConfigurableBase,
     public api::solver::pose::I3DTransformFinderFrom2D2D

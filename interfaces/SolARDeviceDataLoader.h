@@ -34,6 +34,18 @@ namespace OPENCV {
  * @brief <B>Load AR device data including images, poses, timestamp.</B>
  * <TT>UUID: 4b5576c1-4c44-4835-a405-c8de2d4f85b0</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ calibrationFile,
+ *                          ,
+ *                          @SolARComponentPropertyDescString{ "" }}
+ * @SolARComponentProperty{ pathToData,
+ *                          ,
+ *                          @SolARComponentPropertyDescString{ "" }}
+ * @SolARComponentProperty{ delayTime,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 0 }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARDeviceDataLoader : public org::bcom::xpcf::ConfigurableBase,

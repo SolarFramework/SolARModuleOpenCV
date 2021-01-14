@@ -16,6 +16,9 @@ namespace OPENCV {
 * @brief <B>Finds the 3D correspondents of 2D keypoints.</B>
 * <TT>UUID: cedd8c47-e7b0-47bf-abb1-7fb54d198117</TT>
 *
+* @SolARComponentInjectablesBegin
+* @SolARComponentInjectable{SolAR::api::storage::IPointCloudManager}
+* @SolARComponentInjectablesEnd
 */
 class SOLAROPENCV_EXPORT_API SolAR2D3DCorrespondencesFinderOpencv : public org::bcom::xpcf::ComponentBase,
     public api::solver::pose::I2D3DCorrespondencesFinder

@@ -36,6 +36,12 @@ namespace OPENCV {
  * @brief <B>Grabs current image captured by a RGB camera.</B>
  * <TT>UUID: 5b7396f4-a804-4f3c-a0eb-fb1d56042bb4</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ calibrationFile,
+ *                          path to the calibration file of the camera,
+ *                          @SolARComponentPropertyDescString{ "" }}
+ * @SolARComponentPropertiesEnd
+ *
  */
 
 class SOLAROPENCV_EXPORT_API SolARBaseCameraOpencv : public org::bcom::xpcf::ConfigurableBase,

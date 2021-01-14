@@ -39,8 +39,34 @@ namespace OPENCV {
  * @brief <B>Estimates the optical flow between two images based on a pyramidal Lucas Kanade approach.</B>
  * <TT>UUID: b513e9ff-d2e7-4dcf-9a29-4ed95c512158</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ searchWinWidth,
+ *                          widthHeight in pixels of the search window at each pyramid level,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 21 }}
+ * @SolARComponentProperty{ searchWinHeight,
+ *                          height in pixels of the search window at each pyramid level,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 21 }}
+ * @SolARComponentProperty{ maxLevel,
+ *                          if set to 0\, pyramids are not used (single level)\, if set to 1\, two levels are used\, and so on;<br>
+ *                              if pyramids are passed to input then algorithm will use as many levels as pyramids have but no more than maxLevel.,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 3 }}
+ * @SolARComponentProperty{ minEigenThreshold,
+ *                          the minimum eigen value to measure error<br>
+ *                            The algorithm calculates the minimum eigen value of a 2x2 normal matrix of optical flow equations (this matrix is called<br>
+ *                            a spatial gradient matrix in [16]) divided by number of pixels in a window.<br>
+ *                            If this value is less than minEigThreshold then a corresponding feature is filtered out and its flow is not processed so it allows<br>
+ *                            to remove bad points and get a performance boost.<br>
+ *                            If this value is less or equal to 0 the minimum eigen values as an error measure are not used. Instead the L1 distance<br>
+ *                            between patches around the original and a moved point divided by number of pixels in a window is used as a error measure  ,
+ *                          @SolARComponentPropertyDescNum{ double, [-1..MAX DOUBLE], -1.0 }}
+ * @SolARComponentProperty{ maxSearchIterations,
+ *                          the maximum iteration before iterative search algorithm stops,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 20 }}
+ * @SolARComponentProperty{ searchWindowAccuracy,
+ *                          the desired accuracy of the search window before algorithm stops,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 0.03f }}
+ * @SolARComponentPropertiesEnd
  */
-
 
 class SOLAROPENCV_EXPORT_API SolAROpticalFlowPyrLKOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::tracking::IOpticalFlowEstimator {

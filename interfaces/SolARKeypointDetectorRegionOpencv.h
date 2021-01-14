@@ -40,6 +40,19 @@ namespace OPENCV {
  * @brief <B>Detects keypoints in an given region of an image.</B>
  * <TT>UUID: 22c2ca9f-e43b-4a88-8337-4a166a789971</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ imageRatio,
+ *                          the ratio to apply to the size of the input image to compute the descriptor.<br>
+ *                              A ratio must be less or equal to 1. A ratio less than 1 will speedup computation,
+ *                          @SolARComponentPropertyDescNum{ float, [0..1], 1.f }}
+ * @SolARComponentProperty{ nbDescriptors,
+ *                          the number of descriptors that are selected. If negative\, all extracted descriptors are selected,
+ *                          @SolARComponentPropertyDescNum{ int, [-1..MAX INT], 10000 }}
+ * @SolARComponentProperty{ threshold,
+ *                          the threshold of detector to accept a keypoint,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 1e-3f }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARKeypointDetectorRegionOpencv : public org::bcom::xpcf::ConfigurableBase,
