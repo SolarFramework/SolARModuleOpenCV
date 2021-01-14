@@ -102,17 +102,18 @@ int main(int argc,char** argv)
 		}
 		LOG_INFO("Number of keypoints: {}", keypoints.size());
 		// feature matching		
-		matcher->match(frame1->getDescriptors(), descriptors, matches);
+		//matcher->match(descriptors, frame1->getDescriptors(), matches);
+		matcher->matchInRegion(frame, frame1, matches);
 		LOG_INFO("Number of matches: {}", matches.size());		
 		// matches filter
-		matchesFilter->filter(matches, matches, frame1->getKeypoints(), keypoints);
+		matchesFilter->filter(matches, matches, keypoints, frame1->getKeypoints());
 		LOG_INFO("Number of filtered matches: {}\n", matches.size());
 		if (matches.size() < 200) {
 			frame1 = frame;
 			continue;
 		}
 		// draw keypoints and matches		
-		overlayMatches->draw(image, imageDisplay, frame1->getKeypoints(), keypoints, matches);
+		overlayMatches->draw(image, imageDisplay, keypoints, frame1->getKeypoints(), matches);
 		overlay2D->drawCircles(keypoints, imageDisplay);
 
 		// display
