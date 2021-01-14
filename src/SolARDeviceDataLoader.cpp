@@ -18,6 +18,8 @@
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
 
+#include "xpcf/core/helpers.h"
+
 namespace xpcf = org::bcom::xpcf;
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDeviceDataLoader)
@@ -168,7 +170,7 @@ namespace SolAR {
         return m_nbCameras;
     }
 
-    FrameworkReturnCode SolARDeviceDataLoader::getData(std::vector<SRef<Image>>& images, std::vector<Transform3Df>& poses, [[maybe_unused]] std::chrono::system_clock::time_point & timestamp)
+    FrameworkReturnCode SolARDeviceDataLoader::getData(std::vector<SRef<Image>>& images, std::vector<Transform3Df>& poses, ATTRIBUTE(maybe_unused) std::chrono::system_clock::time_point & timestamp)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(m_delayTime));
         for (int id_camera = 0; id_camera < m_nbCameras; ++id_camera) {
