@@ -46,10 +46,10 @@ public:
 		/// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
 		/// @param[in] Original keylines associated to desc_1.
 		/// @param[in] Original keylines associated to desc_2.
-		void filter(const std::vector<DescriptorMatch> & inputMatches,
-					std::vector<DescriptorMatch> & outputMatches,
-					const std::vector<Keyline> & inputKeylinesA,
-					const std::vector<Keyline> & inputKeylinesB) override;
+		void filter(const std::vector<datastructure::DescriptorMatch> & inputMatches,
+					std::vector<datastructure::DescriptorMatch> & outputMatches,
+					const std::vector<datastructure::Keyline> & inputKeylinesA,
+					const std::vector<datastructure::Keyline> & inputKeylinesB) override;
 
 		/// @brief filter matches based fundamental matrix calculated from camera matrices
 		/// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".

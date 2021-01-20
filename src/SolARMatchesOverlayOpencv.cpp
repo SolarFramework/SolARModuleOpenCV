@@ -590,7 +590,7 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image, SRef<Image> & outI
     }
 }
 
-void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <Keyline> & keylines_image1, const std::vector <Keyline> & keylines_image2, const std::vector<DescriptorMatch> matches)
+void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <Keyline> & keylines_image1, const std::vector <Keyline> & keylines_image2, const std::vector<DescriptorMatch> & matches)
 {
 	if (outImage == nullptr)
 	{

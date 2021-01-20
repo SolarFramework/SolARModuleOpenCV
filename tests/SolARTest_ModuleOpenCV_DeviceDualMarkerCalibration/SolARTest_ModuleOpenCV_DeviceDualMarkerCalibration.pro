@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_DeviceDualMarkerCalibration
-VERSION=0.9.0
+VERSION=0.9.2
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z

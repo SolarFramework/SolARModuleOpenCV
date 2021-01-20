@@ -75,11 +75,11 @@ public:
                                 const cv::Point3f & u2,
                                 const cv::Mat & P2);
 
-	bool lineTriangulation(	const Keyline & kl1, const Keyline & kl2,
+	bool lineTriangulation(	const datastructure::Keyline & kl1, const datastructure::Keyline & kl2,
 							const cv::Mat & pose1Inv, const cv::Mat & pose2Inv,
 							const cv::Mat & proj1, const cv::Mat & proj2,
 							const cv::Mat & F12,
-							Edge3Df & line3D,
+							datastructure::Edge3Df & line3D,
 							float & error);
 
     /// @brief triangulate pairs of points 2d captured from two views with differents poses (with respect to the camera instrinsic parameters).
@@ -154,15 +154,15 @@ public:
 	/// @param[in] pose2, camera pose of the second view.
 	/// @param[out] linecloud, set of triangulated 3D lines.
 	/// @return the mean re-projection error
-	double triangulate( const std::vector<Keyline> & keylines1,
-						const std::vector<Keyline> & keylines2,
-						const SRef<DescriptorBuffer> & descriptor1,
-						const SRef<DescriptorBuffer> & descriptor2,
-						const std::vector<DescriptorMatch> & matches,
+	double triangulate( const std::vector<datastructure::Keyline> & keylines1,
+						const std::vector<datastructure::Keyline> & keylines2,
+						const SRef<datastructure::DescriptorBuffer> & descriptor1,
+						const SRef<datastructure::DescriptorBuffer> & descriptor2,
+						const std::vector<datastructure::DescriptorMatch> & matches,
 						const std::pair<unsigned, unsigned> & working_views,
-						const Transform3Df & pose1,
-						const Transform3Df & pose2,
-						std::vector<SRef<CloudLine>> & lineCloud) override;
+						const datastructure::Transform3Df & pose1,
+						const datastructure::Transform3Df & pose2,
+						std::vector<SRef<datastructure::CloudLine>> & lineCloud) override;
 
     void unloadComponent () override final;
 
@@ -178,10 +178,10 @@ public:
 							float & error);
 
 	// Retrieve the mean descriptor between two features index1 & index2.
-	SRef<DescriptorBuffer> getMeanDescriptor(	const SRef<DescriptorBuffer> descriptor1,
-												const SRef<DescriptorBuffer> descriptor2,
-												const unsigned index1,
-												const unsigned index2);
+	SRef<datastructure::DescriptorBuffer> getMeanDescriptor(const SRef<datastructure::DescriptorBuffer> descriptor1,
+                                                            const SRef<datastructure::DescriptorBuffer> descriptor2,
+						            						const unsigned index1,
+									            			const unsigned index2);
 
     // Camera calibration matrix
     cv::Mat m_camMatrix;

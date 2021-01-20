@@ -284,7 +284,7 @@ void SolAR2DOverlayOpencv::drawSBPattern (const SquaredBinaryPattern & pattern, 
     }
 }
 
-void SolAR2DOverlayOpencv::putText(const std::string & text, Point2Df origin, double fontScale, std::vector<int> color, SRef<Image> displayImage)
+void SolAR2DOverlayOpencv::putText(const std::string & text, Point2Df origin, double fontScale, const std::vector<int> & color, SRef<Image> displayImage)
 {
 	cv::Mat displayedImage = SolAROpenCVHelper::mapToOpenCV(displayImage);
 	cv::Scalar chosenColor = cv::Scalar(color[0], color[1], color[2]);
