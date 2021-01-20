@@ -33,7 +33,19 @@ namespace OPENCV {
  * @class SolARFundamentalMatrixEstimationOpencv
  * @brief <B>Estimates the fundamental matrix from two set of keypoints that match together.</B>
  * <TT>UUID: 79b29b50-cf4d-441e-b5de-1de829b91c41</TT>
- *
+ * 
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ confidenceLevel,
+ *                          The desirable level of confidence (propability) that the estimated matrix is correct.,
+ *                          @SolARComponentPropertyDescNum{ float, [0..1], 0.99f }}
+ * @SolARComponentProperty{ outlierDistanceRatio,
+ *                          Here we are using a RANSAC method to remove outlier.<br>
+ *                               This attribute is the ratio between the maximum distance in pixels between source points and the maximum distance in pixels to the epipolar line for which point is considered as a outlier.<br>
+ *                               The higher is this ratio\, the more you will keep inliers to estimate your 2D transform\, but the less this estimation will be correct.<br>
+ *                               By default\, this value is set to the one proposed by [Snavely07 4.1],
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 0.006f }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 /// @class SolARFundamentalMatrixEstimationOpencv

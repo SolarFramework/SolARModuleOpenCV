@@ -31,6 +31,12 @@ namespace OPENCV {
  * @brief <B>Extracts the contours of a given image.</B>
  * <TT>UUID: 6acf8de2-cc63-11e7-abc4-cec278b6b50a</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ minContourEdges,
+ *                          the minimum number of edges of a contour to extract. If negative value\, extract all contours,
+ *                          @SolARComponentPropertyDescNum{ int, [-1..MAX INT], -1 }}
+ * @SolARComponentPropertiesEnd
+ *
  */
 
 class SOLAROPENCV_EXPORT_API SolARContoursExtractorOpencv : public org::bcom::xpcf::ConfigurableBase,

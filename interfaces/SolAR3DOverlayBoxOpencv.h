@@ -35,6 +35,18 @@ namespace OPENCV {
  * @brief <B>Draws a 3D box on an image.</B>
  * <TT>UUID: 2db01f59-9793-4cd5-8e13-b25d0ed5735b</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ orientation,
+ *                          orientation of the box in euler angles in degrees,
+ *                          @SolARComponentPropertyDescList{ 3, float, [MIN FLOAT..MAX FLOAT], { 0.0\, 0.0\, 0.0 }}}
+ * @SolARComponentProperty{ position,
+ *                          position of the center of the bottom face of the Box defined in world unit,
+ *                          @SolARComponentPropertyDescList{ 3, float, [MIN FLOAT..MAX FLOAT], { 0.0\, 0.0\, 0.0 }}}
+ * @SolARComponentProperty{ size,
+ *                          size of the box define in world unit,
+ *                          @SolARComponentPropertyDescList{ 3, float, [MIN FLOAT..MAX FLOAT], { 1.f\, 1.f\, 1.f }}}
+ * @SolARComponentPropertiesEnd
+ *
  */
 
 class SOLAROPENCV_EXPORT_API SolAR3DOverlayBoxOpencv : public org::bcom::xpcf::ConfigurableBase,

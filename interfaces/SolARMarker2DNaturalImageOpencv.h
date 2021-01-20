@@ -31,6 +31,11 @@ namespace OPENCV {
  * @brief <B>Loads a 2D natural image marker from a file.</B>
  * <TT>UUID: efcdb590-c570-11e7-abc4-cec278b6b50a</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ filePath,
+ *                          the path to the file describing the 2D natural image marker,
+ *                          @SolARComponentPropertyDescString{ "" }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARMarker2DNaturalImageOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -67,7 +72,7 @@ private:
     datastructure::Sizef m_size;
     SRef<datastructure::Image> m_image;
 
-    /// @brief the path to the file describing the 2D Squared binary marker
+    /// @brief the path to the file describing the 2D natural image marker
     std::string m_filePath ="";
 };
 

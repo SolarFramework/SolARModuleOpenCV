@@ -39,6 +39,11 @@ namespace OPENCV {
  * @brief <B>Extracts the AKAZE descriptors for a set of keypoints.</B>
  * <TT>UUID: c8cc68db-9abd-4dab-9204-2fe4e9d010cd</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ threshold,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ double, [0..MAX DOUBLE], 3e-4 }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorAKAZEOpencv : public org::bcom::xpcf::ConfigurableBase,

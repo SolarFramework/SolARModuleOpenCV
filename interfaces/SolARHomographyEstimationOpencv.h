@@ -34,6 +34,14 @@ namespace OPENCV {
  * @brief <B>Estimates the homography between two images from their matching keypoints.</B>
  * <TT>UUID: fb9dac20-2a44-44b2-aa42-2871eec31427</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ ransacReprojThreshold,
+ *                          Here we are using the RANSAC to remove outlier. That is if:<br>
+ *                              \f[ \left|| dstPoints_i - convertPointHomogenous \left( H * srcPoints_i \right) \right|| > ransacReprojThreshold \f]<br>
+ *                              then the point i is considered an outlier. If srcPoints and dstPoints are measured in pixels\, it usually makes sense to set this parameter somewhere in the range of 1 to 10.,
+ *                          @SolARComponentPropertyDescNum{ double, [0..MAX DOUBLE], 8 }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARHomographyEstimationOpencv : public org::bcom::xpcf::ConfigurableBase,

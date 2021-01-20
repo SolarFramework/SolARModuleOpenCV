@@ -34,6 +34,21 @@ namespace OPENCV {
  * @brief <B>Displays matching keypoints between two images.</B>
  * <TT>UUID: e95302be-3fe1-44e0-97bf-a98380464af9</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ thickness,
+ *                          thickness of the lines displaying the matches between the two images,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 1 }}
+ * @SolARComponentProperty{ color,
+ *                          the color of the linse displaying the matches between the two images,
+ *                          @SolARComponentPropertyDescList{ 3, uint, [0..255], [ 0\, 255\, 0 ] }}
+ * @SolARComponentProperty{ mode,
+ *                          if not null\, the color will be randomized for each line (values among [\"COLOR\"\, \"RANDOM\"\, \"FADING\"]),
+ *                          @SolARComponentPropertyDescString{ "COLOR" }}
+ * @SolARComponentProperty{ maxMatches,
+ *                          the maximum number of matches to display. If negative\, all matches are displayed,
+ *                          @SolARComponentPropertyDescNum{ int, [-1..MAX INT], -1 }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARMatchesOverlayOpencv : public org::bcom::xpcf::ConfigurableBase,

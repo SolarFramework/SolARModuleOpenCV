@@ -31,6 +31,11 @@ namespace OPENCV {
  * @brief <B>Extracts the descriptor corresponding to a squared binary marker pattern.</B>
  * <TT>UUID: d25625ba-ce3a-11e7-abc4-cec278b6b50a</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ patternSize,
+ *                          define the internal size of the pattern (without the black border),
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 5 }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorSBPatternOpencv : public org::bcom::xpcf::ConfigurableBase,
