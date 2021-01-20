@@ -33,6 +33,11 @@ namespace OPENCV {
  * @brief <B>Loads an image from a file.</B>
  * <TT>UUID: e42d6526-9eb1-4f8a-bb68-53e06f09609c</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ filePath,
+ *                          The path of the image to load,
+ *                          @SolARComponentPropertyDescString{ "" }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARImageLoaderOpencv : public org::bcom::xpcf::ConfigurableBase,

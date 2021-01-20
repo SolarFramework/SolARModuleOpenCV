@@ -35,6 +35,12 @@ namespace OPENCV {
  * @brief <B>Loads a fiducial marker from a description file.</B>
  * <TT>UUID: d0116ed2-45d7-455d-8011-57959da1b0fa</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ filePath,
+ *                          the path to the file describing the fiducial marker,
+ *                          @SolARComponentPropertyDescString{ "" }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARFiducialMarkerLoaderOpencv : public org::bcom::xpcf::ConfigurableBase,

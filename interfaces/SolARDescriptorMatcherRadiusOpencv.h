@@ -39,6 +39,13 @@ namespace OPENCV {
  * @brief <B>Matches descriptors and selects all matches not farther than a specified distance.</B>
  * <TT>UUID: 549f7873-96e4-4eae-b4a0-ae8d80664ce5</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ maxDistance,
+ *                           Threshold for the distance between matched descriptors.<br>
+ *                             Distance means here metric distance (e.g. Hamming distance)\, not the distance between coordinates (which is measured in Pixels),
+ *                           @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], default: 1.f }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherRadiusOpencv : public org::bcom::xpcf::ConfigurableBase,

@@ -39,7 +39,40 @@ namespace OPENCV {
  * @class SolARDescriptorsExtractorORBOpencv
  * @brief <B>Extracts the ORB descriptors for a set of keypoints.</B>
  * <TT>UUID: 0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a</TT>
- *
+ * 
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ nbFeatures,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 500 }}
+ * @SolARComponentProperty{ scaleFactor,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], default: 1.2f }}
+ * @SolARComponentProperty{ nbLevels,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 8 }}
+ * @SolARComponentProperty{ edgeThreshold,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 31 }}
+ * @SolARComponentProperty{ firstLevel,
+ *                          ,
+ *                           @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 0 }}
+ * @SolARComponentProperty{ WTAK,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 2 }}
+ * @SolARComponentProperty{ scoreType,
+ *                          Accepted values: Harris or Fast,
+ *                          @SolARComponentPropertyDescString{ "Harris" }}
+ * @SolARComponentProperty{ patchSize,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 31 }}
+ * @SolARComponentProperty{ fastThreshold,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 20 }}
+ * 
+ * @SolARComponentPropertiesEnd
+ * 
+ * For more information concerning the OR configuration parameters: https://docs.opencv.org/3.4/db/d95/classcv_1_1ORB.html
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorORBOpencv : public org::bcom::xpcf::ConfigurableBase,
