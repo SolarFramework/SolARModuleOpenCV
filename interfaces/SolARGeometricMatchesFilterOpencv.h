@@ -31,7 +31,7 @@ public:
         SolARGeometricMatchesFilterOpencv();
     ///@brief SolARGeometricMatchesFilterOpencv destructor.
        ~SolARGeometricMatchesFilterOpencv();
-        /// @brief filter matches based fundamental matrix assumptions. This filter removes all outliers matches which give high reprojection error.
+        /// @brief filter point matches based fundamental matrix assumptions. This filter removes all outliers matches which give high reprojection error.
         /// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".
         /// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
         /// @param[in] Original keypoints associated to desc_1.
@@ -41,7 +41,7 @@ public:
                     const std::vector<datastructure::Keypoint> & inputKeyPointsA,
                     const std::vector<datastructure::Keypoint> & inputKeyPointsB) override;
 
-		/// @brief filter matches based fundamental matrix assumptions. This filter removes all outliers matches which give high reprojection error.
+		/// @brief filter line matches based fundamental matrix assumptions. This filter removes all outliers matches which give high reprojection error.
 		/// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".
 		/// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
 		/// @param[in] Original keylines associated to desc_1.
@@ -51,7 +51,7 @@ public:
 					const std::vector<datastructure::Keyline> & inputKeylinesA,
 					const std::vector<datastructure::Keyline> & inputKeylinesB) override;
 
-		/// @brief filter matches based fundamental matrix calculated from camera matrices
+		/// @brief filter point matches based fundamental matrix calculated from camera matrices
 		/// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".
 		/// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
 		/// @param[in] Original keypoints associated to desc_1.
@@ -63,9 +63,25 @@ public:
 							std::vector<datastructure::DescriptorMatch> & outputMatches,
 							const std::vector<datastructure::Keypoint> & inputKeyPoints1,
 							const std::vector<datastructure::Keypoint> & inputKeyPoints2,
-							const datastructure::Transform3Df &pose1,
-							const datastructure::Transform3Df &pose2,
-							const datastructure::CamCalibration &intrinsicParams) override;
+							const datastructure::Transform3Df & pose1,
+							const datastructure::Transform3Df & pose2,
+							const datastructure::CamCalibration & intrinsicParams) override;
+
+		/// @brief filter line matches based fundamental matrix calculated from camera matrices
+		/// @param[in] Original matches found between two descriptors "desc_1" and "desc_2".
+		/// @param[out] Filtred matches based on geometric relations such as epipolar constraint.
+		/// @param[in] Original keylines associated to desc_1.
+		/// @param[in] Original keylines associated to desc_2.
+		/// @param[in] camera pose 1.
+		/// @param[in] camera pose 2.
+		/// @param[in] camera's intrinsic parameters.
+		virtual void filter(const std::vector<datastructure::DescriptorMatch> & inputMatches,
+							std::vector<datastructure::DescriptorMatch> & outputMatches,
+							const std::vector<datastructure::Keyline> & inputKeylines1,
+							const std::vector<datastructure::Keyline> & inputKeylines2,
+							const datastructure::Transform3Df & pose1,
+							const datastructure::Transform3Df & pose2,
+							const datastructure::CamCalibration & intrinsicParams) override;
 
 
         void unloadComponent () override final;
@@ -84,6 +100,9 @@ public:
 
 		///  @brief threshold to valid matches based on distance to epilines
 		float m_epilinesDistance = 10.f;
+
+		/// @brief Threshold value to consider that two lines are parallel (using homogeneous coordinates)
+		float m_lineParallelismThreshold = 1e-5f;
 };
 
 }

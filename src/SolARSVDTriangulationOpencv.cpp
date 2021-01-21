@@ -111,7 +111,7 @@ float SolARSVDTriangulationOpencv::getReprojectionErrorCloud(const std::vector<S
 bool SolARSVDTriangulationOpencv::lineTriangulation(const Keyline & kl1, const Keyline & kl2,
 													const cv::Mat & pose1Inv, const cv::Mat & pose2Inv, 
 													const cv::Mat & proj1, const cv::Mat & proj2,
-													const cv::Mat & F12,
+													const cv::Mat & E12,
 													Edge3Df & line3D,
 													float & error)
 {
@@ -122,18 +122,19 @@ bool SolARSVDTriangulationOpencv::lineTriangulation(const Keyline & kl1, const K
 	cv::Mat end2	= (cv::Mat_<float>(3, 1) << kl2.getEndPointX(),		kl2.getEndPointY(),		1.f);
 
 
-	// Define l1 and l2 Pl�cker coordinates
+	// Define l1 and l2 Plucker coordinates
 	cv::Mat l1 = start1.cross(end1);
 	cv::Mat l2 = start2.cross(end2);
 
 	// Assert that epipolar lines are not parallel to l2
-	cv::Mat epipolarLine_start1 = F12 * start1;
-	cv::Mat epipolarLine_end1	= F12 * end1;
+	cv::Mat epipolarLine_start1 = E12 * start1;
+	cv::Mat epipolarLine_end1	= E12 * end1;
 
-	cv::Mat intersect_start = epipolarLine_start1.cross(l2);
-	cv::Mat intersect_end	= epipolarLine_end1.cross(l2);
-
-	if (std::abs(intersect_start.at<float>(2)) == 0 || std::abs(intersect_end.at<float>(2)) == 0)
+	auto checkParallel = [](const auto& l1, const auto& l2) -> bool
+	{
+		return l1.at<float>(0) * l2.at<float>(1) - l1.at<float>(1) * l2.at<float>(0) == 0.f;
+	};
+	if (checkParallel(epipolarLine_start1, l2) || checkParallel(epipolarLine_end1, l2))
 		return false;
 
 	// Triangulate start and end points
@@ -455,36 +456,21 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keyline> & key
 												std::vector<SRef<CloudLine>> & lineCloud)
 {
 	// Compute Projection matrices
-	cv::Matx44f Pose1(	pose1(0, 0), pose1(0, 1), pose1(0, 2), pose1(0, 3),
-						pose1(1, 0), pose1(1, 1), pose1(1, 2), pose1(1, 3),
-						pose1(2, 0), pose1(2, 1), pose1(2, 2), pose1(2, 3),
-						pose1(3, 0), pose1(3, 1), pose1(3, 2), pose1(3, 3));
+	cv::Mat P1 = (cv::Mat_<float>(4, 4) <<	pose1(0, 0), pose1(0, 1), pose1(0, 2), pose1(0, 3),
+											pose1(1, 0), pose1(1, 1), pose1(1, 2), pose1(1, 3),
+											pose1(2, 0), pose1(2, 1), pose1(2, 2), pose1(2, 3),
+											pose1(3, 0), pose1(3, 1), pose1(3, 2), pose1(3, 3));
 
-	cv::Matx44f Pose2(	pose2(0, 0), pose2(0, 1), pose2(0, 2), pose2(0, 3),
-						pose2(1, 0), pose2(1, 1), pose2(1, 2), pose2(1, 3),
-						pose2(2, 0), pose2(2, 1), pose2(2, 2), pose2(2, 3),
-						pose2(3, 0), pose2(3, 1), pose2(3, 2), pose2(3, 3));
-
-	cv::Mat P1 = cv::Mat(Pose1);
-	cv::Mat P2 = cv::Mat(Pose2);
-
+	cv::Mat P2 = (cv::Mat_<float>(4, 4) <<	pose2(0, 0), pose2(0, 1), pose2(0, 2), pose2(0, 3),
+											pose2(1, 0), pose2(1, 1), pose2(1, 2), pose2(1, 3),
+											pose2(2, 0), pose2(2, 1), pose2(2, 2), pose2(2, 3),
+											pose2(3, 0), pose2(3, 1), pose2(3, 2), pose2(3, 3));
 	cv::Mat pose1Inv = P1.inv();
 	cv::Mat pose2Inv = P2.inv();
-
-	cv::Mat Proj1 = m_camMatrix * (pose1Inv.rowRange(0, 3));
-	cv::Mat Proj2 = m_camMatrix * (pose2Inv.rowRange(0, 3));
-
-	// Compute fundamental matrix
-	cv::Mat pose12 = pose1Inv * P2;
-	cv::Mat R12 = (cv::Mat_<float>(3, 3) <<	pose12.at<float>(0, 0), pose12.at<float>(0, 1), pose12.at<float>(0, 2),
-											pose12.at<float>(1, 0), pose12.at<float>(1, 1), pose12.at<float>(1, 2),
-											pose12.at<float>(2, 0), pose12.at<float>(2, 1), pose12.at<float>(2, 2));
-	cv::Mat T12 = (cv::Mat_<float>(3, 1) <<	pose12.at<float>(0, 3), pose12.at<float>(1, 3), pose12.at<float>(2, 3));
-
-	cv::Mat T12x = (cv::Mat_<float>(3, 3) <<	 0,					-T12.at<float>(2),	 T12.at<float>(1),
-												 T12.at<float>(2),   0,					-T12.at<float>(0),
-												-T12.at<float>(1),   T12.at<float>(0),	 0);
-	cv::Mat F12 = m_camMatrix.t().inv() * T12x * R12 * m_camMatrix.inv();
+	cv::Mat proj1 = m_camMatrix * (pose1Inv.rowRange(0, 3));
+	cv::Mat proj2 = m_camMatrix * (pose2Inv.rowRange(0, 3));
+	// Compute essential matrix
+	cv::Mat E12 = m_camMatrix.t().inv() * SolAROpenCVHelper::computeFundamentalMatrix(pose1, pose2) * m_camMatrix.inv();
 
 	// Triangulate lines
 	float error, meanError{0.f};
@@ -499,7 +485,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keyline> & key
 
 		kl1 = keylines1[index1];
 		kl2 = keylines2[index2];
-		check = lineTriangulation(kl1, kl2, pose1Inv, pose2Inv, Proj1, Proj2, F12, line3D, error);
+		check = lineTriangulation(kl1, kl2, pose1Inv, pose2Inv, proj1, proj2, E12, line3D, error);
 		if (check && (error < MAX_ERROR_TRIANGULATION))
 		{
 			std::map<unsigned int, unsigned int> visibility;
@@ -514,8 +500,10 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keyline> & key
 			meanError += error;
 		}
 	}
-	meanError /= lineCloud.size();
-	return meanError;
+	if (lineCloud.empty())
+		return 0.f;
+	else
+		return meanError /= lineCloud.size();
 }
 
 float SolARSVDTriangulationOpencv::distancePointLine2D(const cv::Mat & line, const cv::Mat & point)
@@ -527,7 +515,7 @@ float SolARSVDTriangulationOpencv::distancePointLine2D(const cv::Mat & line, con
 		point2D = point / point.at<float>(2);
 
 	cv::Mat lp = line.t() * point2D;
-	return std::fabs(lp.at<float>(0, 0)) / std::sqrtf(std::powf(line.at<float>(0), 2.f) + std::powf(line.at<float>(1), 2.f));
+	return std::abs(lp.at<float>(0, 0)) / std::sqrt(std::pow(line.at<float>(0), 2.f) + std::pow(line.at<float>(1), 2.f));
 }
 
 bool SolARSVDTriangulationOpencv::solvePoint3DLine( const cv::Mat & l1, const cv::Mat & l2,

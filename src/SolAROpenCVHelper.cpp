@@ -225,6 +225,20 @@ void SolAROpenCVHelper::drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Po
     }
 }
 
+cv::Mat SolAROpenCVHelper::computeFundamentalMatrix(const Transform3Df & pose1, const Transform3Df & pose2)
+{
+    Transform3Df pose12 = pose1.inverse() * pose2;
+	cv::Mat R12 = (cv::Mat_<float>(3, 3) << pose12(0, 0), pose12(0, 1), pose12(0, 2),
+											pose12(1, 0), pose12(1, 1), pose12(1, 2), 
+											pose12(2, 0), pose12(2, 1), pose12(2, 2));
+	cv::Mat T12 = (cv::Mat_<float>(3, 1) << pose12(0, 3), pose12(1, 3), pose12(2, 3));
+
+	cv::Mat T12x = (cv::Mat_<float>(3, 3) << 0, -T12.at<float>(2), T12.at<float>(1),
+											 T12.at<float>(2), 0, -T12.at<float>(0),
+											-T12.at<float>(1), T12.at<float>(0), 0);
+	return T12x * R12;
+}
+
 }
 }
 }

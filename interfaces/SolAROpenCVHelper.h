@@ -67,6 +67,7 @@ public:
  
     static int deduceOpenCVType(SRef<datastructure::Image> img);
 
+    static cv::Mat computeFundamentalMatrix(const datastructure::Transform3Df & pose1, const datastructure::Transform3Df & pose2);
 };
 
 template <class T> constexpr int SolAROpenCVHelper::inferOpenCVType()

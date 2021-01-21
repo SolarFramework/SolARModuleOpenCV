@@ -78,7 +78,7 @@ public:
 	bool lineTriangulation(	const datastructure::Keyline & kl1, const datastructure::Keyline & kl2,
 							const cv::Mat & pose1Inv, const cv::Mat & pose2Inv,
 							const cv::Mat & proj1, const cv::Mat & proj2,
-							const cv::Mat & F12,
+							const cv::Mat & E12,
 							datastructure::Edge3Df & line3D,
 							float & error);
 
