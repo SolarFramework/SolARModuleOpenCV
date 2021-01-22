@@ -57,6 +57,7 @@ class SolARImageFilterErodeOpencv;
 class SolARImageLoaderOpencv;
 class SolARImageViewerOpencv;
 class SolARImagesAsCameraOpencv;
+class SolARKeylineDetectorOpencv;
 class SolARKeypointDetectorOpencv;
 class SolARKeypointDetectorRegionOpencv;
 class SolARMarker2DNaturalImageOpencv;
@@ -231,6 +232,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageViewerOpencv,
                              "19ea4e13-7085-4e3f-92ca-93f200ffb01b",
                              "SolARImageViewerOpencv",
                              "Displays an image in a dedicated window.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARKeylineDetectorOpencv,
+                             "2b901264-99a6-473d-861c-9c79c869ffd1",
+                             "SolARKeylineDetectorOpencv",
+                             "Detects keylines in an image.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARKeypointDetectorOpencv,
                              "e81c7e4e-7da6-476a-8eba-078b43071272",

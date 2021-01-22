@@ -30,6 +30,7 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARImageLoaderOpencv.h \
     interfaces/SolARImagesAsCameraOpencv.h \
     interfaces/SolARImageViewerOpencv.h \
+    interfaces/SolARKeylineDetectorOpencv.h \
     interfaces/SolARKeypointDetectorOpencv.h \
     interfaces/SolARKeypointDetectorRegionOpencv.h \
     interfaces/SolARMapFusionOpencv.h \
@@ -95,6 +96,7 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARImageLoaderOpencv.cpp \
     src/SolARImagesAsCameraOpencv.cpp \
     src/SolARImageViewerOpencv.cpp \
+    src/SolARKeylineDetectorOpencv.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
     src/SolARKeypointDetectorRegionOpencv.cpp \
     src/SolARMapFusionOpencv.cpp \

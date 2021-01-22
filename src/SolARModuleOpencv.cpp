@@ -44,6 +44,7 @@
 #include "SolARImageFilterErodeOpencv.h"
 #include "SolARImageLoaderOpencv.h"
 #include "SolARImageViewerOpencv.h"
+#include "SolARKeylineDetectorOpencv.h"
 #include "SolARKeypointDetectorOpencv.h"
 #include "SolARKeypointDetectorRegionOpencv.h"
 #include "SolAROpticalFlowPyrLKOpencv.h"
@@ -181,6 +182,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageViewerOpencv>(componentUUID,interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARKeylineDetectorOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
