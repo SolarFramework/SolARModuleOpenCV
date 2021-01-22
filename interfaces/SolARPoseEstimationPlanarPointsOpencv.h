@@ -32,6 +32,16 @@ namespace OPENCV {
  * @brief <B>Finds the camera pose of 2D-3D planar points correspondences based on opencv homography.</B>
  * <TT>UUID: 9fbadf80-251f-4160-94f8-a64dc3d40a2f</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ minNbInliers,
+ *                          minimal number of inliers to validate the pose,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 10 }}
+ * @SolARComponentProperty{ reprojErrorThreshold,
+ *                          Inlier threshold value used by the RANSAC procedure. The parameter value is the maximum
+ *                            allowed distance between the observed and computed point projections to consider it an inlier.,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 0.1f }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARPoseEstimationPlanarPointsOpencv : public org::bcom::xpcf::ConfigurableBase,

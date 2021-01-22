@@ -39,6 +39,17 @@ namespace OPENCV {
 * @brief <B>Merge local map or floating map in the global map.</B>
 * <TT>UUID: bc661909-0185-40a4-a5e6-e52280e7b338</TT>
 *
+* @SolARComponentInjectablesBegin
+* @SolARComponentInjectable{SolAR::api::geom::I3DTransform}
+* @SolARComponentInjectable{SolAR::api::features::IDescriptorMatcher}
+* @SolARComponentInjectable{SolAR::api::solver::pose::I3DTransformSACFinderFrom3D3D}
+* @SolARComponentInjectablesEnd
+* 
+* @SolARComponentPropertiesBegin
+* @SolARComponentProperty{ radius,
+*                          ,
+*                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 0.3f }}
+* @SolARComponentPropertiesEnd
 */
 
 class SOLAROPENCV_EXPORT_API SolARMapFusionOpencv : public org::bcom::xpcf::ConfigurableBase,

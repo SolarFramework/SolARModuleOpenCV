@@ -30,6 +30,15 @@ namespace OPENCV {
 * @brief <B>Grabs the images from a video file.</B>
 * <TT>UUID: fa4a780a-9720-11e8-9eb6-529269fb1459</TT>
 *
+* @SolARComponentPropertiesBegin
+* @SolARComponentProperty{ videoPath,
+*                          Path to the video file which will be streamed as a camera capture,
+*                          @SolARComponentPropertyDescString{ "" }}
+* @SolARComponentProperty{ delayTime,
+*                          time delay camera between two images,
+*                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 30 }}
+* @SolARComponentPropertiesEnd
+* 
 */
 
 class SOLAROPENCV_EXPORT_API SolARVideoAsCameraOpencv : public SolARBaseCameraOpencv {

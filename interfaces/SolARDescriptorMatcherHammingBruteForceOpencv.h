@@ -41,7 +41,16 @@ namespace OPENCV {
  * @class SolARDescriptorMatcherHammingBruteForceOpencv
  * @brief <B>Matches descriptors based on a Hamming distance and selects the best matches of each descriptor.</B>
  * <TT>UUID: d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9</TT>
- *
+ * 
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{
+ *                         distanceRatio,
+ *                         Distance ratio used to keep good matches.<br>
+ *                           Several matches can correspond to a given keypoint of the first image. The first match with the best score is always retained.<br>
+ *                           But here\, we can also retain the next matches if their distances or scores is greater than the score of the best match * m_distanceRatio.,
+ *                         type: float; range : [0..MAX FLOAT]; default: 0.75f}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherHammingBruteForceOpencv : public org::bcom::xpcf::ConfigurableBase,

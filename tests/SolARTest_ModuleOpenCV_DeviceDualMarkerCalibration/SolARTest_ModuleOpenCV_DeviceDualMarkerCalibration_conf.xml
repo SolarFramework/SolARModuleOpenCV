@@ -87,26 +87,26 @@
         <configure component="SolARDeviceDataLoader">
             <property name="calibrationFile" type="string" value="../../data/hololens_calibration.yml"/>
             <property name="pathToData" type="string" value="../../data/loop_desktop_A"/>
-            <property name="delayTime" type="Integer" value="100"/>
+            <property name="delayTime" type="int" value="100"/>
         </configure>
         <configure component="SolARImageViewerOpencv">
             <property name="title" type="string" value="Sample AR Device Loader"/>
-            <property name="exitKey" type="Integer" value="27"/>
-            <property name="width" type="Integer" value="0"/>
-            <property name="height" type="Integer" value="0"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
         </configure>
         <configure component="SolAR3DOverlayBoxOpencv">
-            <property name="position" type="Float">
+            <property name="position" type="float">
                 <value>0</value>
                 <value>0</value>
                 <value>0</value>
             </property>
-            <property name="orientation" type="Float">
+            <property name="orientation" type="float">
                 <value>0.0</value>
                 <value>0.0</value>
                 <value>0.0</value>
             </property>
-            <property name="size" type="Float">
+            <property name="size" type="float">
                 <value>0.185</value>
                 <value>0.185</value>
                 <value>0.185</value>
@@ -114,53 +114,53 @@
         </configure>
         <configure component="SolAR3DPointsViewerOpengl">
             <property name="title" type="string" value="Points Cloud (press esc to exit)"/>
-            <property name="width" type="UnsignedInteger" value="1280"/>
-            <property name="height" type="UnsignedInteger" value="960"/>
-            <property name="backgroundColor" type="UnsignedInteger">
+            <property name="width" type="uint" value="1280"/>
+            <property name="height" type="uint" value="960"/>
+            <property name="backgroundColor" type="uint">
                 <value>0</value>
                 <value>0</value>
                 <value>0</value>
             </property>
-            <property name="fixedPointsColor" type="UnsignedInteger" value="1"/>
-            <property name="pointsColor" type="UnsignedInteger">
+            <property name="fixedPointsColor" type="uint" value="1"/>
+            <property name="pointsColor" type="uint">
                 <value>0</value>
                 <value>255</value>
                 <value>0</value>
             </property>
-            <property name="cameraColor" type="UnsignedInteger">
+            <property name="cameraColor" type="uint">
                 <value>255</value>
                 <value>255</value>
                 <value>255</value>
             </property>
-            <property name="drawCameraAxis" type="UnsignedInteger" value="1"/>
-            <property name="drawSceneAxis" type="UnsignedInteger" value="0"/>
-            <property name="drawWorldAxis" type="UnsignedInteger" value="1"/>
-            <property name="axisScale" type="Float" value="1.0"/>
-            <property name="pointSize" type="Float" value="1.0"/>
-            <property name="cameraScale" type="Float" value="1.0"/>
-            <property name="keyframeAsCamera" type="UnsignedInteger" value="1"/>
-            <property name="framesColor" type="UnsignedInteger">
+            <property name="drawCameraAxis" type="uint" value="1"/>
+            <property name="drawSceneAxis" type="uint" value="0"/>
+            <property name="drawWorldAxis" type="uint" value="1"/>
+            <property name="axisScale" type="float" value="1.0"/>
+            <property name="pointSize" type="float" value="1.0"/>
+            <property name="cameraScale" type="float" value="1.0"/>
+            <property name="keyframeAsCamera" type="uint" value="1"/>
+            <property name="framesColor" type="uint">
                 <value>128</value>
                 <value>0</value>
                 <value>255</value>
             </property>
-            <property name="keyframesColor" type="UnsignedInteger">
+            <property name="keyframesColor" type="uint">
                 <value>0</value>
                 <value>0</value>
                 <value>255</value>
             </property>
-            <property name="zoomSensitivity" type="Float" value="10.0"/>
-            <property name="exitKey" type="Integer" value="27"/>
+            <property name="zoomSensitivity" type="float" value="10.0"/>
+            <property name="exitKey" type="int" value="27"/>
         </configure>
         <configure component="SolARFiducialMarkerPoseEstimator" name="fiducialMarkerPoseEstimator1">
-            <property name="nbThreshold" type="Integer" value="3"/>
-            <property name="minThreshold" type="Integer" value="-1"/>
-            <property name="maxThreshold" type="Integer" value="220"/>
+            <property name="nbThreshold" type="int" value="3"/>
+            <property name="minThreshold" type="int" value="-1"/>
+            <property name="maxThreshold" type="int" value="220"/>
         </configure>
         <configure component="SolARFiducialMarkerPoseEstimator" name="fiducialMarkerPoseEstimator2">
-            <property name="nbThreshold" type="Integer" value="3"/>
-            <property name="minThreshold" type="Integer" value="-1"/>
-            <property name="maxThreshold" type="Integer" value="220"/>
+            <property name="nbThreshold" type="int" value="3"/>
+            <property name="minThreshold" type="int" value="-1"/>
+            <property name="maxThreshold" type="int" value="220"/>
         </configure>
         <configure component="SolARMarker2DSquaredBinaryOpencv" name="marker1">
             <property name="filePath" type="string" value="../../data/fiducialMarkerA.yml" description="Path of the .yml file describing the fiducial marker."/>
@@ -169,20 +169,20 @@
             <property name="filePath" type="string" value="../../data/fiducialMarkerB.yml" description="Path of the .yml file describing the fiducial marker."/>
         </configure>
         <configure component="SolARImageFilterBinaryOpencv">
-            <property name="min" type="Integer" value="-1" description="minimum threshold (-1 to automatically compute it on the global image"/>
-            <property name="max" type="Integer" value="255" description="maximum threshold"/>
+            <property name="min" type="int" value="-1" description="minimum threshold (-1 to automatically compute it on the global image"/>
+            <property name="max" type="int" value="255" description="maximum threshold"/>
         </configure>
         <configure component="SolARContoursExtractorOpencv">
-            <property name="minContourEdges" type="Integer" value="4" description="Minimum number of edge to validate a contour (default = 4)" />
+            <property name="minContourEdges" type="int" value="4" description="Minimum number of edge to validate a contour (default = 4)" />
         </configure>
         <configure component="SolARContoursFilterBinaryMarkerOpencv">
-            <property name="epsilon" type="Float" value="0.05" description="The maximum distance between the original curve and its approximation (default = 0.05)"/>
-            <property name="minContourLength" type="Float" value="20.0" description="The minimum length of an edge of the contour in pixels to be considered as valid (default = 20)."/>
-            <property name="minDistanceBetweenContourCorners" type="Float" value="10.0" description="The minimum average distance in pixels between corners of a contour and the same corners of another contour to consider the contour as valid (default = 10)"/>
+            <property name="epsilon" type="float" value="0.05" description="The maximum distance between the original curve and its approximation (default = 0.05)"/>
+            <property name="minContourLength" type="float" value="20.0" description="The minimum length of an edge of the contour in pixels to be considered as valid (default = 20)."/>
+            <property name="minDistanceBetweenContourCorners" type="float" value="10.0" description="The minimum average distance in pixels between corners of a contour and the same corners of another contour to consider the contour as valid (default = 10)"/>
         </configure>
         <configure component="SolARPerspectiveControllerOpencv">
-            <property name="outputImageWidth" type="Integer" value="640" description="The width in pixels of the corrected image."/>
-            <property name="outputImageHeight" type="Integer" value="480" description="The width in pixels of the corrected image."/>
+            <property name="outputImageWidth" type="int" value="640" description="The width in pixels of the corrected image."/>
+            <property name="outputImageHeight" type="int" value="480" description="The width in pixels of the corrected image."/>
         </configure>
     </properties>
 </xpcf-registry>

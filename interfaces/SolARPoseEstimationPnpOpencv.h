@@ -33,6 +33,25 @@ namespace OPENCV {
 * @brief <B>Finds the camera pose of 2D-3D points correspondences based on opencv Perspective-n-Points algorithm.</B>
 * <TT>UUID: 0753ade1-7932-4e29-a71c-66155e309a53</TT>
 *
+* @SolARComponentPropertiesBegin
+* @SolARComponentProperty{ iterationsCount,
+*                          number of iterations,
+*                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 1000 }}
+* @SolARComponentProperty{ reprojError,
+*                          inlier threshold value used by the RANSAC procedure.<br>
+*                            The parameter value is the maximum allowed distance between the observed and computed point projections to consider it an inlier,
+*                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 4f}}
+* @SolARComponentProperty{ confidence,
+*                          the probability that the algorithm produces a useful result,
+*                          @SolARComponentPropertyDescNum{ float, [0..1], 0.99f }}
+* @SolARComponentProperty{ minNbInliers,
+*                          the minimum of number of inliers to valid a good pose estimation,
+*                          @SolARComponentPropertyDescNum{ int, [0..1MAX INT], 10 }}
+* @SolARComponentProperty{ method,
+*                          The method for solving the PnP problem (ITERATIVE\, P3P\, AP3P\, EPNP\, DLS\, UPNP\, IPPE\, IPPE_SQUARE),
+*                          @SolARComponentPropertyDescString{ "ITERATIVE" }}
+* @SolARComponentPropertiesEnd
+* 
 */
 
 class SOLAROPENCV_EXPORT_API SolARPoseEstimationPnpOpencv : public org::bcom::xpcf::ConfigurableBase,

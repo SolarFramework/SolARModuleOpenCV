@@ -36,6 +36,14 @@ namespace OPENCV {
  * @brief <B>Erodes the white regions of a binary image.</B>
  * <TT>UUID: 58b09819-64bc-4a80-b6a2-9fe7b179f3fc</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ erosion_elem,
+ *                          See cv::MorphShapes,
+ *                          @SolARComponentPropertyDescNum{ int, [0 (cv::MORPH_RECT)\, 1 (cv::MORPH_RECT)\, 2 (cv::MORPH_RECT)], 0 }}
+ * @SolARComponentProperty{ erosion_size,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 0 }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARImageFilterErodeOpencv : public org::bcom::xpcf::ConfigurableBase,
