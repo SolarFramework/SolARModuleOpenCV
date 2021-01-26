@@ -108,7 +108,7 @@ int main(int argc,char** argv)
 		// matches filter
 		matchesFilter->filter(matches, matches, keypoints, frame1->getKeypoints());
 		LOG_INFO("Number of filtered matches: {}\n", matches.size());
-		if (matches.size() < 200) {
+		if (matches.size() < 600) {
 			frame1 = frame;
 			continue;
 		}
