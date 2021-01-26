@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_FeatureMatchingStabilization
-VERSION=0.9.0
+VERSION=[2~[3~[5~0.9.1
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
