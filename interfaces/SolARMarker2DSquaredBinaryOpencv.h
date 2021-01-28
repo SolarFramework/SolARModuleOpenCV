@@ -37,6 +37,12 @@ namespace OPENCV {
  * @brief <B>Loads a 2D squared binary marker from a file.</B>
  * <TT>UUID: 5d2b8da9-528e-4e5e-96c1-f883edcf3b1c</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ filePath,
+ *                          the path to the file describing the 2D Squared binary marker,
+ *                          @SolARComponentPropertyDescString{ "" }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARMarker2DSquaredBinaryOpencv : public org::bcom::xpcf::ConfigurableBase,

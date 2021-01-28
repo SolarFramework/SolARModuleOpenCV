@@ -42,7 +42,22 @@ namespace OPENCV {
  * @class SolARDescriptorMatcherKNNOpencv
  * @brief <B>Matches descriptors and selects k best matches for each descriptor.</B>
  * <TT>UUID: 7823dac8-1597-41cf-bdef-59aa22f3d40a</TT>
- *
+ * 
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ distanceRatio,
+ *                           distance ratio used to keep good matches.<br/>
+ *                             Several matches can correspond to a given keypoint of the first image. The first match with the best score is always retained.<br>
+ *                             But here\, we can also retain the second match if its distance or score is greater than the score of the best match * m_distanceRatio.,
+ *                           @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], default: 0.75f }}
+ * @SolARComponentProperty{ radius,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 0.5f }}
+ * @SolARComponentProperty{ matchingDistanceMax,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 500.f }}
+ * @SolARComponentPropertiesEnd
+ * 
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public org::bcom::xpcf::ConfigurableBase,
