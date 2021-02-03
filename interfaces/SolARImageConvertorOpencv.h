@@ -38,6 +38,14 @@ namespace OPENCV {
  * @brief <B>Converts an image according to a given expected layout.</B>
  * <TT>UUID: fd7fb607-144f-418c-bcf2-f7cf71532c22</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ colorMap,
+ *                          color map used\, list of GNU Octave/MATLAB equivalent colormaps available https://docs.opencv.org/4.1.1/d3/d50/group__imgproc__colormap.html,
+ *                          @SolARComponentPropertyDescNum{ int, values of cv::ColormapTypes, cv::COLORMAP_JET (2) }}
+ * @SolARComponentProperty{ equalizeLUT,
+ *                             ,
+ *                             @SolARComponentPropertyDescNum{ int, [0..1], 0 (false) }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARImageConvertorOpencv : public org::bcom::xpcf::ConfigurableBase,

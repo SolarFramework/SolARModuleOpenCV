@@ -42,6 +42,24 @@ namespace OPENCV {
  * @brief <B>Detects keypoints in an image.</B>
  * <TT>UUID: e81c7e4e-7da6-476a-8eba-078b43071272</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ imageRatio,
+ *                          the ratio to apply to the size of the input image to compute the descriptor.<br>
+ *                               A ratio must be less or equal to 1. A ratio less than 1 will speedup computation,
+ *                          @SolARComponentPropertyDescNum{ float, [0..1], 1.f }}
+ * @SolARComponentProperty{ nbDescriptors,
+ *                          the number of descriptors that are selected. If negative\, all extracted descriptors are selected,
+ *                          @SolARComponentPropertyDescNum{ int, [-1..MAX INT], 1000 }}
+ * @SolARComponentProperty{ threshold,
+ *                          the threshold of detector to accept a keypoint,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 1e-3f }}
+ * @SolARComponentProperty{ nbOctaves,
+ *                          the number of octaves,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 4 }}
+ * @SolARComponentProperty{ type,
+ *                          type of descriptor used for the extraction (SIFT\, AKAZE\, AKAZE2\, ORB\, BRISK),
+ *                          @SolARComponentPropertyDescString{ "AKAZE2" }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARKeypointDetectorOpencv : public org::bcom::xpcf::ConfigurableBase,

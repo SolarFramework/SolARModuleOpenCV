@@ -19,6 +19,8 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "core/Log.h"
 
+#include "xpcf/core/helpers.h"
+
 namespace xpcf  = org::bcom::xpcf;
 
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARImageConvertorUnity)
@@ -42,7 +44,7 @@ SolARImageConvertorUnity::~SolARImageConvertorUnity()
 static std::map<std::pair<Image::ImageLayout,Image::ImageLayout>,int> convertMapInfos = {{{Image::ImageLayout::LAYOUT_RGB,Image::ImageLayout::LAYOUT_GREY},cv::COLOR_RGB2GRAY},
                                                                                        {{Image::ImageLayout::LAYOUT_BGR,Image::ImageLayout::LAYOUT_GREY},cv::COLOR_BGR2GRAY}};
 
-FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, [[maybe_unused]] Image::ImageLayout destLayout)
+FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<Image>& imgDst, ATTRIBUTE(maybe_unused) Image::ImageLayout destLayout)
 {
     cv::Mat opencvImage = SolAROpenCVHelper::mapToOpenCV(imgSrc);
     cv::flip(opencvImage, opencvImage,0);
@@ -51,13 +53,13 @@ FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, SRef<I
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, [[maybe_unused]] SRef<Image>& imgDst)
+FrameworkReturnCode SolARImageConvertorUnity::convert(SRef<Image> imgSrc, ATTRIBUTE(maybe_unused) SRef<Image>& imgDst)
 {
     return FrameworkReturnCode::_NOT_IMPLEMENTED;
 }
 
 
-FrameworkReturnCode SolARImageConvertorUnity::convertLookUpTable(const SRef<Image> imgSrc, [[maybe_unused]] SRef<Image> & imgDst)
+FrameworkReturnCode SolARImageConvertorUnity::convertLookUpTable(const SRef<Image> imgSrc, ATTRIBUTE(maybe_unused) SRef<Image> & imgDst)
 {
 	return FrameworkReturnCode::_NOT_IMPLEMENTED;
 }

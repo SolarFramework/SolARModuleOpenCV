@@ -33,6 +33,21 @@ namespace OPENCV {
  * @brief <B>Draws 2D features (circles, lines, etc.) on an image.</B>
  * <TT>UUID: cc51d685-9797-4ffd-a9dd-cec4f367fa6a</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ thickness,
+ *                          the thickness of the displayed features (not used for SBPattern),
+ *                          @SolARComponentPropertyDescNum{ uint, [0..MAX UINT], 1 }}
+ * @SolARComponentProperty{ radius,
+ *                          the radius of a circle (not used for contours and SBPattern),
+ *                          @SolARComponentPropertyDescNum{ uint, [0..MAX UINT], 5}}
+ * @SolARComponentProperty{ color,
+ *                          The color in BGR format of the displayed features,
+ *                          @SolARComponentPropertyDescList{ 3, uint, [0..255], { 0\, 255\, 0 }}}
+ * @SolARComponentProperty{ randomColor,
+ *                          if not 0\, the color will be randomized for each elements,
+ *                          @SolARComponentPropertyDescNum{ int, [0\, 1], 0}}
+ * @SolARComponentPropertiesEnd
+ *
  */
 
 class SOLAROPENCV_EXPORT_API SolAR2DOverlayOpencv : public org::bcom::xpcf::ConfigurableBase,

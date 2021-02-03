@@ -36,6 +36,21 @@ namespace OPENCV {
  * @brief <B>Blurs an image using the normalized box filter.</B>
  * <TT>UUID: deb083aa-69fb-409a-af94-151d476de922</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ kernel_id,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 0 }}
+ * @SolARComponentProperty{ kernel_width,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 0 }}
+ * @SolARComponentProperty{ kernel_height,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 0 }}
+ * @SolARComponentProperty{ direction,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0 (Homogeneous blurring)\, 1 (Gaussian blurring)\, 2 (Median blurring)\, 3 (Bilateral blurring)\, 4 (Bilateral blurring)], 0 }}
+ * 
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARImageFilterBlurOpencv : public org::bcom::xpcf::ConfigurableBase,public api::image::IImageFilter {
