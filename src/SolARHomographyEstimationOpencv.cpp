@@ -46,7 +46,7 @@ api::solver::pose::Transform2DFinder::RetCode SolARHomographyEstimationOpencv::f
     cv::Point2f point;
 
 
-    for( int i = 0; i < srcPoints.size(); i++ ){
+    for( unsigned int i = 0; i < srcPoints.size(); i++ ){
         point.x=srcPoints.at(i).getX();
         point.y=srcPoints.at(i).getY();
         obj.push_back( point );

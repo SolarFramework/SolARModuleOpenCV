@@ -81,7 +81,7 @@ FrameworkReturnCode SolAROpenCVHelper::convertToSolar (cv::Mat&  imgSrc, SRef<Im
 std::vector<cv::Point2i> SolAROpenCVHelper::convertToOpenCV (const Contour2Di &contour)
 {
     std::vector<cv::Point2i> output;
-    for (int i = 0; i < contour.size(); i++)
+    for (unsigned int i = 0; i < contour.size(); i++)
     {
         output.push_back(cv::Point2i(contour[i]->getX(), contour[i]->getY()));
     }
@@ -91,7 +91,7 @@ std::vector<cv::Point2i> SolAROpenCVHelper::convertToOpenCV (const Contour2Di &c
 std::vector<cv::Point2f> SolAROpenCVHelper::convertToOpenCV (const Contour2Df &contour)
 {
     std::vector<cv::Point2f> output;
-    for (int i = 0; i < contour.size(); i++)
+    for (unsigned int i = 0; i < contour.size(); i++)
     {
         output.push_back(cv::Point2f(contour[i].getX(), contour[i].getY()));
     }
