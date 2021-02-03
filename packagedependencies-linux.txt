@@ -1,1 +1,1 @@
-opencv|4.4.0|opencv|conan-solar@conan|conan-solar|default|gapi=False
+opencv|4.4.0|opencv|conan-solar@conan|conan-solar|default|gapi=False#gtk=3
