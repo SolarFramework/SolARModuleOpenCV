@@ -17,6 +17,8 @@
 #include "SolARMapFusionOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
+#include "opencv2/flann/kdtree_single_index.h"
+#include "opencv2/flann.hpp"
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -70,11 +72,15 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 	globalPointcloudManager->getAllPoints(globalCloudPoints);
 	globalKeyframeMananger->getAllKeyframes(globalKeyframes);
 	// init kd tree of global point cloud
-	std::vector<cv::Point3f> pointsForSearch;
-	for (auto &cp : globalCloudPoints)
-		pointsForSearch.push_back(cv::Point3f(cp->getX(), cp->getY(), cp->getZ()));
-	cv::flann::KDTreeIndexParams indexParams;
-	cv::flann::Index kdtree(cv::Mat(pointsForSearch).reshape(1), indexParams);
+	cv::Mat_<float> features(0, 3);
+	for (const auto &cp : globalCloudPoints) {
+		cv::Mat row = (cv::Mat_<float>(1, 3) << cp->getX(), cp->getY(), cp->getZ());
+		features.push_back(row);
+	}
+	cvflann::KDTreeSingleIndexParams indexParams;
+	cvflann::Matrix<float> samplesMatrix((float*)features.data, features.rows, features.cols);
+	cvflann::KDTreeSingleIndex<cvflann::L2<float>> kdtree(samplesMatrix, indexParams);
+	kdtree.buildIndex();
 	// find correspondences for each point
 	std::vector < std::pair<SRef<CloudPoint>, SRef<CloudPoint>>> duplicatedCPs; // first is local CP, second is global CP
 	std::vector<bool> checkMatches(globalCloudPoints.size(), true);
@@ -82,12 +88,17 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 		// find point by 3D distance
 		std::vector<int> idxCandidates;
 		std::vector<float> dists;
-		std::vector<float> query = { cp->getX(), cp->getY(), cp->getZ() };
-		kdtree.radiusSearch(query, idxCandidates, dists, m_radius, 30);
+		std::vector<float> pt3D = { cp->getX(), cp->getY(), cp->getZ() };
+		cvflann::Matrix<float> queryMatrix(pt3D.data(), 1, 3);
+		cvflann::Matrix<int> indicesMatrix(new int[globalCloudPoints.size()], 1, globalCloudPoints.size());
+		cvflann::Matrix<float> distsMatrix(new float[globalCloudPoints.size()], 1, globalCloudPoints.size());
+		int nbFound = kdtree.radiusSearch(queryMatrix, indicesMatrix, distsMatrix, m_radius * m_radius, cvflann::SearchParams());
+		idxCandidates.assign(indicesMatrix.data, indicesMatrix.data + nbFound);
+		dists.assign(distsMatrix.data, distsMatrix.data + nbFound);
 		std::vector<SRef<DescriptorBuffer>> desCandidates;
 		std::vector<int> idxBestCandidates;
 		for (const auto &idx : idxCandidates) {
-			if ((idx != 0) && checkMatches[idx]) {
+			if (checkMatches[idx]) {
 				desCandidates.push_back(globalCloudPoints[idx]->getDescriptor());
 				idxBestCandidates.push_back(idx);
 			}
