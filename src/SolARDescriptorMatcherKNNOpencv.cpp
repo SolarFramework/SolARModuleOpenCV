@@ -67,6 +67,10 @@ int radiusSearch(cvflann::KDTreeSingleIndex<cvflann::L2<float>>& kdtree, const P
 	int nbFound = kdtree.radiusSearch(queryMatrix, indicesMatrix, distsMatrix, radius * radius, cvflann::SearchParams());
 	indices.assign(indicesMatrix.data, indicesMatrix.data + nbFound);
 	dists.assign(distsMatrix.data, distsMatrix.data + nbFound);
+	delete indicesMatrix.data;
+	indicesMatrix.data = NULL;
+	delete distsMatrix.data;
+	distsMatrix.data = NULL;
 	return nbFound;
 }
 
@@ -207,7 +211,7 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::matchInRegion(const
 	matches.clear();
 	float radiusValue = radius > 0 ? radius : m_radius;
 	float matchingDistanceMaxValue = matchingDistanceMax > 0 ? matchingDistanceMax : m_matchingDistanceMax;
-	SRef<DescriptorBuffer> descriptorFrame = frame->getDescriptors();
+	const SRef<DescriptorBuffer>& descriptorFrame = frame->getDescriptors();
 
 	if (descriptors.size() == 0 || descriptorFrame->getNbDescriptors() == 0)
 		return IDescriptorMatcher::RetCode::DESCRIPTOR_EMPTY;

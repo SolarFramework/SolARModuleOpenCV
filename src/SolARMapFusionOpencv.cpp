@@ -95,6 +95,10 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 		int nbFound = kdtree.radiusSearch(queryMatrix, indicesMatrix, distsMatrix, m_radius * m_radius, cvflann::SearchParams());
 		idxCandidates.assign(indicesMatrix.data, indicesMatrix.data + nbFound);
 		dists.assign(distsMatrix.data, distsMatrix.data + nbFound);
+		delete indicesMatrix.data;
+		indicesMatrix.data = NULL;
+		delete distsMatrix.data;
+		distsMatrix.data = NULL;
 		std::vector<SRef<DescriptorBuffer>> desCandidates;
 		std::vector<int> idxBestCandidates;
 		for (const auto &idx : idxCandidates) {
