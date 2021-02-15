@@ -44,7 +44,7 @@ SolARDescriptorMatcherKNNOpencv::~SolARDescriptorMatcherKNNOpencv()
     LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv destructor")
 }
 
-cvflann::KDTreeSingleIndex<cvflann::L2<float>> initKDTree(const std::vector<Keypoint> &keypoints)
+cv::flann::GenericIndex<cv::flann::L2<float>> initKDTree(const std::vector<Keypoint> &keypoints)
 {
 	cv::Mat_<float> features(0, 2);
 	for (const auto &kp : keypoints) {
@@ -52,25 +52,18 @@ cvflann::KDTreeSingleIndex<cvflann::L2<float>> initKDTree(const std::vector<Keyp
 		features.push_back(row);
 	}
 	cvflann::KDTreeSingleIndexParams indexParams;
-	cvflann::Matrix<float> samplesMatrix((float*)features.data, features.rows, features.cols);
-	cvflann::KDTreeSingleIndex<cvflann::L2<float>> kdtree(samplesMatrix, indexParams);
-	kdtree.buildIndex();
+	cv::flann::GenericIndex<cv::flann::L2<float>> kdtree(features, indexParams);
 	return kdtree;
 }
 
-int radiusSearch(cvflann::KDTreeSingleIndex<cvflann::L2<float>>& kdtree, const Point2Df& query, const float & radius, std::vector<int> & indices, std::vector<float> & dists, const int & maxResults = 500)
+int radiusSearch(cv::flann::GenericIndex<cv::flann::L2<float>>& kdtree, const Point2Df& query, const float & radius, std::vector<int> & indices, std::vector<float> & dists, const int & maxResults = 500)
 {
 	std::vector<float> pt2D = { query.getX(), query.getY() };
-	cvflann::Matrix<float> queryMatrix(pt2D.data(), 1, 2);
-	cvflann::Matrix<int> indicesMatrix(new int[maxResults], 1, maxResults);
-	cvflann::Matrix<float> distsMatrix(new float[maxResults], 1, maxResults);
-	int nbFound = kdtree.radiusSearch(queryMatrix, indicesMatrix, distsMatrix, radius * radius, cvflann::SearchParams());
-	indices.assign(indicesMatrix.data, indicesMatrix.data + nbFound);
-	dists.assign(distsMatrix.data, distsMatrix.data + nbFound);
-	delete indicesMatrix.data;
-	indicesMatrix.data = NULL;
-	delete distsMatrix.data;
-	distsMatrix.data = NULL;
+	std::vector<int> tmpIndices(maxResults);
+	std::vector<float> tmpDists(maxResults);
+	int nbFound = kdtree.radiusSearch(pt2D, tmpIndices, tmpDists, radius * radius, cvflann::SearchParams());
+	indices.assign(tmpIndices.begin(), tmpIndices.begin() + nbFound);
+	dists.assign(tmpDists.begin(), tmpDists.begin() + nbFound);
 	return nbFound;
 }
 

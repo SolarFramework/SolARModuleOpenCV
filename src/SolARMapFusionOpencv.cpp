@@ -78,9 +78,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 		features.push_back(row);
 	}
 	cvflann::KDTreeSingleIndexParams indexParams;
-	cvflann::Matrix<float> samplesMatrix((float*)features.data, features.rows, features.cols);
-	cvflann::KDTreeSingleIndex<cvflann::L2<float>> kdtree(samplesMatrix, indexParams);
-	kdtree.buildIndex();
+	cv::flann::GenericIndex<cv::flann::L2<float>> kdtree(features, indexParams);
 	// find correspondences for each point
 	std::vector < std::pair<SRef<CloudPoint>, SRef<CloudPoint>>> duplicatedCPs; // first is local CP, second is global CP
 	std::vector<bool> checkMatches(globalCloudPoints.size(), true);
@@ -89,16 +87,11 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 		std::vector<int> idxCandidates;
 		std::vector<float> dists;
 		std::vector<float> pt3D = { cp->getX(), cp->getY(), cp->getZ() };
-		cvflann::Matrix<float> queryMatrix(pt3D.data(), 1, 3);
-		cvflann::Matrix<int> indicesMatrix(new int[globalCloudPoints.size()], 1, globalCloudPoints.size());
-		cvflann::Matrix<float> distsMatrix(new float[globalCloudPoints.size()], 1, globalCloudPoints.size());
-		int nbFound = kdtree.radiusSearch(queryMatrix, indicesMatrix, distsMatrix, m_radius * m_radius, cvflann::SearchParams());
-		idxCandidates.assign(indicesMatrix.data, indicesMatrix.data + nbFound);
-		dists.assign(distsMatrix.data, distsMatrix.data + nbFound);
-		delete indicesMatrix.data;
-		indicesMatrix.data = NULL;
-		delete distsMatrix.data;
-		distsMatrix.data = NULL;
+		std::vector<int> indicesMatrix(globalCloudPoints.size());
+		std::vector<float> distsMatrix(globalCloudPoints.size());
+		int nbFound = kdtree.radiusSearch(pt3D, indicesMatrix, distsMatrix, m_radius * m_radius, cvflann::SearchParams());
+		idxCandidates.assign(indicesMatrix.begin(), indicesMatrix.begin() + nbFound);
+		dists.assign(distsMatrix.begin(), distsMatrix.begin() + nbFound);
 		std::vector<SRef<DescriptorBuffer>> desCandidates;
 		std::vector<int> idxBestCandidates;
 		for (const auto &idx : idxCandidates) {
