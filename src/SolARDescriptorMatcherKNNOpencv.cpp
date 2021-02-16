@@ -44,31 +44,6 @@ SolARDescriptorMatcherKNNOpencv::~SolARDescriptorMatcherKNNOpencv()
     LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv destructor")
 }
 
-cv::flann::GenericIndex<cv::flann::L2<float>> initKDTree(const std::vector<Keypoint> &keypoints)
-{
-	cv::Mat_<float> features(0, 2);
-	for (const auto &kp : keypoints) {
-		cv::Mat row = (cv::Mat_<float>(1, 2) << kp.getX(), kp.getY());
-		features.push_back(row);
-	}
-	cvflann::KDTreeSingleIndexParams indexParams;
-	cv::flann::GenericIndex<cv::flann::L2<float>> kdtree(features, indexParams);
-	return kdtree;
-}
-
-int radiusSearch(cv::flann::GenericIndex<cv::flann::L2<float>>& kdtree, const Point2Df& query, const float & radius, std::vector<int> & indices, std::vector<float> & dists, const int & maxResults = 500)
-{
-	std::vector<float> pt2D = { query.getX(), query.getY() };
-	std::vector<int> tmpIndices(maxResults);
-	std::vector<float> tmpDists(maxResults);
-	LOG_DEBUG("OK__4: {}", tmpIndices.size());
-	int nbFound = kdtree.radiusSearch(pt2D, tmpIndices, tmpDists, radius * radius, cvflann::SearchParams());
-	LOG_DEBUG("OK__4: {}", nbFound);
-	indices.assign(tmpIndices.begin(), tmpIndices.begin() + nbFound);
-	dists.assign(tmpDists.begin(), tmpDists.begin() + nbFound);
-	return nbFound;
-}
-
 IDescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::match(
             SRef<DescriptorBuffer> desc1,SRef<DescriptorBuffer> desc2, std::vector<DescriptorMatch>& matches){
 
@@ -308,7 +283,13 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::matchInRegion(const
 
 	// init kd tree to accelerate searching		
 	const std::vector<Keypoint> &keypointsLastFrame = lastFrame->getKeypoints();
-	auto kdtree = initKDTree(keypointsLastFrame);
+	cv::Mat_<float> features(0, 2);
+	for (const auto &kp : keypointsLastFrame) {
+		cv::Mat row = (cv::Mat_<float>(1, 2) << kp.getX(), kp.getY());
+		features.push_back(row);
+	}
+	cvflann::KDTreeSingleIndexParams indexParams;
+	cv::flann::GenericIndex<cv::flann::L2<float>> kdtree(features, indexParams);
 
 	// Match each descriptor of the current frame to descriptors of the last frame in a corresponding region
 	std::vector<bool> checkMatches(keypointsLastFrame.size(), true);
@@ -316,9 +297,13 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::matchInRegion(const
 	for (int i = 0; i < keypointsCurrentFrame.size(); ++i) {
 		std::vector<int> idxCandidates;
 		std::vector<float> dists;
-		Point2Df queryPt2D(keypointsCurrentFrame[i].getX(), keypointsCurrentFrame[i].getY());
+		std::vector<float> query = { keypointsCurrentFrame[i].getX(), keypointsCurrentFrame[i].getY() };
+		std::vector<int> indicesMatrix(keypointsLastFrame.size());
+		std::vector<float> distsMatrix(keypointsLastFrame.size());
+		int nbFound = kdtree.radiusSearch(query, indicesMatrix, distsMatrix, radiusValue * radiusValue, cvflann::SearchParams());
+		idxCandidates.assign(indicesMatrix.begin(), indicesMatrix.begin() + nbFound);
+		dists.assign(distsMatrix.begin(), distsMatrix.begin() + nbFound);
 		cv::Mat queryDes = cvDesCurrentFrame.row(i);
-		int nbFound = radiusSearch(kdtree, queryPt2D, radiusValue, idxCandidates, dists, keypointsLastFrame.size());
 		if (nbFound > 0) {
 			float bestDist = std::numeric_limits<float>::max();
 			float bestDist2 = std::numeric_limits<float>::max();
