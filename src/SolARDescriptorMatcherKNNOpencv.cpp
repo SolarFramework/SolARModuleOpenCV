@@ -61,7 +61,9 @@ int radiusSearch(cv::flann::GenericIndex<cv::flann::L2<float>>& kdtree, const Po
 	std::vector<float> pt2D = { query.getX(), query.getY() };
 	std::vector<int> tmpIndices(maxResults);
 	std::vector<float> tmpDists(maxResults);
+	LOG_DEBUG("OK__4: {}", tmpIndices.size());
 	int nbFound = kdtree.radiusSearch(pt2D, tmpIndices, tmpDists, radius * radius, cvflann::SearchParams());
+	LOG_DEBUG("OK__4: {}", nbFound);
 	indices.assign(tmpIndices.begin(), tmpIndices.begin() + nbFound);
 	dists.assign(tmpDists.begin(), tmpDists.begin() + nbFound);
 	return nbFound;
@@ -233,16 +235,25 @@ IDescriptorMatcher::RetCode SolARDescriptorMatcherKNNOpencv::matchInRegion(const
 
 	// init kd tree to accelerate searching		
 	const std::vector<Keypoint> &keypointsFrame = frame->getKeypoints();
-	auto kdtree = initKDTree(keypointsFrame);
-
+	cv::Mat_<float> features(0, 2);
+	for (const auto &kp : keypointsFrame) {
+		cv::Mat row = (cv::Mat_<float>(1, 2) << kp.getX(), kp.getY());
+		features.push_back(row);
+	}
+	cvflann::KDTreeSingleIndexParams indexParams;
+	cv::flann::GenericIndex<cv::flann::L2<float>> kdtree(features, indexParams);
 	// Match each descriptor to descriptors of frame in a corresponding region
 	std::vector<bool> checkMatches(keypointsFrame.size(), true);
 	int idx = 0;
 	for (const auto &it : cvDescriptors) {
 		std::vector<int> idxCandidates;
 		std::vector<float> dists;
-		Point2Df query(points2D[idx].getX(), points2D[idx].getY());
-		int nbFound = radiusSearch(kdtree, query, radiusValue, idxCandidates, dists, keypointsFrame.size());
+		std::vector<float> query = { points2D[idx].getX(), points2D[idx].getY() };
+		std::vector<int> indicesMatrix(keypointsFrame.size());
+		std::vector<float> distsMatrix(keypointsFrame.size());
+		int nbFound = kdtree.radiusSearch(query, indicesMatrix, distsMatrix, radiusValue * radiusValue, cvflann::SearchParams());
+		idxCandidates.assign(indicesMatrix.begin(), indicesMatrix.begin() + nbFound);
+		dists.assign(distsMatrix.begin(), distsMatrix.begin() + nbFound);
 		if (nbFound > 0) {
 			float bestDist = std::numeric_limits<float>::max();
 			float bestDist2 = std::numeric_limits<float>::max();
