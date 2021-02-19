@@ -84,7 +84,7 @@ xpcf::XPCFErrorCode SolAR3DOverlayBoxOpencv::onConfigured()
 		for (int j = 0; j < 3; j++)
 			m_parallelepiped.at< float >(i, j) = parallelepiped[i](j);
 
-    return xpcf::_SUCCESS;
+    return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
 void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displayImage)

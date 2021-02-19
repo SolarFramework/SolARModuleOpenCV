@@ -16,18 +16,14 @@
 
 #ifndef SOLARUNDISTORTPOINTS_H
 #define SOLARUNDISTORTPOINTS_H
-#include <vector>
 
 #include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 #include "api/geom/IUndistortPoints.h"
-
 #include "opencv2/core.hpp"
-
-#include "SolAROpencvAPI.h"
+#include <vector>
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -46,17 +42,31 @@ public:
     ~SolARUndistortPointsOpencv() = default;
 
     void unloadComponent () override final;
-    FrameworkReturnCode undistort(const std::vector<Point2Df> & inputPoints, std::vector<Point2Df> & outputPoints) override;
 
-    /// @brief Set the distortion intrinsic camera parameters
-    void setDistortionParameters(const CamDistortion & distortion_parameters) override;
-        /// @brief Set the intrinsic camera parameters
-    void setIntrinsicParameters(const CamCalibration & intrinsic_parameters) override;
+	/// @brief This method corrects undistortsion to a set of 2D points
+	/// @param[in] inputPoints the set of 2D points to correct
+	/// @param[out] outputPoints the  undistorted 2D Points
+	/// @return FrameworkReturnCode::_SUCCESS_ if 2D transformation succeed, else FrameworkReturnCode::_ERROR.
+    FrameworkReturnCode undistort(const std::vector<datastructure::Point2Df> & inputPoints, 
+								  std::vector<datastructure::Point2Df> & outputPoints) override;
+
+	/// @brief This method corrects undistortsion to a set of 2D keypoints
+	/// @param[in] inputKeypoints the set of 2D keypoints to correct
+	/// @param[out] outputKeypoints the  undistorted 2D keypoints
+	/// @return FrameworkReturnCode::_SUCCESS_ if 2D transformation succeed, else FrameworkReturnCode::_ERROR.
+	FrameworkReturnCode undistort(const std::vector<datastructure::Keypoint> & inputKeypoints,
+								  std::vector<datastructure::Keypoint> & outputKeypoints) override;
+
+	/// @brief this method is used to set intrinsic parameters and distorsion of the camera
+	/// @param[in] Camera calibration matrix parameters.
+	/// @param[in] Camera distorsion parameters.
+	void setCameraParameters(const datastructure::CamCalibration & intrinsicParams,
+							 const datastructure::CamDistortion & distorsionParams) override;
     
 
 private:
-    CamCalibration m_intrinsic_parameters;
-    CamDistortion m_distortion_parameters;
+    datastructure::CamCalibration m_intrinsic_parameters;
+    datastructure::CamDistortion m_distortion_parameters;
 
     cv::Mat m_camMatrix;
     cv::Mat m_camDistortion;

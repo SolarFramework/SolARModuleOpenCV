@@ -31,8 +31,6 @@
 #include "opencv2/highgui.hpp"
 
 namespace SolAR {
-using namespace datastructure;
-using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
@@ -41,6 +39,13 @@ namespace OPENCV {
  * @brief <B>Matches descriptors and selects all matches not farther than a specified distance.</B>
  * <TT>UUID: 549f7873-96e4-4eae-b4a0-ae8d80664ce5</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ maxDistance,
+ *                           Threshold for the distance between matched descriptors.<br>
+ *                             Distance means here metric distance (e.g. Hamming distance)\, not the distance between coordinates (which is measured in Pixels),
+ *                           @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], default: 1.f }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherRadiusOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -56,9 +61,9 @@ public:
     /// [out] matches: ensemble of detected matches, a pair of source/target indices.
     ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
   IDescriptorMatcher::RetCode match(
-            const SRef<DescriptorBuffer> desc1,
-            const SRef<DescriptorBuffer> desc2,
-            std::vector<DescriptorMatch> & matches) override;
+            const SRef<datastructure::DescriptorBuffer> desc1,
+            const SRef<datastructure::DescriptorBuffer> desc2,
+            std::vector<datastructure::DescriptorMatch> & matches) override;
 
   /// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on radius search strategy.
   /// [in] desc1: source descriptor.
@@ -66,9 +71,9 @@ public:
   /// [out] matches: ensemble of detected matches, a pair of source/target indices.
   ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
     IDescriptorMatcher::RetCode match(
-           const SRef<DescriptorBuffer> descriptors1,
-           const std::vector<SRef<DescriptorBuffer>> & descriptors2,
-           std::vector<DescriptorMatch> & matches) override;
+           const SRef<datastructure::DescriptorBuffer> descriptors1,
+           const std::vector<SRef<datastructure::DescriptorBuffer>> & descriptors2,
+           std::vector<datastructure::DescriptorMatch> & matches) override;
 
 
 private:

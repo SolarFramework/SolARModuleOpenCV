@@ -17,6 +17,7 @@
 #include "SolARPoseEstimationPlanarPointsOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
+#include "xpcf/core/helpers.h"
 #include "opencv2/calib3d/calib3d.hpp"
 #include <opencv2/imgproc.hpp>
 
@@ -49,7 +50,7 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
                                                                     const std::vector<Point3Df> & worldPoints,
 																	std::vector<uint32_t> & inliers,
                                                                     Transform3Df & pose,
-                                                                    [[maybe_unused]] const Transform3Df initialPose) {
+                                                                    ATTRIBUTE(maybe_unused) const Transform3Df initialPose) {
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point2f> worldCVPoints;

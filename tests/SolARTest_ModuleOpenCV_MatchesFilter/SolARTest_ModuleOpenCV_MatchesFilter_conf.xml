@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xpcf-registry autoAlias="true">
+    <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.9.1/lib/x86_64/shared">
+        <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="SolARImageLoaderOpencv" description="SolARImageLoaderOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" name="IImageLoader" description="IImageLoader"/>
+        </component>
+		<component uuid="e81c7e4e-7da6-476a-8eba-078b43071272" name="SolARKeypointDetectorOpencv" description="SolARKeypointDetectorOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="0eadc8b7-1265-434c-a4c6-6da8a028e06e" name="IKeypointDetector" description="IKeypointDetector"/>
+        </component>
+		<component uuid="21238c00-26dd-11e8-b467-0ed5f89f718b" name="SolARDescriptorsExtractorAKAZE2Opencv" description="SolARDescriptorsExtractorAKAZE2Opencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="c0e49ff1-0696-4fe6-85a8-9b2c1e155d2e" name="IDescriptorsExtractor" description="IDescriptorsExtractor"/>
+        </component>
+		<component uuid="7823dac8-1597-41cf-bdef-59aa22f3d40a" name="SolARDescriptorMatcherKNNOpencv" description="SolARDescriptorMatcherKNNOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="dda38a40-c50a-4e7d-8433-0f04c7c98518" name="IDescriptorMatcher" description="IDescriptorMatcher"/>
+        </component>
+		<component uuid="3731691e-2c4c-4d37-a2ce-06d1918f8d41" name="SolARGeometricMatchesFilterOpencv" description="SolARGeometricMatchesFilterOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="e0d6cc82-6af2-493d-901a-2384fca0b16f" name="IMatchesFilter" description="IMatchesFilter"/>
+        </component>
+		<component uuid="e95302be-3fe1-44e0-97bf-a98380464af9" name="SolARMatchesOverlayOpencv" description="SolARMatchesOverlayOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="a801354a-3e00-467c-b390-48c76fa8c53a" name="IMatchesOverlay" description="IMatchesOverlay"/>
+        </component>
+		<component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="SolARImageViewerOpencv" description="SolARImageViewerOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
+        </component>
+    </module>
+    <factory>
+        <bindings>
+            <bind name="image1" interface="IImageLoader" to="SolARImageLoaderOpencv" properties="image1_prop"/>
+            <bind name="image2" interface="IImageLoader" to="SolARImageLoaderOpencv" properties="image2_prop"/>
+            <bind name="withoutFilter" interface="IImageViewer" to="SolARImageViewerOpencv" properties="withoutFilter_prop"/>
+            <bind name="withFilter" interface="IImageViewer" to="SolARImageViewerOpencv" properties="withFilter_prop"/>
+        </bindings>
+    </factory>
+    <properties>
+        <configure component="SolARImageLoaderOpencv" name="image1_prop">
+            <property name="filePath" type="string" value="../../data/image1.png"/>
+        </configure>
+        <configure component="SolARImageLoaderOpencv" name="image2_prop">
+            <property name="filePath" type="string" value="../../data/image2.png"/>
+        </configure>
+        <configure component="SolARKeypointDetectorOpencv">
+            <property name="type" type="string" value="AKAZE2"/>
+            <property name="imageRatio" type="float" value="0.5"/>
+            <property name="nbDescriptors" type="int" value="-1"/>
+        </configure>
+        <configure component="SolARDescriptorsExtractorAKAZE2Opencv">
+            <property name="threshold" type="float" value="3e-4"/>
+        </configure>
+        <configure component="SolARDescriptorMatcherKNNOpencv">
+            <property name="distanceRatio" type="float" value="0.75"/>
+        </configure>
+        <configure component="SolARGeometricMatchesFilterOpencv">
+            <property name="confidence" type="float" value="0.9"/>
+            <property name="outlierDistanceRatio" type="float" value="0.005"/>
+        </configure>
+        <configure component="SolARMatchesOverlayOpencv">
+            <property name="thickness" type="uint" value="3"/>
+            <property name="mode" type="string" value="RANDOM"/>
+            <property name="color"  type="uint">
+                    <value>0</value>
+                    <value>0</value>
+                    <value>255</value>
+            </property>
+            <property name="maxMatches" type="uint" value="-1"/>
+        </configure>
+        <configure component="SolARImageViewerOpencv" name="withoutFilter_prop">
+            <property name="title" type="string" value="matches without filter (press esc key to exit)"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="1536"/>
+            <property name="height" type="int" value="512"/>
+        </configure>
+        <configure component="SolARImageViewerOpencv" name="withFilter_prop">
+            <property name="title" type="string" value="matches with filter (press esc key to exit)"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="1536"/>
+            <property name="height" type="int" value="512"/>
+        </configure>
+    </properties>
+</xpcf-registry>

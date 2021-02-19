@@ -34,8 +34,6 @@
 #include "datastructure/DescriptorBuffer.h"
 
 namespace SolAR {
-using namespace datastructure;
-using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
@@ -43,7 +41,16 @@ namespace OPENCV {
  * @class SolARDescriptorMatcherHammingBruteForceOpencv
  * @brief <B>Matches descriptors based on a Hamming distance and selects the best matches of each descriptor.</B>
  * <TT>UUID: d67ce1ba-04a5-43bc-a0f8-e0c3653b32c9</TT>
- *
+ * 
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{
+ *                         distanceRatio,
+ *                         Distance ratio used to keep good matches.<br>
+ *                           Several matches can correspond to a given keypoint of the first image. The first match with the best score is always retained.<br>
+ *                           But here\, we can also retain the next matches if their distances or scores is greater than the score of the best match * m_distanceRatio.,
+ *                         type: float; range : [0..MAX FLOAT]; default: 0.75f}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherHammingBruteForceOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -59,18 +66,18 @@ public:
     /// [out] matches: ensemble of detected matches, a pair of source/target indices.
     ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
   IDescriptorMatcher::RetCode match(
-            const SRef<DescriptorBuffer> desc1,
-            const SRef<DescriptorBuffer> desc2,
-            std::vector<DescriptorMatch> & matches) override;
+            const SRef<datastructure::DescriptorBuffer> desc1,
+            const SRef<datastructure::DescriptorBuffer> desc2,
+            std::vector<datastructure::DescriptorMatch> & matches) override;
   /// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on hamming distance
   /// [in] desc1: source descriptor.
   /// [in] desc2: target descriptors.
   /// [out] matches: ensemble of detected matches, a pair of source/target indices.
   ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
     IDescriptorMatcher::RetCode match(
-           const SRef<DescriptorBuffer> descriptors1,
-           const std::vector<SRef<DescriptorBuffer>> & descriptors2,
-           std::vector<DescriptorMatch> & matches) override;
+           const SRef<datastructure::DescriptorBuffer> descriptors1,
+           const std::vector<SRef<datastructure::DescriptorBuffer>> & descriptors2,
+           std::vector<datastructure::DescriptorMatch> & matches) override;
 
 private:
     /// @brief distance ratio used to keep good matches.

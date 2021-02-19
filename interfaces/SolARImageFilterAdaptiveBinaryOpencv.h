@@ -28,7 +28,6 @@
 #include <vector>
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -37,6 +36,20 @@ namespace OPENCV {
  * @brief <B>Filters a greyscale image to a binary image based on an adaptive threshold.</B>
  * <TT>UUID: 901e7a07-5013-4907-be41-0259fca3726c</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ max,
+ *                          Non - zero value assigned to the pixels for which the condition is satisfied,
+ *                          @SolARComponentPropertyDescNum{ int, [0..255], 255 }}
+ * @SolARComponentProperty{ blockSize,
+ *                          Size of a pixel neighborhood that is used to calculate a threshold value for the<br>
+ *                            pixel : 3\, 5\, 7\, and so on.,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 11 }}
+ * @SolARComponentProperty{ C,
+ *                          Constant subtracted from the mean or weighted mean(see the details below).Normally\, it<br>
+ *                            is positive but may be zero or negative as well.,
+ *                          @SolARComponentPropertyDescNum{ int, [MIN INT..MAX INT], 2 }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARImageFilterAdaptiveBinaryOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -46,7 +59,7 @@ public:
     SolARImageFilterAdaptiveBinaryOpencv();
    ~SolARImageFilterAdaptiveBinaryOpencv();
 
-    FrameworkReturnCode filter(const SRef<Image>input, SRef<Image>& output) override;
+    FrameworkReturnCode filter(const SRef<datastructure::Image>input, SRef<datastructure::Image>& output) override;
 
     void unloadComponent () override final;
 

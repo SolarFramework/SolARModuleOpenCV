@@ -26,7 +26,6 @@
 #include "opencv2/core.hpp"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -35,6 +34,14 @@ namespace OPENCV {
  * @brief <B>Estimates the homography between two images from their matching keypoints.</B>
  * <TT>UUID: fb9dac20-2a44-44b2-aa42-2871eec31427</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ ransacReprojThreshold,
+ *                          Here we are using the RANSAC to remove outlier. That is if:<br>
+ *                              \f[ \left|| dstPoints_i - convertPointHomogenous \left( H * srcPoints_i \right) \right|| > ransacReprojThreshold \f]<br>
+ *                              then the point i is considered an outlier. If srcPoints and dstPoints are measured in pixels\, it usually makes sense to set this parameter somewhere in the range of 1 to 10.,
+ *                          @SolARComponentPropertyDescNum{ double, [0..MAX DOUBLE], 8 }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARHomographyEstimationOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -49,14 +56,14 @@ public:
     /// [in] targetPints: set of target points.
     /// [out] homography: 3x3  homography matrice transformation.
     /// @return Transform2DFinder::RetCode::TRANSFORM2D_ESTIMATION_OK if succed.
-    api::solver::pose::Transform2DFinder::RetCode find(const std::vector<Point2Df> & srcPoints,
-                                                      const std::vector<Point2Df> & targetPoints,
-                                                      Transform2Df & homography) override;
+    api::solver::pose::Transform2DFinder::RetCode find(const std::vector<datastructure::Point2Df> & srcPoints,
+                                                      const std::vector<datastructure::Point2Df> & targetPoints,
+                                                      datastructure::Transform2Df & homography) override;
 
     void unloadComponent () override final;
 
 private:
-    bool isHValid(const Transform2Df & H);
+    bool isHValid(const datastructure::Transform2Df & H);
     float computeSurface(std::vector<cv::Point2f> points);
     float computeDistance(cv::Point2f a, cv::Point2f b);
 

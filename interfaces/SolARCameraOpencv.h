@@ -22,7 +22,6 @@
 #include "SolARBaseCameraOpencv.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -30,6 +29,12 @@ namespace OPENCV {
  * @class SolARCameraOpencv
  * @brief <B>Grabs current image captured by a RGB camera.</B>
  * <TT>UUID: 5b7396f4-a804-4f3c-a0eb-fb1d56042bb4</TT>
+ *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ deviceID,
+ *                          the ID of the camera to capture with,
+ *                          @SolARComponentPropertyDescNum{ uint, [0..MAX INT], 0 }}
+ * @SolARComponentPropertiesEnd
  *
  */
 
@@ -45,7 +50,7 @@ public:
 
     /// @brief Fill the SRef img buffer with a last image captured by the camera device.
     /// @return FrameworkReturnCode to track sucessful or failing event.
-    FrameworkReturnCode getNextImage(SRef<Image> & img) override;
+    FrameworkReturnCode getNextImage(SRef<datastructure::Image> & img) override;
 
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...

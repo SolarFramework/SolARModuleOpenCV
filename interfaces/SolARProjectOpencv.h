@@ -23,7 +23,6 @@
 #include "xpcf/component/ConfigurableBase.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -46,21 +45,21 @@ public:
     /// @brief this method is used to set intrinsic parameters and distorsion of the camera
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) override;
+    void setCameraParameters(const datastructure::CamCalibration & intrinsicParams, const datastructure::CamDistortion & distorsionParams) override;
 
     /// @brief This method project a set of 3D points in the image plane
     /// @param[in] inputPoints the set of 3D points to project
     /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
     /// @param[out] outputPoints the resulting set of 2D points define in the image coordinate systemn
     /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
-    FrameworkReturnCode project(const std::vector<Point3Df> & inputPoints, std::vector<Point2Df> & imagePoints, const Transform3Df & pose = Transform3Df::Identity()) override;
+    FrameworkReturnCode project(const std::vector<datastructure::Point3Df> & inputPoints, std::vector<datastructure::Point2Df> & imagePoints, const datastructure::Transform3Df & pose = datastructure::Transform3Df::Identity()) override;
 
     /// @brief This method project a set of 3D cloud points in the image plane
     /// @param[in] inputPoints the set of 3D cloud points to project
     /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
     /// @param[out] outputPoints the resulting set of 2D points define in the image coordinate systemn
     /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
-    FrameworkReturnCode project(const std::vector<SRef<CloudPoint>> & inputPoints, std::vector<Point2Df> & imagePoints, const Transform3Df & pose = Transform3Df::Identity()) override;
+    FrameworkReturnCode project(const std::vector<SRef<datastructure::CloudPoint>> & inputPoints, std::vector<datastructure::Point2Df> & imagePoints, const datastructure::Transform3Df & pose = datastructure::Transform3Df::Identity()) override;
 
 
     void unloadComponent () override final;

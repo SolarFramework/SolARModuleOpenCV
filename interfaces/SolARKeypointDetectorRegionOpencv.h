@@ -32,8 +32,6 @@
 #include "features2d_akaze2.hpp"  // Define AKAZE2;
 
 namespace SolAR {
-using namespace datastructure;
-using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
@@ -42,10 +40,23 @@ namespace OPENCV {
  * @brief <B>Detects keypoints in an given region of an image.</B>
  * <TT>UUID: 22c2ca9f-e43b-4a88-8337-4a166a789971</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ imageRatio,
+ *                          the ratio to apply to the size of the input image to compute the descriptor.<br>
+ *                              A ratio must be less or equal to 1. A ratio less than 1 will speedup computation,
+ *                          @SolARComponentPropertyDescNum{ float, [0..1], 1.f }}
+ * @SolARComponentProperty{ nbDescriptors,
+ *                          the number of descriptors that are selected. If negative\, all extracted descriptors are selected,
+ *                          @SolARComponentPropertyDescNum{ int, [-1..MAX INT], 10000 }}
+ * @SolARComponentProperty{ threshold,
+ *                          the threshold of detector to accept a keypoint,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 1e-3f }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARKeypointDetectorRegionOpencv : public org::bcom::xpcf::ConfigurableBase,
-        public IKeypointDetectorRegion {
+    public api::features::IKeypointDetectorRegion {
 public:
 
     /// @brief SolARKeypointDetectorRegionOpencv default constructor
@@ -58,19 +69,19 @@ public:
 
     /// @brief Set the type of method used to detect keypoints in the image
     /// @param[in] type The type of method used to detect keypoints.
-    void setType(IKeypointDetector::KeypointDetectorType type) override;
+    void setType(api::features::IKeypointDetector::KeypointDetectorType type) override;
 
     /// @brief Get the type of method used to detect keypoints in the image
     /// @return The type of method used to detect keypoints.
-    IKeypointDetector::KeypointDetectorType  getType() override;
+    api::features::IKeypointDetector::KeypointDetectorType  getType() override;
  
     /// @brief This method detects keypoints in an input Image
     /// @param[in] image input image on which we are extracting keypoints.
     /// @param[in] contours a set of 2D points defining the contour of the region where keypoints will be detected
     /// @param[out] keypoints The keypoints detected from the given region of the image passed as first argument.
-    void detect (const SRef<Image> image,
-                             const std::vector<Point2Df> & contours,
-                             std::vector<Keypoint> & keypoints) override;
+    void detect (const SRef<datastructure::Image> image,
+                             const std::vector<datastructure::Point2Df> & contours,
+                             std::vector<datastructure::Keypoint> & keypoints) override;
 
     void unloadComponent () override final;
 
@@ -94,7 +105,7 @@ private:
 
 };
 
-extern int deduceOpenCVType(SRef<Image> img);
+extern int deduceOpenCVType(SRef<datastructure::Image> img);
 
 }
 }

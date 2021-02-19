@@ -34,8 +34,6 @@
 
 
 namespace SolAR {
-using namespace datastructure;
-using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
@@ -44,10 +42,28 @@ namespace OPENCV {
  * @brief <B>Detects keypoints in an image.</B>
  * <TT>UUID: e81c7e4e-7da6-476a-8eba-078b43071272</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ imageRatio,
+ *                          the ratio to apply to the size of the input image to compute the descriptor.<br>
+ *                               A ratio must be less or equal to 1. A ratio less than 1 will speedup computation,
+ *                          @SolARComponentPropertyDescNum{ float, [0..1], 1.f }}
+ * @SolARComponentProperty{ nbDescriptors,
+ *                          the number of descriptors that are selected. If negative\, all extracted descriptors are selected,
+ *                          @SolARComponentPropertyDescNum{ int, [-1..MAX INT], 1000 }}
+ * @SolARComponentProperty{ threshold,
+ *                          the threshold of detector to accept a keypoint,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 1e-3f }}
+ * @SolARComponentProperty{ nbOctaves,
+ *                          the number of octaves,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 4 }}
+ * @SolARComponentProperty{ type,
+ *                          type of descriptor used for the extraction (SIFT\, AKAZE\, AKAZE2\, ORB\, BRISK),
+ *                          @SolARComponentPropertyDescString{ "AKAZE2" }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARKeypointDetectorOpencv : public org::bcom::xpcf::ConfigurableBase,
-        public IKeypointDetector {
+        public api::features::IKeypointDetector {
 public:
 
     SolARKeypointDetectorOpencv();
@@ -67,7 +83,7 @@ public:
     /// @brief This method detects keypoints in an input Image
     /// @param[in] image input image on which we are extracting keypoints.
     /// @param[out] keypoints The keypoints detected from the image passed as first argument.
-    void detect (const SRef<Image> image, std::vector<Keypoint> & keypoints) override;
+    void detect (const SRef<datastructure::Image> image, std::vector<datastructure::Keypoint> & keypoints) override;
 
 private:
     /// @brief the type of descriptor used for the extraction (SIFT, AKAZE, AKAZE2, ORB, BRISK)
@@ -89,10 +105,12 @@ private:
     int m_id;
     cv::Ptr<cv::Feature2D> m_detector;
     cv::KeyPointsFilter kptsFilter;
+	int m_nbGridWidth = 20;
+	int m_nbGridHeight = 20;
 
 };
 
-extern int deduceOpenCVType(SRef<Image> img);
+extern int deduceOpenCVType(SRef<datastructure::Image> img);
 
 }
 }

@@ -6,7 +6,7 @@
 *.lo
 *.o
 *.obj
-build/
+*build*
 
 # Precompiled Headers
 *.gch
@@ -46,7 +46,6 @@ build/
 *vcxproj.*
 x64/
 .vs/
-*.bat
 *remakeninfo.txt
 Debug/
 Release/
@@ -56,8 +55,10 @@ Release/
 *-packagedependencies-unix.*
 *-packagedependencies-android.*
 *.pc
-*-Debug
-*-Release
+*-Debug*
+*-Release*
+*_Debug*
+*_Release*
 
 # Executables
 *.exe
@@ -89,3 +90,6 @@ tests/bin
 *.tmp
 .git Merge
 *aps
+
+# Tests Data
+tests/data/loop_desktop_A/*

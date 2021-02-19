@@ -51,7 +51,7 @@ xpcf::XPCFErrorCode SolARDescriptorsExtractorSIFTOpencv::onConfigured()
 {
     // m_extractor must have a default implementation : initialize default extractor type
     m_extractor=SIFT::create(m_nbFeatures, m_nbOctaveLayers, m_contrastThreshold, m_edgeThreshold, m_sigma);
-    return xpcf::_SUCCESS;
+    return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
 SolARDescriptorsExtractorSIFTOpencv::~SolARDescriptorsExtractorSIFTOpencv()

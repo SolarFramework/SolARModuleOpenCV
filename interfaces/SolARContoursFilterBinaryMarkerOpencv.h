@@ -23,7 +23,6 @@
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -31,6 +30,24 @@ namespace OPENCV {
  * @class SolARContoursFilterBinaryMarkerOpencv
  * @brief <B>Filters contours to select only the contours of squared binary markers.</B>
  * <TT>UUID: 4309dcc6-cc73-11e7-abc4-cec278b6b50a</TT>
+ *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ minContourLength,
+ *                          the minimum length of an edge of a contour in pixels after simplification.<br>
+ *                            Any simplified contour which will have at least one edge that will
+ *                            have a length in pixel less than this value will be removed from the
+ *                            input filters,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 20.f }}
+ * @SolARComponentProperty{ epsilon,
+ *                          the maximum distance between the original curve and its approximation.<br>
+ *                            This filter first simplifies the contour if its curve is low.
+ *                            The simplified contour will not be more than epsilon pixels away
+ *                            from the original contour,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 0.05f }}
+ * @SolARComponentProperty{ minDistanceBetweenContourCorners,
+ *                          the minimum number of edges of a contour to extract. If negative value\, extract all contours,
+ *                          @SolARComponentPropertyDescNum{ float, [-1..MAX FLOAT], 0.05f }}
+ * @SolARComponentPropertiesEnd
  *
  */
 
@@ -42,7 +59,7 @@ public:
     /// @brief Filters an ensemble of contours according to a given parameters (minimum of contour length,  minimum contours corners..).
     /// [in] input_contours: original extracted contours.
     ///[out] output_contours: final filtred contours.
-    FrameworkReturnCode filter(const std::vector<Contour2Df> & input_contours, std::vector<Contour2Df> & output_contours) override;
+    FrameworkReturnCode filter(const std::vector<datastructure::Contour2Df> & input_contours, std::vector<datastructure::Contour2Df> & output_contours) override;
     void unloadComponent () override final; 
 
 private:    

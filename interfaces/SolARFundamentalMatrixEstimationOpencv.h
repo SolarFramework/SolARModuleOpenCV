@@ -26,7 +26,6 @@
 #include "opencv2/core.hpp"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -34,7 +33,19 @@ namespace OPENCV {
  * @class SolARFundamentalMatrixEstimationOpencv
  * @brief <B>Estimates the fundamental matrix from two set of keypoints that match together.</B>
  * <TT>UUID: 79b29b50-cf4d-441e-b5de-1de829b91c41</TT>
- *
+ * 
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ confidenceLevel,
+ *                          The desirable level of confidence (propability) that the estimated matrix is correct.,
+ *                          @SolARComponentPropertyDescNum{ float, [0..1], 0.99f }}
+ * @SolARComponentProperty{ outlierDistanceRatio,
+ *                          Here we are using a RANSAC method to remove outlier.<br>
+ *                               This attribute is the ratio between the maximum distance in pixels between source points and the maximum distance in pixels to the epipolar line for which point is considered as a outlier.<br>
+ *                               The higher is this ratio\, the more you will keep inliers to estimate your 2D transform\, but the less this estimation will be correct.<br>
+ *                               By default\, this value is set to the one proposed by [Snavely07 4.1],
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 0.006f }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 /// @class SolARFundamentalMatrixEstimationOpencv
@@ -53,14 +64,14 @@ public:
     /// @param[in] targetPoints set of target 2d points.
     /// @param[out] Estimated Fundamental transform matrix.
     /// @return Transform2DFinder::RetCode::TRANSFORM2D_ESTIMATION_OK if succeed.
-    api::solver::pose::Transform2DFinder::RetCode find(const std::vector<Point2Df> & srcPoints,
-                                                   const std::vector<Point2Df> & dstPoints,
-                                                   Transform2Df & fundamental) override;
+    api::solver::pose::Transform2DFinder::RetCode find(const std::vector<datastructure::Point2Df> & srcPoints,
+                                                   const std::vector<datastructure::Point2Df> & dstPoints,
+                                                   datastructure::Transform2Df & fundamental) override;
 
     void unloadComponent () override final;
 
 private:
-    bool isFValid(const Transform2Df & F);
+    bool isFValid(const datastructure::Transform2Df & F);
 
     /// @brief The desirable level of confidence (propability) that the estimated matrix is correct.
     float m_confidenceLevel = 0.99f;

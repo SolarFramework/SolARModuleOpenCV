@@ -23,6 +23,7 @@ namespace xpcf = org::bcom::xpcf;
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARBaseCameraOpencv)
 
 namespace SolAR {
+using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -49,7 +50,7 @@ namespace OPENCV {
         if (m_calibrationFile.empty())
         {
             LOG_ERROR("Camera Calibration file path is empty");
-            return xpcf::_FAIL;
+            return xpcf::XPCFErrorCode::_FAIL;
         }
         cv::FileStorage fs(m_calibrationFile, cv::FileStorage::READ);
         cv::Mat intrinsic_parameters;
@@ -70,7 +71,7 @@ namespace OPENCV {
             if (intrinsic_parameters.empty())
             {
                 LOG_ERROR ("SolARBaseCameraOpencv::loadCameraParameters: Use the landmark camera_matrix to define the intrinsic matrix in the .yml camera calibration file")
-                return xpcf::_FAIL;
+                return xpcf::XPCFErrorCode::_FAIL;
             }
 
             if (intrinsic_parameters.rows == m_parameters.intrinsic.rows() && intrinsic_parameters.cols == m_parameters.intrinsic.cols())
@@ -80,13 +81,13 @@ namespace OPENCV {
             else
             {
                 LOG_ERROR("SolARBaseCameraOpencv::loadCameraParameters: Camera Calibration should be a 3x3 Matrix")
-                return xpcf::_FAIL;
+                return xpcf::XPCFErrorCode::_FAIL;
             }
 
             if (distortion_parameters.empty())
             {
                 LOG_ERROR("SolARBaseCameraOpencv::loadCameraParameters: Use the landmark distortion_coefficients to define the distortion vector in the .yml camera calibration file")
-                return xpcf::_FAIL;
+                return xpcf::XPCFErrorCode::_FAIL;
             }
 
             if (distortion_parameters.rows == m_parameters.distortion.rows() && distortion_parameters.cols == m_parameters.distortion.cols())
@@ -96,14 +97,14 @@ namespace OPENCV {
             else
             {
                 LOG_ERROR("SolARBaseCameraOpencv::loadCameraParameters: Camera distortion matrix should be a 5x1 Matrix")
-                return xpcf::_FAIL;
+                return xpcf::XPCFErrorCode::_FAIL;
             }
-            return xpcf::_SUCCESS;
+            return xpcf::XPCFErrorCode::_SUCCESS;
         }
         else
         {
             LOG_ERROR("SolARBaseCameraOpencv::loadCameraParameters: Cannot open camera calibration file ")
-            return xpcf::_FAIL;
+            return xpcf::XPCFErrorCode::_FAIL;
         }
     }
 
@@ -136,21 +137,23 @@ namespace OPENCV {
         m_parameters = parameters;
      }
 
-     const CameraParameters & SolARBaseCameraOpencv::getParameters()
+     const CameraParameters & SolARBaseCameraOpencv::getParameters() const
      {
         return m_parameters;
      }
 
-     Sizei SolARBaseCameraOpencv::getResolution()
+     Sizei SolARBaseCameraOpencv::getResolution() const
      {
          return m_parameters.resolution;
      }
 
-    const CamCalibration & SolARBaseCameraOpencv::getIntrinsicsParameters(){
+    const CamCalibration & SolARBaseCameraOpencv::getIntrinsicsParameters() const
+    {
         return m_parameters.intrinsic;
     }
 
-    const CamDistortion & SolARBaseCameraOpencv::getDistortionParameters(){
+    const CamDistortion & SolARBaseCameraOpencv::getDistortionParameters() const
+    {
         return m_parameters.distortion;
     }
 

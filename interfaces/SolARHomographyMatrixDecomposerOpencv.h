@@ -26,7 +26,6 @@
 #include "opencv2/core.hpp"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -46,13 +45,13 @@ public:
     /// @brief this method is used to set intrinsic parameters and distorsion of the camera
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams)  override;
+    void setCameraParameters(const datastructure::CamCalibration & intrinsicParams, const datastructure::CamDistortion & distorsionParams)  override;
 
     /// @brief decompose a transform 2d to a transform 3d (4  possible poses {R1,t1},{R1,t2}, {R2,t1}, {R2,t2}).
     /// @param[in] Transform 2D (fundamental matrxi, homgraphy..).
     /// @param[out] Set (04 possibles cases) of the decomposed camera poses in the world coordinate system expressed as Transform3D.
-    bool decompose(const Transform2Df & F,
-                   std::vector<Transform3Df> & decomposedPoses) override;
+    bool decompose(const datastructure::Transform2Df & F,
+                   std::vector<datastructure::Transform3Df> & decomposedPoses) override;
 
     void unloadComponent () override final;
 

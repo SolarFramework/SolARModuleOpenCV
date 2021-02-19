@@ -23,6 +23,7 @@ namespace xpcf = org::bcom::xpcf;
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv)
 
 namespace SolAR {
+using namespace datastructure;
     namespace MODULES {
     namespace OPENCV {
 
@@ -45,8 +46,8 @@ namespace SolAR {
         {
             return FrameworkReturnCode::_ERROR_LOAD_IMAGE;
         }
-        unsigned int w=cvFrame.rows;
-        unsigned int h=cvFrame.cols;
+        unsigned int w=cvFrame.cols;
+        unsigned int h=cvFrame.rows;
         if(w!=m_parameters.resolution.width || h!=m_parameters.resolution.height)
             cv::resize(cvFrame, cvFrame, cv::Size((int)m_parameters.resolution.width,(int)m_parameters.resolution.height), 0, 0);
 

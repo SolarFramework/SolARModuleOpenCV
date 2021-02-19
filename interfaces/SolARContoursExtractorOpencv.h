@@ -23,7 +23,6 @@
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -31,6 +30,12 @@ namespace OPENCV {
  * @class SolARContoursExtractorOpencv
  * @brief <B>Extracts the contours of a given image.</B>
  * <TT>UUID: 6acf8de2-cc63-11e7-abc4-cec278b6b50a</TT>
+ *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ minContourEdges,
+ *                          the minimum number of edges of a contour to extract. If negative value\, extract all contours,
+ *                          @SolARComponentPropertyDescNum{ int, [-1..MAX INT], -1 }}
+ * @SolARComponentPropertiesEnd
  *
  */
 
@@ -42,7 +47,7 @@ public:
     /// @brief Extracts an ensemble of contours from a given image.
     /// [in] inputImg: source image from which the contour will be extracted.
     ///[out] contours: ensemble of contours extracted.
-    FrameworkReturnCode extract(const SRef<Image> inputImg, std::vector<Contour2Df> & contours) override;
+    FrameworkReturnCode extract(const SRef<datastructure::Image> inputImg, std::vector<datastructure::Contour2Df> & contours) override;
 
     void unloadComponent () override final;
 

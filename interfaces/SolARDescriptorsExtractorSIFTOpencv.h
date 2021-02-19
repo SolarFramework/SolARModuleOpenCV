@@ -37,7 +37,6 @@
 #include "xpcf/component/ConfigurableBase.h"
 
 namespace SolAR {
-using namespace datastructure;
 
 namespace MODULES {
 namespace OPENCV {
@@ -47,6 +46,23 @@ namespace OPENCV {
  * @brief <B>Extracts the SIFT descriptors for a set of keypoints.</B>
  * <TT>UUID: 3787eaa6-d0a0-11e7-8fab-cec278b6b50a</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ nbFeatures,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 0 }}
+ * @SolARComponentProperty{ nbOctaveLayers,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 3 }}
+ * @SolARComponentProperty{ contrastThreshold,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ double, [0..MAX DOUBLE], 0.04 }}
+ * @SolARComponentProperty{ edgeThreshold,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ double, [0..MAX DOUBLE], 10 }}
+ * @SolARComponentProperty{ m_sigma,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ double, [0..MAX DOUBLE], 1.6 }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorSIFTOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -63,7 +79,7 @@ public:
     /// [in] image: source image.
     /// [in] keypoints: set of keypoints.
     /// [out] decsriptors: set of computed descriptors.
-    void extract (const SRef<Image> image, const std::vector<Keypoint> & keypoints, SRef<DescriptorBuffer>& descriptors) override;
+    void extract (const SRef<datastructure::Image> image, const std::vector<datastructure::Keypoint> & keypoints, SRef<datastructure::DescriptorBuffer>& descriptors) override;
 
 private:
     cv::Ptr<cv::Feature2D> m_extractor;

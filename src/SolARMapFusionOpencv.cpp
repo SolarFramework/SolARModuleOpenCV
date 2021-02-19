@@ -17,6 +17,8 @@
 #include "SolARMapFusionOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
+#include "opencv2/flann/kdtree_single_index.h"
+#include "opencv2/flann.hpp"
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -24,6 +26,8 @@ XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMapFusionOpencv
 
 namespace SolAR {
 using namespace datastructure;
+using namespace api::solver::map;
+using namespace api::storage;
 namespace MODULES {
 namespace OPENCV {
 
@@ -42,7 +46,7 @@ SolARMapFusionOpencv::~SolARMapFusionOpencv()
 	LOG_DEBUG(" SolARMapFusionOpencv destructor")
 }
 
-FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper>& globalMap, Transform3Df & transform, uint32_t & nbMatches, float & error)
+FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper> globalMap, Transform3Df & transform, uint32_t & nbMatches, float & error)
 {
 	/// Transform local map to global map
 	m_transform3D->transform(transform, map);
@@ -68,11 +72,13 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	globalPointcloudManager->getAllPoints(globalCloudPoints);
 	globalKeyframeMananger->getAllKeyframes(globalKeyframes);
 	// init kd tree of global point cloud
-	std::vector<cv::Point3f> pointsForSearch;
-	for (auto &cp : globalCloudPoints)
-		pointsForSearch.push_back(cv::Point3f(cp->getX(), cp->getY(), cp->getZ()));
-	cv::flann::KDTreeIndexParams indexParams;
-	cv::flann::Index kdtree(cv::Mat(pointsForSearch).reshape(1), indexParams);
+	cv::Mat_<float> features(0, 3);
+	for (const auto &cp : globalCloudPoints) {
+		cv::Mat row = (cv::Mat_<float>(1, 3) << cp->getX(), cp->getY(), cp->getZ());
+		features.push_back(row);
+	}
+	cvflann::KDTreeSingleIndexParams indexParams;
+	cv::flann::GenericIndex<cv::flann::L2<float>> kdtree(features, indexParams);
 	// find correspondences for each point
 	std::vector < std::pair<SRef<CloudPoint>, SRef<CloudPoint>>> duplicatedCPs; // first is local CP, second is global CP
 	std::vector<bool> checkMatches(globalCloudPoints.size(), true);
@@ -80,12 +86,16 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 		// find point by 3D distance
 		std::vector<int> idxCandidates;
 		std::vector<float> dists;
-		std::vector<float> query = { cp->getX(), cp->getY(), cp->getZ() };
-		kdtree.radiusSearch(query, idxCandidates, dists, m_radius, 30);
+		std::vector<float> pt3D = { cp->getX(), cp->getY(), cp->getZ() };
+		std::vector<int> indicesMatrix(globalCloudPoints.size());
+		std::vector<float> distsMatrix(globalCloudPoints.size());
+		int nbFound = kdtree.radiusSearch(pt3D, indicesMatrix, distsMatrix, m_radius * m_radius, cvflann::SearchParams());
+		idxCandidates.assign(indicesMatrix.begin(), indicesMatrix.begin() + nbFound);
+		dists.assign(distsMatrix.begin(), distsMatrix.begin() + nbFound);
 		std::vector<SRef<DescriptorBuffer>> desCandidates;
 		std::vector<int> idxBestCandidates;
 		for (const auto &idx : idxCandidates) {
-			if ((idx != 0) && checkMatches[idx]) {
+			if (checkMatches[idx]) {
 				desCandidates.push_back(globalCloudPoints[idx]->getDescriptor());
 				idxBestCandidates.push_back(idx);
 			}
@@ -136,7 +146,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper>& globalMap, Transform3Df & transform, const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, const bool & isRefineTransform)
+FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper> globalMap, Transform3Df & transform, const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, bool isRefineTransform)
 {
 	uint32_t nbMatches;
 	float error;
@@ -149,7 +159,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper>& map, SRef<IMapper
 	return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, SRef<IMapper>& map, SRef<IMapper>& globalMap)
+void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, SRef<IMapper> map, SRef<IMapper> globalMap)
 {
 	// get map
 	SRef<IPointCloudManager> pointcloudManager, globalPointcloudManager;
@@ -254,7 +264,6 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 			// update covisibility graph
 			for (const auto &vi2 : visibilities2) {
 				uint32_t id_kf2 = vi2.first;
-				uint32_t id_kp2 = vi2.second;
 				globalCovisibilityGraph->increaseEdge(id_kf1, id_kf2, 1.0);
 			}
 		}

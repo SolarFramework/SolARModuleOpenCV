@@ -29,11 +29,38 @@ using namespace api::features;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDescriptorsExtractorORBOpencv::SolARDescriptorsExtractorORBOpencv():ComponentBase(xpcf::toUUID<SolARDescriptorsExtractorORBOpencv>())
+SolARDescriptorsExtractorORBOpencv::SolARDescriptorsExtractorORBOpencv():ConfigurableBase(xpcf::toUUID<SolARDescriptorsExtractorORBOpencv>())
 {
     declareInterface<api::features::IDescriptorsExtractor>(this);
-    m_extractor=cv::ORB::create();
+
+    declareProperty("nbFeatures", m_nbFeatures);
+    declareProperty("scaleFactor", m_scaleFactor);
+    declareProperty("nbLevels", m_nbLevels);
+    declareProperty("edgeThreshold", m_edgeThreshold);
+    declareProperty("firstLevel", m_firstLevel);
+    declareProperty("WTAK", m_WTAK);
+    declareProperty("scoreType", m_scoreType);
+    declareProperty("patchSize", m_patchSize);
+    declareProperty("fastThreshold", m_fastThreshold);
+
     LOG_DEBUG(" SolARDescriptorsExtractorORBOpencv constructor")
+}
+
+xpcf::XPCFErrorCode SolARDescriptorsExtractorORBOpencv::onConfigured()
+{
+    cv::ORB::ScoreType scoreType;
+    if (m_scoreType == "Harris")
+        scoreType = cv::ORB::ScoreType::HARRIS_SCORE;
+    else if (m_scoreType == "Fast")
+        scoreType = cv::ORB::ScoreType::FAST_SCORE;
+    else
+    {
+        scoreType = cv::ORB::ScoreType::HARRIS_SCORE;
+        LOG_WARNING("Score Type \"{}\" is not allowed for ORB descriptor. It should be whether \"Harris\" or \"Fast\". Set to Harris by default", m_scoreType);
+    }
+
+    m_extractor=cv::ORB::create(m_nbFeatures, m_scaleFactor, m_nbLevels, m_edgeThreshold, m_firstLevel, m_WTAK, scoreType, m_patchSize, m_fastThreshold);
+    return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
 SolARDescriptorsExtractorORBOpencv::~SolARDescriptorsExtractorORBOpencv()

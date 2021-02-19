@@ -27,14 +27,25 @@
 #include "xpcf/component/ConfigurableBase.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
 /**
  * @class SolAR3DOverlayBoxOpencv
  * @brief <B>Draws a 3D box on an image.</B>
- * <TT>UUID: 2db01f59-9793-4cd5-8e13-b25d0ed5735</TT>
+ * <TT>UUID: 2db01f59-9793-4cd5-8e13-b25d0ed5735b</TT>
+ *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ orientation,
+ *                          orientation of the box in euler angles in degrees,
+ *                          @SolARComponentPropertyDescList{ 3, float, [MIN FLOAT..MAX FLOAT], { 0.0\, 0.0\, 0.0 }}}
+ * @SolARComponentProperty{ position,
+ *                          position of the center of the bottom face of the Box defined in world unit,
+ *                          @SolARComponentPropertyDescList{ 3, float, [MIN FLOAT..MAX FLOAT], { 0.0\, 0.0\, 0.0 }}}
+ * @SolARComponentProperty{ size,
+ *                          size of the box define in world unit,
+ *                          @SolARComponentPropertyDescList{ 3, float, [MIN FLOAT..MAX FLOAT], { 1.f\, 1.f\, 1.f }}}
+ * @SolARComponentPropertiesEnd
  *
  */
 
@@ -48,12 +59,12 @@ public:
     ///@brief draw  a projection of 3D box based on 3D pose on an image.
     /// @param[in] pose: 3D camera pose expressed in the world coordinate.
     /// @param[in,out] displayImage The image on which the projection of a 3D box will be drawn.
-    void draw(const Transform3Df & pose, SRef<Image> displayImage) override;
+    void draw(const datastructure::Transform3Df & pose, SRef<datastructure::Image> displayImage) override;
 
     /// @brief this method is used to set intrinsic parameters and distorsion of the camera
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const CamCalibration & intrinsic_parameters, const CamDistortion & distorsion_parameters);
+    void setCameraParameters(const datastructure::CamCalibration & intrinsic_parameters, const datastructure::CamDistortion & distorsion_parameters);
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
     void unloadComponent () override final;

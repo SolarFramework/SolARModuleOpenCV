@@ -25,7 +25,6 @@
 
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -34,6 +33,11 @@ namespace OPENCV {
  * @brief <B>Loads an image from a file.</B>
  * <TT>UUID: e42d6526-9eb1-4f8a-bb68-53e06f09609c</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ filePath,
+ *                          The path of the image to load,
+ *                          @SolARComponentPropertyDescString{ "" }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARImageLoaderOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -47,7 +51,7 @@ public:
     ///
     /// \brief getImage method returns the image previously loaded when its configuration parameter path has been set
     ///
-    FrameworkReturnCode getImage(SRef<Image> & img);
+    FrameworkReturnCode getImage(SRef<datastructure::Image> & img);
 
     ///
     /// \brief reloadImage method load a image if as instance its path (set as a configuration parameter of the implemented component) has changed
@@ -58,7 +62,7 @@ private:
     /// @brief The path of the image to load
     std::string m_filePath = "";
 
-    SRef<Image> m_img;
+    SRef<datastructure::Image> m_img;
 };
 
 }

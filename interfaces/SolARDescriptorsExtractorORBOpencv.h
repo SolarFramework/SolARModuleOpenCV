@@ -18,11 +18,12 @@
 #define SOLARDESCRIPTORSEXTRACTOORBROPENCV_H
 
 #include "api/features/IDescriptorsExtractor.h"
+#include <string>
 
 // Definition of SolARDescriptorExtractorOpencv Class //
 // part of SolAR namespace //
 
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/opencv.hpp"
@@ -31,7 +32,6 @@
 #include "datastructure/Keypoint.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -39,26 +39,74 @@ namespace OPENCV {
  * @class SolARDescriptorsExtractorORBOpencv
  * @brief <B>Extracts the ORB descriptors for a set of keypoints.</B>
  * <TT>UUID: 0ca8f7a6-d0a7-11e7-8fab-cec278b6b50a</TT>
- *
+ * 
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ nbFeatures,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 500 }}
+ * @SolARComponentProperty{ scaleFactor,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], default: 1.2f }}
+ * @SolARComponentProperty{ nbLevels,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 8 }}
+ * @SolARComponentProperty{ edgeThreshold,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 31 }}
+ * @SolARComponentProperty{ firstLevel,
+ *                          ,
+ *                           @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 0 }}
+ * @SolARComponentProperty{ WTAK,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 2 }}
+ * @SolARComponentProperty{ scoreType,
+ *                          Accepted values: Harris or Fast,
+ *                          @SolARComponentPropertyDescString{ "Harris" }}
+ * @SolARComponentProperty{ patchSize,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 31 }}
+ * @SolARComponentProperty{ fastThreshold,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], default: 20 }}
+ * 
+ * @SolARComponentPropertiesEnd
+ * 
+ * For more information concerning the OR configuration parameters: https://docs.opencv.org/3.4/db/d95/classcv_1_1ORB.html
+ * 
  */
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorORBOpencv : public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorORBOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::features::IDescriptorsExtractor {
 public:
     SolARDescriptorsExtractorORBOpencv();
     ~SolARDescriptorsExtractorORBOpencv() override;
+
+    org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
     void unloadComponent () override final;
+
     std::string getTypeString() override { return std::string("DescriptorsExtractorType::ORB"); }
     /// @brief Extracts a set of descriptors from a given image around a set of keypoints based on ORB algorithm
     /// "ORB: an efficient alternative to SIFT or SURF"
     /// [in] image: source image.
     /// [in] keypoints: set of keypoints.
     /// [out] decsriptors: se of computed descriptors.
-    void extract (const SRef<Image> image,
-                  const std::vector< Keypoint > &keypoints,
-                  SRef<DescriptorBuffer> & descriptors) override;
+    void extract (const SRef<datastructure::Image> image,
+                  const std::vector< datastructure::Keypoint > &keypoints,
+                  SRef<datastructure::DescriptorBuffer> & descriptors) override;
 private:
     cv::Ptr<cv::Feature2D> m_extractor;
+
+
+// For more information concerning the OR configuration parameters: https://docs.opencv.org/3.4/db/d95/classcv_1_1ORB.html
+    int m_nbFeatures = 500;
+    float m_scaleFactor = 1.2f;
+    int m_nbLevels = 8;
+    int m_edgeThreshold = 31;
+    int m_firstLevel=0;
+    int m_WTAK = 2;
+    std::string m_scoreType = "Harris"; // Accepted values: Harris or Fast
+    int m_patchSize = 31;
+    int m_fastThreshold = 20;
 };
 
 }

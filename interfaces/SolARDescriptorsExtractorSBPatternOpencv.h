@@ -23,7 +23,6 @@
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -32,6 +31,11 @@ namespace OPENCV {
  * @brief <B>Extracts the descriptor corresponding to a squared binary marker pattern.</B>
  * <TT>UUID: d25625ba-ce3a-11e7-abc4-cec278b6b50a</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ patternSize,
+ *                          define the internal size of the pattern (without the black border),
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 5 }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARDescriptorsExtractorSBPatternOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -42,19 +46,19 @@ public:
     /// @brief Extracts a set of descriptors from a given images based on a marker pattern
     /// [in] : set of keypoints.
     /// [out] decsriptors: se of computed descriptors.
-    FrameworkReturnCode extract(const std::vector<SRef<Image>> & images,
-                                           const std::vector<Contour2Df> & inContours,
-                                           SRef<DescriptorBuffer> & descriptors,
-                                           std::vector<Contour2Df> & outContours) override;
+    FrameworkReturnCode extract(const std::vector<SRef<datastructure::Image>> & images,
+                                           const std::vector<datastructure::Contour2Df> & inContours,
+                                           SRef<datastructure::DescriptorBuffer> & descriptors,
+                                           std::vector<datastructure::Contour2Df> & outContours) override;
 
-    FrameworkReturnCode extract(const SquaredBinaryPattern & pattern,
-                                           SRef<DescriptorBuffer> & descriptor) override;
+    FrameworkReturnCode extract(const datastructure::SquaredBinaryPattern & pattern,
+                                           SRef<datastructure::DescriptorBuffer> & descriptor) override;
 
     void unloadComponent () override final;
 
 private:
-    FrameworkReturnCode getPatternDescriptorFromImage (SRef<Image> image, unsigned char* data);
-    bool isPattern(SRef<Image> image);
+    FrameworkReturnCode getPatternDescriptorFromImage (SRef<datastructure::Image> image, unsigned char* data);
+    bool isPattern(SRef<datastructure::Image> image);
 
 private:
     // Define the internal size of the pattern (without the black border)

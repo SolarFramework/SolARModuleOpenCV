@@ -49,7 +49,7 @@ FrameworkReturnCode SolARImageFilterAdaptiveBinaryOpencv::filter(const SRef<Imag
         return FrameworkReturnCode::_ERROR_;
     }
 
-    if (output == nullptr)
+    if (!output)
         output = xpcf::utils::make_shared<Image> (Image::ImageLayout::LAYOUT_GREY, input->getPixelOrder(), input->getDataType());
 
     output->setSize(input->getWidth(),input->getHeight());

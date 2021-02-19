@@ -22,7 +22,6 @@
 #include "SolARBaseCameraOpencv.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -31,6 +30,15 @@ namespace OPENCV {
  * @brief <B>Loads an image sequence stored in a dedicated folder.</B>
  * <TT>UUID: b8a8b963-ba55-4ea4-b045-d9e7e8f6db02</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ imagesDirectoryPath,
+ *                          Path to the images which will be used as a camera capture,
+ *                          @SolARComponentPropertyDescString{ "" }}
+ * @SolARComponentProperty{ delayTime,
+ *                          time delay camera between two images,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 30 }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARImagesAsCameraOpencv : public SolARBaseCameraOpencv {
@@ -43,7 +51,7 @@ public:
     /// @return FrameworkReturnCode::_SUCCESS if sucessful, eiher FrameworkRetunrnCode::_ERROR_.
     FrameworkReturnCode start() override;
 
-    FrameworkReturnCode getNextImage(SRef<Image> & img) override;
+    FrameworkReturnCode getNextImage(SRef<datastructure::Image> & img) override;
 
     //params getCameraIntrinsics() override;
     //Frame : image + timestamp image + depth + timestamp depth ...

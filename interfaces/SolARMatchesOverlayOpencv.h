@@ -26,7 +26,6 @@
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -35,6 +34,21 @@ namespace OPENCV {
  * @brief <B>Displays matching keypoints between two images.</B>
  * <TT>UUID: e95302be-3fe1-44e0-97bf-a98380464af9</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ thickness,
+ *                          thickness of the lines displaying the matches between the two images,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 1 }}
+ * @SolARComponentProperty{ color,
+ *                          the color of the linse displaying the matches between the two images,
+ *                          @SolARComponentPropertyDescList{ 3, uint, [0..255], [ 0\, 255\, 0 ] }}
+ * @SolARComponentProperty{ mode,
+ *                          if not null\, the color will be randomized for each line (values among [\"COLOR\"\, \"RANDOM\"\, \"FADING\"]),
+ *                          @SolARComponentPropertyDescString{ "COLOR" }}
+ * @SolARComponentProperty{ maxMatches,
+ *                          the maximum number of matches to display. If negative\, all matches are displayed,
+ *                          @SolARComponentPropertyDescNum{ int, [-1..MAX INT], -1 }}
+ * @SolARComponentPropertiesEnd
+ * 
  */
 
 class SOLAROPENCV_EXPORT_API SolARMatchesOverlayOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -51,7 +65,7 @@ public:
     /// @param[in] points_image1: The keypoints of image1 that match with keypoints of image2. The Nth keypoint of this vector match with the Nth keypoint of the vector points_image2.
     /// @param[in] points_image2: The keypoints of image2 that match with keypoints of image1. The Nth keypoint of this vector match with the Nth keypoint of the vector points_image1.
     /// @param[in|out] matches, a vector of matches between the first and second image that will be displayed. If this vector is empty, we consider that the ith point of points_image1 matches with the ith point of points_image2.
-    void draw(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <Point2Df> & points_image1, const std::vector <Point2Df> & points_image2, const std::vector<DescriptorMatch> matches = std::vector<DescriptorMatch>()) override;
+    void draw(const SRef<datastructure::Image> image1, const SRef<datastructure::Image> image2, SRef<datastructure::Image> & outImage, const std::vector <datastructure::Point2Df> & points_image1, const std::vector <datastructure::Point2Df> & points_image2, const std::vector<datastructure::DescriptorMatch> & matches = std::vector<datastructure::DescriptorMatch>()) override;
 
     /// @brief dra Match Lines.
     /// Draw all the lines joining the keypoints that match between two images
@@ -61,7 +75,7 @@ public:
     /// @param[in] keypoints_image1: The keypoints of image1 that match with keypoints of image2. The Nth keypoint of this vector match with the Nth keypoint of the vector points_image2.
     /// @param[in] keypoints_image2: The keypoints of image2 that match with keypoints of image1. The Nth keypoint of this vector match with the Nth keypoint of the vector points_image1.
     /// @param[in|out] matches, a vector of matches between the first and second image that will be displayed. If this vector is empty, we consider that the ith point of points_image1 matches with the ith point of points_image2.
-    void draw(const SRef<Image> image1, const SRef<Image> image2, SRef<Image> & outImage, const std::vector <Keypoint> & keypoints_image1, const std::vector <Keypoint> & keypoints_image2, const std::vector<DescriptorMatch> matches = std::vector<DescriptorMatch>()) override;
+    void draw(const SRef<datastructure::Image> image1, const SRef<datastructure::Image> image2, SRef<datastructure::Image> & outImage, const std::vector <datastructure::Keypoint> & keypoints_image1, const std::vector <datastructure::Keypoint> & keypoints_image2, const std::vector<datastructure::DescriptorMatch> & matches = std::vector<datastructure::DescriptorMatch>()) override;
 
     /// @brief draw Match Lines.
     /// Draw all the lines joining the keypoints that match between two images
@@ -70,7 +84,7 @@ public:
     /// @param[in] points_image1: The keypoints of image1 that match with keypoints of image2. The Nth keypoint of this vector match with the Nth keypoint of the vector points_image2.
     /// @param[in] points_image2: The keypoints of image2 that match with keypoints of image1. The Nth keypoint of this vector match with the Nth keypoint of the vector points_image1.
     /// @param[in|out] matches, a vector of matches between the first and second image that will be displayed. If this vector is empty, we consider that the ith point of points_image1 matches with the ith point of points_image2.
-    void draw(const SRef<Image> image, SRef<Image> & outImage, const std::vector <Point2Df> & points_image1, const std::vector <Point2Df> & points_image2, const std::vector<DescriptorMatch> matches = std::vector<DescriptorMatch>()) override;
+    void draw(const SRef<datastructure::Image> image, SRef<datastructure::Image> & outImage, const std::vector <datastructure::Point2Df> & points_image1, const std::vector <datastructure::Point2Df> & points_image2, const std::vector<datastructure::DescriptorMatch> & matches = std::vector<datastructure::DescriptorMatch>()) override;
 
     /// @brief dra Match Lines.
     /// Draw all the lines joining the keypoints that match between two images
@@ -79,7 +93,7 @@ public:
     /// @param[in] keypoints_image1: The keypoints of image1 that match with keypoints of image2. The Nth keypoint of this vector match with the Nth keypoint of the vector points_image2.
     /// @param[in] keypoints_image2: The keypoints of image2 that match with keypoints of image1. The Nth keypoint of this vector match with the Nth keypoint of the vector points_image1.
     /// @param[in|out] matches, a vector of matches between the first and second image that will be displayed. If this vector is empty, we consider that the ith point of points_image1 matches with the ith point of points_image2.
-    void draw(const SRef<Image> image, SRef<Image> & outImage, const std::vector <Keypoint> & keypoints_image1, const std::vector <Keypoint> & keypoints_image2, const std::vector<DescriptorMatch> matches = std::vector<DescriptorMatch>())override;
+    void draw(const SRef<datastructure::Image> image, SRef<datastructure::Image> & outImage, const std::vector <datastructure::Keypoint> & keypoints_image1, const std::vector <datastructure::Keypoint> & keypoints_image2, const std::vector<datastructure::DescriptorMatch> & matches = std::vector<datastructure::DescriptorMatch>())override;
 
 
     void unloadComponent () override final;

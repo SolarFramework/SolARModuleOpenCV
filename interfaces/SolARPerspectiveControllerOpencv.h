@@ -22,7 +22,6 @@
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -31,8 +30,16 @@ namespace OPENCV {
  * @brief <B>Extracts an unwrapped image from a specific region of an input image defined with four 2D points.</B>
  * <TT>UUID: 9c960f2a-cd6e-11e7-abc4-cec278b6b50a</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ outputImageWidth,
+ *                          the width in pixels of the output image,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 640 }}
+ * @SolARComponentProperty{ outputImageHeight,
+ *                          the Height in pixels of the output image,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 480 }}
+ * 
+ * @SolARComponentPropertiesEnd
  */
-
 
 class SOLAROPENCV_EXPORT_API SolARPerspectiveControllerOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::image::IPerspectiveController {
@@ -40,8 +47,8 @@ public:
     SolARPerspectiveControllerOpencv();
     ~SolARPerspectiveControllerOpencv() = default;
 
-    FrameworkReturnCode correct(const SRef<Image> inputImg, const std::vector<Contour2Df> & contours, std::vector<SRef<Image>> & patches) override;
-    FrameworkReturnCode correct(const SRef<Image> inputImg, const Contour2Df & contour, SRef<Image> & patch) override;
+    FrameworkReturnCode correct(const SRef<datastructure::Image> inputImg, const std::vector<datastructure::Contour2Df> & contours, std::vector<SRef<datastructure::Image>> & patches) override;
+    FrameworkReturnCode correct(const SRef<datastructure::Image> inputImg, const datastructure::Contour2Df & contour, SRef<datastructure::Image> & patch) override;
 
     void unloadComponent () override final;
 

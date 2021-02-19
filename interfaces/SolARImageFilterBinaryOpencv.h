@@ -28,7 +28,6 @@
 #include <vector>
 
 namespace SolAR {
-using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
@@ -37,6 +36,14 @@ namespace OPENCV {
  * @brief <B>Filters an image to a binary image based on a unique threshold.</B>
  * <TT>UUID: e5fd7e9a-fcae-4f86-bfc7-ea8584c298b2</TT>
  *
+ * @SolARComponentPropertiesBegin
+ * @SolARComponentProperty{ m_min,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 0 }}
+ * @SolARComponentProperty{ m_max,
+ *                          ,
+ *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 255 }}
+ * @SolARComponentPropertiesEnd
  */
 
 class SOLAROPENCV_EXPORT_API SolARImageFilterBinaryOpencv : public org::bcom::xpcf::ConfigurableBase,
@@ -46,8 +53,8 @@ public:
     SolARImageFilterBinaryOpencv();
    ~SolARImageFilterBinaryOpencv();
 
-    FrameworkReturnCode filter(const SRef<Image>input,
-                  SRef<Image>& output) override;
+    FrameworkReturnCode filter(const SRef<datastructure::Image>input,
+                  SRef<datastructure::Image>& output) override;
 
     void unloadComponent () override final;
 

@@ -32,7 +32,7 @@ namespace OPENCV {
     {
         declareInterface<api::features::IContoursFilter>(this);
         declareProperty("minContourLength",m_minContourLength);
-        declareProperty("espilon",m_epsilon);
+        declareProperty("epsilon",m_epsilon);
         declareProperty("minDistanceBetweenContourCorners",m_minDistanceBetweenContourCorners);
     }
 
