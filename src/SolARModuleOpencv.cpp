@@ -65,6 +65,7 @@
 #include "SolARImagesAsCameraOpencv.h"
 #include "SolARDeviceDataLoader.h"
 #include "SolARMapFusionOpencv.h"
+#include "SolARCornerRefinementOpencv.h"
 
 namespace xpcf=org::bcom::xpcf;
 
@@ -266,6 +267,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
 	{
 		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARUndistortPointsOpencv>(componentUUID, interfaceRef);
 	}
+	if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+	{
+		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARCornerRefinementOpencv>(componentUUID, interfaceRef);
+	}
     return errCode;
 }
 
@@ -319,4 +324,5 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImagesAsCameraOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDeviceDataLoader)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapFusionOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARUndistortPointsOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCornerRefinementOpencv)
 XPCF_END_COMPONENTS_DECLARATION
