@@ -1,1 +1,2 @@
-opencv|4.4.0|opencv|conan-solar@conan|conan-solar|default|gapi=False#gtk=3
+libgtk-3-dev|3.22.30|gtk+-3.0|apt-get@system|apt-get
+opencv|4.4.0|opencv|conan-solar@conan|conan-solar|default|gapi=False#gtk=3#ffmpeg=True
