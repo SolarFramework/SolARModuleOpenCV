@@ -129,9 +129,8 @@ namespace SolAR {
     {
         // Prepare loader for images, poses
         for (int id_camera = 0; id_camera < m_nbCameras; ++id_camera) {
-            char index[3];
+            char index[4] = {};
             std::sprintf(index, "%03d", id_camera);
-
             // pose loader
             std::string pathToPose = m_pathToData + "/pose_" + index + ".txt";
             m_poseFiles[id_camera].open(pathToPose);
@@ -139,7 +138,6 @@ namespace SolAR {
                 LOG_ERROR("Cannot load pose file of camera {}", id_camera);
                 return FrameworkReturnCode::_ERROR_;
             }
-
             // camera loader
             std::string pathToImages = m_pathToData + "/" + index + "/%08d.jpg";
             m_cameras[id_camera].open(pathToImages);
