@@ -23,6 +23,7 @@
 
 #include "SolAROpencvAPI.h"
 #include <string>
+#include "SolARImageConvertorOpencv.h"
 
 //opencv headers
 #include "opencv2/opencv.hpp"
@@ -88,6 +89,7 @@ private:
     double m_contrastThreshold = 0.04;
     double m_edgeThreshold = 10.0;
     double m_sigma = 1.6;
+	SolARImageConvertorOpencv m_convertor;
 };
 
 }
