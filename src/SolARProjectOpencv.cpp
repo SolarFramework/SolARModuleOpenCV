@@ -49,7 +49,10 @@ FrameworkReturnCode projectCV(const std::vector<cv::Point3f> & inputPoints, std:
     Transform3Df poseInv = pose.inverse();
 
     cv::Mat rotMat, rvec;
-    rotMat = cv::Mat(3, 3, SolAROpenCVHelper::inferOpenCVType<float>(), (void *)poseInv.rotation().data());
+    rotMat = (cv::Mat_<float>(3, 3) << poseInv(0, 0), poseInv(0, 1), poseInv(0, 2),
+                                     poseInv(1, 0), poseInv(1, 1), poseInv(1, 2),
+                                     poseInv(2, 0), poseInv(2, 1), poseInv(2, 2));
+
     cv::Mat tvec(3, 1, SolAROpenCVHelper::inferOpenCVType<float>());
     tvec.at<float>(0, 0) = poseInv(0, 3);
     tvec.at<float>(1, 0) = poseInv(1, 3);
