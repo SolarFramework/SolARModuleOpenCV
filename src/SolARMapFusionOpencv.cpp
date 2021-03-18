@@ -207,7 +207,6 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 		Eigen::Matrix3f rot;
 		kfPose.computeScalingRotation(&scale, &rot);
 		kfPose.linear() = rot;
-		kfPose.translation() = kfPose.translation() / scale(0, 0);
 		kf->setPose(kfPose);
 
 		uint32_t idxOld = kf->getId();
