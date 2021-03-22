@@ -107,6 +107,7 @@ private:
     cv::KeyPointsFilter kptsFilter;
 	int m_nbGridWidth = 20;
 	int m_nbGridHeight = 20;
+	float m_borderRatio = 0.01f;
 
 };
 

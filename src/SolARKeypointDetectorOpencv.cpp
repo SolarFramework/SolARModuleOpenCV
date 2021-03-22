@@ -56,6 +56,7 @@ SolARKeypointDetectorOpencv::SolARKeypointDetectorOpencv():ConfigurableBase(xpcf
     declareProperty("nbOctaves", m_nbOctaves);
     declareProperty("nbGridWidth", m_nbGridWidth);
     declareProperty("nbGridHeight", m_nbGridHeight);
+    declareProperty("borderRatio", m_borderRatio);
     declareProperty("type", m_type);
     LOG_DEBUG("SolARKeypointDetectorOpencv constructor");
 }
@@ -186,9 +187,15 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
 			}
 			// group keypoints according to cells of the grid
 			std::map<int, std::vector<cv::KeyPoint>> gridKps;
+			int borderWidth = static_cast<int>(m_borderRatio * image->getWidth());
+			int borderHeight = static_cast<int>(m_borderRatio * image->getHeight());
+			int widthToExtract = image->getWidth() - 2 * borderWidth;
+			int heightToExtract = image->getHeight() - 2 * borderHeight;
 			for (const auto &it : kpts) {
-				int id_width = static_cast<int>(std::floor(it.pt.x * m_nbGridWidth / image->getWidth()));
-				int id_height = static_cast<int>(std::floor(it.pt.y * m_nbGridHeight / image->getHeight()));
+				int id_width = static_cast<int>(std::floor((it.pt.x - borderWidth) * m_nbGridWidth / widthToExtract));
+				int id_height = static_cast<int>(std::floor((it.pt.y - borderHeight) * m_nbGridHeight / heightToExtract));
+				if ((id_width < 0) || (id_width >= m_nbGridWidth) || (id_height < 0) || (id_height >= m_nbGridHeight))
+					continue;
 				gridKps[id_height * m_nbGridWidth + id_width].push_back(it);
 			}
 			// get best feature per cell
