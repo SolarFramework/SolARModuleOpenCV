@@ -46,9 +46,6 @@ SolARMapFusionOpencv::~SolARMapFusionOpencv()
 
 FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper> globalMap, Transform3Df & transform, uint32_t & nbMatches, float & error)
 {
-	/// Transform local map to global map
-	m_transform3D->transform(transform, map);
-
 	/// Find 3D-3D correspondences using kd tree and feature
 	// get map
 	SRef<IPointCloudManager> pointcloudManager, globalPointcloudManager;
@@ -59,6 +56,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 	map->getKeyframesManager(keyframeMananger);
 	map->getCovisibilityGraph(covisibilityGraph);
 	map->getKeyframeRetriever(keyframeRetriever);
+
 	globalMap->getPointCloudManager(globalPointcloudManager);
 	globalMap->getKeyframesManager(globalKeyframeMananger);
 	globalMap->getCovisibilityGraph(globalCovisibilityGraph);
@@ -69,6 +67,11 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 	keyframeMananger->getAllKeyframes(keyframes);
 	globalPointcloudManager->getAllPoints(globalCloudPoints);
 	globalKeyframeMananger->getAllKeyframes(globalKeyframes);
+
+    /// Transform local map to global map
+    m_transform3D->transformInPlace(transform, cloudPoints);
+    m_transform3D->transformInPlace(transform, keyframes);
+
 	// init kd tree of global point cloud
 	std::vector<cv::Point3f> pointsForSearch;
 	for (auto &cp : globalCloudPoints)
@@ -117,7 +120,8 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 		return FrameworkReturnCode::_ERROR_;
 
 	/// Apply transform2 and refine transform
-	m_transform3D->transform(transform2, map);
+    m_transform3D->transformInPlace(transform2, cloudPoints);
+    m_transform3D->transformInPlace(transform2, keyframes);
 	transform = transform2 * transform;
 
 	/// get best matches
@@ -145,7 +149,17 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 	if (isRefineTransform)
 		return this->merge(map, globalMap, transform, nbMatches, error);
 	// transform map
-	m_transform3D->transform(transform, map);
+    SRef<IPointCloudManager> pointcloudManager;
+    SRef<IKeyframesManager> keyframeMananger;
+    map->getPointCloudManager(pointcloudManager);
+    map->getKeyframesManager(keyframeMananger);
+    std::vector<SRef<CloudPoint>> cloudPoints;
+    std::vector<SRef<Keyframe>> keyframes;
+    pointcloudManager->getAllPoints(cloudPoints);
+    keyframeMananger->getAllKeyframes(keyframes);
+
+    m_transform3D->transformInPlace(transform, cloudPoints);
+    m_transform3D->transformInPlace(transform, keyframes);
 	// fuse local map into global map
 	fuseMap(cpOverlapIndices, map, globalMap);
 	return FrameworkReturnCode::_SUCCESS;
