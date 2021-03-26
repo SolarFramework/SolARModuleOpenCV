@@ -33,8 +33,7 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARKeypointDetectorOpencv.h \
     interfaces/SolARKeypointDetectorRegionOpencv.h \
     interfaces/SolARMapFusionOpencv.h \
-    interfaces/SolARMarker2DNaturalImageOpencv.h \
-    interfaces/SolARMarker2DSquaredBinaryOpencv.h \
+    interfaces/SolARImageMarkerLoaderOpencv.h \
     interfaces/SolARMatchesOverlayOpencv.h \
     interfaces/SolARModuleOpencv_traits.h \
     interfaces/SolAROpencvAPI.h \
@@ -59,6 +58,7 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     src/AKAZE2/utils.h
 
 SOURCES +=  src/AKAZE2/akaze.cpp \
+    $$PWD/src/SolARImageMarkerLoaderOpencv.cpp \
     src/AKAZE2/AKAZEFeatures.cpp \
     src/AKAZE2/fed.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
@@ -97,8 +97,6 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
     src/SolARKeypointDetectorRegionOpencv.cpp \
     src/SolARMapFusionOpencv.cpp \
-    src/SolARMarker2DNaturalImageOpencv.cpp \
-    src/SolARMarker2DSquaredBinaryOpencv.cpp \
     src/SolARMatchesOverlayOpencv.cpp \
     src/SolARModuleOpencv.cpp \
     src/SolAROpenCVHelper.cpp \

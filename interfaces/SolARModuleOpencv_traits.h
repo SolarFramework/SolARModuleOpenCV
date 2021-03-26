@@ -55,12 +55,11 @@ class SolARImageFilterBlurOpencv;
 class SolARImageFilterDilateOpencv;
 class SolARImageFilterErodeOpencv;
 class SolARImageLoaderOpencv;
+class SolARImageMarkerLoaderOpencv;
 class SolARImageViewerOpencv;
 class SolARImagesAsCameraOpencv;
 class SolARKeypointDetectorOpencv;
 class SolARKeypointDetectorRegionOpencv;
-class SolARMarker2DNaturalImageOpencv;
-class SolARMarker2DSquaredBinaryOpencv;
 class SolARMatchesOverlayOpencv;
 class SolAROpticalFlowPyrLKOpencv;
 class SolARPerspectiveControllerOpencv;
@@ -221,6 +220,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv,
                              "SolARImageLoaderOpencv",
                              "Loads an image from a file.")
 
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageMarkerLoaderOpencv,
+                             "aae41002-8e5b-11eb-8dcd-0242ac130003",
+                             "SolARImageMarkerLoaderOpencv",
+                             "Loads an image marker from a file.")
+
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImagesAsCameraOpencv,
                              "b8a8b963-ba55-4ea4-b045-d9e7e8f6db02",
                              "SolARImagesAsCameraOpencv",
@@ -240,16 +244,6 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARKeypointDetectorRegion
                              "22c2ca9f-e43b-4a88-8337-4a166a789971",
                              "SolARKeypointDetectorRegionOpencv",
                              "Detects keypoints in an given region of an image.")
-
-XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMarker2DNaturalImageOpencv,
-                             "efcdb590-c570-11e7-abc4-cec278b6b50a",
-                             "SolARMarker2DNaturalImageOpencv",
-                             "Loads a 2D natural image marker from a file.")
-
-XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMarker2DSquaredBinaryOpencv,
-                             "5d2b8da9-528e-4e5e-96c1-f883edcf3b1c",
-                             "SolARMarker2DSquaredBinaryOpencv",
-                             "Loads a 2D squared binary marker from a file.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMatchesOverlayOpencv,
                              "e95302be-3fe1-44e0-97bf-a98380464af9",
