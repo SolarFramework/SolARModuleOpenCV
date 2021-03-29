@@ -17,7 +17,7 @@
 #include "SolARFiducialMarkerLoaderOpencv.h"
 #include "core/Log.h"
 #include "opencv2/opencv.hpp"
-#include "datastructure/FiducialMArker.h"
+#include "datastructure/FiducialMarker.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
