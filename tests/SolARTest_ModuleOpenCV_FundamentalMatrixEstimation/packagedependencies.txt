@@ -1,1 +1,1 @@
-SolARFramework|0.9.1|SolARFramework|SolARBuild@github|https://github.com/SolarFramework/SolarFramework/releases/download
+SolARFramework|0.9.4|SolARFramework|SolARBuild@github|https://github.com/SolarFramework/SolarFramework/releases/download
