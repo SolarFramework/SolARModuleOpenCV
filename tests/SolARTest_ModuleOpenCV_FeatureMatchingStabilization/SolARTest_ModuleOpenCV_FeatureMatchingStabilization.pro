@@ -3,7 +3,7 @@ QT       -= core gui
 CONFIG -= qt
 
 ## global defintions : target lib name, version
-TARGET = SolARTest_ModuleOpenCV_DevicePoseCorrection
+TARGET = SolARTest_ModuleOpenCV_FeatureMatchingStabilization
 VERSION=0.9.1
 
 DEFINES += MYVERSION=$${VERSION}
@@ -13,7 +13,7 @@ CONFIG += console
 include(findremakenrules.pri)
 
 CONFIG(debug,debug|release) {
-	TARGETDEPLOYDIR = $${PWD}/../bin/Debug
+    TARGETDEPLOYDIR = $${PWD}/../bin/Debug
     DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
@@ -45,7 +45,7 @@ SOURCES += \
 
 unix {
     LIBS += -ldl
-    QMAKE_CXXFLAGS += -DBOOST_LOG_DYN_LINK
+    QMAKE_CXXFLAGS += -DBOOST_ALL_DYN_LINK
 }
 
 macx {
@@ -63,12 +63,8 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
-android {
-    ANDROID_ABIS="arm64-v8a"
-}
-
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $${PWD}/SolARTest_ModuleOpenCV_DevicePoseCorrection_conf.xml
+configfile.files = $${PWD}/SolARTest_ModuleOpenCV_FeatureMatchingStabilization_conf.xml
 INSTALLS += configfile
 
 DISTFILES += \

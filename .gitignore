@@ -55,8 +55,10 @@ Release/
 *-packagedependencies-unix.*
 *-packagedependencies-android.*
 *.pc
-*-Debug
-*-Release
+*-Debug*
+*-Release*
+*_Debug*
+*_Release*
 
 # Executables
 *.exe
