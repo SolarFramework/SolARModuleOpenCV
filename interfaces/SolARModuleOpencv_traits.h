@@ -76,6 +76,7 @@ class SolARUndistortPointsOpencv;
 class SolARVideoAsCameraOpencv;
 class SolARDeviceDataLoader;
 class SolARMapFusionOpencv;
+class SolARCornerRefinementOpencv;
 }
 }
 }
@@ -318,5 +319,9 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMapFusionOpencv,
 							"bc661909-0185-40a4-a5e6-e52280e7b338",
 							"SolARMapFusionOpencv",
 							"Merge local map or floating map in the global map.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARCornerRefinementOpencv,
+							"ddae46ca-1657-4301-a87d-f2dcfa6265d0",
+							"SolARCornerRefinementOpencv",
+							"Refine the corner locations.")
 
 #endif // SOLARMODULEOPENCV_TRAITS_H

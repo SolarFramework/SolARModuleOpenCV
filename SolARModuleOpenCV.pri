@@ -6,6 +6,7 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARCameraOpencv.h \
     interfaces/SolARContoursExtractorOpencv.h \
     interfaces/SolARContoursFilterBinaryMarkerOpencv.h \
+    interfaces/SolARCornerRefinementOpencv.h \
     interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
     interfaces/SolARDescriptorMatcherKNNOpencv.h \
     interfaces/SolARDescriptorMatcherRadiusOpencv.h \
@@ -70,6 +71,7 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARCameraOpencv.cpp \
     src/SolARContoursExtractorOpencv.cpp \
     src/SolARContoursFilterBinaryMarkerOpencv.cpp \
+    src/SolARCornerRefinementOpencv.cpp \
     src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \

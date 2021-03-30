@@ -59,10 +59,12 @@
 #include "SolARSVDFundamentalMatrixDecomposerOpencv.h"
 #include "SolARSVDTriangulationOpencv.h"
 #include "SolAR2D3DcorrespondencesFinderOpencv.h"
+#include "SolARUndistortPointsOpencv.h"
 #include "SolARVideoAsCameraOpencv.h"
 #include "SolARImagesAsCameraOpencv.h"
 #include "SolARDeviceDataLoader.h"
 #include "SolARMapFusionOpencv.h"
+#include "SolARCornerRefinementOpencv.h"
 
 namespace xpcf=org::bcom::xpcf;
 
@@ -256,6 +258,14 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
 	{
 		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMapFusionOpencv>(componentUUID, interfaceRef);
 	}
+	if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+	{
+		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARUndistortPointsOpencv>(componentUUID, interfaceRef);
+	}
+	if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+	{
+		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARCornerRefinementOpencv>(componentUUID, interfaceRef);
+	}
     return errCode;
 }
 
@@ -280,6 +290,7 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARGeometricMatchesFilterOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARHomographyEstimationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARHomographyMatrixDecomposerOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageConvertorOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageConvertorUnity)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterBinaryOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterAdaptiveBinaryOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterBlurOpencv)
@@ -306,4 +317,6 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARVideoAsCameraOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImagesAsCameraOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDeviceDataLoader)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapFusionOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARUndistortPointsOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCornerRefinementOpencv)
 XPCF_END_COMPONENTS_DECLARATION

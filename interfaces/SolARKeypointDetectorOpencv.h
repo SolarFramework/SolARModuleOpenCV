@@ -105,6 +105,9 @@ private:
     int m_id;
     cv::Ptr<cv::Feature2D> m_detector;
     cv::KeyPointsFilter kptsFilter;
+	int m_nbGridWidth = 20;
+	int m_nbGridHeight = 20;
+	float m_borderRatio = 0.01f;
 
 };
 
