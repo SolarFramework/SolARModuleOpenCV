@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry autoAlias="true">
-        <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV module" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.9.3/lib/x86_64/shared">
+        <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV module" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/0.9.3/lib/x86_64/shared">
         <component uuid="d0116ed2-45d7-455d-8011-57959da1b0fa" name="SolARFiducialMarkerLoaderOpencv" description="SolARFiducialMarkerLoaderOpencv">
                 <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
                 <interface uuid="8e54d5d0-f7a3-4d62-b012-728e5704b46a" name="ITrackableLoader" description="ITrackableLoader"/>
