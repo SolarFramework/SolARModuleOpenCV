@@ -61,7 +61,7 @@
 
     <factory>
         <bindings>
-			<bind interface="ICamera" to="SolARVideoAsCameraOpencv"/>
+			<bind interface="ICamera" to="SolARCameraOpencv"/>
             <bind interface="IKeypointDetector" to="SolARKeypointDetectorOpencv"/>
             <bind interface="IDescriptorsExtractor" to="SolARDescriptorsExtractorSIFTOpencv"/>
             <bind interface="IDescriptorMatcher" to="SolARDescriptorMatcherKNNOpencv" />
@@ -70,10 +70,9 @@
     </factory>
 	
     <properties>
-        <configure component="SolARVideoAsCameraOpencv">
-			<property name="calibrationFile" type="string" value="path to calibration file"/>
-			<property name="videoPath" type="string" value="path to video file"/>
-			<property name="delayTime" type="Integer" value="50"/>
+        <configure component="SolARCameraOpencv">
+			<property name="calibrationFile" type="string" value="..\..\data\camera_calibration.yml"/>
+			<property name="deviceID" type="uint" value="0"/>
 		</configure>
         <configure component="SolARKeypointDetectorOpencv">
 			<property name="type" type="string" value="SIFT"/>
@@ -99,7 +98,6 @@
 				<value>0</value>
 				<value>255</value>
 			</property>
-			<property name="maxMatches" type="UnsignedInteger" value="-1"/>
 		</configure>
 		<configure component="SolARMatchesOverlayOpencv">
 			<property name="thickness" type="UnsignedInteger" value="1"/>

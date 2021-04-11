@@ -51,6 +51,14 @@
             <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
             <interface uuid="77281cda-47c2-4bb7-bde6-5b0d02e75dae" name="I3DTransformFinder" description="I3DTransformFinder"/>
         </component>
+		<component uuid="ddae46ca-1657-4301-a87d-f2dcfa6265d0" name="SolARCornerRefinementOpencv" description="SolARCornerRefinementOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="6ed0413a-751e-4c33-b91b-97b3ea949bc2" name="ICornerRefinement" description="ICornerRefinement"/>
+		</component>
+		<component uuid="741fc298-0149-4322-a7a9-ccb971e857ba" name="SolARProjectOpencv" description="SolARProjectOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="b485f37d-a8ea-49f6-b361-f2b30777d9ba" name="IProject" description="IProject"/>
+		</component>
     </module>
 	
     <module uuid="6e960df6-9a36-11e8-9eb6-529269fb1459" name="SolARModuleOpenGL" description="SolARModuleOpenGL" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenGL/0.9.4/lib/x86_64/shared">
@@ -153,12 +161,12 @@
             <property name="exitKey" type="int" value="27"/>
         </configure>
         <configure component="SolARFiducialMarkerPoseEstimator" name="fiducialMarkerPoseEstimator1">
-            <property name="nbThreshold" type="int" value="3"/>
+            <property name="nbThreshold" type="int" value="8"/>
             <property name="minThreshold" type="int" value="-1"/>
             <property name="maxThreshold" type="int" value="220"/>
         </configure>
         <configure component="SolARFiducialMarkerPoseEstimator" name="fiducialMarkerPoseEstimator2">
-            <property name="nbThreshold" type="int" value="3"/>
+            <property name="nbThreshold" type="int" value="8"/>
             <property name="minThreshold" type="int" value="-1"/>
             <property name="maxThreshold" type="int" value="220"/>
         </configure>
