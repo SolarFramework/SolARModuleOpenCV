@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry autoAlias="true">
-	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.9.4/lib/x86_64/shared">
+	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/0.9.4/lib/x86_64/shared">
         <component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="SolARImageViewerOpencv" description="SolARImageViewerOpencv">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
@@ -12,7 +12,11 @@
 		<component uuid="4b5576c1-4c44-4835-a405-c8de2d4f85b0" name="SolARDeviceDataLoader" description="SolARDeviceDataLoader">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="999085e6-1d11-41a5-8cca-3daf4e02e941" name="IARDevice" description="IARDevice"/>
-		</component>	
+		</component>
+		<component uuid="d0116ed2-45d7-455d-8011-57959da1b0fa" name="SolARFiducialMarkerLoaderOpencv" description="SolARFiducialMarkerLoaderOpencv">
+				<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+				<interface uuid="8e54d5d0-f7a3-4d62-b012-728e5704b46a" name="ITrackableLoader" description="ITrackableLoader"/>
+		</component>
 		<component uuid="5d2b8da9-528e-4e5e-96c1-f883edcf3b1c" name="SolARMarker2DSquaredBinaryOpencv" description="SolARMarker2DSquaredBinaryOpencv">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="3c9cee8a-e9ca-4c16-851a-669a94c2a68d" name="IMarker" description="IMarker"/>
@@ -61,17 +65,17 @@
 		</component>
     </module>
 	
-	<module uuid="6e960df6-9a36-11e8-9eb6-529269fb1459" name="SolARModuleOpenGL" description="SolARModuleOpenGL" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenGL/0.9.4/lib/x86_64/shared">
+	<module uuid="6e960df6-9a36-11e8-9eb6-529269fb1459" name="SolARModuleOpenGL" description="SolARModuleOpenGL" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenGL/0.9.4/lib/x86_64/shared">
 		<component uuid="afd38ea0-9a46-11e8-9eb6-529269fb1459" name="SolAR3DPointsViewerOpengl" description="SolAR3DPointsViewerOpengl">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="575d365a-9a27-11e8-9eb6-529269fb1459" name="I3DPointsViewer" description="I3DPointsViewer"/>
 		</component>
 	</module>
 	
-	<module uuid="28b89d39-41bd-451d-b19e-d25a3d7c5797" name="SolARModuleTools"  path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleTools/0.9.4/lib/x86_64/shared" description="Tools">
+	<module uuid="28b89d39-41bd-451d-b19e-d25a3d7c5797" name="SolARModuleTools"  path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleTools/0.9.4/lib/x86_64/shared" description="Tools">
 		<component uuid="cddd23c4-da4e-4c5c-b3f9-7d095d097c97" name="SolARFiducialMarkerPoseEstimator" description="SolARFiducialMarkerPoseEstimator">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-			<interface uuid="d5247968-b74e-4afb-9abd-546021441ad4" name="IFiducialMarkerPose" description="IFiducialMarkerPose"/>
+			<interface uuid="d5247968-b74e-4afb-9abd-546021441ad4" name="ITrackablePose" description="ITrackablePose"/>
 		</component>
 		<component uuid="a2ef5542-029e-4fce-9974-0aea14b29d6f" name="SolARSBPatternReIndexer" description="SolARSBPatternReIndexer">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
@@ -84,30 +88,33 @@
 	</module>
 	
 	<factory>
-		<bindings>
-			<bind name="Matcher-Fiducial" interface="IDescriptorMatcher" to="SolARDescriptorMatcherRadiusOpencv" />
-		</bindings>
+		<injects>
+			<inject to="SolARFiducialMarkerPoseEstimator">
+				<bind interface="IDescriptorMatcher" to="SolARDescriptorMatcherRadiusOpencv"/>
+				<bind interface="IImageConvertor" to="SolARImageConvertorOpencv"/>
+			</inject>
+		</injects>
 	</factory>
 	
     <properties>
         <configure component="SolARDeviceDataLoader">
             <property name="calibrationFile" type="string" value="../../data/hololens_calibration.yml"/>
             <property name="pathToData" type="string" value="../../data/loop_desktop_A"/>
-                        <property name="delayTime" type="int" value="100"/>
+			<property name="delayTime" type="int" value="100"/>
 		</configure>
 		<configure component="SolARImageViewerOpencv">
 			<property name="title" type="string" value="Sample AR Device Loader"/>
-                        <property name="exitKey" type="int" value="27"/>
-                        <property name="width" type="int" value="0"/>
-                        <property name="height" type="int" value="0"/>
+			<property name="exitKey" type="int" value="27"/>
+			<property name="width" type="int" value="0"/>
+			<property name="height" type="int" value="0"/>
 		</configure>
 		<configure component="SolAR3DOverlayBoxOpencv">
-                        <property name="position" type="float">
+			<property name="position" type="float">
 				<value>0</value>
 				<value>0</value>
 				<value>0</value>
 			</property>
-                        <property name="orientation" type="float">
+			<property name="orientation" type="float">
 				<value>0.0</value>
 				<value>0.0</value>
 				<value>0.0</value>
@@ -120,15 +127,15 @@
 		</configure>
 		<configure component="SolAR3DPointsViewerOpengl">
 			<property name="title" type="string" value="Points Cloud (press esc to exit)"/>
-                        <property name="width" type="uint" value="1280"/>
-                        <property name="height" type="uint" value="960"/>
-                        <property name="backgroundColor" type="uint">
+			<property name="width" type="uint" value="1280"/>
+			<property name="height" type="uint" value="960"/>
+			<property name="backgroundColor" type="uint">
 				<value>0</value>
 				<value>0</value>
 				<value>0</value>
 			</property>
-                        <property name="fixedPointsColor" type="uint" value="1"/>
-                        <property name="pointsColor" type="uint">
+			<property name="fixedPointsColor" type="uint" value="1"/>
+			<property name="pointsColor" type="uint">
 				<value>0</value>
 				<value>255</value>
 				<value>0</value>
@@ -138,49 +145,49 @@
 				<value>255</value>
 				<value>255</value>
 			</property>
-                        <property name="drawCameraAxis" type="uint" value="1"/>
-                        <property name="drawSceneAxis" type="uint" value="0"/>
-                        <property name="drawWorldAxis" type="uint" value="1"/>
-                        <property name="axisScale" type="float" value="1.0"/>
-                        <property name="pointSize" type="float" value="1.0"/>
-                        <property name="cameraScale" type="float" value="1.0"/>
-                        <property name="keyframeAsCamera" type="uint" value="1"/>
-                        <property name="framesColor" type="uint">
+			<property name="drawCameraAxis" type="uint" value="1"/>
+			<property name="drawSceneAxis" type="uint" value="0"/>
+			<property name="drawWorldAxis" type="uint" value="1"/>
+			<property name="axisScale" type="float" value="1.0"/>
+			<property name="pointSize" type="float" value="1.0"/>
+			<property name="cameraScale" type="float" value="1.0"/>
+			<property name="keyframeAsCamera" type="uint" value="1"/>
+			<property name="framesColor" type="uint">
 				<value>128</value>
 				<value>0</value>
 				<value>255</value>
 			</property>
-                        <property name="keyframesColor" type="uint">
+			<property name="keyframesColor" type="uint">
 				<value>0</value>
 				<value>0</value>
 				<value>255</value>
 			</property>
-                        <property name="zoomSensitivity" type="float" value="10.0"/>
-                        <property name="exitKey" type="int" value="27"/>
+			<property name="zoomSensitivity" type="float" value="10.0"/>
+			<property name="exitKey" type="int" value="27"/>
 		</configure>    
 		<configure component="SolARFiducialMarkerPoseEstimator">
-                        <property name="nbThreshold" type="int" value="8"/>
-                        <property name="minThreshold" type="int" value="-1"/>
-                        <property name="maxThreshold" type="int" value="220"/>
+			<property name="nbThreshold" type="int" value="8"/>
+			<property name="minThreshold" type="int" value="-1"/>
+			<property name="maxThreshold" type="int" value="220"/>
 		</configure>
 		<configure component="SolARMarker2DSquaredBinaryOpencv">
-                <property name="filePath" type="string" value="../../data/fiducialMarkerA.yml" description="Path of the .yml file describing the fiducial marker."/>
+			<property name="filePath" type="string" value="../../data/fiducialMarkerA.yml" description="Path of the .yml file describing the fiducial marker."/>
 		</configure>	
 		<configure component="SolARImageFilterBinaryOpencv">
-                        <property name="min" type="int" value="-1" description="minimum threshold (-1 to automatically compute it on the global image"/>
-                        <property name="max" type="int" value="255" description="maximum threshold"/>
+			<property name="min" type="int" value="-1" description="minimum threshold (-1 to automatically compute it on the global image"/>
+			<property name="max" type="int" value="255" description="maximum threshold"/>
 		</configure>
 		<configure component="SolARContoursExtractorOpencv">
-                        <property name="minContourEdges" type="int" value="4" description="Minimum number of edge to validate a contour (default = 4)" />
+			<property name="minContourEdges" type="int" value="4" description="Minimum number of edge to validate a contour (default = 4)" />
 		</configure>
 		<configure component="SolARContoursFilterBinaryMarkerOpencv">
-                        <property name="epsilon" type="float" value="0.05" description="The maximum distance between the original curve and its approximation (default = 0.05)"/>
-                        <property name="minContourLength" type="float" value="20.0" description="The minimum length of an edge of the contour in pixels to be considered as valid (default = 20)."/>
-                        <property name="minDistanceBetweenContourCorners" type="float" value="10.0" description="The minimum average distance in pixels between corners of a contour and the same corners of another contour to consider the contour as valid (default = 10)"/>
+			<property name="epsilon" type="float" value="0.05" description="The maximum distance between the original curve and its approximation (default = 0.05)"/>
+			<property name="minContourLength" type="float" value="20.0" description="The minimum length of an edge of the contour in pixels to be considered as valid (default = 20)."/>
+			<property name="minDistanceBetweenContourCorners" type="float" value="10.0" description="The minimum average distance in pixels between corners of a contour and the same corners of another contour to consider the contour as valid (default = 10)"/>
 		</configure>
 		<configure component="SolARPerspectiveControllerOpencv">
-                        <property name="outputImageWidth" type="int" value="640" description="The width in pixels of the corrected image."/>
-                        <property name="outputImageHeight" type="int" value="480" description="The width in pixels of the corrected image."/>
+			<property name="outputImageWidth" type="int" value="640" description="The width in pixels of the corrected image."/>
+			<property name="outputImageHeight" type="int" value="480" description="The width in pixels of the corrected image."/>
 		</configure>
 	</properties>
 </xpcf-registry>

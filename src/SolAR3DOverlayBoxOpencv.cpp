@@ -80,7 +80,7 @@ xpcf::XPCFErrorCode SolAR3DOverlayBoxOpencv::onConfigured()
     parallelepiped.push_back(transform * Vector4f( half_X,  half_Y,   -Z, 1.0f));
     parallelepiped.push_back(transform * Vector4f(-half_X,  half_Y,   -Z, 1.0f));
 
-    for (int i = 0; i < parallelepiped.size(); i++)
+    for (unsigned int i = 0; i < parallelepiped.size(); i++)
 		for (int j = 0; j < 3; j++)
 			m_parallelepiped.at< float >(i, j) = parallelepiped[i](j);
 

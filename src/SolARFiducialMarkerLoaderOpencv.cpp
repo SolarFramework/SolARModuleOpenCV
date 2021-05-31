@@ -16,6 +16,8 @@
 
 #include "SolARFiducialMarkerLoaderOpencv.h"
 #include "core/Log.h"
+#include "opencv2/opencv.hpp"
+#include "datastructure/FiducialMarker.h"
 
 namespace xpcf  = org::bcom::xpcf;
 
@@ -38,9 +40,8 @@ namespace OPENCV {
         LOG_DEBUG(" SolARFiducialMarkerLoaderOpencv destructor")
     }
 
-    SRef<Trackable> SolARFiducialMarkerLoaderOpencv::loadTrackable()
+    FrameworkReturnCode SolARFiducialMarkerLoaderOpencv::loadTrackable(SRef<Trackable>& trackable)
     {
-        SRef<FiducialMarker> fiducialMarker = 0; // Fiducial Marker instance returned
         SquaredBinaryPattern binaryPattern; // Binary pattern of the fiducial marker
         Sizef markerSize; // Size of the fiducial image
         cv::Mat cv_pattern;
@@ -50,7 +51,7 @@ namespace OPENCV {
         if (m_filePath.empty())
         {
             LOG_ERROR("Fiducial marker definition file path has not been defined");
-            return fiducialMarker;
+            return FrameworkReturnCode::_ERROR_;
         }
 
         LOG_DEBUG("Load fiducial configuration file: {}", m_filePath);
@@ -60,7 +61,7 @@ namespace OPENCV {
         if (!fs.isOpened())
         {
             LOG_ERROR("Binary Fiducial Marker file {} cannot be loaded", m_filePath)
-            return fiducialMarker;
+            return FrameworkReturnCode::_ERROR_;
         }
 
         LOG_DEBUG("Extract data from configuration file");
@@ -76,7 +77,7 @@ namespace OPENCV {
         if (nbRows== 0 || nbCols ==0)
         {
             LOG_ERROR("In Binary Fiducial Marker file {}, the pattern matrix is empty", m_filePath)
-            return fiducialMarker;
+            return FrameworkReturnCode::_ERROR_;
         }
 
         // Reconstruct the binary pattern
@@ -90,13 +91,13 @@ namespace OPENCV {
         // Set the binary pattern
         binaryPattern.setPatternMatrix(sfpm);
 
-        // Create the new FiducialMarker object (kinf of Trackable object)
-        fiducialMarker = SRef<FiducialMarker>(new FiducialMarker(m_filePath, markerSize, binaryPattern));
-
         LOG_DEBUG("Fiducial marker url / width / height / pattern size = {} / {} / {} / {}",
-                  fiducialMarker->getURL(), fiducialMarker->getWidth(), fiducialMarker->getHeight(), fiducialMarker->getPattern().getSize());
+                  m_filePath, markerSize.width , markerSize.height, binaryPattern.getSize());
 
-        return fiducialMarker;
+        // Create the new FiducialMarker object (kinf of Trackable object)
+        trackable = xpcf::utils::make_shared<FiducialMarker>(m_filePath, markerSize, binaryPattern);
+
+        return FrameworkReturnCode::_SUCCESS;
     }
 
 }

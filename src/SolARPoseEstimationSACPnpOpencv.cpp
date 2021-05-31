@@ -78,7 +78,7 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
     }
 
-    for (int i=0;i<imagePoints.size();++i) {
+    for (unsigned int i=0;i<imagePoints.size();++i) {
         Point2Df point2D = imagePoints.at(i);
         Point3Df point3D =worldPoints.at(i);
         imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
@@ -111,7 +111,7 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
      cv::projectPoints(worldCVPoints, raux, taux, m_camMatrix, m_camDistorsion, projected3D);
 
 	 inliers.clear();
-     for (int i = 0; i < projected3D.size(); i++) {
+     for (unsigned int i = 0; i < projected3D.size(); i++) {
 		 double err_reprj = norm(projected3D[i] - imageCVPoints[i]);
          if (err_reprj < m_reprojError) {
 			 inliers.push_back(i);

@@ -102,7 +102,7 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
 	cv::Mat F12 = K.t().inv() * T12x * R12 * K.inv();
 	
 	// check matches based on distance to epipolar lines
-	for (int i = 0; i < inputMatches.size(); ++i) {		
+    for (unsigned int i = 0; i < inputMatches.size(); ++i) {
 		Keypoint kp1 = inputKeyPoints1[inputMatches[i].getIndexInDescriptorA()];
 		Keypoint kp2 = inputKeyPoints2[inputMatches[i].getIndexInDescriptorB()];
 		// Epipolar line in second image l = x1'F12 = [a b c]

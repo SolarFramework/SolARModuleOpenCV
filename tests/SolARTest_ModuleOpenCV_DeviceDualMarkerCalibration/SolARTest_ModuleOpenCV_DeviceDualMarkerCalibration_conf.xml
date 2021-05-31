@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry autoAlias="true">
-    <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.9.4/lib/x86_64/shared">
+    <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/0.9.4/lib/x86_64/shared">
         <component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="SolARImageViewerOpencv" description="SolARImageViewerOpencv">
             <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
             <interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
@@ -13,11 +13,9 @@
             <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
             <interface uuid="999085e6-1d11-41a5-8cca-3daf4e02e941" name="IARDevice" description="IARDevice"/>
         </component>
-        <component uuid="5d2b8da9-528e-4e5e-96c1-f883edcf3b1c" name="SolARMarker2DSquaredBinaryOpencv" description="SolARMarker2DSquaredBinaryOpencv">
-            <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-            <interface uuid="3c9cee8a-e9ca-4c16-851a-669a94c2a68d" name="IMarker" description="IMarker"/>
-            <interface uuid="e9cdcf6e-c54c-11e7-abc4-cec278b6b50a" name="IMarker2Dquared" description="IMarker2Dquared"/>
-            <interface uuid="12d592ff-aa46-40a6-8d65-7fbfb382d60b" name="IMarker2DSquaredBinary" description="IMarker2DSquaredBinary"/>
+        <component uuid="d0116ed2-45d7-455d-8011-57959da1b0fa" name="SolARFiducialMarkerLoaderOpencv" description="SolARFiducialMarkerLoaderOpencv">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="8e54d5d0-f7a3-4d62-b012-728e5704b46a" name="ITrackableLoader" description="ITrackableLoader"/>
         </component>
         <component uuid="4309dcc6-cc73-11e7-abc4-cec278b6b50a" name="SolARContoursFilterBinaryMarkerOpencv" description="SolARContoursFilterBinaryMarkerOpencv">
             <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
@@ -61,17 +59,17 @@
 		</component>
     </module>
 	
-    <module uuid="6e960df6-9a36-11e8-9eb6-529269fb1459" name="SolARModuleOpenGL" description="SolARModuleOpenGL" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenGL/0.9.4/lib/x86_64/shared">
+    <module uuid="6e960df6-9a36-11e8-9eb6-529269fb1459" name="SolARModuleOpenGL" description="SolARModuleOpenGL" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenGL/0.9.4/lib/x86_64/shared">
         <component uuid="afd38ea0-9a46-11e8-9eb6-529269fb1459" name="SolAR3DPointsViewerOpengl" description="SolAR3DPointsViewerOpengl">
             <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
             <interface uuid="575d365a-9a27-11e8-9eb6-529269fb1459" name="I3DPointsViewer" description="I3DPointsViewer"/>
         </component>
     </module>
 
-    <module uuid="28b89d39-41bd-451d-b19e-d25a3d7c5797" name="SolARModuleTools"  path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleTools/0.9.4/lib/x86_64/shared" description="Tools">
+    <module uuid="28b89d39-41bd-451d-b19e-d25a3d7c5797" name="SolARModuleTools"  path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleTools/0.9.4/lib/x86_64/shared" description="Tools">
         <component uuid="cddd23c4-da4e-4c5c-b3f9-7d095d097c97" name="SolARFiducialMarkerPoseEstimator" description="SolARFiducialMarkerPoseEstimator">
             <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-            <interface uuid="d5247968-b74e-4afb-9abd-546021441ad4" name="IFiducialMarkerPose" description="IFiducialMarkerPose"/>
+            <interface uuid="d5247968-b74e-4afb-9abd-546021441ad4" name="ITrackablePose" description="ITrackablePose"/>
         </component>
         <component uuid="a2ef5542-029e-4fce-9974-0aea14b29d6f" name="SolARSBPatternReIndexer" description="SolARSBPatternReIndexer">
             <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
@@ -85,10 +83,15 @@
 
     <factory>
         <bindings>
-            <bind name="Matcher-Fiducial" interface="IDescriptorMatcher" to="SolARDescriptorMatcherRadiusOpencv" />
-            <bind interface="IMarker2DSquaredBinary" to="SolARMarker2DSquaredBinaryOpencv" name="marker1" properties="marker1"/>
-            <bind interface="IMarker2DSquaredBinary" to="SolARMarker2DSquaredBinaryOpencv" name="marker2" properties="marker2"/>
+            <bind interface="ITrackableLoader" to="SolARFiducialMarkerLoaderOpencv" name="marker1" properties="marker1"/>
+            <bind interface="ITrackableLoader" to="SolARFiducialMarkerLoaderOpencv" name="marker2" properties="marker2"/>
         </bindings>
+		<injects>
+			<inject to="SolARFiducialMarkerPoseEstimator">
+				<bind interface="IDescriptorMatcher" to="SolARDescriptorMatcherRadiusOpencv"/>
+				<bind interface="IImageConvertor" to="SolARImageConvertorOpencv"/>
+			</inject>
+		</injects>
     </factory>
 	
     <properties>
@@ -160,20 +163,15 @@
             <property name="zoomSensitivity" type="float" value="10.0"/>
             <property name="exitKey" type="int" value="27"/>
         </configure>
-        <configure component="SolARFiducialMarkerPoseEstimator" name="fiducialMarkerPoseEstimator1">
-            <property name="nbThreshold" type="int" value="8"/>
+        <configure component="SolARFiducialMarkerPoseEstimator">
+            <property name="nbThreshold" type="int" value="5"/>
             <property name="minThreshold" type="int" value="-1"/>
             <property name="maxThreshold" type="int" value="220"/>
         </configure>
-        <configure component="SolARFiducialMarkerPoseEstimator" name="fiducialMarkerPoseEstimator2">
-            <property name="nbThreshold" type="int" value="8"/>
-            <property name="minThreshold" type="int" value="-1"/>
-            <property name="maxThreshold" type="int" value="220"/>
-        </configure>
-        <configure component="SolARMarker2DSquaredBinaryOpencv" name="marker1">
+        <configure component="SolARFiducialMarkerLoaderOpencv" name="marker1">
             <property name="filePath" type="string" value="../../data/fiducialMarkerA.yml" description="Path of the .yml file describing the fiducial marker."/>
         </configure>
-        <configure component="SolARMarker2DSquaredBinaryOpencv" name="marker2">
+        <configure component="SolARFiducialMarkerLoaderOpencv" name="marker2">
             <property name="filePath" type="string" value="../../data/fiducialMarkerB.yml" description="Path of the .yml file describing the fiducial marker."/>
         </configure>
         <configure component="SolARImageFilterBinaryOpencv">
