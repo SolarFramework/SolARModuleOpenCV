@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_FiducialMarker
-VERSION=0.9.4
+VERSION=0.9.3
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
@@ -50,6 +50,11 @@ unix {
     QMAKE_CXXFLAGS += -DBOOST_ALL_DYN_LINK
 }
 
+linux {
+        QMAKE_LFLAGS += -ldl
+        LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
+}
+
 macx {
     QMAKE_MAC_SDK= macosx
     QMAKE_CXXFLAGS += -fasm-blocks -x objective-c++
@@ -75,6 +80,7 @@ configfile.files = $${PWD}/SolARTest_ModuleOpenCV_FiducialMarker_conf.xml
 INSTALLS += configfile
 
 DISTFILES += \
+    SolARTest_ModuleOpenCV_FiducialMarker_conf.xml \
     packagedependencies.txt
 
 #NOTE : Must be placed at the end of the .pro
