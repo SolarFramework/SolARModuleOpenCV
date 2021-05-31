@@ -27,7 +27,6 @@ XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMapFusionOpencv
 namespace SolAR {
 using namespace datastructure;
 using namespace api::solver::map;
-using namespace api::storage;
 namespace MODULES {
 namespace OPENCV {
 
@@ -46,34 +45,19 @@ SolARMapFusionOpencv::~SolARMapFusionOpencv()
 	LOG_DEBUG(" SolARMapFusionOpencv destructor")
 }
 
-FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper> globalMap, Transform3Df & transform, uint32_t & nbMatches, float & error)
+FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<datastructure::Map> map, SRef<datastructure::Map> globalMap, Transform3Df & transform, uint32_t & nbMatches, float & error)
 {
+	/// Transform local map to global map
+	m_transform3D->transformInPlace(transform, map);
+	
+	// get point cloud
+	std::vector<SRef<CloudPoint>> cloudPoints, globalCloudPoints;
+	const SRef<PointCloud>& pointCloud = map->getConstPointCloud();
+	pointCloud->getAllPoints(cloudPoints);
+	const SRef<PointCloud>& globalPointCloud = globalMap->getConstPointCloud();
+	globalPointCloud->getAllPoints(globalCloudPoints);
+
 	/// Find 3D-3D correspondences using kd tree and feature
-	// get map
-	SRef<IPointCloudManager> pointcloudManager, globalPointcloudManager;
-	SRef<IKeyframesManager> keyframeMananger, globalKeyframeMananger;
-	SRef<ICovisibilityGraph> covisibilityGraph, globalCovisibilityGraph;
-	SRef<api::reloc::IKeyframeRetriever> keyframeRetriever, globalKeyframeRetriever;
-	map->getPointCloudManager(pointcloudManager);	
-	map->getKeyframesManager(keyframeMananger);
-	map->getCovisibilityGraph(covisibilityGraph);
-	map->getKeyframeRetriever(keyframeRetriever);
-
-	globalMap->getPointCloudManager(globalPointcloudManager);
-	globalMap->getKeyframesManager(globalKeyframeMananger);
-	globalMap->getCovisibilityGraph(globalCovisibilityGraph);
-	globalMap->getKeyframeRetriever(globalKeyframeRetriever);
-	std::vector<SRef<CloudPoint>> cloudPoints, globalCloudPoints;	
-	std::vector<SRef<Keyframe>> keyframes, globalKeyframes;
-	pointcloudManager->getAllPoints(cloudPoints);
-	keyframeMananger->getAllKeyframes(keyframes);
-	globalPointcloudManager->getAllPoints(globalCloudPoints);
-	globalKeyframeMananger->getAllKeyframes(globalKeyframes);
-
-    /// Transform local map to global map
-    m_transform3D->transformInPlace(transform, cloudPoints);
-    m_transform3D->transformInPlace(transform, keyframes);
-
 	// init kd tree of global point cloud
 	cv::Mat_<float> features(0, 3);
 	for (const auto &cp : globalCloudPoints) {
@@ -128,8 +112,7 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 		return FrameworkReturnCode::_ERROR_;
 
 	/// Apply transform2 and refine transform
-    m_transform3D->transformInPlace(transform2, cloudPoints);
-    m_transform3D->transformInPlace(transform2, keyframes);
+	m_transform3D->transformInPlace(transform2, map);
 	transform = transform2 * transform;
 
 	/// get best matches
@@ -150,57 +133,53 @@ FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper>
 	return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<IMapper> map, SRef<IMapper> globalMap, Transform3Df & transform, const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, bool isRefineTransform)
+FrameworkReturnCode SolARMapFusionOpencv::merge(SRef<datastructure::Map> map, SRef<datastructure::Map> globalMap, Transform3Df & transform, const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, bool isRefineTransform)
 {
 	uint32_t nbMatches;
 	float error;
 	if (isRefineTransform)
 		return this->merge(map, globalMap, transform, nbMatches, error);
 	// transform map
-    SRef<IPointCloudManager> pointcloudManager;
-    SRef<IKeyframesManager> keyframeMananger;
-    map->getPointCloudManager(pointcloudManager);
-    map->getKeyframesManager(keyframeMananger);
-    std::vector<SRef<CloudPoint>> cloudPoints;
-    std::vector<SRef<Keyframe>> keyframes;
-    pointcloudManager->getAllPoints(cloudPoints);
-    keyframeMananger->getAllKeyframes(keyframes);
-
-    m_transform3D->transformInPlace(transform, cloudPoints);
-    m_transform3D->transformInPlace(transform, keyframes);
+	m_transform3D->transformInPlace(transform, map);
 	// fuse local map into global map
 	fuseMap(cpOverlapIndices, map, globalMap);
 	return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, SRef<IMapper> map, SRef<IMapper> globalMap)
+void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_t>>& cpOverlapIndices, SRef<datastructure::Map> map, SRef<datastructure::Map> globalMap)
 {
-	// get map
-	SRef<IPointCloudManager> pointcloudManager, globalPointcloudManager;
-	SRef<IKeyframesManager> keyframeMananger, globalKeyframeMananger;
-	SRef<ICovisibilityGraph> covisibilityGraph, globalCovisibilityGraph;
-	SRef<api::reloc::IKeyframeRetriever> keyframeRetriever, globalKeyframeRetriever;
-	map->getPointCloudManager(pointcloudManager);
-	map->getKeyframesManager(keyframeMananger);
-	map->getCovisibilityGraph(covisibilityGraph);
-	map->getKeyframeRetriever(keyframeRetriever);
-	globalMap->getPointCloudManager(globalPointcloudManager);
-	globalMap->getKeyframesManager(globalKeyframeMananger);
-	globalMap->getCovisibilityGraph(globalCovisibilityGraph);
-	globalMap->getKeyframeRetriever(globalKeyframeRetriever);
+	// get point cloud
 	std::vector<SRef<CloudPoint>> cloudPoints, globalCloudPoints;
+	const SRef<PointCloud>& pointCloud = map->getConstPointCloud();
+	pointCloud->getAllPoints(cloudPoints);
+	SRef<PointCloud> globalPointCloud;
+	globalMap->getPointCloud(globalPointCloud);
+	globalPointCloud->getAllPoints(globalCloudPoints);
+
+	// get keyframes
 	std::vector<SRef<Keyframe>> keyframes, globalKeyframes;
-	pointcloudManager->getAllPoints(cloudPoints);
-	keyframeMananger->getAllKeyframes(keyframes);
-	globalPointcloudManager->getAllPoints(globalCloudPoints);
-	globalKeyframeMananger->getAllKeyframes(globalKeyframes);
+	const SRef<KeyframeCollection>& keyframeCollection = map->getConstKeyframeCollection();
+	keyframeCollection->getAllKeyframes(keyframes);
+	SRef<KeyframeCollection> globalKeyframeCollection;
+	globalMap->getKeyframeCollection(globalKeyframeCollection);
+	globalKeyframeCollection->getAllKeyframes(globalKeyframes);
+
+	// get covisibility graph
+	const SRef<CovisibilityGraph>& covisibilityGraph = map->getConstCovisibilityGraph();
+	SRef<CovisibilityGraph> globalCovisibilityGraph;
+	globalMap->getCovisibilityGraph(globalCovisibilityGraph);
+
+	// get keyframe retrieval	
+	const SRef<KeyframeRetrieval>& keyframeRetrieval = map->getConstKeyframeRetrieval();
+	SRef<KeyframeRetrieval> globalKeyframeRetrieval;
+	globalMap->getKeyframeRetrieval(globalKeyframeRetrieval);
 
 	// get duplicated cloud points
 	std::vector < std::pair<SRef<CloudPoint>, SRef<CloudPoint>>> duplicatedCPsFiltered; // first is local CP, second is global CP
 	for (const auto &it : cpOverlapIndices) {
 		SRef<CloudPoint> localCP, globalCP;
-		pointcloudManager->getPoint(it.first, localCP);
-		globalPointcloudManager->getPoint(it.second, globalCP);
+		pointCloud->getPoint(it.first, localCP);
+		globalPointCloud->getPoint(it.second, globalCP);
 		duplicatedCPsFiltered.push_back(std::make_pair(localCP, globalCP));
 	}
 
@@ -208,7 +187,7 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 	std::map<uint32_t, uint32_t> idxCPOldNew;
 	for (const auto &cp : cloudPoints) {
 		uint32_t idxOld = cp->getId();
-		globalPointcloudManager->addPoint(cp);
+		globalPointCloud->addPoint(cp);
 		idxCPOldNew[idxOld] = cp->getId();
 	}
 
@@ -224,7 +203,7 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 		kf->setPose(kfPose);
 
 		uint32_t idxOld = kf->getId();
-		globalKeyframeMananger->addKeyframe(kf);
+		globalKeyframeCollection->addKeyframe(kf);
 		idxKfOldNew[idxOld] = kf->getId();
 	}
 
@@ -232,7 +211,7 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 	for (const auto &cp : cloudPoints) {
 		std::map<uint32_t, uint32_t> visibilities = cp->getVisibility();
 		for (const auto &vi : visibilities) {
-			cp->removeVisibility(vi.first, vi.second);
+			cp->removeVisibility(vi.first);
 			cp->addVisibility(idxKfOldNew[vi.first], vi.second);
 		}
 	}
@@ -247,8 +226,12 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 	}
 
 	// add keyframe retriever of local map to global map
-	for (const auto &kf : keyframes) {
-		globalKeyframeRetriever->addKeyframe(kf);
+	for (const auto &idKf : idxKfOldNew) {
+		fbow::fBow fbowDesc;
+		fbow::fBow2 fbow2Desc;
+		keyframeRetrieval->getFBow(idKf.first, fbowDesc);
+		keyframeRetrieval->getFBow2(idKf.first, fbow2Desc);
+		globalKeyframeRetrieval->addDescriptor(idKf.second, fbowDesc, fbow2Desc);
 	}
 
 	// add covisibility graph of local map to global map
@@ -270,7 +253,7 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 			uint32_t id_kp1 = vi1.second;
 			SRef<Keyframe> kf1;
 			// update visibility of keyframes seen cp1
-			globalKeyframeMananger->getKeyframe(id_kf1, kf1);
+			globalKeyframeCollection->getKeyframe(id_kf1, kf1);
 			kf1->addVisibility(id_kp1, cp2->getId());
 			// move visibility of cp1 to cp2
 			cp2->addVisibility(id_kf1, id_kp1);
@@ -281,7 +264,7 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 			}
 		}
 		// suppress cp1
-		globalPointcloudManager->suppressPoint(cp1->getId());
+		globalPointCloud->suppressPoint(cp1->getId());
 	}
 }
 

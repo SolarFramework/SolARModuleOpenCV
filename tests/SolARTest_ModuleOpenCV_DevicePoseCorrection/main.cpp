@@ -18,7 +18,8 @@
 #include "xpcf/xpcf.h"
 #include "core/Log.h"
 #include "api/input/devices/IARDevice.h"
-#include "api/solver/pose/IFiducialMarkerPose.h"
+#include "api/input/files/ITrackableLoader.h"
+#include "api/solver/pose/ITrackablePose.h"
 #include "api/display/IImageViewer.h"
 #include "api/display/I3DOverlay.h"
 #include "api/display/I3DPointsViewer.h"
@@ -53,7 +54,8 @@ int main(int argc, char *argv[])
 		// declare and create components
 		LOG_INFO("Start creating components");
 		auto arDevice = xpcfComponentManager->resolve<input::devices::IARDevice>();
-		auto fiducialMarkerPoseEstimator = xpcfComponentManager->resolve<solver::pose::IFiducialMarkerPose>();
+        auto fiducialMarkerPoseEstimator = xpcfComponentManager->resolve<solver::pose::ITrackablePose>();
+        auto trackableLoader  = xpcfComponentManager->resolve<input::files::ITrackableLoader>();
 		int nbCameras = arDevice->getNbCameras();
 		if (INDEX_USE_CAMERA >= nbCameras) {
 			LOG_ERROR("Index of the used camera cannot be found");
@@ -63,6 +65,21 @@ int main(int argc, char *argv[])
 		auto imageViewer = xpcfComponentManager->resolve<display::IImageViewer>();
 		auto overlay3D = xpcfComponentManager->resolve<display::I3DOverlay>();
 		LOG_INFO("Components created!");
+        LOG_INFO("Setting marker!");
+        SRef<Trackable> trackable;
+        if (trackableLoader->loadTrackable(trackable) != FrameworkReturnCode::_SUCCESS)
+        {
+            LOG_ERROR("cannot load fiducial marker");
+            return -1;
+        }
+        else
+        {
+            if (fiducialMarkerPoseEstimator->setTrackable(trackable)!= FrameworkReturnCode::_SUCCESS)
+            {
+                LOG_ERROR("cannot set fiducial marker as a trackable for fiducial marker pose estimator");
+                return -1;
+            }
+        }
 
 		LOG_INFO("Start AR device loader");
 		// Connect remotely to the HoloLens streaming app
