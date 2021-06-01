@@ -170,7 +170,7 @@
 			<property name="minThreshold" type="int" value="-1"/>
 			<property name="maxThreshold" type="int" value="220"/>
 		</configure>
-		<configure component="SolARMarker2DSquaredBinaryOpencv">
+		<configure component="SolARFiducialMarkerLoaderOpencv">
 			<property name="filePath" type="string" value="../../data/fiducialMarkerA.yml" description="Path of the .yml file describing the fiducial marker."/>
 		</configure>	
 		<configure component="SolARImageFilterBinaryOpencv">
