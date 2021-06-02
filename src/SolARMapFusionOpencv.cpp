@@ -227,11 +227,11 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 
 	// add keyframe retriever of local map to global map
 	for (const auto &idKf : idxKfOldNew) {
-		fbow::fBow fbowDesc;
-		fbow::fBow2 fbow2Desc;
-		keyframeRetrieval->getFBow(idKf.first, fbowDesc);
-		keyframeRetrieval->getFBow2(idKf.first, fbow2Desc);
-		globalKeyframeRetrieval->addDescriptor(idKf.second, fbowDesc, fbow2Desc);
+        datastructure::BoWFeature bowDesc;
+        datastructure::BoWLevelFeature bowLevelDesc;
+        keyframeRetrieval->getBoWFeature(idKf.first, bowDesc);
+        keyframeRetrieval->getBoWLevelFeature(idKf.first, bowLevelDesc);
+        globalKeyframeRetrieval->addDescriptor(idKf.second, bowDesc, bowLevelDesc);
 	}
 
 	// add covisibility graph of local map to global map
