@@ -30,6 +30,7 @@
 #include "opencv2/features2d.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
+#include <opencv2/calib3d.hpp>
 
 #include "datastructure/DescriptorMatch.h"
 #include "datastructure/DescriptorBuffer.h"
@@ -85,6 +86,24 @@ public:
            const SRef<datastructure::DescriptorBuffer> descriptors1,
            const std::vector<SRef<datastructure::DescriptorBuffer>> & descriptors2,
            std::vector<datastructure::DescriptorMatch> & matches) override;
+
+    /// @brief Match two sets of descriptors from two frames based on epipolar constraint.
+    /// @param[in] frame1 The first frame.
+    /// @param[in] frame2 The second frame.
+    /// @param[in] pose1 The first pose.
+    /// @param[in] pose2 The second pose.
+    /// @param[in] intrinsicParameters The intrinsic parameters of the camera.
+    /// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
+    /// @param[in] mask The indices of descriptors in the first frame are used for matching to the second frame. If it is empty then all will be used.
+    /// @return DesciptorMatcher::DESCRIPTORS_MATCHER_OK if matching succeeds, DesciptorMatcher::DESCRIPTORS_DONT_MATCH if the types of descriptors are different, DesciptorMatcher::DESCRIPTOR_TYPE_UNDEFINED if one of the descriptors set is unknown, or DesciptorMatcher::DESCRIPTOR_EMPTY if one of the set is empty.
+    IDescriptorMatcher::RetCode match(
+        const SRef<SolAR::datastructure::Frame> frame1,
+        const SRef<SolAR::datastructure::Frame> frame2,
+        const SolAR::datastructure::Transform3Df& pose1,
+        const SolAR::datastructure::Transform3Df& pose2,
+        const SolAR::datastructure::CamCalibration& intrinsicParameters,
+        std::vector<SolAR::datastructure::DescriptorMatch> & matches,
+        const std::vector<uint32_t>& mask = {}) override;
 
 	/// @brief Match each descriptor input with descriptors of a frame in a region. The searching space is a circle which is defined by a 2D center and a radius
 	/// @param[in] points2D The center points of searching regions
