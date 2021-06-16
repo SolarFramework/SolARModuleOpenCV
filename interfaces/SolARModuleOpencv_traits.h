@@ -54,6 +54,7 @@ class SolARImageFilterAdaptiveBinaryOpencv;
 class SolARImageFilterBlurOpencv;
 class SolARImageFilterDilateOpencv;
 class SolARImageFilterErodeOpencv;
+class SolARImageFilterWallisOpencv;
 class SolARImageLoaderOpencv;
 class SolARImageMarkerLoaderOpencv;
 class SolARImageViewerOpencv;
@@ -215,6 +216,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterErodeOpencv
                              "58b09819-64bc-4a80-b6a2-9fe7b179f3fc",
                              "SolARImageFilterErodeOpencv",
                              "Erodes the white regions of a binary image.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageFilterWallisOpencv,
+                             "77113af0-4af2-4c45-92d4-fd1ea77b56cc",
+                             "SolARImageFilterWallisOpencv",
+                             "Apply a Wallis filter to the image")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv,
                              "e42d6526-9eb1-4f8a-bb68-53e06f09609c",

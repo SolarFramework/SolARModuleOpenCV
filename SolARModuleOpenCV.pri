@@ -1,4 +1,5 @@
 HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
+    $$PWD/interfaces/SolARImageFilterWallisOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolAR3DOverlayBoxOpencv.h \
     interfaces/SolARBaseCameraOpencv.h \
@@ -59,6 +60,7 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     src/AKAZE2/utils.h
 
 SOURCES +=  src/AKAZE2/akaze.cpp \
+    $$PWD/src/SolARImageFilterWallisOpencv.cpp \
     $$PWD/src/SolARImageMarkerLoaderOpencv.cpp \
     src/AKAZE2/AKAZEFeatures.cpp \
     src/AKAZE2/fed.cpp \

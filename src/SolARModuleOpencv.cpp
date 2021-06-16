@@ -42,6 +42,7 @@
 #include "SolARImageFilterBlurOpencv.h"
 #include "SolARImageFilterDilateOpencv.h"
 #include "SolARImageFilterErodeOpencv.h"
+#include "SolARImageFilterWallisOpencv.h"
 #include "SolARImageLoaderOpencv.h"
 #include "SolARImageMarkerLoaderOpencv.h"
 #include "SolARImageViewerOpencv.h"
@@ -176,6 +177,10 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageFilterWallisOpencv>(componentUUID,interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARImageLoaderOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
@@ -296,6 +301,7 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterAdaptiveBinaryOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterBlurOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterDilateOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterErodeOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageFilterWallisOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageLoaderOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageMarkerLoaderOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARImageViewerOpencv)

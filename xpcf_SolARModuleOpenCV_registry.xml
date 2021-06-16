@@ -104,7 +104,11 @@
     <component uuid="58b09819-64bc-4a80-b6a2-9fe7b179f3fc" name="SolARImageFilterErodeOpencv" description="SolARImageFilterErodeOpencv">
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
       <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" name="IImageFilter" description="IImageFilter"/>
-    </component>                
+    </component>
+    <component uuid="77113af0-4af2-4c45-92d4-fd1ea77b56cc" name="SolARImageFilterWallisOpencv" description="SolARImageFilterWallisOpencv">
+        <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+        <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" name="IImageFilter" description="IImageFilter"/>
+    </component>
     <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="SolARImageLoaderOpencv" description="SolARImageLoaderOpencv">
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
       <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" name="IImageLoader" description="IImageLoader"/>
