@@ -26,7 +26,7 @@
             <property name="filePath" type="string" value="../../data/notredame1.jpg"/>
         </configure>
         <configure component="SolARImageFilterWallisOpencv" name="wallis">
-            <property name="windowWidth" type="unsigned int" value="3"/>
+            <property name="windowWidth" type="unsigned int" value="14"/>
             <property name="denoisingMethod" type="string" value="None"/>
         </configure>
         <configure component="SolARImageViewerOpencv">
