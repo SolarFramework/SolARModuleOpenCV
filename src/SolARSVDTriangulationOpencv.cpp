@@ -304,7 +304,8 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 		pts3D.push_back(pt3D);
 		goodMatches.push_back(matches[i]);
 	}
-
+	if (pts3D.size() == 0)
+		return 0.0;
 	// Reproject 3D points
 	std::vector<Point2Df> ptsIn1, ptsIn2;
 	m_projector->project(pts3D, ptsIn1, poseView1);
