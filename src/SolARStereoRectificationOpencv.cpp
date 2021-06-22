@@ -73,11 +73,11 @@ xpcf::XPCFErrorCode SolARStereoRectificationOpencv::onConfigured()
 		cv::cv2eigen(m_P[i], m_rectificationParams[i].projection);
 	}
 	if (m_rectificationParams[1].projection(0, 3) != 0) {
-		m_baseline = m_rectificationParams[1].projection(0, 3) / m_rectificationParams[1].projection(0, 0);
+		m_baseline = std::abs(m_rectificationParams[1].projection(0, 3) / m_rectificationParams[1].projection(0, 0));
 		m_stereoType = StereoType::Horizontal;
 	}
 	else {
-		m_baseline = m_rectificationParams[1].projection(1, 3) / m_rectificationParams[1].projection(0, 0);
+		m_baseline = std::abs(m_rectificationParams[1].projection(1, 3) / m_rectificationParams[1].projection(0, 0));
 		m_stereoType = StereoType::Vertical;
 	}
 	return xpcf::XPCFErrorCode::_SUCCESS;
