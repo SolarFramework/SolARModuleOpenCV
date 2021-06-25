@@ -17,6 +17,7 @@
 #include "SolARStereoCalibrationOpencv.h"
 #include "core/Log.h"
 #include "SolAROpenCVHelper.h"
+#include <cassert>
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -49,6 +50,11 @@ FrameworkReturnCode SolARStereoCalibrationOpencv::calibrate(const std::vector<SR
 		LOG_ERROR("Must set all configurations and camera parameters before calibrating stereo camera");
 		return FrameworkReturnCode::_ERROR_;
 	}
+	if (m_nbDropFrames < 0) {
+		LOG_ERROR("Number of drop images must be greater than or equal to zero");
+		return FrameworkReturnCode::_ERROR_;
+	}
+
 	std::vector<std::vector<cv::Point2f>> imagePoints1, imagePoints2;
 	SRef<Image> image1, image2;
 	for (int i = 0; i < images1.size(); ++i){
@@ -58,7 +64,7 @@ FrameworkReturnCode SolARStereoCalibrationOpencv::calibrate(const std::vector<SR
 		cv::Mat displayImage1, displayImage2;
 		std::vector<cv::Point2f> pts1, pts2;
 		bool isFoundCorners = findChessboardCornersImage(image1, image2, displayImage1, displayImage2, pts1, pts2);
-		if ((i % m_nbDropFrames == 0) && isFoundCorners) {
+		if ((i % (m_nbDropFrames + 1) == 0) && isFoundCorners) {
 			imagePoints1.push_back(pts1);
 			imagePoints2.push_back(pts2);
 		}
