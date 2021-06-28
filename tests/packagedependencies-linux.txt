@@ -1,1 +1,1 @@
-SolARModuleOpenGL|0.9.4|SolARModuleOpenGL|SolARBuild@github|https://github.com/SolarFramework/SolarModuleOpenGL/releases/download
+SolARModuleOpenGL|0.10.0|SolARModuleOpenGL|SolARBuild@github|https://github.com/SolarFramework/SolarModuleOpenGL/releases/download
