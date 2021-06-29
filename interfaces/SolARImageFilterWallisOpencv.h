@@ -17,7 +17,7 @@
 #ifndef INTERFACESSolARImageFilterWallisOpencv_H
 #define INTERFACESSolARImageFilterWallisOpencv_H
 #include <xpcf/component/ConfigurableBase.h>
-
+#include "interfaces/SolARImageConvertorOpencv.h"
 #include "api/image/IImageFilter.h"
 
 
@@ -84,8 +84,7 @@ private:
     float m_B = 0.7f;
     uint32_t m_windowWidth = 14;
     std::string m_denoisingMethod = "None";
-
-
+    SolARImageConvertorOpencv m_convertor;
 };
 
 

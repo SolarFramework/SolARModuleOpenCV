@@ -15,7 +15,6 @@
  */
 
 #include "interfaces/SolARImageFilterWallisOpencv.h"
-#include "interfaces/SolARImageConvertorOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/photo.hpp"
@@ -67,10 +66,11 @@ xpcf::XPCFErrorCode SolARImageFilterWallisOpencv::onConfigured()
 
 FrameworkReturnCode SolARImageFilterWallisOpencv::filter(const SRef<SolAR::datastructure::Image> input, SRef<SolAR::datastructure::Image> & output)
 {
-
     SRef<datastructure::Image> imageGrey;
-    SolARImageConvertorOpencv convertor;
-    convertor.convert(input, imageGrey, datastructure::Image::ImageLayout::LAYOUT_GREY);
+    if (input->getImageLayout() != datastructure::Image::ImageLayout::LAYOUT_GREY)
+        m_convertor.convert(input, imageGrey, datastructure::Image::ImageLayout::LAYOUT_GREY);
+    else
+        imageGrey = input;
 
     cv::Mat cvImgGrey8U, cvImgFiltered, cvImgSmooth8U, cvImgSmooth64F, cvImgUniform64F, cvImgSum64F, cvImgCount64F, cvImgLocalMean64F, cvImgTemp64F, cvImgTemp2_64F, cvImgS_64F, cvKernel64F;
     SolAROpenCVHelper::mapToOpenCV(imageGrey,cvImgGrey8U);
