@@ -17,7 +17,7 @@
 #ifndef SOLARSTEREODESCRIPTORMATCHEROPENCV_H
 #define SOLARSTEREODESCRIPTORMATCHEROPENCV_H
 
-#include "api/stereo/IStereoDescriptorMatcher.h"
+#include "api/features/IDescriptorMatcherStereo.h"
 #include <string>
 #include "opencv2/core.hpp"
 #include "opencv2/imgproc.hpp"
@@ -39,7 +39,7 @@ namespace OPENCV {
 
 class SOLAROPENCV_EXPORT_API SolARStereoDescriptorMatcherOpencv :
 	public org::bcom::xpcf::ConfigurableBase,
-	public api::stereo::IStereoDescriptorMatcher
+	public api::features::IDescriptorMatcherStereo
 {
 public:
 	/// @brief SolARStereoDescriptorMatcherOpencv constructor

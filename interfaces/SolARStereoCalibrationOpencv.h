@@ -17,7 +17,7 @@
 #ifndef SOLARSTEREOCALIBRATIONOPENCV_H
 #define SOLARSTEREOCALIBRATIONOPENCV_H
 
-#include "api/stereo/IStereoCalibration.h"
+#include "api/input/devices/IStereoCameraCalibration.h"
 #include <string>
 #include "opencv2/core.hpp"
 #include "opencv2/imgproc.hpp"
@@ -39,7 +39,7 @@ namespace OPENCV {
 
 class SOLAROPENCV_EXPORT_API SolARStereoCalibrationOpencv :
 	public org::bcom::xpcf::ComponentBase,
-	public api::stereo::IStereoCalibration
+	public api::input::devices::IStereoCameraCalibration
 {
 public:
 	/// @brief SolARStereoCalibrationOpencv constructor

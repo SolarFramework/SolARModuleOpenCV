@@ -30,7 +30,7 @@ namespace OPENCV {
 
 SolARStereoCalibrationOpencv::SolARStereoCalibrationOpencv() :ComponentBase(xpcf::toUUID<SolARStereoCalibrationOpencv>())
 {
-	declareInterface<api::stereo::IStereoCalibration>(this);
+	declareInterface<api::input::devices::IStereoCameraCalibration>(this);
 	LOG_DEBUG("SolARStereoCalibrationOpencv constructor");
 }
 
@@ -143,16 +143,17 @@ FrameworkReturnCode SolARStereoCalibrationOpencv::rectify(const std::string & ca
 	cv::Mat R1, R2, P1, P2, Q;
 	cv::stereoRectify(intrinsic1, distortion1, intrinsic2, distortion2, imageSize, R, T, R1, R2, P1, P2, Q);
 	cv::FileStorage fsRect(rectificationFilePath, cv::FileStorage::WRITE);
-	fsRect << "image_width" << imageSize.width;
-	fsRect << "image_height" << imageSize.height;
-	fsRect << "camera_matrix1" << intrinsic1;
-	fsRect << "distortion_coefficients1" << distortion1;
-	fsRect << "camera_matrix2" << intrinsic2;
-	fsRect << "distortion_coefficients2" << distortion2;
-	fsRect << "rotation_matrix1" << R1;
-	fsRect << "projection_matrix1" << P1;
-	fsRect << "rotation_matrix2" << R2;	
-	fsRect << "projection_matrix2" << P2;
+	fsRect << "NbRectifications" << 1;
+	fsRect << "Rectification 0";
+	fsRect << "{" << "Camera1";
+	fsRect << "{" << "Index" << 0;
+	fsRect << "Rotation" << R1;
+	fsRect << "Projection" << P1 << "}";
+	fsRect << "Camera2";
+	fsRect << "{" << "Index" << 1;
+	fsRect << "Rotation" << R2;
+	fsRect << "Projection" << P2 << "}";
+	fsRect << "}";	
 	fsRect.release();
 	LOG_INFO("Rectification done!");
 	return FrameworkReturnCode::_SUCCESS;

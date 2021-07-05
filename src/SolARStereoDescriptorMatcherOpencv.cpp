@@ -29,7 +29,7 @@ namespace OPENCV {
 
 SolARStereoDescriptorMatcherOpencv::SolARStereoDescriptorMatcherOpencv() :ConfigurableBase(xpcf::toUUID<SolARStereoDescriptorMatcherOpencv>())
 {
-	declareInterface<api::stereo::IStereoDescriptorMatcher>(this);
+    declareInterface<api::features::IDescriptorMatcherStereo>(this);
 	declareProperty("ratioRadius", m_ratioRadius);
 	declareProperty("matchingDistanceMax", m_matchingDistanceMax);
 	LOG_DEBUG("SolARStereoDescriptorMatcherOpencv constructor");

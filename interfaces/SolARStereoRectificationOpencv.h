@@ -17,7 +17,7 @@
 #ifndef SOLARSTEREORECTIFICATIONOPENCV_H
 #define SOLARSTEREORECTIFICATIONOPENCV_H
 
-#include "api/stereo/IStereoRectification.h"
+#include "api/image/IRectification.h"
 #include <string>
 #include "opencv2/core.hpp"
 #include "opencv2/imgproc.hpp"
@@ -39,7 +39,7 @@ namespace OPENCV {
 
 class SOLAROPENCV_EXPORT_API SolARStereoRectificationOpencv :
 	public org::bcom::xpcf::ConfigurableBase,
-	public api::stereo::IStereoRectification
+	public api::image::IRectification
 {
 public:
 	/// @brief SolARStereoRectificationOpencv constructor
@@ -50,56 +50,37 @@ public:
 
 	/// @brief Rectify image
 	/// @param[in] image The input image
-	/// @param[out] rectifiedImage The rectified image
-	/// @param[in] indexCamera The index of camera
-	void rectify(SRef<SolAR::datastructure::Image> image,
-				SRef<SolAR::datastructure::Image>& rectifiedImage,
-				int indexCamera) override;
+	/// @param[in] rectParams The rectification parameters of camera
+	/// @param[out] rectifiedImage The rectified image	
+	/// @return FrameworkReturnCode::_SUCCESS if rectifying succeed, else FrameworkReturnCode::_ERROR_
+	FrameworkReturnCode rectify(SRef<SolAR::datastructure::Image> image,
+								const SolAR::datastructure::RectificationParameters& rectParams,
+								SRef<SolAR::datastructure::Image>& rectifiedImage) override;
 
 	/// @brief Rectify 2D points
 	/// @param[in] points2D The input 2D points
+	/// @param[in] rectParams The rectification parameters of camera
 	/// @param[out] rectifiedPoints2D The rectified 2D points
-	/// @param[in] indexCamera The index of camera
-	void rectify(const std::vector<SolAR::datastructure::Point2Df>& points2D,
-				std::vector<SolAR::datastructure::Point2Df>& rectifiedPoints2D,
-				int indexCamera) override;
+	/// @return FrameworkReturnCode::_SUCCESS if rectifying succeed, else FrameworkReturnCode::_ERROR_
+	FrameworkReturnCode rectify(const std::vector<SolAR::datastructure::Point2Df>& points2D,
+								const SolAR::datastructure::RectificationParameters& rectParams,
+								std::vector<SolAR::datastructure::Point2Df>& rectifiedPoints2D) override;
 
 	/// @brief Rectify 2D keypoints
 	/// @param[in] keypoints The input 2D keypoints
+	/// @param[in] rectParams The rectification parameters of camera
 	/// @param[out] rectifiedKeypoints The rectified 2D keypoints
-	/// @param[in] indexCamera The index of camera
-	void rectify(const std::vector<SolAR::datastructure::Keypoint>& keypoints,
-				std::vector<SolAR::datastructure::Keypoint>& rectifiedKeypoints,
-				int indexCamera) override;
-
-	/// @brief Get stereo camera type
-	/// @return stereo type
-	SolAR::datastructure::StereoType getType() override;
-
-	/// @brief Get baseline distance
-	/// @return baseline distance
-	float getBaseline() override;
-
-	/// @brief Get rectification parameters
-	/// @param[in] indexCamera Index of camera
-	/// @return rectification parameters
-	SolAR::datastructure::RectificationParameters getRectificationParamters(int indexCamera) override;
+	/// @return FrameworkReturnCode::_SUCCESS if rectifying succeed, else FrameworkReturnCode::_ERROR_
+	FrameworkReturnCode rectify(const std::vector<SolAR::datastructure::Keypoint>& keypoints,
+								const SolAR::datastructure::RectificationParameters& rectParams,
+								std::vector<SolAR::datastructure::Keypoint>& rectifiedKeypoints) override;
 
 	void unloadComponent() override;
 
-	org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
-
 private:
 	/// @brief Rectify a 2D point
-	datastructure::Point2Df rectifyPoint(const datastructure::Point2Df& pt2D, int indexCamera);
-
-private:
-	std::string m_rectificationFile;
-	cv::Size m_imageSize;
-	std::vector<cv::Mat> m_R, m_P, m_intrinsic, m_distortion;
-	std::vector<datastructure::RectificationParameters> m_rectificationParams;
-	float m_baseline;
-	datastructure::StereoType m_stereoType;
+	datastructure::Point2Df rectifyPoint(const datastructure::Point2Df& pt2D, 
+										 const SolAR::datastructure::RectificationParameters& rectParams);
 };
 }
 }
