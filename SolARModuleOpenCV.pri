@@ -10,6 +10,8 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
     interfaces/SolARDescriptorMatcherKNNOpencv.h \
     interfaces/SolARDescriptorMatcherRadiusOpencv.h \
+    interfaces/SolARDescriptorMatcherGeometricOpencv.h \
+    interfaces/SolARDescriptorMatcherRegionOpencv.h \
     interfaces/SolARDescriptorsExtractorAKAZE2Opencv.h \
     interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
     interfaces/SolARDescriptorsExtractorORBOpencv.h \
@@ -78,6 +80,8 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \
+    src/SolARDescriptorMatcherGeometricOpencv.cpp \
+    src/SolARDescriptorMatcherRegionOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZE2Opencv.cpp \
     src/SolARDescriptorsExtractorAKAZEOpencv.cpp \
     src/SolARDescriptorsExtractorORBOpencv.cpp \

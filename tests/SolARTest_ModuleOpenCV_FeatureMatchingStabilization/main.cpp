@@ -102,8 +102,7 @@ int main(int argc,char** argv)
 		}
 		LOG_INFO("Number of keypoints: {}", keypoints.size());
 		// feature matching		
-		//matcher->match(descriptors, frame1->getDescriptors(), matches);
-		matcher->matchInRegion(frame, frame1, matches);
+        matcher->match(descriptors, frame1->getDescriptors(), matches);
 		LOG_INFO("Number of matches: {}", matches.size());		
 		// matches filter
 		matchesFilter->filter(matches, matches, keypoints, frame1->getKeypoints());

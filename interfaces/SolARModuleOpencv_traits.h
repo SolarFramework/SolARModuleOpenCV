@@ -37,6 +37,8 @@ class SolARContoursFilterBinaryMarkerOpencv;
 class SolARDescriptorMatcherHammingBruteForceOpencv;
 class SolARDescriptorMatcherKNNOpencv;
 class SolARDescriptorMatcherRadiusOpencv;
+class SolARDescriptorMatcherGeometricOpencv;
+class SolARDescriptorMatcherRegionOpencv;
 class SolARDescriptorsExtractorSIFTOpencv;
 class SolARDescriptorsExtractorAKAZE2Opencv;
 class SolARDescriptorsExtractorAKAZEOpencv;
@@ -133,6 +135,17 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiu
                              "549f7873-96e4-4eae-b4a0-ae8d80664ce5",
                              "SolARDescriptorMatcherRadiusOpencv",
                              "Matches descriptors and selects all matches not farther than a specified distance.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorMatcherGeometricOpencv,
+                             "389ece8b-9e29-45ae-bd60-de1784ff0931",
+                             "SolARDescriptorMatcherGeometricOpencv",
+                             "Matches two sets of descriptors based on geometric constraints.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRegionOpencv,
+                             "a12a8706-299b-4981-b12b-60717ef3b160",
+                             "SolARDescriptorMatcherRegionOpencv",
+                             "Matches two sets of descriptors based on region constraints.")
+
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSIFTOpencv,
                              "3787eaa6-d0a0-11e7-8fab-cec278b6b50a",
