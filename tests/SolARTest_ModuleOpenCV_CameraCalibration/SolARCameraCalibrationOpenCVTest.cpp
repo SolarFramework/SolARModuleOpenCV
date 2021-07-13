@@ -23,6 +23,7 @@
 
 #include "core/Log.h"
 
+#include <boost/log/core.hpp>
 #include <iostream>
 #include <map>
 
