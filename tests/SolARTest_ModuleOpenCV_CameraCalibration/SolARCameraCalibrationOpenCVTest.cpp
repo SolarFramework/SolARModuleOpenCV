@@ -19,10 +19,7 @@
 
 // ADD COMPONENTS HEADERS HERE, e.g #include "SolarComponent.h"
 
-#include "SolARImageLoaderOpencv.h"
-#include "SolARImageViewerOpencv.h"
-#include "SolARCameraCalibrationOpencv.h"
-#include "SolARCameraOpencv.h"
+#include "api/input/devices/ICameraCalibration.h"
 
 #include "core/Log.h"
 
@@ -33,7 +30,6 @@ using namespace std;
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
-using namespace SolAR::MODULES::OPENCV;
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -56,19 +52,38 @@ void printHelp() {
 
 int calibratio_run(int cameraId) {
 
-	SRef<Image> inputImage;
+#if NDEBUG
+    boost::log::core::get()->set_logging_enabled(false);
+#endif
+
+    LOG_ADD_LOG_TO_CONSOLE();
+
+    /* instantiate component manager*/
+    /* this is needed in dynamic mode */
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+
+    if(xpcfComponentManager->load("SolARTest_ModuleOpenCV_CameraCalibration_conf.xml")!=org::bcom::xpcf::_SUCCESS)
+    {
+        LOG_ERROR("Failed to load the configuration file SolARTest_ModuleOpenCV_CameraCalibration_conf.xml")
+        return -1;
+    }
 
     std::string calib_config = std::string("../../data/chessboard_config.yml");
-	std::ifstream ifs(calib_config.c_str());
-	if (!ifs) {
-		LOG_ERROR("Calibration config File {} does not exist", calib_config.c_str());
-		printHelp();
-		return -1;
-	}
-
-    auto cameraCalibration =xpcf::ComponentFactory::createInstance<SolARCameraCalibrationOpencv>()->bindTo<input::devices::ICameraCalibration>();
+    std::ifstream ifs(calib_config.c_str());
+    if (!ifs) {
+        LOG_ERROR("Calibration config File {} does not exist", calib_config.c_str());
+        printHelp();
+        return -1;
+    }
 
     std::string calib_output = std::string("../../data/camera_calibration.yml");
+
+    // declare and create components
+    LOG_INFO("Start creating components");
+
+    auto cameraCalibration = xpcfComponentManager->resolve<input::devices::ICameraCalibration>();
+
+    SRef<Image> inputImage;
 
 	if (cameraCalibration->setParameters(calib_config))
 	{
@@ -85,21 +100,36 @@ int calibratio_run(int cameraId) {
 
 int calibratio_run(std::string& video) {
 
-	SRef<Image> inputImage;
+    LOG_ADD_LOG_TO_CONSOLE();
 
-    auto cameraCalibration =xpcf::ComponentFactory::createInstance<SolARCameraCalibrationOpencv>()->bindTo<input::devices::ICameraCalibration>();
+    /* instantiate component manager*/
+    /* this is needed in dynamic mode */
+    SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+
+    if(xpcfComponentManager->load("SolARTest_ModuleOpenCV_CameraCalibration_conf.xml")!=org::bcom::xpcf::_SUCCESS)
+    {
+        LOG_ERROR("Failed to load the configuration file SolARTest_ModuleOpenCV_CameraCalibration_conf.xml")
+        return -1;
+    }
 
     std::string calib_config = std::string("../../data/chessboard_config.yml");
-	std::ifstream ifs(calib_config.c_str());
-	if (!ifs) {
-		LOG_ERROR("Calibration config File {} does not exist", calib_config.c_str());
-		printHelp();
-		return -1;
-	}
+    std::ifstream ifs(calib_config.c_str());
+    if (!ifs) {
+        LOG_ERROR("Calibration config File {} does not exist", calib_config.c_str());
+        printHelp();
+        return -1;
+    }
 
     std::string calib_output = std::string("../../data/camera_calibration.yml");
 
-	if (cameraCalibration->setParameters(calib_config))
+    // declare and create components
+    LOG_INFO("Start creating components");
+
+    auto cameraCalibration = xpcfComponentManager->resolve<input::devices::ICameraCalibration>();
+
+    SRef<Image> inputImage;
+
+    if (cameraCalibration->setParameters(calib_config))
 	{
 		cameraCalibration->calibrate(video, calib_output);
 	}

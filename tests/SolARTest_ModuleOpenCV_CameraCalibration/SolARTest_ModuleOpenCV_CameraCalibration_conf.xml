@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xpcf-registry autoAlias="true">
+    <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$REMAKEN_PKG_ROOT/packages/SolARBuild/win-cl-14.1/SolARModuleOpenCV/0.9.1/lib/x86_64/shared">
+        <component uuid="702a7f53-e5ec-45d2-887d-daa99a34a33c " name="SolARCameraCalibrationOpencv" description="SolARCameraCalibrationOpencv">
+            <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+            <interface uuid="0e83b228-b9ca-413d-9dc2-db45c427428b" name="ICameraCalibration" description="ICameraCalibration"/>
+        </component>
+    </module>
+</xpcf-registry>
