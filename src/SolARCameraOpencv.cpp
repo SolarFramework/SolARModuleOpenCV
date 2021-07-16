@@ -68,7 +68,7 @@ namespace OPENCV {
                 auto setResolution = [&]
                                      (cv::VideoCaptureProperties dimensionProp,
                                       uint32_t value,
-                                      std::string dimensionName)
+                                      const std::string& dimensionName)
                 {
                   bool setResDimOk = m_capture.set(dimensionProp, value);
 
