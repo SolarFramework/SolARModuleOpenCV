@@ -66,8 +66,27 @@ using namespace datastructure;
         {
             if (m_is_resolution_set)
             {
-                m_capture.set(cv::CAP_PROP_FRAME_WIDTH, m_parameters.resolution.width );
-                m_capture.set(cv::CAP_PROP_FRAME_HEIGHT, m_parameters.resolution.height );
+                LOG_INFO("Camera using {}  *  {} resolution", m_parameters.resolution.width ,m_parameters.resolution.height)
+
+                auto setResolution = [&]
+                                     (cv::VideoCaptureProperties dimensionProp,
+                                      uint32_t value,
+                                      std::string dimensionName)
+                {
+                  bool setResDimOk = m_capture.set(dimensionProp, value);
+
+                  if (!setResDimOk || m_capture.get(dimensionProp) != value)
+                  {
+                    LOG_WARNING("Cannot set camera {} to {}. Will fallback to cv::resize() each frame", dimensionName, value);
+                    if (!setResDimOk)
+                    {
+                      LOG_WARNING( "Note: cv::VideoCapture::set() returned 'true'");
+                    }
+                  }
+                };
+
+                setResolution(cv::CAP_PROP_FRAME_WIDTH, m_parameters.resolution.width, "width");
+                setResolution(cv::CAP_PROP_FRAME_HEIGHT, m_parameters.resolution.height, "height");
             }
             return FrameworkReturnCode::_SUCCESS;
         }
