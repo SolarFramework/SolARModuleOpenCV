@@ -17,16 +17,13 @@
 #ifndef SOLARDESCRIPTORMATCHERKNNOPENCV_H
 #define SOLARDESCRIPTORMATCHERKNNOPENCV_H
 
-#include "api/features/IDescriptorMatcher.h"
-#include "xpcf/component/ConfigurableBase.h"
+#include "base/features/ADescriptorMatcher.h"
 #include "SolAROpencvAPI.h"
 #include "opencv2/core.hpp"
 #include "opencv2/features2d.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include <opencv2/calib3d.hpp>
-#include "datastructure/DescriptorMatch.h"
-#include "datastructure/DescriptorBuffer.h"
 
 namespace SolAR {
 namespace MODULES {
@@ -48,8 +45,7 @@ namespace OPENCV {
  * 
  */
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public org::bcom::xpcf::ConfigurableBase,
-        public api::features::IDescriptorMatcher {
+class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public base::features::ADescriptorMatcher {
 public:
     /// @brief SolARDescriptorMatcherKNNOpencv constructor
     SolARDescriptorMatcherKNNOpencv();
@@ -57,26 +53,16 @@ public:
     /// @brief SolARDescriptorMatcherKNNOpencv destructor
     ~SolARDescriptorMatcherKNNOpencv() override;    
 
-    /// @brief Match two sets of descriptors together
-    /// @param[in] descriptors1 The first set of descriptors organized in a dedicated buffer structure.
-    /// @param[in] descriptors2 The second set of descriptors organized in a dedicated buffer structure.
-    /// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
-    /// @return DesciptorMatcher::DESCRIPTORS_MATCHER_OK if matching succeeds, DesciptorMatcher::DESCRIPTORS_DONT_MATCH if the types of descriptors are different, DesciptorMatcher::DESCRIPTOR_TYPE_UNDEFINED if one of the descriptors set is unknown, or DesciptorMatcher::DESCRIPTOR_EMPTY if one of the set is empty.
-    RetCode match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1,
-                  const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
-                  std::vector<SolAR::datastructure::DescriptorMatch> & matches) override;
+	/// @brief Match two sets of descriptors together
+	/// @param[in] descriptors1 The first set of descriptors organized in a dedicated buffer structure.
+	/// @param[in] descriptors2 The second set of descriptors organized in a dedicated buffer structure.
+	/// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
+	/// @return FrameworkReturnCode::_SUCCESS if matching succeed, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1,
+                              const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
+                              std::vector<SolAR::datastructure::DescriptorMatch> & matches) override;
 
-    /// @brief Match two sets of descriptors together. The second set is organized in a vector of descriptors buffer and can be used if the descriptors have been extracted on subsets of an image.
-    /// @param[in] descriptors1 The first set of descriptors organized in a dedicated buffer structure.
-    /// @param[in] descriptors2 The second set of descriptors organized in a vectir of dedicated buffer structure.
-    /// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
-    /// @return DesciptorMatcher::DESCRIPTORS_MATCHER_OK if matching succeeds, DesciptorMatcher::DESCRIPTORS_DONT_MATCH if the types of descriptors are different, DesciptorMatcher::DESCRIPTOR_TYPE_UNDEFINED if one of the descriptors set is unknown, or DesciptorMatcher::DESCRIPTOR_EMPTY if one of the set is empty.
-    RetCode match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1,
-                  const std::vector<SRef<SolAR::datastructure::DescriptorBuffer>> & descriptors2,
-                  std::vector<SolAR::datastructure::DescriptorMatch> & matches) override;
-
-    void unloadComponent () override final;
-
+	void unloadComponent() override;
 
 private:
     /// @brief distance ratio used to keep good matches.

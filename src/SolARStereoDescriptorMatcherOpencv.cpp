@@ -27,7 +27,7 @@ using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARStereoDescriptorMatcherOpencv::SolARStereoDescriptorMatcherOpencv() :ConfigurableBase(xpcf::toUUID<SolARStereoDescriptorMatcherOpencv>())
+SolARStereoDescriptorMatcherOpencv::SolARStereoDescriptorMatcherOpencv() : base::features::ADescriptorMatcherStereo(xpcf::toMap<SolARStereoDescriptorMatcherOpencv>())
 {
     declareInterface<api::features::IDescriptorMatcherStereo>(this);
 	declareProperty("ratioRadius", m_ratioRadius);

@@ -17,7 +17,7 @@
 #ifndef SOLARSTEREODESCRIPTORMATCHEROPENCV_H
 #define SOLARSTEREODESCRIPTORMATCHEROPENCV_H
 
-#include "api/features/IDescriptorMatcherStereo.h"
+#include "base/features/ADescriptorMatcherStereo.h"
 #include <string>
 #include "opencv2/core.hpp"
 #include "opencv2/imgproc.hpp"
@@ -37,9 +37,7 @@ namespace OPENCV {
 *
 */
 
-class SOLAROPENCV_EXPORT_API SolARStereoDescriptorMatcherOpencv :
-	public org::bcom::xpcf::ConfigurableBase,
-	public api::features::IDescriptorMatcherStereo
+class SOLAROPENCV_EXPORT_API SolARStereoDescriptorMatcherOpencv : public base::features::ADescriptorMatcherStereo
 {
 public:
 	/// @brief SolARStereoDescriptorMatcherOpencv constructor
@@ -51,15 +49,15 @@ public:
 	/// @brief Match two sets of descriptors from stereo images.
 	/// @param[in] descriptors1 Descirptors of the first image.
 	/// @param[in] descriptors2 Descirptors of the second image.
-	/// @param[in] keypoints1 Keypoints of the first image.
-	/// @param[in] keypoints2 Keypoints of the second image.
+	/// @param[in] undistortedKeypoints1 Keypoints of the first image.
+	/// @param[in] undistortedKeypoints2 Keypoints of the second image.
 	/// @param[in] type Stereo type (horizontal or vertical).
 	/// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
 	/// @return FrameworkReturnCode::_SUCCESS if matching succeed, else FrameworkReturnCode::_ERROR_
 	FrameworkReturnCode match(const SRef<SolAR::datastructure::DescriptorBuffer>& descriptors1,
 							const SRef<SolAR::datastructure::DescriptorBuffer>& descriptors2,
-							const std::vector<SolAR::datastructure::Keypoint>& keypoints1,
-							const std::vector<SolAR::datastructure::Keypoint>& keypoints2,
+							const std::vector<SolAR::datastructure::Keypoint>& undistortedKeypoints1,
+							const std::vector<SolAR::datastructure::Keypoint>& undistortedKeypoints2,
 							SolAR::datastructure::StereoType type,
 							std::vector<SolAR::datastructure::DescriptorMatch> &matches) override;
 

@@ -75,6 +75,10 @@ android {
     ANDROID_ABIS="arm64-v8a"
 }
 
+config_files.path = $${TARGETDEPLOYDIR}
+config_files.files= $$files($${PWD}/SolARTest_ModuleOpenCV_CameraCalibration_conf.xml)
+INSTALLS += config_files
+
 DISTFILES += \
     packagedependencies.txt
 

@@ -79,8 +79,9 @@ class SolARVideoAsCameraOpencv;
 class SolARDeviceDataLoader;
 class SolARMapFusionOpencv;
 class SolARCornerRefinementOpencv;
+class SolARStereo2DPointsRectificationOpencv;
 class SolARStereoCalibrationOpencv;
-class SolARStereoRectificationOpencv;
+class SolARStereoImageRectificationOpencv;
 class SolARStereoDescriptorMatcherOpencv;
 }
 }
@@ -347,9 +348,13 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARStereoDescriptorMatche
 							"a2740dbd-a17d-4a48-9f3f-3ddc38479745",
 							"SolARStereoDescriptorMatcherOpencv",
 							"Matches two sets of descriptors from stereo images.")
-XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARStereoRectificationOpencv,
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARStereo2DPointsRectificationOpencv,
 							"bf4c7011-b7e6-453d-a755-884dac18d3ee",
-							"SolARStereoRectificationOpencv",
-							"Rectiy image or 2D points.")
+                            "SolARStereo2DPointsRectificationOpencv",
+                            "Rectify 2D points.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARStereoImageRectificationOpencv,
+                            "427cbbb8-6afe-4b3b-8b04-cb93ed925b40",
+                            "SolARStereoImageRectificationOpencv",
+                            "Rectify image.")
 
 #endif // SOLARMODULEOPENCV_TRAITS_H

@@ -48,9 +48,10 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARPoseEstimationSACPnpOpencv.h \
     interfaces/SolARPoseFinderFrom2D2DOpencv.h \
     interfaces/SolARProjectOpencv.h \
+	interfaces/SolARStereo2DPointsRectificationOpencv.h \
     interfaces/SolARStereoCalibrationOpencv.h \
     interfaces/SolARStereoDescriptorMatcherOpencv.h \
-    interfaces/SolARStereoRectificationOpencv.h \
+    interfaces/SolARStereoImageRectificationOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
     interfaces/SolARUndistortPointsOpencv.h \
     interfaces/SolARUnprojectPlanarPointsOpencv.h \
@@ -116,9 +117,10 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARPoseEstimationSACPnpOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
     src/SolARProjectOpencv.cpp \
+	src/SolARStereo2DPointsRectificationOpencv.cpp \
     src/SolARStereoCalibrationOpencv.cpp \
     src/SolARStereoDescriptorMatcherOpencv.cpp \
-    src/SolARStereoRectificationOpencv.cpp \
+    src/SolARStereoImageRectificationOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
     src/SolARUndistortPointsOpencv.cpp \

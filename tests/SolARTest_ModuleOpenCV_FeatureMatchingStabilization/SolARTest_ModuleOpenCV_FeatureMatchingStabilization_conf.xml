@@ -83,8 +83,6 @@
         </configure>
         <configure component="SolARDescriptorMatcherKNNOpencv">
 			<property name="distanceRatio" type="Float" value="0.8"/>
-			<property name="radius" type="Float" value="5"/>
-			<property name="matchingDistanceMax" type="Float" value="600"/>
 		</configure>
 		<configure component="SolARGeometricMatchesFilterOpencv">
 			<property name="confidence" type="Float" value="0.99"/>
@@ -99,7 +97,6 @@
 				<value>0</value>
 				<value>255</value>
 			</property>
-			<property name="maxMatches" type="UnsignedInteger" value="-1"/>
 		</configure>
 		<configure component="SolARMatchesOverlayOpencv">
 			<property name="thickness" type="UnsignedInteger" value="1"/>

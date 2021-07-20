@@ -18,12 +18,12 @@
 #define SOLARSTEREOCALIBRATIONOPENCV_H
 
 #include "api/input/devices/IStereoCameraCalibration.h"
+#include "xpcf/component/ConfigurableBase.h"
 #include <string>
 #include "opencv2/core.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/calib3d.hpp"
 #include "opencv2/highgui.hpp"
-#include "xpcf/component/ComponentBase.h"
 #include "SolAROpencvAPI.h"
 
 namespace SolAR {
@@ -37,8 +37,7 @@ namespace OPENCV {
  *
  */
 
-class SOLAROPENCV_EXPORT_API SolARStereoCalibrationOpencv :
-	public org::bcom::xpcf::ComponentBase,
+class SOLAROPENCV_EXPORT_API SolARStereoCalibrationOpencv : public org::bcom::xpcf::ConfigurableBase,
 	public api::input::devices::IStereoCameraCalibration
 {
 public:
@@ -48,49 +47,32 @@ public:
 	/// @brief SolARStereoCalibrationOpencv destructor
     ~SolARStereoCalibrationOpencv() override;
 
-	/// @brief Calibrate a stereo camera from a set of captured images and output the result in the given file
-	/// @param[in] images1 Set of images from the first camera
-	/// @param[in] images2 Set of images from the second camera
-	/// @param[in] calibrationFilePath file path
-	/// @return FrameworkReturnCode::_SUCCESS if calibration succeed, else FrameworkReturnCode::_ERROR_
-	FrameworkReturnCode calibrate(const std::vector<SRef<SolAR::datastructure::Image>>& images1,
-								const std::vector<SRef<SolAR::datastructure::Image>>& images2,
-								const std::string & calibrationFilePath) override;
-
-	/// @brief Computes rectification transforms of a calibrated stereo camera and output the result in the given file
-	/// @param[in] calibrationFilePath calibration file path
-	/// @param[in] rectificationFilePath rectification file path
-	/// @return FrameworkReturnCode::_SUCCESS if rectification succeed, else FrameworkReturnCode::_ERROR_
-	FrameworkReturnCode rectify(const std::string & calibrationFilePath,
-								const std::string & rectificationFilePath) override;
-
-	/// @brief this method is used to set camera parameters for the first camera
-	/// @param[in] camParams camera parameters of the first camera
-	void setCameraParameters1(const SolAR::datastructure::CameraParameters & camParams) override;
-
-	/// @brief this method is used to set camera parameters for the second camera
-	/// @param[in] camParams camera parameters of the second camera
-	void setCameraParameters2(const SolAR::datastructure::CameraParameters & camParams) override;
-
-	/// @brief Set configuration of stereo calibration
-	/// @param[in] configFile configuration file
-	void setConfiguration(const std::string & configFile) override;
+    /// @brief Calibrate a stereo camera from a set of captured images and output the result in the given file
+    /// @param[in] images1 Set of images from the first camera
+    /// @param[in] images2 Set of images from the second camera
+    /// @param[in] camParams1 Camera parameters of the first camera
+    /// @param[in] camParams2 Camera parameters of the second camera
+    /// @param[out] transformation Transformation matrix from the frist camera to the second camera
+    /// @param[out] rectParams1 Rectification parameters of the first camera
+    /// @param[out] rectParams2 Rectification parameters of the second camera
+    /// @return FrameworkReturnCode::_SUCCESS if calibration succeed, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode calibrate(const std::vector<SRef<SolAR::datastructure::Image>>& images1,
+                                  const std::vector<SRef<SolAR::datastructure::Image>>& images2,
+                                  const SolAR::datastructure::CameraParameters & camParams1,
+                                  const SolAR::datastructure::CameraParameters & camParams2,
+                                  SolAR::datastructure::Transform3Df & transformation,
+                                  SolAR::datastructure::RectificationParameters & rectParams1,
+                                  SolAR::datastructure::RectificationParameters & rectParams2) override;
     
 	void unloadComponent() override;
 
 private:
 	/// @brief Find chessboard corners in stereo image
-	bool findChessboardCornersImage(SRef<datastructure::Image>& image1, 
-									SRef<datastructure::Image> image2,
-									cv::Mat& displayImage1, 
-									cv::Mat& displayImage2, 
-									std::vector<cv::Point2f>& corners1,
-									std::vector<cv::Point2f>& corners2);
+	bool findChessboardCornersImage(SRef<datastructure::Image>& image, 
+									cv::Mat& displayImage, 
+									std::vector<cv::Point2f>& corners);
 
 private:
-	bool m_isSetConfig = false;
-	bool m_isSetParams1 = false;
-	bool m_isSetParams2 = false;
 	cv::Mat m_intrinsic1, m_intrinsic2, m_distortion1, m_distortion2;
 	cv::Size m_boardSize;
 	cv::Size m_imageSize;

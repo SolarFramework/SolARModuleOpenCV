@@ -17,8 +17,7 @@
 #ifndef SOLARDESCRIPTORMATCHERGEOMETRICOPENCV_H
 #define SOLARDESCRIPTORMATCHERGEOMETRICOPENCV_H
 
-#include "api/features/IDescriptorMatcherGeometric.h"
-#include "xpcf/component/ConfigurableBase.h"
+#include "base/features/ADescriptorMatcherGeometric.h"
 #include "SolAROpencvAPI.h"
 #include <limits>
 #include "opencv2/core.hpp"
@@ -26,8 +25,6 @@
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include <opencv2/calib3d.hpp>
-#include "datastructure/DescriptorMatch.h"
-#include "datastructure/DescriptorBuffer.h"
 
 namespace SolAR {
 namespace MODULES {
@@ -55,8 +52,7 @@ namespace OPENCV {
  * 
  */
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherGeometricOpencv : public org::bcom::xpcf::ConfigurableBase,
-        public api::features::IDescriptorMatcherGeometric {
+class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherGeometricOpencv : public base::features::ADescriptorMatcherGeometric {
 public:
     /// @brief SolARDescriptorMatcherGeometricOpencv constructor
     SolARDescriptorMatcherGeometricOpencv();
@@ -64,24 +60,29 @@ public:
     /// @brief SolARDescriptorMatcherGeometricOpencv destructor
     ~SolARDescriptorMatcherGeometricOpencv() override;
 
-    /// @brief Match two sets of descriptors from two frames based on epipolar constraint.
-    /// @param[in] frame1 The first frame.
-    /// @param[in] frame2 The second frame.
-    /// @param[in] pose1 The first pose.
-    /// @param[in] pose2 The second pose.
-    /// @param[in] intrinsicParameters The intrinsic parameters of the camera.
-    /// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
-    /// @param[in] mask The indices of descriptors in the first frame are used for matching to the second frame. If it is empty then all will be used.
-    /// @return FrameworkReturnCode::_SUCCESS if matching succeed, else FrameworkReturnCode::_ERROR_
-    FrameworkReturnCode match(const SRef<SolAR::datastructure::Frame> frame1,
-                              const SRef<SolAR::datastructure::Frame> frame2,
+	/// @brief Match two sets of descriptors from two frames based on epipolar constraint.
+	/// @param[in] descriptors1 The first set of descriptors.
+	/// @param[in] descriptors2 The second set of descriptors.
+	/// @param[in] undistortedKeypoints1 The first set of undistorted keypoints.
+	/// @param[in] undistortedKeypoints2 The second set of undistorted keypoints.
+	/// @param[in] pose1 The first pose.
+	/// @param[in] pose2 The second pose.
+	/// @param[in] camParams The intrinsic parameters of the camera.
+	/// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
+	/// @param[in] mask The indices of descriptors in the first frame are used for matching to the second frame. If it is empty then all will be used.
+	/// @return FrameworkReturnCode::_SUCCESS if matching succeed, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1,
+                              const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
+                              const std::vector<SolAR::datastructure::Keypoint> &undistortedKeypoints1,
+                              const std::vector<SolAR::datastructure::Keypoint> &undistortedKeypoints2,
                               const SolAR::datastructure::Transform3Df& pose1,
                               const SolAR::datastructure::Transform3Df& pose2,
-                              const SolAR::datastructure::CamCalibration& intrinsicParameters,
+                              const SolAR::datastructure::CameraParameters& camParams,
                               std::vector<SolAR::datastructure::DescriptorMatch> & matches,
                               const std::vector<uint32_t>& mask = {}) override;
 
-    void unloadComponent () override final;
+	void unloadComponent() override;
+
 private:
     float m_distanceRatio = 0.75f;
     float m_paddingRatio = 0.003f;
