@@ -79,9 +79,10 @@ FrameworkReturnCode SolARDescriptorMatcherRadiusOpencv::match(
 
         }
     }
-
-	return FrameworkReturnCode::_SUCCESS;
-
+	if (matches.size() > 0)
+		return FrameworkReturnCode::_SUCCESS;
+	else
+		return FrameworkReturnCode::_ERROR_;
 }
 
 }
