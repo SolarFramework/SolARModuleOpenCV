@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_DeviceDualMarkerCalibration
-VERSION=0.9.3
+VERSION=0.10.0
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
@@ -70,6 +70,18 @@ win32 {
 
 android {
     ANDROID_ABIS="arm64-v8a"
+}
+
+linux {
+  run_install.path = $${TARGETDEPLOYDIR}
+  run_install.files = $${PWD}/../run.sh
+  CONFIG(release,debug|release) {
+    run_install.extra = cp $$files($${PWD}/../runRelease.sh) $${PWD}/../run.sh
+  }
+  CONFIG(debug,debug|release) {
+    run_install.extra = cp $$files($${PWD}/../runDebug.sh) $${PWD}/../run.sh
+  }
+  INSTALLS += run_install
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
