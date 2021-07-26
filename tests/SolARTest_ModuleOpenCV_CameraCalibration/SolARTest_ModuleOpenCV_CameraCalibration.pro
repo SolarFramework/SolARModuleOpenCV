@@ -75,7 +75,6 @@ android {
     ANDROID_ABIS="arm64-v8a"
 }
 
-<<<<<<< HEAD
 linux {
   run_install.path = $${TARGETDEPLOYDIR}
   run_install.files = $${PWD}/../run.sh
