@@ -47,7 +47,7 @@ FrameworkReturnCode SolARDescriptorMatcherKNNOpencv::match(SRef<DescriptorBuffer
     // check conditions
     if ((desc1->getDescriptorType() != desc2->getDescriptorType()) ||
 		desc1->getNbDescriptors() == 0 || desc2->getNbDescriptors() == 0 ||
-		desc1->getNbDescriptors() < 2 || desc2->getNbDescriptors() < 2){
+		desc2->getNbDescriptors() < 2){
         return FrameworkReturnCode::_ERROR_;
     }
 
