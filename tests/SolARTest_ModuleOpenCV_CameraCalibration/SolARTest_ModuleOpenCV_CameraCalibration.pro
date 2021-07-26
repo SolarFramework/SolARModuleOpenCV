@@ -75,6 +75,7 @@ android {
     ANDROID_ABIS="arm64-v8a"
 }
 
+<<<<<<< HEAD
 linux {
   run_install.path = $${TARGETDEPLOYDIR}
   run_install.files = $${PWD}/../run.sh
@@ -86,6 +87,10 @@ linux {
   }
   INSTALLS += run_install
 }
+
+configfile.path = $${TARGETDEPLOYDIR}/
+configfile.files = $${PWD}/SolARTest_ModuleOpenCV_CameraCalibration_conf.xml
+INSTALLS += configfile
 
 DISTFILES += \
     packagedependencies.txt
