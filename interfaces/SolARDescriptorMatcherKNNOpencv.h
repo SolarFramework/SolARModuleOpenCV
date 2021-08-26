@@ -72,15 +72,15 @@ public:
     /// [in] desc2: target descriptor.
     /// [out] matches: ensemble of detected matches, a pair of source/target indices.
     ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
-  IDescriptorMatcher::RetCode match(
+	IDescriptorMatcher::RetCode match(
             const SRef<datastructure::DescriptorBuffer> desc1,
             const SRef<datastructure::DescriptorBuffer> desc2,
             std::vector<datastructure::DescriptorMatch> & matches) override;
-  /// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on KNN search strategy.
-  /// [in] desc1: source descriptor.
-  /// [in] desc2: target descriptors.
-  /// [out] matches: ensemble of detected matches, a pair of source/target indices.
-  ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
+	/// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on KNN search strategy.
+	/// [in] desc1: source descriptor.
+	/// [in] desc2: target descriptors.
+	/// [out] matches: ensemble of detected matches, a pair of source/target indices.
+	///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
     IDescriptorMatcher::RetCode match(
            const SRef<datastructure::DescriptorBuffer> descriptors1,
            const std::vector<SRef<datastructure::DescriptorBuffer>> & descriptors2,
@@ -92,10 +92,25 @@ public:
 	/// @param[in] frame The frame contains descriptors to match.
 	/// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
 	/// @return DesciptorMatcher::DESCRIPTORS_MATCHER_OK if matching succeeds, DesciptorMatcher::DESCRIPTORS_DONT_MATCH if the types of descriptors are different, DesciptorMatcher::DESCRIPTOR_TYPE_UNDEFINED if one of the descriptors set is unknown, or DesciptorMatcher::DESCRIPTOR_EMPTY if one of the set is empty.
-	virtual IDescriptorMatcher::RetCode matchInRegion(
+	IDescriptorMatcher::RetCode matchInRegion(
 		const std::vector<datastructure::Point2Df> & points2D,
 		const std::vector<SRef<datastructure::DescriptorBuffer>> & descriptors,
 		const SRef<datastructure::Frame> frame,
+		std::vector<datastructure::DescriptorMatch> &matches,
+		const float radius = 0.f,
+		const float matchingDistanceMax = 0.f
+	) override;
+
+	/// @brief Match each descriptor input with descriptors of a frame in a region. The searching space is a circle which is defined by a 2D center and a radius
+	/// @param[in] currentFrame the current frame.
+	/// @param[in] lastFrame the last frame.
+	/// @param[out] matches a vector of matches between two frames representing pairs of keypoint indices relatively.
+	/// @param[in] radius the radius of search region around each keypoint of the last frame.
+	/// @param[in] matchingDistanceMax the maximum distance to valid a match.
+	/// @return DesciptorMatcher::DESCRIPTORS_MATCHER_OK if matching succeeds, DesciptorMatcher::DESCRIPTORS_DONT_MATCH if the types of descriptors are different, DesciptorMatcher::DESCRIPTOR_TYPE_UNDEFINED if one of the descriptors set is unknown, or DesciptorMatcher::DESCRIPTOR_EMPTY if one of the set is empty.
+	IDescriptorMatcher::RetCode matchInRegion(
+		const SRef<datastructure::Frame> currentFrame,
+		const SRef<datastructure::Frame> lastFrame,
 		std::vector<datastructure::DescriptorMatch> &matches,
 		const float radius = 0.f,
 		const float matchingDistanceMax = 0.f
@@ -115,11 +130,6 @@ private:
 
     int m_id;
     cv::FlannBasedMatcher m_matcher;
-
-    IDescriptorMatcher::RetCode match(
-            SRef<datastructure::DescriptorBuffer>& descriptors1,
-            SRef<datastructure::DescriptorBuffer>& descriptors2,
-            std::vector<std::vector< cv::DMatch >>& matches,int nbOfMatches);
 
 };
 

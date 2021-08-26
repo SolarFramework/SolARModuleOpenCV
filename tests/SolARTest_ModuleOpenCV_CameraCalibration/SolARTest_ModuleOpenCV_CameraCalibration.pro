@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_CameraCalibration
-VERSION=0.9.0
+VERSION=0.9.1
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
@@ -69,6 +69,10 @@ win32 {
 android {
     ANDROID_ABIS="arm64-v8a"
 }
+
+configfile.path = $${TARGETDEPLOYDIR}/
+configfile.files = $${PWD}/SolARTest_ModuleOpenCV_CameraCalibration_conf.xml
+INSTALLS += configfile
 
 DISTFILES += \
     packagedependencies.txt
