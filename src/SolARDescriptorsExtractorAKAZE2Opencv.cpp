@@ -15,7 +15,6 @@
  */
 
 #include "SolARDescriptorsExtractorAKAZE2Opencv.h"
-#include "SolARImageConvertorOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
 
@@ -62,10 +61,8 @@ void SolARDescriptorsExtractorAKAZE2Opencv::extract(const SRef<Image> image, con
     SRef<Image> convertedImage = image;
 
     if (image->getImageLayout() != Image::ImageLayout::LAYOUT_GREY) {
-        // input Image not in grey levels : convert it !
-        SolARImageConvertorOpencv convertor;
-        convertedImage = xpcf::utils::make_shared<Image>(Image::ImageLayout::LAYOUT_GREY,Image::PixelOrder::INTERLEAVED,image->getDataType());
-        convertor.convert(image,convertedImage);
+        // input Image not in grey levels : convert it !              
+        m_convertor.convert(image, convertedImage, Image::ImageLayout::LAYOUT_GREY);
     }
 
     cv::Mat opencvImage;

@@ -80,7 +80,7 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
     }
 
-    for (int i=0;i<imagePoints.size();++i) {
+    for (unsigned int i=0;i<imagePoints.size();++i) {
 
         Point2Df point2D = imagePoints.at(i);
         Point3Df point3D = worldPoints.at(i);
