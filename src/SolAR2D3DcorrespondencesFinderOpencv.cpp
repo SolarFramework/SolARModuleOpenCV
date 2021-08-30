@@ -46,7 +46,7 @@ FrameworkReturnCode SolAR2D3DCorrespondencesFinderOpencv::find(const SRef<Frame>
 	const std::map<uint32_t, uint32_t> &mapVisibility = lastFrame->getVisibility();
 	const std::vector<Keypoint> &current_kpoints = currentFrame->getKeypoints();
 
-	for (int j = 0; j < current_matches.size(); ++j) {
+    for (unsigned int j = 0; j < current_matches.size(); ++j) {
 		SRef<CloudPoint> point3D;
 		std::map<unsigned int, unsigned int>::const_iterator it_cp = mapVisibility.find(current_matches[j].getIndexInDescriptorA());
 		if ((it_cp != mapVisibility.end()) && (m_pointCloudManager->getPoint(it_cp->second, point3D) == FrameworkReturnCode::_SUCCESS)) {

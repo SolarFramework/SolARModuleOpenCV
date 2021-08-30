@@ -19,12 +19,7 @@
 
 #include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
-
 #include "api/input/files/ITrackableLoader.h"
-#include "datastructure/Trackable.h"
-#include "datastructure/FiducialMarker.h"
-
-#include "opencv2/opencv.hpp"
 
 namespace SolAR {
 namespace MODULES {
@@ -54,9 +49,9 @@ class SOLAROPENCV_EXPORT_API SolARFiducialMarkerLoaderOpencv : public org::bcom:
         void unloadComponent () override;
 
         /// @brief Loads a specific trackable object and its features.
-        /// @return SRef<Trackable> : the trackable object created from the description file
-        /// or 0 if an error occurs
-        virtual SRef<datastructure::Trackable> loadTrackable() override;
+        /// @param [in,out] trackable: the loaded trackable loaded
+        /// @return FrameworkReturnCode::_SUCCESS if load succeed, else FrameworkReturnCode::_ERROR_
+        virtual FrameworkReturnCode loadTrackable(SRef<datastructure::Trackable>& trackable) override;
 
      private:
         /// @brief the path to the file describing the fiducial marker

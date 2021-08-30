@@ -135,7 +135,7 @@ void SolAR2DOverlayOpencv::drawContour (const Contour2Df & contour, SRef<Image> 
     }
 
 
-    for (int i = 0; i < contour.size(); i++)
+    for (unsigned int i = 0; i < contour.size(); i++)
     {
         if (i != contour.size() - 1)
         {
@@ -175,7 +175,7 @@ void SolAR2DOverlayOpencv::drawContours (const std::vector<Contour2Df> & contour
             color = cv::Scalar(uni(rng), uni(rng), uni(rng));
         }
 
-        for (int i = 0; i < contour.size(); i++)
+        for (unsigned int i = 0; i < contour.size(); i++)
         {
             if (i != contour.size() - 1)
             {

@@ -335,7 +335,7 @@ int AKAZEFeaturesV2::Create_Nonlinear_Scale_Space(const Mat& img)
     float * lstep = Lstep.ptr<float>(0);
     std::vector<float> & tsteps = tsteps_[i - 1];
 
-    for (int j = 0; j < tsteps.size(); j++) {
+    for (unsigned int j = 0; j < tsteps.size(); j++) {
       nld_step_scalarV2(evolution_[i].Lt, Lflow, Lstep);
 
       const float step_size = tsteps[j];

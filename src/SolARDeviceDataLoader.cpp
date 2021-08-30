@@ -136,7 +136,7 @@ namespace SolAR {
             m_poseFiles[id_camera].open(pathToPose);
             if (!m_poseFiles[id_camera].is_open()) {
                 LOG_ERROR("Cannot load pose file of camera {}", id_camera);
-                FrameworkReturnCode::_ERROR_;
+                return FrameworkReturnCode::_ERROR_;
             }
             // camera loader
             std::string pathToImages = m_pathToData + "/" + index + "/%08d.jpg";

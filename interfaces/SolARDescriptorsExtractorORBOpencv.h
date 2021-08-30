@@ -30,6 +30,7 @@
 #include "opencv2/features2d.hpp"
 #include "datastructure/DescriptorBuffer.h"
 #include "datastructure/Keypoint.h"
+#include "SolARImageConvertorOpencv.h"
 
 namespace SolAR {
 namespace MODULES {
@@ -107,6 +108,7 @@ private:
     std::string m_scoreType = "Harris"; // Accepted values: Harris or Fast
     int m_patchSize = 31;
     int m_fastThreshold = 20;
+	SolARImageConvertorOpencv m_convertor;
 };
 
 }

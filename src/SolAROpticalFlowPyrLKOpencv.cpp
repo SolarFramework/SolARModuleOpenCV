@@ -123,7 +123,7 @@ FrameworkReturnCode SolAROpticalFlowPyrLKOpencv::estimate(const SRef<Image> prev
     cv::calcOpticalFlowPyrLK(previousFrame, currentFrame, pointsToTrack, cv_trackedPoints, status, error, cv::Size(m_searchWinWidth, m_searchWinHeight), m_maxLevel, termcrit, flags, m_minEigenThreshold);
 
     trackedPoints.clear();
-    for (int i = 0; i < cv_trackedPoints.size(); i++)
+    for (unsigned int i = 0; i < cv_trackedPoints.size(); i++)
         trackedPoints.push_back(Point2Df(cv_trackedPoints[i].x, cv_trackedPoints[i].y));
 
     return FrameworkReturnCode::_SUCCESS;
