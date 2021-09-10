@@ -2,6 +2,8 @@
 QT       -= core gui
 CONFIG -= qt
 
+QMAKE_PROJECT_DEPTH = 0
+
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_MatchesFilter
 VERSION=0.10.0
