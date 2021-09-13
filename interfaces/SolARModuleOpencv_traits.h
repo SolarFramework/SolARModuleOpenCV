@@ -44,6 +44,7 @@ class SolARDescriptorsExtractorAKAZE2Opencv;
 class SolARDescriptorsExtractorAKAZEOpencv;
 class SolARDescriptorsExtractorORBOpencv;
 class SolARDescriptorsExtractorSBPatternOpencv;
+class SolARDescriptorsExtractorFromImageOpencv;
 class SolARFiducialMarkerLoaderOpencv;
 class SolARFundamentalMatrixEstimationOpencv;
 class SolARGeometricMatchesFilterOpencv;
@@ -173,6 +174,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSB
                              "d25625ba-ce3a-11e7-abc4-cec278b6b50a",
                              "SolARDescriptorsExtractorSBPatternOpencv",
                              "Extracts the descriptor corresponding to a squared binary marker pattern.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorFromImageOpencv,
+                             "cf2721f2-0dc9-4442-ad1e-90c0ab12b0ff",
+                             "SolARDescriptorsExtractorFromImageOpencv",
+                             "Detect keypoints and compute the descriptors from an image.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARFiducialMarkerLoaderOpencv,
                              "d0116ed2-45d7-455d-8011-57959da1b0fa",

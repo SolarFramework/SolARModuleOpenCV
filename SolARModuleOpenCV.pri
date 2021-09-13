@@ -1,5 +1,5 @@
 HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
-    $$PWD/interfaces/SolARImageFilterWallisOpencv.h \
+    interfaces/SolARImageFilterWallisOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolAR3DOverlayBoxOpencv.h \
     interfaces/SolARBaseCameraOpencv.h \
@@ -18,6 +18,7 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARDescriptorsExtractorORBOpencv.h \
     interfaces/SolARDescriptorsExtractorSBPatternOpencv.h \
     interfaces/SolARDescriptorsExtractorSIFTOpencv.h \
+    interfaces/SolARDescriptorsExtractorFromImageOpencv.h \
     interfaces/SolARDeviceDataLoader.h \
     interfaces/SolARFiducialMarkerLoaderOpencv.h \
     interfaces/SolARFundamentalMatrixEstimationOpencv.h \
@@ -49,7 +50,7 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARPoseEstimationSACPnpOpencv.h \
     interfaces/SolARPoseFinderFrom2D2DOpencv.h \
     interfaces/SolARProjectOpencv.h \
-	interfaces/SolARStereo2DPointsRectificationOpencv.h \
+    interfaces/SolARStereo2DPointsRectificationOpencv.h \
     interfaces/SolARStereoCalibrationOpencv.h \
     interfaces/SolARStereoDescriptorMatcherOpencv.h \
     interfaces/SolARStereoImageRectificationOpencv.h \
@@ -90,6 +91,7 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARDescriptorsExtractorORBOpencv.cpp \
     src/SolARDescriptorsExtractorSBPatternOpencv.cpp \
     src/SolARDescriptorsExtractorSIFTOpencv.cpp \
+    src/SolARDescriptorsExtractorFromImageOpencv.cpp \
     src/SolARDeviceDataLoader.cpp \
     src/SolARFiducialMarkerLoaderOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
@@ -119,7 +121,7 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARPoseEstimationSACPnpOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
     src/SolARProjectOpencv.cpp \
-	src/SolARStereo2DPointsRectificationOpencv.cpp \
+    src/SolARStereo2DPointsRectificationOpencv.cpp \
     src/SolARStereoCalibrationOpencv.cpp \
     src/SolARStereoDescriptorMatcherOpencv.cpp \
     src/SolARStereoImageRectificationOpencv.cpp \
