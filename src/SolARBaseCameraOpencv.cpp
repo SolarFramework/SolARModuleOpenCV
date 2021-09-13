@@ -17,6 +17,7 @@
 #include "SolARBaseCameraOpencv.h"
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
+#include <boost/filesystem.hpp>
 
 namespace xpcf = org::bcom::xpcf;
 
@@ -47,65 +48,16 @@ namespace OPENCV {
     xpcf::XPCFErrorCode SolARBaseCameraOpencv::onConfigured()
     {
         LOG_DEBUG(" SolARBaseCameraOpencv onConfigured");
-        if (m_calibrationFile.empty())
+        if (!boost::filesystem::exists(m_calibrationFile))
         {
-            LOG_ERROR("Camera Calibration file path is empty");
-            return xpcf::XPCFErrorCode::_FAIL;
+            LOG_WARNING("Camera Calibration file path not exist");
+			return xpcf::XPCFErrorCode::_SUCCESS;
         }
-        cv::FileStorage fs(m_calibrationFile, cv::FileStorage::READ);
-        cv::Mat intrinsic_parameters;
-        cv::Mat distortion_parameters;
-
-        if (fs.isOpened())
-        {
-            int width, height;
-            fs["image_width"] >> width;
-            fs["image_height"] >> height;
-            fs["camera_matrix"] >> intrinsic_parameters;
-            fs["distortion_coefficients"] >> distortion_parameters;
-
-            m_parameters.resolution.width = width;
-            m_parameters.resolution.height = height;
-            m_is_resolution_set = true;
-
-            if (intrinsic_parameters.empty())
-            {
-                LOG_ERROR ("SolARBaseCameraOpencv::loadCameraParameters: Use the landmark camera_matrix to define the intrinsic matrix in the .yml camera calibration file")
-                return xpcf::XPCFErrorCode::_FAIL;
-            }
-
-            if (intrinsic_parameters.rows == m_parameters.intrinsic.rows() && intrinsic_parameters.cols == m_parameters.intrinsic.cols())
-                for (int i = 0; i < intrinsic_parameters.rows; i++)
-                    for (int j = 0; j < intrinsic_parameters.cols; j++)
-                        m_parameters.intrinsic(i,j) = (float)intrinsic_parameters.at<double>(i,j);
-            else
-            {
-                LOG_ERROR("SolARBaseCameraOpencv::loadCameraParameters: Camera Calibration should be a 3x3 Matrix")
-                return xpcf::XPCFErrorCode::_FAIL;
-            }
-
-            if (distortion_parameters.empty())
-            {
-                LOG_ERROR("SolARBaseCameraOpencv::loadCameraParameters: Use the landmark distortion_coefficients to define the distortion vector in the .yml camera calibration file")
-                return xpcf::XPCFErrorCode::_FAIL;
-            }
-
-            if (distortion_parameters.rows == m_parameters.distortion.rows() && distortion_parameters.cols == m_parameters.distortion.cols())
-                for (int i = 0; i < distortion_parameters.rows; i++)
-                    for (int j = 0; j < distortion_parameters.cols; j++)
-                        m_parameters.distortion(i,j) = distortion_parameters.at<double>(i,j);
-            else
-            {
-                LOG_ERROR("SolARBaseCameraOpencv::loadCameraParameters: Camera distortion matrix should be a 5x1 Matrix")
-                return xpcf::XPCFErrorCode::_FAIL;
-            }
-            return xpcf::XPCFErrorCode::_SUCCESS;
-        }
-        else
-        {
-            LOG_ERROR("SolARBaseCameraOpencv::loadCameraParameters: Cannot open camera calibration file ")
-            return xpcf::XPCFErrorCode::_FAIL;
-        }
+		if (!datastructure::loadFromFile(m_parameters, m_calibrationFile)) {
+			LOG_ERROR("Cannot load calibration file");
+			return xpcf::XPCFErrorCode::_FAIL;
+		}      
+		return xpcf::XPCFErrorCode::_SUCCESS;
     }
 
     void SolARBaseCameraOpencv::setResolution(const Sizei & resolution)

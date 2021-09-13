@@ -69,10 +69,6 @@ public:
 	/// @return FrameworkReturnCode::_SUCCESS if successful, eiher FrameworkReturnCode::_ERROR_.
 	FrameworkReturnCode stop() override;
 
-	/// @brief Get number of cameras of the device.
-	/// @return the number of cameras.
-	int getNbCameras() override;
-
 	/// @brief Retrieve a set of images and their associated poses from the sensors as well as timestamp.
 	/// @param[out] images: the captured images.
 	/// @param[out] poses: the associated poses.
@@ -80,22 +76,15 @@ public:
 	/// @return FrameworkReturnCode to track successful or failing event.
 	FrameworkReturnCode getData(std::vector<SRef<datastructure::Image>> & images, std::vector<datastructure::Transform3Df> & poses, std::chrono::system_clock::time_point &timestamp) override;
 
-	/// @brief Get the distortion and intrinsic camera parameters
-	/// @param[in] camera_id: The id of the camera.
-	/// @return the camera parameters
-    const datastructure::CameraParameters & getParameters(const int & camera_id) const override;
-
-	/// @brief Set the distortion and intrinsic camera parameters
-	/// @param[in] camera_id: The id of the camera.
-	/// @param[in] parameters: the camera parameters.
-	void setParameters(const int & camera_id, const datastructure::CameraParameters & parameters) override;
+    /// @brief Get parameters of a camera rig
+    /// @return the camera rig parameters
+    const SolAR::datastructure::CameraRigParameters & getCameraParameters() const override;
 
  private:
 	 int											m_nbCameras;
 	 std::string									m_calibrationFile;
 	 std::string									m_pathToData;
-	 std::vector<datastructure::CameraParameters>	m_camParameters;
-	 std::vector<std::string>						m_cameraNames;
+	 datastructure::CameraRigParameters				m_camRigParameters;
 	 std::vector<cv::VideoCapture>					m_cameras;
 	 std::vector<std::ifstream>						m_poseFiles;
 	 std::ifstream									m_timestampFile;

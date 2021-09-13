@@ -63,8 +63,33 @@ namespace OPENCV {
             LOG_INFO("Camera using {}  *  {} resolution", m_parameters.resolution.width ,m_parameters.resolution.height)
             if (m_is_resolution_set)
             {
-                m_capture.set(cv::CAP_PROP_FRAME_WIDTH, m_parameters.resolution.width );
-                m_capture.set(cv::CAP_PROP_FRAME_HEIGHT, m_parameters.resolution.height );
+                bool setResolutionFailed = false;
+
+                auto setResolution = [&]
+                                     (cv::VideoCaptureProperties dimensionProp,
+                                      uint32_t value,
+                                      const std::string& dimensionName)
+                {
+                  bool setResDimOk = m_capture.set(dimensionProp, value);
+
+                  if (!setResDimOk || m_capture.get(dimensionProp) != value)
+                  {
+                    setResolutionFailed = true;
+                    LOG_ERROR("Cannot set camera {} to {}", dimensionName, value);
+                    if (!setResDimOk)
+                    {
+                      LOG_WARNING( "Note: cv::VideoCapture::set() returned 'true'");
+                    }
+                  }
+                };
+
+                setResolution(cv::CAP_PROP_FRAME_WIDTH, m_parameters.resolution.width, "width");
+                setResolution(cv::CAP_PROP_FRAME_HEIGHT, m_parameters.resolution.height, "height");
+
+                if ( setResolutionFailed )
+                {
+                  return FrameworkReturnCode::_ERROR_;
+                }
             }
             else {
                 // set default resolution : get camera resolution ? or force camera resolution from default resolution values ?

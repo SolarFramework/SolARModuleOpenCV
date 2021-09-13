@@ -21,7 +21,7 @@
 
 #include <string>
 #include "opencv2/videoio.hpp"
-#include "xpcf/component/ComponentBase.h"
+#include "xpcf/component/ConfigurableBase.h"
 
 #include "SolAROpencvAPI.h"
 
@@ -37,93 +37,38 @@ namespace OPENCV {
  */
 
 class SOLAROPENCV_EXPORT_API SolARCameraCalibrationOpencv :
-	public org::bcom::xpcf::ComponentBase,
+	public org::bcom::xpcf::ConfigurableBase,
 	public api::input::devices::ICameraCalibration
 {
 public:
-	enum ProcessMode
-	{
-		SOLAR_DETECT = 0,
-		SOLAR_CAPTURE = 1,
-		SOLAR_CALIBRATED = 2
-	};
+    SolARCameraCalibrationOpencv();
+    ~SolARCameraCalibrationOpencv() override;
+    /// @brief Calibrate the camera device from a sequence of images
+    /// @param[in] images The set of images for calibration
+    /// @param[out] camParams The camera paramters
+    /// @return FrameworkReturnCode::_SUCCESS if calibration succeed, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode calibrate(const std::vector<SRef<SolAR::datastructure::Image>>& images,
+                                  SolAR::datastructure::CameraParameters & camParams) override;
 
-public:
-	SolARCameraCalibrationOpencv();
-    virtual ~SolARCameraCalibrationOpencv() override;
-    /// @brief this method calibrates and fixes an unkonwn camera intrinsic parameters from a offline video stream,
-    /// it saves the result calibration file inside output folder.
-    /// @param[in] inputVideo: path of the video stream captured by the unkown camera.
-    /// @param[out] output: path of the folder where a result calibration file will be written.
-    bool calibrate(const std::string & inputVideo, const std::string & output) override;
-    /// @brief this method calibrates and fixes an unkonwn camera intrinsic parameters from a online video stream,
-    /// it saves the result calibration file inside output folder.
-    /// @param[in] camera_id: id of the unkown camera from which the video stream is grabbed.
-    /// @param[out] output: path of the folder where a result calibration file will be written.
-    bool calibrate(int camera_id, const std::string & output) override;
-    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
-    /// @param[in] Camera calibration matrix parameters.
-    /// @param[in] Camera distorsion parameters.
-    bool setParameters(const std::string & config_file) override;
-	virtual void unloadComponent() override;
-
+	void unloadComponent() override;
 
 private:
-protected:
+	bool findChessboardCornersImage(SRef<SolAR::datastructure::Image>& image,
+									cv::Mat & displayImage,
+									std::vector<cv::Point2f>& corners);
+
+private:
+    cv::Mat m_camMatrix;
+    cv::Mat m_camDistortion;
 	cv::Size m_boardSize;
-	cv::Size m_imageSize;
-	cv::Mat m_camMatrix;
-	cv::Mat m_camDistorsion;
-
+	cv::Size m_imageSize;	
 	float m_squareSize;
-	float m_aspectRatio;
-
-	int m_nframes;
+	int m_nbFrames = 30;
+	int m_nbDropFrames = 0;
 	int m_flags;
-	int m_delay;
-
-    virtual bool process(cv::VideoCapture &, const std::string &);
-	
-	static double computeReprojectionErrors(const std::vector<std::vector<cv::Point3f> >& objectPoints,
-		const std::vector<std::vector<cv::Point2f> >& imagePoints,
-		const std::vector<cv::Mat>& rvecs, const std::vector<cv::Mat>& tvecs,
-		const cv::Mat& cameraMatrix, const cv::Mat& distCoeffs,
-		std::vector<float>& perViewErrors);
-
-	static void calcChessboardCorners(cv::Size boardSize, float squareSize, std::vector<cv::Point3f>& corners);
-
-    static bool runCalibration(const std::vector<std::vector<cv::Point2f>> & imagePoints,
-		cv::Size imageSize,
-		cv::Size boardSize,
-		float squareSize,
-		float aspectRatio,
-		int flags,
-		cv::Mat& cameraMatrix,
-		cv::Mat& distCoeffs,
-		std::vector<cv::Mat>& rvecs,
-		std::vector<cv::Mat>& tvecs,
-		std::vector<float>& reprojErrs,
-		double& totalAvgErr);
-
-	static void saveCameraParams(const std::string& filename,
-		cv::Size imageSize,
-		cv::Size boardSize,
-		float squareSize,
-		float aspectRatio,
-		int flags,
-		const cv::Mat& cameraMatrix,
-		const cv::Mat& distCoeffs);
-
-	static bool runAndSave(const std::string& outputFilename,
-		const std::vector<std::vector<cv::Point2f> >& imagePoints,
-		cv::Size imageSize,
-		cv::Size boardSize,
-		float squareSize,
-		float aspectRatio,
-		int flags,
-		cv::Mat& cameraMatrix,
-		cv::Mat& distCoeffs);
+	int m_waitTime = 30;	
 };
+
 }
 }
 }  // end of namespace Solar

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xpcf-registry autoAlias="true">    
+	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/0.10.0/lib/x86_64/shared">
+        <component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" name="SolARCameraOpencv" description="SolARCameraOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+		</component>
+		<component uuid="b8a8b963-ba55-4ea4-b045-d9e7e8f6db02" name="SolARImagesAsCameraOpencv" description="SolARImagesAsCameraOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+		</component>
+		<component uuid="fa4a780a-9720-11e8-9eb6-529269fb1459" name="SolARVideoAsCameraOpencv" description="SolARVideoAsCameraOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+		</component>
+		<component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="SolARImageViewerOpencv" description="SolARImageViewerOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
+        </component> 
+		<component uuid="702a7f53-e5ec-45d2-887d-daa99a34a33c" name="SolARCameraCalibrationOpencv" description="SolARCameraCalibrationOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="0e83b228-b9ca-413d-9dc2-db45c427428b" name="ICameraCalibration" description="ICameraCalibration"/>
+        </component> 		
+    </module>
+
+    <factory>
+        <bindings>
+            <bind interface="ICamera" to="SolARCameraOpencv"/>
+			<!--bind interface="ICamera" to="SolARImagesAsCameraOpencv"/-->
+			<!--bind interface="ICamera" to="SolARVideoAsCameraOpencv"/-->        
+        </bindings>
+    </factory>
+	
+    <properties>
+        <configure component="SolARCameraOpencv">
+			<property name="calibrationFile" type="string" value="path to camera calibration"/>
+			<property name="deviceID" type="uint" value="0"/>
+		</configure>
+		<configure component="SolARImagesAsCameraOpencv">
+			<property name="calibrationFile" type="string" value="path to camera calibration"/>
+			<property name="imagesDirectoryPath" type="string" value="path to images"/>
+			<property name="delayTime" type="int" value="10"/>
+		</configure>
+		<configure component="SolARVideoAsCameraOpencv">
+			<property name="calibrationFile" type="string" value="path to camera calibration"/>
+			<property name="videoPath" type="string" value="path to video"/>
+			<property name="delayTime" type="Integer" value="30"/>
+		</configure>
+		<configure component="SolARCameraCalibrationOpencv">
+			<property name="image_width" type="int" value="640"/>
+			<property name="image_height" type="int" value="480"/>
+			<property name="chessboard_width" type="int" value="9"/>
+			<property name="chessboard_height" type="int" value="6"/>
+			<property name="square_size" type="float" value="0.0286"/>
+			<property name="nb_frames" type="int" value="30"/>
+			<property name="nb_drop_frames" type="int" value="3"/>
+			<property name="nb_wait_time" type="int" value="30"/>
+			<property name="flags" type="int" value="0"/>
+		</configure>
+        <configure component="SolARImageViewerOpencv">
+            <property name="title" type="string" value="Image View"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="640"/>
+            <property name="height" type="int" value="480"/>
+        </configure>
+    </properties>
+</xpcf-registry>

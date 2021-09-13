@@ -14,122 +14,78 @@
 * limitations under the License.
 */
 
-#include <iostream>
-#include <string>
-
-// ADD COMPONENTS HEADERS HERE, e.g #include "SolarComponent.h"
-
-#include "SolARImageLoaderOpencv.h"
-#include "SolARImageViewerOpencv.h"
-#include "SolARCameraCalibrationOpencv.h"
-#include "SolARCameraOpencv.h"
-
+#include "api/input/devices/ICamera.h"
+#include "api/display/IImageViewer.h"
+#include "api/input/devices/ICameraCalibration.h"
 #include "core/Log.h"
-
 #include <iostream>
 #include <map>
+#include <string>
 
 using namespace std;
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
-using namespace SolAR::MODULES::OPENCV;
 
 namespace xpcf = org::bcom::xpcf;
 
-void printHelp() {
-	std::cout << "Missing parameters" << std::endl;
-	std::string readmeFile = std::string("../readme.adoc");
-	std::ifstream ifs(readmeFile.c_str());
-	if (!ifs) {
-		LOG_ERROR("Readme File {} does not exist", readmeFile.c_str());
-		return;
-	}
-	std::string line;
-	while (std::getline(ifs, line))
-		//  printf("{}", line);
-		std::cout << line << std::endl;
-	ifs.close();
-	return;
-}
-
-
-int calibratio_run(int cameraId) {
-
-	SRef<Image> inputImage;
-
-    std::string calib_config = std::string("../../data/chessboard_config.yml");
-	std::ifstream ifs(calib_config.c_str());
-	if (!ifs) {
-		LOG_ERROR("Calibration config File {} does not exist", calib_config.c_str());
-		printHelp();
-		return -1;
-	}
-
-    auto cameraCalibration =xpcf::ComponentFactory::createInstance<SolARCameraCalibrationOpencv>()->bindTo<input::devices::ICameraCalibration>();
-
-    std::string calib_output = std::string("../../data/camera_calibration.yml");
-
-	if (cameraCalibration->setParameters(calib_config))
-	{
-		cameraCalibration->calibrate(cameraId, calib_output);
-	}
-	else
-	{
-		printHelp();
-	}
-
-	return 0;
-}
-
-
-int calibratio_run(std::string& video) {
-
-	SRef<Image> inputImage;
-
-    auto cameraCalibration =xpcf::ComponentFactory::createInstance<SolARCameraCalibrationOpencv>()->bindTo<input::devices::ICameraCalibration>();
-
-    std::string calib_config = std::string("../../data/chessboard_config.yml");
-	std::ifstream ifs(calib_config.c_str());
-	if (!ifs) {
-		LOG_ERROR("Calibration config File {} does not exist", calib_config.c_str());
-		printHelp();
-		return -1;
-	}
-
-    std::string calib_output = std::string("../../data/camera_calibration.yml");
-
-	if (cameraCalibration->setParameters(calib_config))
-	{
-		cameraCalibration->calibrate(video, calib_output);
-	}
-	else
-	{
-		printHelp();
-	}
-
-	return 0;
-}
 int main(int argc, char* argv[]) {
+	SRef<xpcf::IComponentManager> xpcfComponentManager;
 	LOG_ADD_LOG_TO_CONSOLE();
-
-	if (argc == 2) {
-
-		//  initalizes camera with the given parameter of the program
-		std::string cameraArg = std::string(argv[1]);
-
-		//  checks if a video is given in parameters
-		if (cameraArg.find("mp4") != std::string::npos || cameraArg.find("mov") != std::string::npos || cameraArg.find("wmv") != std::string::npos || cameraArg.find("avi") != std::string::npos)
+	try {
+		xpcfComponentManager = xpcf::getComponentManagerInstance();
+		std::string configxml = std::string("SolARTest_ModuleOpenCV_CameraCalibration_conf.xml");
+		if (argc == 2)
+			configxml = std::string(argv[1]);
+		if (xpcfComponentManager->load(configxml.c_str()) != org::bcom::xpcf::_SUCCESS)
 		{
-			return calibratio_run(cameraArg);
+			LOG_ERROR("Failed to load the configuration file {}", configxml.c_str())
+				return -1;
 		}
-		else
-		{  //no video in parameters, then the input camera is used
-			return calibratio_run(atoi(argv[1]));
+		LOG_INFO("Start creating components");
+		auto camera = xpcfComponentManager->resolve<input::devices::ICamera>();
+		auto viewer = xpcfComponentManager->resolve<display::IImageViewer>();
+		auto calibrator = xpcfComponentManager->resolve<input::devices::ICameraCalibration>();
+		LOG_INFO("Loaded all components");
+		// set resolution
+		Sizei resolution;
+		resolution.width = calibrator->bindTo<xpcf::IConfigurable>()->getProperty("image_width")->getIntegerValue();
+		resolution.height = calibrator->bindTo<xpcf::IConfigurable>()->getProperty("image_height")->getIntegerValue();		
+		camera->setResolution(resolution);
+		// start camera
+		if (camera->start() != FrameworkReturnCode::_SUCCESS) {
+			LOG_ERROR("Cannot open camera");
+			return -1;
 		}
+		// get data
+		int nbMaxImages = 500;
+		std::vector<SRef<Image>> images;
+		while (true) {
+			SRef<Image> image;
+			if (camera->getNextImage(image) != FrameworkReturnCode::_SUCCESS) {
+				LOG_ERROR("Error during capture");
+				return -1;
+			}
+			if (viewer->display(image) != FrameworkReturnCode::_SUCCESS) break;
+			images.push_back(image);
+			if (images.size() >= nbMaxImages)
+				break;
+			std::cout << "Number of captured images: " << images.size() << "\r";
+		}
+		// calibrate
+		CameraParameters camParams;
+		camParams.id = 0;
+		camParams.name = "Camera";
+		camParams.type = CameraType::RGB;
+		calibrator->calibrate(images, camParams);
+		saveToFile(camParams, "camera_calibration.json");
 	}
-	return calibratio_run(0);
+	catch (xpcf::Exception e)
+	{
+		LOG_ERROR("The following exception has been catch : {}", e.what());
+		return -1;
+	}
 
-
+	return 0;
 }
 

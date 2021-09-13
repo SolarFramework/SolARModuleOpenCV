@@ -51,12 +51,7 @@ int main(int argc, char *argv[])
 
         // declare and create components
         LOG_INFO("Start creating components");
-		auto arDevice = xpcfComponentManager->resolve<input::devices::IARDevice>();
-		int nbCameras = arDevice->getNbCameras();
-		if (INDEX_USE_CAMERA >= nbCameras) {
-			LOG_ERROR("Index of the used camera cannot be found");
-			return 0;
-		}
+		auto arDevice = xpcfComponentManager->resolve<input::devices::IARDevice>();		
 		auto viewer3D = xpcfComponentManager->resolve<display::I3DPointsViewer>();		
 		auto imageViewer = xpcfComponentManager->resolve<display::IImageViewer>();
 		auto overlay3D = xpcfComponentManager->resolve<display::I3DOverlay>();
@@ -72,8 +67,12 @@ int main(int argc, char *argv[])
 		LOG_INFO("Started!");
 
 		// set calibration matrix for components
-		CameraParameters camParams;
-		camParams = arDevice->getParameters(INDEX_USE_CAMERA);
+		CameraRigParameters camRigParams = arDevice->getCameraParameters();
+		if (camRigParams.cameraParams.find(INDEX_USE_CAMERA) == camRigParams.cameraParams.end()) {
+			LOG_ERROR("Cannot load parameters of camera {}", INDEX_USE_CAMERA);
+			return -1;
+		}
+		CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
 		overlay3D->setCameraParameters(camParams.intrinsic, camParams.distortion);
 
         // Display images and poses

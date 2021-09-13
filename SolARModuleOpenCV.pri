@@ -11,6 +11,8 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
     interfaces/SolARDescriptorMatcherKNNOpencv.h \
     interfaces/SolARDescriptorMatcherRadiusOpencv.h \
+    interfaces/SolARDescriptorMatcherGeometricOpencv.h \
+    interfaces/SolARDescriptorMatcherRegionOpencv.h \
     interfaces/SolARDescriptorsExtractorAKAZE2Opencv.h \
     interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
     interfaces/SolARDescriptorsExtractorORBOpencv.h \
@@ -47,6 +49,10 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARPoseEstimationSACPnpOpencv.h \
     interfaces/SolARPoseFinderFrom2D2DOpencv.h \
     interfaces/SolARProjectOpencv.h \
+	interfaces/SolARStereo2DPointsRectificationOpencv.h \
+    interfaces/SolARStereoCalibrationOpencv.h \
+    interfaces/SolARStereoDescriptorMatcherOpencv.h \
+    interfaces/SolARStereoImageRectificationOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
     interfaces/SolARUndistortPointsOpencv.h \
     interfaces/SolARUnprojectPlanarPointsOpencv.h \
@@ -77,6 +83,8 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \
+    src/SolARDescriptorMatcherGeometricOpencv.cpp \
+    src/SolARDescriptorMatcherRegionOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZE2Opencv.cpp \
     src/SolARDescriptorsExtractorAKAZEOpencv.cpp \
     src/SolARDescriptorsExtractorORBOpencv.cpp \
@@ -111,6 +119,10 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARPoseEstimationSACPnpOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
     src/SolARProjectOpencv.cpp \
+	src/SolARStereo2DPointsRectificationOpencv.cpp \
+    src/SolARStereoCalibrationOpencv.cpp \
+    src/SolARStereoDescriptorMatcherOpencv.cpp \
+    src/SolARStereoImageRectificationOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
     src/SolARUndistortPointsOpencv.cpp \

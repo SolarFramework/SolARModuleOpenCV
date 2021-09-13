@@ -37,6 +37,8 @@ class SolARContoursFilterBinaryMarkerOpencv;
 class SolARDescriptorMatcherHammingBruteForceOpencv;
 class SolARDescriptorMatcherKNNOpencv;
 class SolARDescriptorMatcherRadiusOpencv;
+class SolARDescriptorMatcherGeometricOpencv;
+class SolARDescriptorMatcherRegionOpencv;
 class SolARDescriptorsExtractorSIFTOpencv;
 class SolARDescriptorsExtractorAKAZE2Opencv;
 class SolARDescriptorsExtractorAKAZEOpencv;
@@ -78,6 +80,10 @@ class SolARVideoAsCameraOpencv;
 class SolARDeviceDataLoader;
 class SolARMapFusionOpencv;
 class SolARCornerRefinementOpencv;
+class SolARStereo2DPointsRectificationOpencv;
+class SolARStereoCalibrationOpencv;
+class SolARStereoImageRectificationOpencv;
+class SolARStereoDescriptorMatcherOpencv;
 }
 }
 }
@@ -131,6 +137,17 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiu
                              "549f7873-96e4-4eae-b4a0-ae8d80664ce5",
                              "SolARDescriptorMatcherRadiusOpencv",
                              "Matches descriptors and selects all matches not farther than a specified distance.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorMatcherGeometricOpencv,
+                             "389ece8b-9e29-45ae-bd60-de1784ff0931",
+                             "SolARDescriptorMatcherGeometricOpencv",
+                             "Matches two sets of descriptors based on geometric constraints.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRegionOpencv,
+                             "a12a8706-299b-4981-b12b-60717ef3b160",
+                             "SolARDescriptorMatcherRegionOpencv",
+                             "Matches two sets of descriptors based on region constraints.")
+
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSIFTOpencv,
                              "3787eaa6-d0a0-11e7-8fab-cec278b6b50a",
@@ -329,5 +346,21 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARCornerRefinementOpencv
 							"ddae46ca-1657-4301-a87d-f2dcfa6265d0",
 							"SolARCornerRefinementOpencv",
 							"Refine the corner locations.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARStereoCalibrationOpencv,
+							"31051575-1521-4559-9e75-e7e97f990c77",
+							"SolARStereoCalibrationOpencv",
+							"Calibrate and rectify a stereo camera.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARStereoDescriptorMatcherOpencv,
+							"a2740dbd-a17d-4a48-9f3f-3ddc38479745",
+							"SolARStereoDescriptorMatcherOpencv",
+							"Matches two sets of descriptors from stereo images.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARStereo2DPointsRectificationOpencv,
+							"bf4c7011-b7e6-453d-a755-884dac18d3ee",
+                            "SolARStereo2DPointsRectificationOpencv",
+                            "Rectify 2D points.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARStereoImageRectificationOpencv,
+                            "427cbbb8-6afe-4b3b-8b04-cb93ed925b40",
+                            "SolARStereoImageRectificationOpencv",
+                            "Rectify image.")
 
 #endif // SOLARMODULEOPENCV_TRAITS_H

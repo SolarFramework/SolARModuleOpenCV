@@ -25,6 +25,8 @@
 #include "SolARDescriptorMatcherHammingBruteForceOpencv.h"
 #include "SolARDescriptorMatcherKNNOpencv.h"
 #include "SolARDescriptorMatcherRadiusOpencv.h"
+#include "SolARDescriptorMatcherGeometricOpencv.h"
+#include "SolARDescriptorMatcherRegionOpencv.h"
 #include "SolARDescriptorsExtractorSIFTOpencv.h"
 #include "SolARDescriptorsExtractorAKAZEOpencv.h"
 #include "SolARDescriptorsExtractorAKAZE2Opencv.h"
@@ -66,6 +68,10 @@
 #include "SolARDeviceDataLoader.h"
 #include "SolARMapFusionOpencv.h"
 #include "SolARCornerRefinementOpencv.h"
+#include "SolARStereoCalibrationOpencv.h"
+#include "SolARStereoDescriptorMatcherOpencv.h"
+#include "SolARStereo2DPointsRectificationOpencv.h"
+#include "SolARStereoImageRectificationOpencv.h"
 
 namespace xpcf=org::bcom::xpcf;
 
@@ -106,6 +112,14 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv>(componentUUID,interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherGeometricOpencv>(componentUUID,interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDescriptorMatcherRegionOpencv>(componentUUID,interfaceRef);
     }
     if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
@@ -271,6 +285,22 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
 	{
 		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARCornerRefinementOpencv>(componentUUID, interfaceRef);
 	}
+	if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+	{
+		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARStereoCalibrationOpencv>(componentUUID, interfaceRef);
+	}
+	if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+	{
+		errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARStereoDescriptorMatcherOpencv>(componentUUID, interfaceRef);
+	}
+	if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+	{
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARStereo2DPointsRectificationOpencv>(componentUUID, interfaceRef);
+	}
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARStereoImageRectificationOpencv>(componentUUID, interfaceRef);
+    }
     return errCode;
 }
 
@@ -284,6 +314,8 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARContoursFilterBinaryMarkerOpencv
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherHammingBruteForceOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherKNNOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRadiusOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherGeometricOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorMatcherRegionOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorSIFTOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZE2Opencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDescriptorsExtractorAKAZEOpencv)
@@ -325,4 +357,8 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDeviceDataLoader)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMapFusionOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARUndistortPointsOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARCornerRefinementOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereoCalibrationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereoDescriptorMatcherOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereo2DPointsRectificationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereoImageRectificationOpencv)
 XPCF_END_COMPONENTS_DECLARATION

@@ -90,8 +90,6 @@ int main(int argc,char** argv)
     SRef<DescriptorBuffer>          descriptors1;
     SRef<DescriptorBuffer>          descriptors2;
     std::vector<DescriptorMatch>    matches;
-    std::vector<SRef<Point2Df>>     matchedKeypoints1;
-    std::vector<SRef<Point2Df>>     matchedKeypoints2;
     SRef<Image>                     viewerImageAKAZE, viewerImageORB, viewerImageSIFT;
 
  // Start
