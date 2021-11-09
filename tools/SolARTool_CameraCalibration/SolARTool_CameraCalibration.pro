@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARTool_CameraCalibration
-VERSION=0.4.0
+VERSION=0.10.0
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
@@ -69,10 +69,28 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
+unix {
+  run_install.path = $${TARGETDEPLOYDIR}
+  run_install.files = $${PWD}/../run.sh
+  CONFIG(release,debug|release) {
+    run_install.extra = cp $$files($${PWD}/../runRelease.sh) $${PWD}/../run.sh
+  }
+  CONFIG(debug,debug|release) {
+    run_install.extra = cp $$files($${PWD}/../runDebug.sh) $${PWD}/../run.sh
+  }
+  INSTALLS += run_install
+}
+
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $$files($${PWD}/calibration_config.yml) \
+configfile.files = $$files($${PWD}/SolARTool_CameraCalibration_conf.xml)\
+					$$files($${PWD}/camera_calibration.json)\
+					$$files($${PWD}/calibration_config.yml) \
 					$$files($${PWD}/chessboard.png)
 INSTALLS += configfile
+
+OTHER_FILES += \
+    packagedependencies.txt \
+    SolARTool_CameraCalibration_conf.xml
 
 #NOTE : Must be placed at the end of the .pro
 include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/remaken_install_target.pri)))) # Shell_quote & shell_path required for visual on windows

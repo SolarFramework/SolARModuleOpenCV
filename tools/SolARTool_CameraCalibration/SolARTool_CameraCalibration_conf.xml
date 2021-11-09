@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xpcf-registry autoAlias="true">
+    <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/0.10.0/lib/x86_64/shared">
+        <component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" name="SolARCameraOpencv" description="SolARCameraOpencv">
+            <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+            <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+        </component>
+        <component uuid="b8a8b963-ba55-4ea4-b045-d9e7e8f6db02" name="SolARImagesAsCameraOpencv" description="SolARImagesAsCameraOpencv">
+            <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+            <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+        </component>
+        <component uuid="fa4a780a-9720-11e8-9eb6-529269fb1459" name="SolARVideoAsCameraOpencv" description="SolARVideoAsCameraOpencv">
+            <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+            <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+        </component>
+    </module>
+
+    <factory>
+        <bindings>
+            <bind interface="ICamera" to="SolARCameraOpencv"/>
+            <!--bind interface="ICamera" to="SolARImagesAsCameraOpencv"/-->
+            <!--bind interface="ICamera" to="SolARVideoAsCameraOpencv"/-->
+        </bindings>
+    </factory>
+	
+    <properties>
+        <configure component="SolARCameraOpencv">
+			<property name="calibrationFile" type="string" value="camera_calibration.json"/>
+            <property name="deviceID" type="uint" value="0"/>
+        </configure>
+        <configure component="SolARImagesAsCameraOpencv">
+            <property name="calibrationFile" type="string" value="camera_calibration.json"/>
+			<property name="imagesDirectoryPath" type="string" value="../images/%06d.png"/>		<!--path to images"/-->
+            <property name="delayTime" type="int" value="30"/>
+        </configure>
+        <configure component="SolARVideoAsCameraOpencv">
+            <property name="calibrationFile" type="string" value="camera_calibration.json"/>
+			<property name="videoPath" type="string" value="path to video"/>
+            <property name="delayTime" type="int" value="30"/>
+        </configure>       
+    </properties>
+</xpcf-registry>

@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 #include <iostream>
+#include "xpcf/xpcf.h"
 #include <boost/log/core.hpp>
 #include "core/Log.h"
+#include "api/input/devices/ICamera.h"
+#include "SolAROpenCVHelper.h"
 #include "datastructure/CameraDefinitions.h"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/calib3d.hpp"
+#include "opencv2/opencv.hpp"
 #include "opencv2/core/eigen.hpp"
 
 using namespace SolAR;
 using namespace SolAR::datastructure;
+using namespace SolAR::api;
+namespace xpcf = org::bcom::xpcf;
 
 const cv::String keys =
 "{help h usage ?||}"
 "{config c|calibration_config.yml| calibration configuration file}"
-"{input i|0| index of camera or a video file}"
 "{output o|camera_calibration.json| camera calibration output file in json format}"
 ;
 
@@ -61,6 +62,29 @@ int main(int argc, char *argv[])
 	boost::log::core::get()->set_logging_enabled(false);
 #endif
 	LOG_ADD_LOG_TO_CONSOLE();
+
+	// camera component
+	SRef<input::devices::ICamera> camera;
+	std::string configxml = "SolARTool_CameraCalibration_conf.xml";
+	// load components
+	try {
+		SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+		if (xpcfComponentManager->load(configxml.c_str()) != org::bcom::xpcf::_SUCCESS)
+		{
+			LOG_ERROR("Failed to load the configuration file {}", configxml.c_str());
+			return -1;
+		}
+		/* Declare and create components */
+		camera = xpcfComponentManager->resolve<input::devices::ICamera>();		
+		LOG_INFO("Camera component created!");
+	}
+	catch (xpcf::Exception e)
+	{
+		LOG_ERROR("The following exception has been catch : {}", e.what());
+		return -1;
+	}
+
+	// Parsing
 	cv::CommandLineParser parser(argc, argv, keys);
 	if (parser.has("help"))
 	{
@@ -74,13 +98,7 @@ int main(int argc, char *argv[])
 		LOG_ERROR("Must give a configuration file");
 		return -1;
 	}
-	std::string configFile = parser.get<std::string>("config");
-	if (!parser.has("input")) 
-	{
-		LOG_ERROR("Must give an index of camera or a video file");
-		return -1;
-	}
-	std::string input = parser.get<std::string>("input");
+	std::string configFile = parser.get<std::string>("config");	
 	if (!parser.has("output")) 
 	{
 		LOG_ERROR("Must give a camera calibration output file");
@@ -124,17 +142,11 @@ int main(int argc, char *argv[])
 		for (int j = 0; j < boardSize.width; j++)
 			corners.push_back(cv::Point3f(float(j * squareSize), float(i * squareSize), 0));
 	
-	// Load input
-	cv::VideoCapture capture;
-	bool isOpen;
-	if (input.length() > 1)
-		isOpen = capture.open(input);
-	else
-		isOpen = capture.open(std::stoi(input));
-	
-	if (!isOpen) 
+	// set resolution and open camera
+	camera->setResolution(camera->getResolution());
+	if (camera->start() != FrameworkReturnCode::_SUCCESS) 
 	{
-		LOG_ERROR("Cannot open input {}", input);
+		LOG_ERROR("Cannot open camera");
 		return -1;
 	}
 
@@ -149,8 +161,12 @@ int main(int argc, char *argv[])
 		cv::Mat image, imageGray;
 		bool blink = false;
 		// get image
-		if (!capture.read(image))
-			break;
+		SRef<Image> imageSolAR;
+		if (camera->getNextImage(imageSolAR) != FrameworkReturnCode::_SUCCESS) {
+			LOG_ERROR("Error during capture images");
+			return -1;
+		}
+		image = MODULES::OPENCV::SolAROpenCVHelper::mapToOpenCV(imageSolAR);
 		imageSize = image.size();
 		// convert to gray image
 		cv::cvtColor(image, imageGray, cv::COLOR_BGR2GRAY);
@@ -162,10 +178,10 @@ int main(int argc, char *argv[])
 			cv::Size(-1, -1), cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 30, 0.1));
 
 		if (mode == SOLAR_CAPTURE && found &&
-			(!capture.isOpened() || clock() - prevTimestamp > delay*1e-3*CLOCKS_PER_SEC)) {
+			(clock() - prevTimestamp > delay*1e-3*CLOCKS_PER_SEC)) {
 			imagePoints.push_back(pointbuf);
 			prevTimestamp = clock();
-			blink = capture.isOpened();
+			blink = true;
 		}
 
 		if (found)

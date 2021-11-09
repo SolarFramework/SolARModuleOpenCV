@@ -7,7 +7,7 @@ chessboard_height: 6
 # square size in some user-defined units
 square_size: 0.026
 #fix aspect ratio (fx/fy)
-aspect_ration: 1
+aspect_ratio: 1
 # number of frames to calibrate the camera
 nb_frames: 10
 # OpenCV Flags for camera calibration
