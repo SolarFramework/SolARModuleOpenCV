@@ -50,7 +50,6 @@ unix {
 
 linux {
         QMAKE_LFLAGS += -ldl
-        LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
 }
 
 macx {
@@ -69,7 +68,7 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
-unix {
+linux {
   run_install.path = $${TARGETDEPLOYDIR}
   run_install.files = $${PWD}/../run.sh
   CONFIG(release,debug|release) {
@@ -80,6 +79,7 @@ unix {
   }
   INSTALLS += run_install
 }
+
 
 configfile.path = $${TARGETDEPLOYDIR}/
 configfile.files = $$files($${PWD}/SolARTool_CameraCalibration_conf.xml)\
