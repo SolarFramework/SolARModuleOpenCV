@@ -1,3 +1,3 @@
-SolARModuleOpenCV|0.10.0|SolARModuleOpenCV|SolARBuild@github|https://github.com/SolarFramework/SolarModuleOpenCV/releases/download
-SolARModuleFBOW|0.10.0|SolARModuleFBOW|SolARBuild@github|https://github.com/SolarFramework/SolARModuleFBOW/releases/download
-SolARModuleTools|0.10.0|SolARModuleTools|SolARBuild@github|https://github.com/SolarFramework/SolARModuleTools/releases/download
+SolARModuleOpenCV|0.11.0|SolARModuleOpenCV|SolARBuild@github|https://github.com/SolarFramework/SolarModuleOpenCV/releases/download
+SolARModuleFBOW|0.11.0|SolARModuleFBOW|SolARBuild@github|https://github.com/SolarFramework/SolARModuleFBOW/releases/download
+SolARModuleTools|0.11.0|SolARModuleTools|SolARBuild@github|https://github.com/SolarFramework/SolARModuleTools/releases/download
