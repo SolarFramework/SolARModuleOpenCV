@@ -47,7 +47,7 @@ void SolARQRCodePoseEstimatorOpencv::setCameraParameters(const CamCalibration & 
 
 FrameworkReturnCode SolARQRCodePoseEstimatorOpencv::setTrackable(const SRef<SolAR::datastructure::Trackable> trackable)
 {
-    if (trackable->getType() == TrackableType::QRCODE)
+    if (trackable->getType() == TrackableType::QRCODE_MARKER)
     {
         m_QRCode = xpcf::utils::dynamic_pointer_cast<QRCode>(trackable);
         LOG_DEBUG("Decoding code: {}", m_QRCode->getCode());
