@@ -87,6 +87,7 @@ class SolARStereoImageRectificationOpencv;
 class SolARStereoDescriptorMatcherOpencv;
 class SolARQRCodeLoaderOpencv;
 class SolARQRCodePoseEstimatorOpencv;
+class SolARMultiQRCodesPoseEstimatorOpencv;
 }
 }
 }
@@ -196,6 +197,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARQRCodePoseEstimatorOpe
                              "7cd9c6ea-9287-4058-9e18-c64129c017c8",
                              "SolARQRCodePoseEstimatorOpencv",
                              "Estimate camera pose based on a QR code.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMultiQRCodesPoseEstimatorOpencv,
+                             "73e66f7f-be35-4d76-97f2-ef864e043d57",
+                             "SolARMultiQRCodesPoseEstimatorOpencv",
+                             "Estimate camera pose based on a set of QR codes.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv,
                              "79b29b50-cf4d-441e-b5de-1de829b91c41",
