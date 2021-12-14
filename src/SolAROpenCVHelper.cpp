@@ -39,8 +39,11 @@ static std::map<std::tuple<uint32_t,std::size_t,uint32_t>,int> solar2cvTypeConve
     {std::make_tuple(16,1,1), CV_16UC1}
 };
 
-static std::map<int,std::pair<Image::ImageLayout,Image::DataType>> cv2solarTypeConvertMap = {{CV_8UC3,{Image::ImageLayout::LAYOUT_BGR,Image::DataType::TYPE_8U}},
-                                                                                                      {CV_8UC1,{Image::ImageLayout::LAYOUT_GREY,Image::DataType::TYPE_8U}}};
+static std::map<int,std::pair<Image::ImageLayout,Image::DataType>> cv2solarTypeConvertMap = {
+	{CV_8UC3,{Image::ImageLayout::LAYOUT_BGR,Image::DataType::TYPE_8U}},
+	{CV_8UC1,{Image::ImageLayout::LAYOUT_GREY,Image::DataType::TYPE_8U}},
+	{CV_16UC1,{Image::ImageLayout::LAYOUT_GREY,Image::DataType::TYPE_16U}}
+};
 
 uint32_t SolAROpenCVHelper::deduceOpenDescriptorCVType(DescriptorDataType querytype){
     return solarDescriptor2cvType.at(querytype);
