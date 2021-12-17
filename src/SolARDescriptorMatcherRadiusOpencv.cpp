@@ -30,12 +30,23 @@ namespace OPENCV {
 SolARDescriptorMatcherRadiusOpencv::SolARDescriptorMatcherRadiusOpencv(): base::features::ADescriptorMatcher(xpcf::toMap<SolARDescriptorMatcherRadiusOpencv>())
 {
 	declareProperty("maxDistance", m_maxDistance);
+	declareProperty("type", m_type);
     LOG_DEBUG(" SolARDescriptorMatcherRadiusOpencv constructor")
 }
 
 SolARDescriptorMatcherRadiusOpencv::~SolARDescriptorMatcherRadiusOpencv()
 {
     LOG_DEBUG(" SolARDescriptorMatcherRadiusOpencv destructor")
+}
+
+xpcf::XPCFErrorCode SolARDescriptorMatcherRadiusOpencv::onConfigured()
+{
+	LOG_DEBUG(" SolARDescriptorMatcherRadiusOpencv onConfigured");
+	if (SolAROpenCVHelper::createMatcher(m_type, m_matcher) != FrameworkReturnCode::_SUCCESS) {
+		LOG_ERROR("Descriptor matcher type {} is not supported", m_type);
+		return xpcf::XPCFErrorCode::_FAIL;
+	}
+	return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
 FrameworkReturnCode SolARDescriptorMatcherRadiusOpencv::match(
@@ -69,7 +80,7 @@ FrameworkReturnCode SolARDescriptorMatcherRadiusOpencv::match(
         cvDescriptors2.convertTo(cvDescriptors2, CV_32F);
     }
 
-    m_matcher.radiusMatch(cvDescriptors1, cvDescriptors2, cv_matches, m_maxDistance);
+    m_matcher->radiusMatch(cvDescriptors1, cvDescriptors2, cv_matches, m_maxDistance);
 
     matches.clear();
     for (std::vector<std::vector<cv::DMatch>>::iterator itr=cv_matches.begin();itr!=cv_matches.end();++itr){

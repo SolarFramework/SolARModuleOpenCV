@@ -62,6 +62,7 @@ public:
                               const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
                               std::vector<SolAR::datastructure::DescriptorMatch> & matches) override;
 
+	org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 	void unloadComponent() override;
 
 private:
@@ -69,8 +70,10 @@ private:
     /// Several matches can correspond to a given keypoint of the first image. The first match with the best score is always retained.
     /// But here, we can also retain the second match if its distance or score is greater than the score of the best match * m_distanceRatio.
     float m_distanceRatio = 0.75f;
-    /// flann matcher
-    cv::FlannBasedMatcher m_matcher;
+	/// matcher type
+	std::string m_type = "BruteForce";
+    /// Matcher
+    cv::Ptr<cv::DescriptorMatcher> m_matcher;
 
 };
 

@@ -45,6 +45,11 @@ static std::map<int,std::pair<Image::ImageLayout,Image::DataType>> cv2solarTypeC
 	{CV_16UC1,{Image::ImageLayout::LAYOUT_GREY,Image::DataType::TYPE_16U}}
 };
 
+static std::map<std::string, cv::DescriptorMatcher::MatcherType> cv2MatcherType = {
+	{"BruteForce", cv::DescriptorMatcher::MatcherType::BRUTEFORCE},
+	{"Flann", cv::DescriptorMatcher::MatcherType::FLANNBASED}
+};
+
 uint32_t SolAROpenCVHelper::deduceOpenDescriptorCVType(DescriptorDataType querytype){
     return solarDescriptor2cvType.at(querytype);
 }
@@ -226,6 +231,15 @@ void SolAROpenCVHelper::drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Po
         if (Liang_Barsky(p1, p2, rect, p1_result, p2_result))
             cv::line(inputImage, p1_result, p2_result, color, thickness, cv::LINE_AA);
     }
+}
+
+FrameworkReturnCode SolAROpenCVHelper::createMatcher(std::string type, cv::Ptr<cv::DescriptorMatcher>& matcher)
+{
+	auto typeIt = cv2MatcherType.find(type);
+	if (typeIt == cv2MatcherType.end())
+		return FrameworkReturnCode::_ERROR_;
+	matcher = cv::DescriptorMatcher::create(typeIt->second);
+	return FrameworkReturnCode::_SUCCESS;
 }
 
 }

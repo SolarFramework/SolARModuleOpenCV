@@ -57,13 +57,14 @@ public:
                               const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
                               std::vector<SolAR::datastructure::DescriptorMatch> & matches) override;
 
+	org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 	void unloadComponent() override;
 
 private:
     /// @brief Threshold for the distance between matched descriptors. Distance means here metric distance (e.g. Hamming distance), not the distance between coordinates (which is measured in Pixels)
     float m_maxDistance = 1.0f;
-    cv::FlannBasedMatcher m_matcher;
-
+	std::string m_type = "BruteForce";
+	cv::Ptr<cv::DescriptorMatcher> m_matcher;
 };
 
 }

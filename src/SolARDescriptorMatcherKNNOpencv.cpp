@@ -30,12 +30,23 @@ namespace OPENCV {
 SolARDescriptorMatcherKNNOpencv::SolARDescriptorMatcherKNNOpencv(): base::features::ADescriptorMatcher(xpcf::toMap<SolARDescriptorMatcherKNNOpencv>())
 {
     declareProperty("distanceRatio", m_distanceRatio);
+    declareProperty("type", m_type);
     LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv constructor")
 }
 
 SolARDescriptorMatcherKNNOpencv::~SolARDescriptorMatcherKNNOpencv()
 {
     LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv destructor")
+}
+
+xpcf::XPCFErrorCode SolARDescriptorMatcherKNNOpencv::onConfigured()
+{
+	LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv onConfigured");
+	if (SolAROpenCVHelper::createMatcher(m_type, m_matcher) != FrameworkReturnCode::_SUCCESS) {
+		LOG_ERROR("Descriptor matcher type {} is not supported", m_type);
+		return xpcf::XPCFErrorCode::_FAIL;
+	}
+	return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
 FrameworkReturnCode SolARDescriptorMatcherKNNOpencv::match(SRef<DescriptorBuffer> desc1,
@@ -69,26 +80,26 @@ FrameworkReturnCode SolARDescriptorMatcherKNNOpencv::match(SRef<DescriptorBuffer
         cvDescriptor2.convertTo(cvDescriptor2, CV_32F);
 
     std::vector< std::vector<cv::DMatch> > nn_matches;
-    m_matcher.knnMatch(cvDescriptor1, cvDescriptor2, nn_matches,2);
-	std::map<uint32_t, std::map<uint32_t, float>> matches21;
+    m_matcher->knnMatch(cvDescriptor2, cvDescriptor1, nn_matches,2);
+	std::map<uint32_t, std::map<uint32_t, float>> matches12;
     for(unsigned i = 0; i < nn_matches.size(); i++) {
         if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
-			matches21[nn_matches[i][0].trainIdx][nn_matches[i][0].queryIdx] = nn_matches[i][0].distance;
+			matches12[nn_matches[i][0].trainIdx][nn_matches[i][0].queryIdx] = nn_matches[i][0].distance;
         }
     }
 
-	// get best matches to descriptors 2
-	for (auto it_des2 : matches21) {
-		uint32_t idxDes2 = it_des2.first;
-		std::map<uint32_t, float> infoMatch = it_des2.second;
-		uint32_t bestIdxDes1;
+	// get best matches to descriptors 1
+	for (auto it_des1 : matches12) {
+		uint32_t idxDes1 = it_des1.first;
+		std::map<uint32_t, float> infoMatch = it_des1.second;
+		uint32_t bestIdxDes2;
 		float bestDistance = FLT_MAX;
-		for (auto it_des1: infoMatch)
-			if (it_des1.second < bestDistance) {
-				bestDistance = it_des1.second;
-				bestIdxDes1 = it_des1.first;
+		for (auto it_des2: infoMatch)
+			if (it_des2.second < bestDistance) {
+				bestDistance = it_des2.second;
+				bestIdxDes2 = it_des2.first;
 			}
-		matches.push_back(DescriptorMatch(bestIdxDes1, idxDes2, bestDistance));
+		matches.push_back(DescriptorMatch(idxDes1, bestIdxDes2, bestDistance));
 	}
 
     return FrameworkReturnCode::_SUCCESS;
