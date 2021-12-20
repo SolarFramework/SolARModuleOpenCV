@@ -24,6 +24,9 @@
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include <opencv2/calib3d.hpp>
+#ifdef WITHCUDA
+#include <opencv2/cudafeatures2d.hpp>
+#endif
 
 namespace SolAR {
 namespace MODULES {
@@ -73,7 +76,11 @@ private:
 	/// matcher type
 	std::string m_type = "BruteForce";
     /// Matcher
-    cv::Ptr<cv::DescriptorMatcher> m_matcher;
+#ifdef WITHCUDA
+	cv::Ptr<cv::cuda::DescriptorMatcher> m_matcher;
+#else
+	cv::Ptr<cv::DescriptorMatcher> m_matcher;
+#endif    
 
 };
 

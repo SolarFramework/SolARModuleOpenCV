@@ -42,10 +42,14 @@ SolARDescriptorMatcherKNNOpencv::~SolARDescriptorMatcherKNNOpencv()
 xpcf::XPCFErrorCode SolARDescriptorMatcherKNNOpencv::onConfigured()
 {
 	LOG_DEBUG(" SolARDescriptorMatcherKNNOpencv onConfigured");
+#ifdef WITHCUDA
+	m_matcher = cv::cuda::DescriptorMatcher::createBFMatcher(cv::NORM_L2);
+#else
 	if (SolAROpenCVHelper::createMatcher(m_type, m_matcher) != FrameworkReturnCode::_SUCCESS) {
 		LOG_ERROR("Descriptor matcher type {} is not supported", m_type);
 		return xpcf::XPCFErrorCode::_FAIL;
-	}
+	}	
+#endif // WITHCUDA	
 	return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
@@ -80,7 +84,15 @@ FrameworkReturnCode SolARDescriptorMatcherKNNOpencv::match(SRef<DescriptorBuffer
         cvDescriptor2.convertTo(cvDescriptor2, CV_32F);
 
     std::vector< std::vector<cv::DMatch> > nn_matches;
-    m_matcher->knnMatch(cvDescriptor2, cvDescriptor1, nn_matches,2);
+
+#ifdef WITHCUDA
+	cv::cuda::GpuMat cvDescriptor1Gpu, cvDescriptor2Gpu;
+	cvDescriptor1Gpu.upload(cvDescriptor1);
+	cvDescriptor2Gpu.upload(cvDescriptor2);
+	m_matcher->knnMatch(cvDescriptor2Gpu, cvDescriptor1Gpu, nn_matches, 2);
+#else
+	m_matcher->knnMatch(cvDescriptor2, cvDescriptor1, nn_matches, 2);
+#endif // WITHCUDA	    
 	std::map<uint32_t, std::map<uint32_t, float>> matches12;
     for(unsigned i = 0; i < nn_matches.size(); i++) {
         if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
