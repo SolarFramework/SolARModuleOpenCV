@@ -38,9 +38,15 @@ SolARDescriptorMatcherHammingBruteForceOpencv::~SolARDescriptorMatcherHammingBru
     LOG_DEBUG(" SolARDescriptorMatcherHammingBruteForceOpencv destructor")
 }
 
-bool sortByDistanceBFM(const std::pair<int,float> &lhs, const std::pair<int,float> &rhs)
+xpcf::XPCFErrorCode SolARDescriptorMatcherHammingBruteForceOpencv::onConfigured()
 {
-    return lhs.second < rhs.second;
+	LOG_DEBUG(" SolARDescriptorMatcherHammingBruteForceOpencv onConfigured");
+#ifdef WITHCUDA
+	m_matcher = cv::cuda::DescriptorMatcher::createBFMatcher(cv::NORM_HAMMING);
+#else
+	m_matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::MatcherType::BRUTEFORCE_HAMMING);
+#endif // WITHCUDA		
+	return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
 FrameworkReturnCode SolARDescriptorMatcherHammingBruteForceOpencv::match(SRef<DescriptorBuffer> desc1,
@@ -49,42 +55,48 @@ FrameworkReturnCode SolARDescriptorMatcherHammingBruteForceOpencv::match(SRef<De
 {
 	// check conditions
 	if ((desc1->getDescriptorType() != desc2->getDescriptorType()) ||
-		desc1->getNbDescriptors() == 0 || desc2->getNbDescriptors() == 0) {
+		desc1->getNbDescriptors() == 0 || desc2->getNbDescriptors() == 0 || 
+		desc1->getDescriptorDataType() != SolAR::DescriptorDataType::TYPE_8U) {
 		return FrameworkReturnCode::_ERROR_;
 	}
   
-		//since it is an openCV implementation we need to convert back the descriptors from SolAR to Opencv
-		uint32_t type_conversion= SolAROpenCVHelper::deduceOpenDescriptorCVType(desc1->getDescriptorDataType());
+	//since it is an openCV implementation we need to convert back the descriptors from SolAR to Opencv
+	uint32_t type_conversion= SolAROpenCVHelper::deduceOpenDescriptorCVType(desc1->getDescriptorDataType());
  
-		cv::Mat cvDescriptor1(desc1->getNbDescriptors(), desc1->getNbElements(), type_conversion);
-		cvDescriptor1.data=(uchar*)desc1->data();
+	cv::Mat cvDescriptor1(desc1->getNbDescriptors(), desc1->getNbElements(), type_conversion);
+	cvDescriptor1.data=(uchar*)desc1->data();
  
-		cv::Mat cvDescriptor2(desc2->getNbDescriptors(), desc1->getNbElements(), type_conversion);
-		cvDescriptor2.data=(uchar*)desc2->data();
+	cv::Mat cvDescriptor2(desc2->getNbDescriptors(), desc1->getNbElements(), type_conversion);
+	cvDescriptor2.data=(uchar*)desc2->data();
 
-	cv::BFMatcher matcher(cv::NormTypes::NORM_HAMMING);
 	std::vector< std::vector<cv::DMatch> > nn_matches;
-    
-	matcher.knnMatch(cvDescriptor1, cvDescriptor2, nn_matches,2);
-	std::map<uint32_t, std::map<uint32_t, float>> matches21;
-	matches.clear();
-	for(unsigned i = 0; i < nn_matches.size(); i++) {
-		if(nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
-			matches21[nn_matches[i][0].trainIdx][nn_matches[i][0].queryIdx] = nn_matches[i][0].distance;
+#ifdef WITHCUDA
+	cv::cuda::GpuMat cvDescriptor1Gpu, cvDescriptor2Gpu;
+	cvDescriptor1Gpu.upload(cvDescriptor1);
+	cvDescriptor2Gpu.upload(cvDescriptor2);
+	m_matcher->knnMatch(cvDescriptor2Gpu, cvDescriptor1Gpu, nn_matches, 2);
+#else
+	m_matcher->knnMatch(cvDescriptor2, cvDescriptor1, nn_matches, 2);
+#endif // WITHCUDA
+	std::map<uint32_t, std::map<uint32_t, float>> matches12;
+	for (unsigned i = 0; i < nn_matches.size(); i++) {
+		if (nn_matches[i][0].distance < m_distanceRatio * nn_matches[i][1].distance) {
+			matches12[nn_matches[i][0].trainIdx][nn_matches[i][0].queryIdx] = nn_matches[i][0].distance;
 		}
 	}
-	// get best matches to descriptors 2
-	for (auto it_des2 : matches21) {
-		uint32_t idxDes2 = it_des2.first;
-		std::map<uint32_t, float> infoMatch = it_des2.second;
-		uint32_t bestIdxDes1;
+
+	// get best matches to descriptors 1
+	for (auto it_des1 : matches12) {
+		uint32_t idxDes1 = it_des1.first;
+		std::map<uint32_t, float> infoMatch = it_des1.second;
+		uint32_t bestIdxDes2;
 		float bestDistance = FLT_MAX;
-		for (auto it_des1 : infoMatch)
-			if (it_des1.second < bestDistance) {
-				bestDistance = it_des1.second;
-				bestIdxDes1 = it_des1.first;
+		for (auto it_des2 : infoMatch)
+			if (it_des2.second < bestDistance) {
+				bestDistance = it_des2.second;
+				bestIdxDes2 = it_des2.first;
 			}
-		matches.push_back(DescriptorMatch(bestIdxDes1, idxDes2, bestDistance));
+		matches.push_back(DescriptorMatch(idxDes1, bestIdxDes2, bestDistance));
 	}
 	return FrameworkReturnCode::_SUCCESS;
 }
