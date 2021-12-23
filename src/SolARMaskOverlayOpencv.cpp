@@ -1,0 +1,114 @@
+/**
+ * @copyright Copyright (c) 2020 B-com http://www.b-com.com/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "SolARMaskOverlayOpencv.h"
+#include "core/Log.h"
+#include "SolAROpenCVHelper.h"
+
+namespace xpcf  = org::bcom::xpcf;
+
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARMaskOverlayOpencv)
+
+namespace SolAR {
+using namespace datastructure;
+namespace MODULES {
+namespace OPENCV {
+
+SolARMaskOverlayOpencv::SolARMaskOverlayOpencv():ConfigurableBase(xpcf::toUUID<SolARMaskOverlayOpencv>())
+{
+    LOG_DEBUG("SolARMaskOverlayOpencv constructor")
+    declareInterface<api::display::IMaskOverlay>(this);
+    declareProperty("classFile", m_classFile);
+    declareProperty("colorFile", m_colorFile);
+}
+
+SolARMaskOverlayOpencv::~SolARMaskOverlayOpencv()
+{
+    LOG_DEBUG(" SolARMaskOverlayOpencv destructor")
+}
+
+xpcf::XPCFErrorCode SolARMaskOverlayOpencv::onConfigured()
+{
+    LOG_DEBUG(" SolARMaskOverlayOpencv onConfigured");
+	// Load names of classes
+	std::ifstream ifs(m_classFile.c_str());
+	std::string line;	
+	while (std::getline(ifs, line)) 
+		m_classes.push_back(line);
+
+	// Load the colors	
+	std::ifstream colorFptr(m_colorFile.c_str());
+	while (std::getline(colorFptr, line)) {
+		char* pEnd;
+		double r, g, b;
+		r = strtod(line.c_str(), &pEnd);
+		g = strtod(pEnd, NULL);
+		b = strtod(pEnd, NULL);
+		m_colors.push_back(cv::Scalar(r, g, b, 255.0));
+	}
+	return xpcf::XPCFErrorCode::_SUCCESS;
+}
+
+FrameworkReturnCode SolARMaskOverlayOpencv::draw(SRef<SolAR::datastructure::Image> image,
+                                                 const std::vector<SolAR::datastructure::Rectanglei> &boxes,
+                                                 const std::vector<SRef<SolAR::datastructure::Image>> &masks,
+                                                 const std::vector<uint32_t> &classIds,
+                                                 const std::vector<float> &scores)
+{
+	// convert to opencv image
+	cv::Mat imageCV = SolAROpenCVHelper::mapToOpenCV(image);
+	if (imageCV.channels() != 3) {
+		LOG_ERROR("Input image must be RGB image");
+		return FrameworkReturnCode::_ERROR_;
+	}
+
+	// Draw
+	int nbBoxes = boxes.size();
+	for (int i = 0; i < nbBoxes; ++i) {
+		cv::Rect box(boxes[i].startX, boxes[i].startY, boxes[i].size.width, boxes[i].size.height);
+		cv::Scalar color = m_colors[classIds[i] % m_colors.size()];
+		//Draw a rectangle displaying the bounding box
+		cv::rectangle(imageCV, box, color, 3);
+
+		//Get the label for the class name and its confidence
+		std::string label = cv::format("%.2f", scores[i]);
+		CV_Assert(classIds[i] < m_classes.size());
+		label = m_classes[classIds[i]] + ":" + label;
+
+		//Display the label at the top of the bounding box
+		int baseLine;
+		cv::Size labelSize = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
+		int boxY = std::max(box.y, labelSize.height);
+		cv::rectangle(imageCV, cv::Point(box.x, boxY - round(1.5 * labelSize.height)), cv::Point(box.x + round(1.5*labelSize.width), boxY + baseLine), cv::Scalar(255, 255, 255), cv::FILLED);
+		cv::putText(imageCV, label, cv::Point(box.x, boxY), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0), 1);
+
+		cv::Mat coloredRoi = (0.3 * color + 0.7 * imageCV(box));
+		coloredRoi.convertTo(coloredRoi, CV_8UC3);
+		// Draw the contours on the image
+		std::vector<cv::Mat> contours;
+		cv::Mat hierarchy;
+		cv::Mat mask = SolAROpenCVHelper::mapToOpenCV(masks[i]);
+		mask.convertTo(mask, CV_8U);
+		cv::findContours(mask, contours, hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_SIMPLE);
+		cv::drawContours(coloredRoi, contours, -1, color, 5, cv::LINE_8, hierarchy, 100);
+		coloredRoi.copyTo(imageCV(box), mask);
+	}
+	return FrameworkReturnCode::_SUCCESS;
+}
+
+}
+}
+}
