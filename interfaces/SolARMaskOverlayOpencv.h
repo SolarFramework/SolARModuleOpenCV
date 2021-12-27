@@ -58,11 +58,19 @@ public:
     /// @param[in] masks The binary masks corresponding to the bounding boxes. For each mask, regions with a value of 1 correspond to the object, otherwise the background.
     /// @param[in] classIds The id of each object in the bounding box.
     /// @param[in] scores The corresponding confidence scores.
+	/// @return FrameworkReturnCode::_SUCCESS if the draw succeed, else FrameworkReturnCode::_ERROR_
     FrameworkReturnCode draw(SRef<SolAR::datastructure::Image> image,
                              const std::vector<SolAR::datastructure::Rectanglei> &boxes,
                              const std::vector<SRef<SolAR::datastructure::Image>> &masks,
                              const std::vector<uint32_t> &classIds,
                              const std::vector<float> &scores) override;
+
+	/// @brief Draw masks on an image.
+	/// @param[in,out] image The image on which the masks will be drawn.
+	/// @param[in] mask The mask has same size as the input image, in which the value of each pixel is corresponding to the class id.
+	/// @return FrameworkReturnCode::_SUCCESS if the draw succeed, else FrameworkReturnCode::_ERROR_
+	FrameworkReturnCode draw(SRef<SolAR::datastructure::Image> image,
+							 const SRef<SolAR::datastructure::Image> mask) override;
 
 private:
 	std::string					m_classFile;

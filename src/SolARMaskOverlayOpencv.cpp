@@ -52,12 +52,10 @@ xpcf::XPCFErrorCode SolARMaskOverlayOpencv::onConfigured()
 	// Load the colors	
 	std::ifstream colorFptr(m_colorFile.c_str());
 	while (std::getline(colorFptr, line)) {
-		char* pEnd;
+		std::istringstream iss(line);
 		double r, g, b;
-		r = strtod(line.c_str(), &pEnd);
-		g = strtod(pEnd, NULL);
-		b = strtod(pEnd, NULL);
-		m_colors.push_back(cv::Scalar(r, g, b, 255.0));
+		iss >> r >> g >> b;
+		m_colors.push_back(cv::Scalar(b, g, r, 255.0));
 	}
 	return xpcf::XPCFErrorCode::_SUCCESS;
 }
@@ -106,6 +104,52 @@ FrameworkReturnCode SolARMaskOverlayOpencv::draw(SRef<SolAR::datastructure::Imag
 		cv::drawContours(coloredRoi, contours, -1, color, 5, cv::LINE_8, hierarchy, 100);
 		coloredRoi.copyTo(imageCV(box), mask);
 	}
+	return FrameworkReturnCode::_SUCCESS;
+}
+
+FrameworkReturnCode SolARMaskOverlayOpencv::draw(SRef<SolAR::datastructure::Image> image, 
+												 const SRef<SolAR::datastructure::Image> mask)
+{
+	// convert to opencv image
+	cv::Mat imageCV = SolAROpenCVHelper::mapToOpenCV(image);
+	if (imageCV.channels() != 3) {
+		LOG_ERROR("Input image must be RGB image");
+		return FrameworkReturnCode::_ERROR_;
+	}
+	int rows = imageCV.rows;
+	int cols = imageCV.cols;
+	cv::Mat maskCV = SolAROpenCVHelper::mapToOpenCV(mask);
+	cv::Mat overlay(rows, cols, CV_8UC3);
+	for (int row = 0; row < rows; row++)
+	{
+		const uchar *ptrMaskCV = maskCV.ptr<uchar>(row);
+		cv::Vec3b *ptrOverlay = overlay.ptr<cv::Vec3b>(row);
+		for (int col = 0; col < cols; col++)
+		{
+			uchar classId = ptrMaskCV[col];
+			if (classId >= m_colors.size()) {
+				LOG_ERROR("Class id exceeds the number of objects");
+				return FrameworkReturnCode::_ERROR_;
+			}
+			ptrOverlay[col] = cv::Vec3b(m_colors[classId][0], m_colors[classId][1], m_colors[classId][2]);
+		}
+	}
+	cv::addWeighted(imageCV, 0.1, overlay, 0.9, 0.0, imageCV);
+	// show legend
+	static const int kBlockHeight = rows / m_classes.size();
+	static cv::Mat legend;
+	if (legend.empty())
+	{
+		const int numClasses = (int)m_classes.size();
+		legend.create(rows, 100, CV_8UC3);
+		for (int i = 0; i < numClasses; i++)
+		{
+			cv::Mat block = legend.rowRange(i * kBlockHeight, (i + 1) * kBlockHeight);
+			block.setTo(cv::Vec3b(m_colors[i][0], m_colors[i][1], m_colors[i][2]));
+			putText(block, m_classes[i], cv::Point(0, kBlockHeight / 2), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Vec3b(255, 255, 255));
+		}
+	}
+	legend.copyTo(imageCV(cv::Rect(cols - 100, 0, 100, rows)));
 	return FrameworkReturnCode::_SUCCESS;
 }
 
