@@ -134,7 +134,7 @@ FrameworkReturnCode SolARMaskOverlayOpencv::draw(SRef<SolAR::datastructure::Imag
 			ptrOverlay[col] = cv::Vec3b(m_colors[classId][0], m_colors[classId][1], m_colors[classId][2]);
 		}
 	}
-	cv::addWeighted(imageCV, 0.1, overlay, 0.9, 0.0, imageCV);
+	cv::addWeighted(imageCV, 0.3, overlay, 0.7, 0.0, imageCV);
 	// show legend
 	static const int kBlockHeight = rows / m_classes.size();
 	static cv::Mat legend;

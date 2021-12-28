@@ -41,8 +41,7 @@
 			<property name="deviceID" type="uint" value="0"/>
 		</configure>
         <configure component="SolARFCNSegmentationOpencv">
-            <property name="modelFile" type="string" value="../../data/fcn8s-heavy-pascal.caffemodel"/>
-            <property name="modelConfig" type="string" value="../../data/fcn8s-heavy-pascal.prototxt"/>
+            <property name="modelFile" type="string" value="../../data/fcn_resnet50.onnx"/>
         </configure>
 		<configure component="SolARMaskOverlayOpencv">
 			<property name="classFile" type="string" value="../../data/pascal-classes.txt"/>

@@ -76,19 +76,15 @@ FrameworkReturnCode SolARFCNSegmentationOpencv::segment(const SRef<SolAR::datast
 	}
 	/// fcn prediction
 	// input preparation
-	//cv::Mat blobInput = cv::dnn::blobFromImage(imageCV, m_scale, imageCV.size(), m_mean, true);
-	//m_net.setInput(blobInput);	
-	//std::vector<cv::Mat> outs;
-	//m_net.forward(outs, m_outputLayerNames);
-	//cv::Mat score = outs[0];	
-	cv::Mat blobInput = cv::dnn::blobFromImage(imageCV);
-	m_net.setInput(blobInput);
-	cv::Mat score = m_net.forward();
+	cv::Mat blobInput = cv::dnn::blobFromImage(imageCV, m_scale, m_inputSize, m_mean, true);
+	m_net.setInput(blobInput);	
+	std::vector<cv::Mat> outs;
+	m_net.forward(outs, m_outputLayerNames);
+	cv::Mat score = outs[0];	
 	/// post-processing
 	const int rows = score.size[2];
 	const int cols = score.size[3];
 	const int chns = score.size[1];
-	
 	cv::Mat maxClass = cv::Mat::zeros(rows, cols, CV_8UC1);
 	cv::Mat maxVal(rows, cols, CV_32FC1, score.data);
 	for (int ch = 1; ch < chns; ch++)
@@ -108,7 +104,9 @@ FrameworkReturnCode SolARFCNSegmentationOpencv::segment(const SRef<SolAR::datast
 			}
 		}
 	}
-	SolAROpenCVHelper::convertToSolar(maxClass, mask);
+	cv::Mat maskCV;
+	cv::resize(maxClass, maskCV, imageCV.size(), 0.0, 0.0, cv::INTER_NEAREST);
+	SolAROpenCVHelper::convertToSolar(maskCV, mask);
 	return FrameworkReturnCode::_SUCCESS;
 }
 
