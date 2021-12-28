@@ -17,22 +17,13 @@
 #ifndef SOLARDESCRIPTORMATCHERKNNOPENCV_H
 #define SOLARDESCRIPTORMATCHERKNNOPENCV_H
 
-#include "api/features/IDescriptorMatcher.h"
-
-// Definition of SolARDescriptorMatcherOpencv Class //
-// part of SolAR namespace //
-
-#include "xpcf/component/ConfigurableBase.h"
+#include "base/features/ADescriptorMatcher.h"
 #include "SolAROpencvAPI.h"
-#include <string>
-#include <limits>
 #include "opencv2/core.hpp"
 #include "opencv2/features2d.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
-
-#include "datastructure/DescriptorMatch.h"
-#include "datastructure/DescriptorBuffer.h"
+#include <opencv2/calib3d.hpp>
 
 namespace SolAR {
 namespace MODULES {
@@ -48,87 +39,37 @@ namespace OPENCV {
  *                           distance ratio used to keep good matches.<br/>
  *                             Several matches can correspond to a given keypoint of the first image. The first match with the best score is always retained.<br>
  *                             But here\, we can also retain the second match if its distance or score is greater than the score of the best match * m_distanceRatio.,
- *                           @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], default: 0.75f }}
- * @SolARComponentProperty{ radius,
- *                          ,
- *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 0.5f }}
- * @SolARComponentProperty{ matchingDistanceMax,
- *                          ,
- *                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 500.f }}
+ *                           @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], default: 0.75f }} 
  * @SolARComponentPropertiesEnd
  * 
  * 
  */
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public org::bcom::xpcf::ConfigurableBase,
-        public api::features::IDescriptorMatcher {
+class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherKNNOpencv : public base::features::ADescriptorMatcher {
 public:
+    /// @brief SolARDescriptorMatcherKNNOpencv constructor
     SolARDescriptorMatcherKNNOpencv();
-    ~SolARDescriptorMatcherKNNOpencv() override;
-    void unloadComponent () override final;
 
-    /// @brief Matches two descriptors desc1 and desc2 respectively based on KNN search strategy.
-    /// [in] desc1: source descriptor.
-    /// [in] desc2: target descriptor.
-    /// [out] matches: ensemble of detected matches, a pair of source/target indices.
-    ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
-	IDescriptorMatcher::RetCode match(
-            const SRef<datastructure::DescriptorBuffer> desc1,
-            const SRef<datastructure::DescriptorBuffer> desc2,
-            std::vector<datastructure::DescriptorMatch> & matches) override;
-	/// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on KNN search strategy.
-	/// [in] desc1: source descriptor.
-	/// [in] desc2: target descriptors.
-	/// [out] matches: ensemble of detected matches, a pair of source/target indices.
-	///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
-    IDescriptorMatcher::RetCode match(
-           const SRef<datastructure::DescriptorBuffer> descriptors1,
-           const std::vector<SRef<datastructure::DescriptorBuffer>> & descriptors2,
-           std::vector<datastructure::DescriptorMatch> & matches) override;
+    /// @brief SolARDescriptorMatcherKNNOpencv destructor
+    ~SolARDescriptorMatcherKNNOpencv() override;    
 
-	/// @brief Match each descriptor input with descriptors of a frame in a region. The searching space is a circle which is defined by a 2D center and a radius
-	/// @param[in] points2D The center points of searching regions
-	/// @param[in] descriptors The descriptors organized in a vector of dedicated buffer structure.
-	/// @param[in] frame The frame contains descriptors to match.
+	/// @brief Match two sets of descriptors together
+	/// @param[in] descriptors1 The first set of descriptors organized in a dedicated buffer structure.
+	/// @param[in] descriptors2 The second set of descriptors organized in a dedicated buffer structure.
 	/// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
-	/// @return DesciptorMatcher::DESCRIPTORS_MATCHER_OK if matching succeeds, DesciptorMatcher::DESCRIPTORS_DONT_MATCH if the types of descriptors are different, DesciptorMatcher::DESCRIPTOR_TYPE_UNDEFINED if one of the descriptors set is unknown, or DesciptorMatcher::DESCRIPTOR_EMPTY if one of the set is empty.
-	IDescriptorMatcher::RetCode matchInRegion(
-		const std::vector<datastructure::Point2Df> & points2D,
-		const std::vector<SRef<datastructure::DescriptorBuffer>> & descriptors,
-		const SRef<datastructure::Frame> frame,
-		std::vector<datastructure::DescriptorMatch> &matches,
-		const float radius = 0.f,
-		const float matchingDistanceMax = 0.f
-	) override;
+	/// @return FrameworkReturnCode::_SUCCESS if matching succeed, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1,
+                              const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
+                              std::vector<SolAR::datastructure::DescriptorMatch> & matches) override;
 
-	/// @brief Match each descriptor input with descriptors of a frame in a region. The searching space is a circle which is defined by a 2D center and a radius
-	/// @param[in] currentFrame the current frame.
-	/// @param[in] lastFrame the last frame.
-	/// @param[out] matches a vector of matches between two frames representing pairs of keypoint indices relatively.
-	/// @param[in] radius the radius of search region around each keypoint of the last frame.
-	/// @param[in] matchingDistanceMax the maximum distance to valid a match.
-	/// @return DesciptorMatcher::DESCRIPTORS_MATCHER_OK if matching succeeds, DesciptorMatcher::DESCRIPTORS_DONT_MATCH if the types of descriptors are different, DesciptorMatcher::DESCRIPTOR_TYPE_UNDEFINED if one of the descriptors set is unknown, or DesciptorMatcher::DESCRIPTOR_EMPTY if one of the set is empty.
-	IDescriptorMatcher::RetCode matchInRegion(
-		const SRef<datastructure::Frame> currentFrame,
-		const SRef<datastructure::Frame> lastFrame,
-		std::vector<datastructure::DescriptorMatch> &matches,
-		const float radius = 0.f,
-		const float matchingDistanceMax = 0.f
-	) override;
-
+	void unloadComponent() override;
 
 private:
-
     /// @brief distance ratio used to keep good matches.
     /// Several matches can correspond to a given keypoint of the first image. The first match with the best score is always retained.
     /// But here, we can also retain the second match if its distance or score is greater than the score of the best match * m_distanceRatio.
     float m_distanceRatio = 0.75f;
-
-	float m_radius = 5.f;
-
-	float m_matchingDistanceMax = 500.f;
-
-    int m_id;
+    /// flann matcher
     cv::FlannBasedMatcher m_matcher;
 
 };

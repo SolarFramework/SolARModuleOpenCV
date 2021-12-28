@@ -29,6 +29,7 @@
 #include "opencv2/features2d.hpp"
 #include "datastructure/DescriptorBuffer.h"
 #include "datastructure/Keypoint.h"
+#include "SolARImageConvertorOpencv.h"
 
 namespace SolAR {
 namespace MODULES {
@@ -68,6 +69,7 @@ public:
 private:
     cv::Ptr<cv::AKAZE> m_extractor;
     double m_threshold = 3e-4;
+	SolARImageConvertorOpencv m_convertor;
 };
 
 }

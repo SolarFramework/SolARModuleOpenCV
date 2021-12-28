@@ -29,6 +29,7 @@
 #include "features2d_akaze2.hpp"  // Define AKAZE2;
 #include "datastructure/DescriptorBuffer.h"
 #include "datastructure/Keypoint.h"
+#include "SolARImageConvertorOpencv.h"
 
 namespace SolAR {
 namespace MODULES {
@@ -66,8 +67,8 @@ public:
                   SRef<datastructure::DescriptorBuffer> & descriptors) override;
 private:
     cv::Ptr<cv::AKAZE2> m_extractor;
-
     double m_threshold = 3e-4;
+	SolARImageConvertorOpencv m_convertor;
 };
 
 }

@@ -18,7 +18,8 @@
 #include "xpcf/xpcf.h"
 #include "core/Log.h"
 #include "api/input/devices/IARDevice.h"
-#include "api/solver/pose/IFiducialMarkerPose.h"
+#include "api/input/files/ITrackableLoader.h"
+#include "api/solver/pose/ITrackablePose.h"
 #include "api/display/IImageViewer.h"
 #include "api/display/I3DOverlay.h"
 #include "api/display/I3DPointsViewer.h"
@@ -53,21 +54,42 @@ int main(int argc, char *argv[])
 		// declare and create components
 		LOG_INFO("Start creating components");
 		auto arDevice = xpcfComponentManager->resolve<input::devices::IARDevice>();
-        auto fiducialMarkerPoseEstimator1 = xpcfComponentManager->resolve<solver::pose::IFiducialMarkerPose>("fiducialMarkerPoseEstimator1");
-        auto fiducialMarkerPoseEstimator2 = xpcfComponentManager->resolve<solver::pose::IFiducialMarkerPose>("fiducialMarkerPoseEstimator2");
-        int nbCameras = arDevice->getNbCameras();
-		if (INDEX_USE_CAMERA >= nbCameras) {
-			LOG_ERROR("Index of the used camera cannot be found");
-			return 0;
-		}
+        auto fiducialMarkerPoseEstimator1 = xpcfComponentManager->resolve<solver::pose::ITrackablePose>();
+        auto fiducialMarkerPoseEstimator2 = xpcfComponentManager->resolve<solver::pose::ITrackablePose>();
 		auto viewer3D = xpcfComponentManager->resolve<display::I3DPointsViewer>();
 		auto imageViewer = xpcfComponentManager->resolve<display::IImageViewer>();
 		auto overlay3D = xpcfComponentManager->resolve<display::I3DOverlay>();
-        auto marker1  = xpcfComponentManager->resolve<input::files::IMarker2DSquaredBinary>("marker1");
-        auto marker2  = xpcfComponentManager->resolve<input::files::IMarker2DSquaredBinary>("marker2");
+        auto trackableLoader1  = xpcfComponentManager->resolve<input::files::ITrackableLoader>("marker1");
+        auto trackableLoader2  = xpcfComponentManager->resolve<input::files::ITrackableLoader>("marker2");
         LOG_INFO("Setting marker!");
-        fiducialMarkerPoseEstimator1->setMarker(marker1);
-        fiducialMarkerPoseEstimator2->setMarker(marker2);
+        SRef<Trackable> trackable1, trackable2;
+        if (trackableLoader1->loadTrackable(trackable1) != FrameworkReturnCode::_SUCCESS)
+        {
+            LOG_ERROR("cannot load fiducial marker 1");
+            return -1;
+        }
+        else
+        {
+            if (fiducialMarkerPoseEstimator1->setTrackable(trackable1)!= FrameworkReturnCode::_SUCCESS)
+            {
+                LOG_ERROR("cannot set fiducial marker as a trackable for first fiducial marker pose estimator");
+                return -1;
+            }
+        }
+
+        if (trackableLoader2->loadTrackable(trackable2) != FrameworkReturnCode::_SUCCESS)
+        {
+            LOG_ERROR("cannot load fiducial marker 2");
+            return -1;
+        }
+        else
+        {
+            if (fiducialMarkerPoseEstimator2->setTrackable(trackable2)!= FrameworkReturnCode::_SUCCESS)
+            {
+                LOG_ERROR("cannot set fiducial marker as a trackable for second fiducial marker pose estimator");
+                return -1;
+            }
+        }
 
 		LOG_INFO("Components created!");
 
@@ -81,8 +103,12 @@ int main(int argc, char *argv[])
 		LOG_INFO("Started!");
 
 		// set calibration matrix for components
-		CameraParameters camParams;
-		camParams = arDevice->getParameters(INDEX_USE_CAMERA);
+		CameraRigParameters camRigParams = arDevice->getCameraParameters();
+		if (camRigParams.cameraParams.find(INDEX_USE_CAMERA) == camRigParams.cameraParams.end()) {
+			LOG_ERROR("Cannot load parameters of camera {}", INDEX_USE_CAMERA);
+			return -1;
+		}
+		CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
 		overlay3D->setCameraParameters(camParams.intrinsic, camParams.distortion);
         fiducialMarkerPoseEstimator1->setCameraParameters(camParams.intrinsic, camParams.distortion);
         fiducialMarkerPoseEstimator2->setCameraParameters(camParams.intrinsic, camParams.distortion);
@@ -115,6 +141,7 @@ int main(int argc, char *argv[])
         // foundedTransformM2WQuality  = max(foundedTransformM2WQuality, R_M2_C_3_3)
         float foundedTransformM1WQuality = -1.0;
         float foundedTransformM2WQuality = -1.0;
+        bool isResultDisplayed = false;
 
 		while (!isStop)
 		{
@@ -159,12 +186,14 @@ int main(int argc, char *argv[])
             T_M2_C = T_M2_W * pose; // pose = T_W_C ; new_pose = T_M1_C
 
             // draw pose marker1 and display
-            overlay3D->draw(T_M1_C, image);
+            if (foundedTransformM1WQuality>-1.0)
+                overlay3D->draw(T_M1_C, image);
 			if (imageViewer->display(image) == SolAR::FrameworkReturnCode::_STOP)
 				isStop = true;
 
             // draw pose marker1 and display
-            overlay3D->draw(T_M2_C, image);
+            if (foundedTransformM2WQuality>-1.0)
+                overlay3D->draw(T_M2_C, image);
             if (imageViewer->display(image) == SolAR::FrameworkReturnCode::_STOP)
                 isStop = true;
 
@@ -182,10 +211,11 @@ int main(int argc, char *argv[])
             }
 
             //
-            if(foundedTransformM1WQuality>-1.0 && foundedTransformM2WQuality>-1.0)
+            if(foundedTransformM1WQuality>-1.0 && foundedTransformM2WQuality>-1.0 && !isResultDisplayed)
             {
                 T_M1_M2 = T_M1_W * T_M2_W.inverse();
-                LOG_INFO("Founded T_M1_M2 : {}", T_M1_M2.matrix() );
+                isResultDisplayed = true;
+                LOG_INFO("Founded T_M1_M2 : \n{}", T_M1_M2.matrix() );
             }
 
 

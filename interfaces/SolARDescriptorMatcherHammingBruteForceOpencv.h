@@ -17,21 +17,13 @@
 #ifndef SOLARDESCRIPTORMATCHERHAMMINGBRUTEFORCEMOPENCV_H
 #define SOLARDESCRIPTORMATCHERHAMMINGBRUTEFORCEMOPENCV_H
 
-#include "api/features/IDescriptorMatcher.h"
-
-// Definition of SolARDescriptorMatcherOpencv Class //
-// part of SolAR namespace //
-
-#include "xpcf/component/ConfigurableBase.h"
+#include "base/features/ADescriptorMatcher.h"
 #include "SolAROpencvAPI.h"
 #include <string>
 #include "opencv2/core.hpp"
 #include "opencv2/features2d.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
-
-#include "datastructure/DescriptorMatch.h"
-#include "datastructure/DescriptorBuffer.h"
 
 namespace SolAR {
 namespace MODULES {
@@ -53,39 +45,27 @@ namespace OPENCV {
  * 
  */
 
-class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherHammingBruteForceOpencv : public org::bcom::xpcf::ConfigurableBase,
-        public api::features::IDescriptorMatcher {
+class SOLAROPENCV_EXPORT_API SolARDescriptorMatcherHammingBruteForceOpencv : public base::features::ADescriptorMatcher {
 public:
     SolARDescriptorMatcherHammingBruteForceOpencv();
     ~SolARDescriptorMatcherHammingBruteForceOpencv() override;
-    void unloadComponent () override final;
 
-    /// @brief Matches two descriptors desc1 and desc2 respectively based on hamming distance
-    /// [in] desc1: source descriptor.
-    /// [in] desc2: target descriptor.
-    /// [out] matches: ensemble of detected matches, a pair of source/target indices.
-    ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
-  IDescriptorMatcher::RetCode match(
-            const SRef<datastructure::DescriptorBuffer> desc1,
-            const SRef<datastructure::DescriptorBuffer> desc2,
-            std::vector<datastructure::DescriptorMatch> & matches) override;
-  /// @brief Matches a  descriptor desc1 with an ensemble of descriptors desc2 based on hamming distance
-  /// [in] desc1: source descriptor.
-  /// [in] desc2: target descriptors.
-  /// [out] matches: ensemble of detected matches, a pair of source/target indices.
-  ///@return IDescriptorMatcher::RetCode::DESCRIPTORS_MATCHER_OK if succeed.
-    IDescriptorMatcher::RetCode match(
-           const SRef<datastructure::DescriptorBuffer> descriptors1,
-           const std::vector<SRef<datastructure::DescriptorBuffer>> & descriptors2,
-           std::vector<datastructure::DescriptorMatch> & matches) override;
+	/// @brief Match two sets of descriptors together
+	/// @param[in] descriptors1 The first set of descriptors organized in a dedicated buffer structure.
+	/// @param[in] descriptors2 The second set of descriptors organized in a dedicated buffer structure.
+	/// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
+	/// @return FrameworkReturnCode::_SUCCESS if matching succeed, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1,
+                              const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
+                              std::vector<SolAR::datastructure::DescriptorMatch> & matches) override;
+
+	void unloadComponent() override;
 
 private:
     /// @brief distance ratio used to keep good matches.
     /// Several matches can correspond to a given keypoint of the first image. The first match with the best score is always retained.
     /// But here, we can also retain the next matches if their distances or scores is greater than the score of the best match * m_distanceRatio.
     float m_distanceRatio = 0.75f;
-
-
     int m_id;
     cv::BFMatcher m_matcher;
 

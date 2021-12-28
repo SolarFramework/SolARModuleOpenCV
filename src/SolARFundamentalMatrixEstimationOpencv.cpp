@@ -56,7 +56,7 @@ api::solver::pose::Transform2DFinder::RetCode SolARFundamentalMatrixEstimationOp
 
     std::vector<uchar>status(points_view1.size());
 
-    for( int i = 0; i < srcPoints.size(); i++ ){
+    for( unsigned int i = 0; i < srcPoints.size(); i++ ){
         points_view1[i].x=srcPoints.at(i).getX();
         points_view1[i].y=srcPoints.at(i).getY();
 

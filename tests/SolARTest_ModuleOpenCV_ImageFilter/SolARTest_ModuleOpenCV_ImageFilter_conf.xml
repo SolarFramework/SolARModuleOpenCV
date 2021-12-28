@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xpcf-registry autoAlias="true">
+    <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/0.9.3/lib/x86_64/shared">
+        <component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="SolARImageLoaderOpencv" description="SolARImageLoaderOpencv">
+            <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+            <interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" name="IImageLoader" description="IImageLoader"/>
+        </component>
+        <component uuid="77113af0-4af2-4c45-92d4-fd1ea77b56cc" name="SolARImageFilterWallisOpencv" description="SolARImageFilterWallisOpencv">
+            <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+            <interface uuid="f7948ae2-e994-416f-be40-dd404ca03a83" name="IImageFilter" description="IImageFilter"/>
+        </component>
+        <component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="SolARImageViewerOpencv" description="SolARImageViewerOpencv">
+            <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+            <interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
+        </component>
+    </module>
+    <factory>
+        <bindings>
+            <bind interface="IImageFilter" to="SolARImageFilterWallisOpencv" name="wallis" properties="wallis"/>
+            <bind interface="IImageViewer" to="SolARImageViewerOpencv" name="gaussianBlur" properties="gaussianBlur"/>
+            <bind interface="IImageViewer" to="SolARImageViewerOpencv" name="nonLocalMeans" properties="nonLocalMeans"/>
+        </bindings>
+    </factory>
+    <properties>
+        <configure component="SolARImageLoaderOpencv">
+            <property name="filePath" type="string" value="../../data/notredame1.jpg"/>
+        </configure>
+        <configure component="SolARImageFilterWallisOpencv" name="wallis">
+            <property name="windowWidth" type="unsigned int" value="14"/>
+            <property name="denoisingMethod" type="string" value="None"/>
+        </configure>
+        <configure component="SolARImageViewerOpencv">
+            <property name="title" type="string" value="Image Wallis Filter without denoising (press esc key to exit)"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
+        </configure>
+        <configure component="SolARImageViewerOpencv" name="gaussianBlur">
+            <property name="title" type="string" value="Image Wallis Filter with Gaussian blur (press esc key to exit)"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
+        </configure>
+        <configure component="SolARImageViewerOpencv" name="nonLocalMeans">
+            <property name="title" type="string" value="Image Wallis Filter with non-local means(press esc key to exit)"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
+        </configure>
+    </properties>
+</xpcf-registry>

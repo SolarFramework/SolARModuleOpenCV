@@ -55,10 +55,13 @@ Release/
 *-packagedependencies-unix.*
 *-packagedependencies-android.*
 *.pc
-*-Debug*
-*-Release*
-*_Debug*
-*_Release*
+*-Debug
+*-Release
+*-debug.bat
+*-release.bat
+*_debug.bat
+*_release.bat
+*run.sh
 
 # Executables
 *.exe

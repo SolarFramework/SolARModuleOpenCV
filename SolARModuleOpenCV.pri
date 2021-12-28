@@ -1,4 +1,5 @@
 HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
+    interfaces/SolARImageFilterWallisOpencv.h \
     interfaces/SolAR2DOverlayOpencv.h \
     interfaces/SolAR3DOverlayBoxOpencv.h \
     interfaces/SolARBaseCameraOpencv.h \
@@ -10,11 +11,14 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
     interfaces/SolARDescriptorMatcherKNNOpencv.h \
     interfaces/SolARDescriptorMatcherRadiusOpencv.h \
+    interfaces/SolARDescriptorMatcherGeometricOpencv.h \
+    interfaces/SolARDescriptorMatcherRegionOpencv.h \
     interfaces/SolARDescriptorsExtractorAKAZE2Opencv.h \
     interfaces/SolARDescriptorsExtractorAKAZEOpencv.h \
     interfaces/SolARDescriptorsExtractorORBOpencv.h \
     interfaces/SolARDescriptorsExtractorSBPatternOpencv.h \
     interfaces/SolARDescriptorsExtractorSIFTOpencv.h \
+    interfaces/SolARDescriptorsExtractorFromImageOpencv.h \
     interfaces/SolARDeviceDataLoader.h \
     interfaces/SolARFiducialMarkerLoaderOpencv.h \
     interfaces/SolARFundamentalMatrixEstimationOpencv.h \
@@ -34,8 +38,7 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARKeypointDetectorOpencv.h \
     interfaces/SolARKeypointDetectorRegionOpencv.h \
     interfaces/SolARMapFusionOpencv.h \
-    interfaces/SolARMarker2DNaturalImageOpencv.h \
-    interfaces/SolARMarker2DSquaredBinaryOpencv.h \
+    interfaces/SolARImageMarkerLoaderOpencv.h \
     interfaces/SolARMatchesOverlayOpencv.h \
     interfaces/SolARModuleOpencv_traits.h \
     interfaces/SolAROpencvAPI.h \
@@ -47,6 +50,10 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARPoseEstimationSACPnpOpencv.h \
     interfaces/SolARPoseFinderFrom2D2DOpencv.h \
     interfaces/SolARProjectOpencv.h \
+    interfaces/SolARStereo2DPointsRectificationOpencv.h \
+    interfaces/SolARStereoCalibrationOpencv.h \
+    interfaces/SolARStereoDescriptorMatcherOpencv.h \
+    interfaces/SolARStereoImageRectificationOpencv.h \
     interfaces/SolARSVDFundamentalMatrixDecomposerOpencv.h\
     interfaces/SolARUndistortPointsOpencv.h \
     interfaces/SolARUnprojectPlanarPointsOpencv.h \
@@ -60,6 +67,8 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     src/AKAZE2/utils.h
 
 SOURCES +=  src/AKAZE2/akaze.cpp \
+    $$PWD/src/SolARImageFilterWallisOpencv.cpp \
+    $$PWD/src/SolARImageMarkerLoaderOpencv.cpp \
     src/AKAZE2/AKAZEFeatures.cpp \
     src/AKAZE2/fed.cpp \
     src/AKAZE2/nldiffusion_functions.cpp \
@@ -75,11 +84,14 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     src/SolARDescriptorMatcherKNNOpencv.cpp \
     src/SolARDescriptorMatcherRadiusOpencv.cpp \
+    src/SolARDescriptorMatcherGeometricOpencv.cpp \
+    src/SolARDescriptorMatcherRegionOpencv.cpp \
     src/SolARDescriptorsExtractorAKAZE2Opencv.cpp \
     src/SolARDescriptorsExtractorAKAZEOpencv.cpp \
     src/SolARDescriptorsExtractorORBOpencv.cpp \
     src/SolARDescriptorsExtractorSBPatternOpencv.cpp \
     src/SolARDescriptorsExtractorSIFTOpencv.cpp \
+    src/SolARDescriptorsExtractorFromImageOpencv.cpp \
     src/SolARDeviceDataLoader.cpp \
     src/SolARFiducialMarkerLoaderOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
@@ -99,8 +111,6 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARKeypointDetectorOpencv.cpp \
     src/SolARKeypointDetectorRegionOpencv.cpp \
     src/SolARMapFusionOpencv.cpp \
-    src/SolARMarker2DNaturalImageOpencv.cpp \
-    src/SolARMarker2DSquaredBinaryOpencv.cpp \
     src/SolARMatchesOverlayOpencv.cpp \
     src/SolARModuleOpencv.cpp \
     src/SolAROpenCVHelper.cpp \
@@ -111,6 +121,10 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARPoseEstimationSACPnpOpencv.cpp \
     src/SolARPoseFinderFrom2D2DOpencv.cpp \
     src/SolARProjectOpencv.cpp \
+    src/SolARStereo2DPointsRectificationOpencv.cpp \
+    src/SolARStereoCalibrationOpencv.cpp \
+    src/SolARStereoDescriptorMatcherOpencv.cpp \
+    src/SolARStereoImageRectificationOpencv.cpp \
     src/SolARSVDFundamentalMatrixDecomposerOpencv.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
     src/SolARUndistortPointsOpencv.cpp \

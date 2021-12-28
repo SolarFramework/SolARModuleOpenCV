@@ -204,7 +204,7 @@ void SolARKeypointDetectorRegionOpencv::detect(const SRef<Image> image, const st
 
     auto checkInside = [getAngle](const std::vector<Point2Df>& contours, Point2f &ptToCheck) {
 		float sumAngles(0.f);
-		for (int i = 0; i < contours.size(); ++i) {
+        for (unsigned int i = 0; i < contours.size(); ++i) {
             cv::Point2f pt1(contours[i].getX(), contours[i].getY());
             cv::Point2f pt2(contours[(i + 1) % contours.size()].getX(), contours[(i + 1) % contours.size()].getY());
 			sumAngles += getAngle(pt1, pt2, ptToCheck);
