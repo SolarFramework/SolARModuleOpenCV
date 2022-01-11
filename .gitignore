@@ -96,3 +96,5 @@ tests/bin
 
 # Tests Data
 tests/data/loop_desktop_A/*
+
+bundle_system_install.sh
