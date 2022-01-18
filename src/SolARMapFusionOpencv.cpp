@@ -242,18 +242,21 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 				globalCovisibilityGraph->increaseEdge(it1->second, it2->second, weight);
 		}
 
+
 	// Fuse duplicated cloud points
 	for (const auto &dup : duplicatedCPsFiltered) {
 		SRef<CloudPoint> cp1 = dup.first;
 		SRef<CloudPoint> cp2 = dup.second;
-		const std::map<uint32_t, uint32_t> &visibilities1 = cp1->getVisibility();
-		const std::map<uint32_t, uint32_t> &visibilities2 = cp2->getVisibility();
+		std::map<uint32_t, uint32_t> visibilities1 = cp1->getVisibility();
+		std::map<uint32_t, uint32_t> visibilities2 = cp2->getVisibility();
 		for (const auto &vi1 : visibilities1) {
 			uint32_t id_kf1 = vi1.first;
-			uint32_t id_kp1 = vi1.second;
+			uint32_t id_kp1 = vi1.second;			
 			SRef<Keyframe> kf1;
 			// update visibility of keyframes seen cp1
-			globalKeyframeCollection->getKeyframe(id_kf1, kf1);
+			if (globalKeyframeCollection->getKeyframe(id_kf1, kf1) != FrameworkReturnCode::_SUCCESS)
+				continue;
+			kf1->removeVisibility(id_kp1, cp1->getId());
 			kf1->addVisibility(id_kp1, cp2->getId());
 			// move visibility of cp1 to cp2
 			cp2->addVisibility(id_kf1, id_kp1);
