@@ -84,8 +84,6 @@ private:
     float m_distanceRatio = 0.75f;
 	float m_radius = 5.f;
 	float m_matchingDistanceMax = 500.f;
-    cv::FlannBasedMatcher m_matcher;
-
 };
 
 }

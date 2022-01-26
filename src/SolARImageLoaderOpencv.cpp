@@ -74,7 +74,7 @@ xpcf::XPCFErrorCode SolARImageLoaderOpencv::onConfigured()
 FrameworkReturnCode SolARImageLoaderOpencv::reloadImage()
 {
     // Load the image when its path has been read
-    cv::Mat img_src = cv::imread(m_filePath);
+    cv::Mat img_src = cv::imread(m_filePath, -1);
     if (img_src.data == NULL)
         return FrameworkReturnCode::_ERROR_;
     return SolAROpenCVHelper::convertToSolar(img_src,m_img);

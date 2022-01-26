@@ -18,7 +18,7 @@
 #define SOLAROPENCVHELPER_H
 
 #include "opencv2/core.hpp"
-
+#include <opencv2/features2d.hpp>
 #include "SolAROpencvAPI.h"
 #include "xpcf/api/IComponentManager.h"
 
@@ -67,6 +67,7 @@ public:
  
     static int deduceOpenCVType(SRef<datastructure::Image> img);
 
+	static FrameworkReturnCode createMatcher(std::string type, cv::Ptr<cv::DescriptorMatcher> &matcher);
 };
 
 template <class T> constexpr int SolAROpenCVHelper::inferOpenCVType()

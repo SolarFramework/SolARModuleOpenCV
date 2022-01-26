@@ -39,8 +39,16 @@ static std::map<std::tuple<uint32_t,std::size_t,uint32_t>,int> solar2cvTypeConve
     {std::make_tuple(16,1,1), CV_16UC1}
 };
 
-static std::map<int,std::pair<Image::ImageLayout,Image::DataType>> cv2solarTypeConvertMap = {{CV_8UC3,{Image::ImageLayout::LAYOUT_BGR,Image::DataType::TYPE_8U}},
-                                                                                                      {CV_8UC1,{Image::ImageLayout::LAYOUT_GREY,Image::DataType::TYPE_8U}}};
+static std::map<int,std::pair<Image::ImageLayout,Image::DataType>> cv2solarTypeConvertMap = {
+	{CV_8UC3,{Image::ImageLayout::LAYOUT_BGR,Image::DataType::TYPE_8U}},
+	{CV_8UC1,{Image::ImageLayout::LAYOUT_GREY,Image::DataType::TYPE_8U}},
+	{CV_16UC1,{Image::ImageLayout::LAYOUT_GREY,Image::DataType::TYPE_16U}}
+};
+
+static std::map<std::string, cv::DescriptorMatcher::MatcherType> cv2MatcherType = {
+	{"BruteForce", cv::DescriptorMatcher::MatcherType::BRUTEFORCE},
+	{"Flann", cv::DescriptorMatcher::MatcherType::FLANNBASED}
+};
 
 uint32_t SolAROpenCVHelper::deduceOpenDescriptorCVType(DescriptorDataType querytype){
     return solarDescriptor2cvType.at(querytype);
@@ -223,6 +231,15 @@ void SolAROpenCVHelper::drawCVLine (cv::Mat& inputImage, cv::Point2f& p1, cv::Po
         if (Liang_Barsky(p1, p2, rect, p1_result, p2_result))
             cv::line(inputImage, p1_result, p2_result, color, thickness, cv::LINE_AA);
     }
+}
+
+FrameworkReturnCode SolAROpenCVHelper::createMatcher(std::string type, cv::Ptr<cv::DescriptorMatcher>& matcher)
+{
+	auto typeIt = cv2MatcherType.find(type);
+	if (typeIt == cv2MatcherType.end())
+		return FrameworkReturnCode::_ERROR_;
+	matcher = cv::DescriptorMatcher::create(typeIt->second);
+	return FrameworkReturnCode::_SUCCESS;
 }
 
 }

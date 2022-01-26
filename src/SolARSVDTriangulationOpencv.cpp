@@ -236,10 +236,10 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 			DescriptorView8U desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_8U>(matches[i].getIndexInDescriptorA());
 			DescriptorView8U desc_2 = descriptor2->getDescriptor<DescriptorDataType::TYPE_8U>(matches[i].getIndexInDescriptorB());
 
-			cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
+			cv::Mat cvDesc1(1, desc_1.length(), CV_8U);
 			cvDesc1.data = (uchar*)desc_1.data();
 
-			cv::Mat cvDesc2(1, desc_2.length(), desc_2.type());
+			cv::Mat cvDesc2(1, desc_2.length(), CV_8U);
 			cvDesc2.data = (uchar*)desc_2.data();
 			
 			cvDescMean = cvDesc1 / 2 + cvDesc2 / 2;
@@ -248,10 +248,10 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 			DescriptorView32F desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_32F>(matches[i].getIndexInDescriptorA());
 			DescriptorView32F desc_2 = descriptor2->getDescriptor<DescriptorDataType::TYPE_32F>(matches[i].getIndexInDescriptorB());
 
-			cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
+			cv::Mat cvDesc1(1, desc_1.length(), CV_32F);
 			cvDesc1.data = (uchar*)desc_1.data();
 
-			cv::Mat cvDesc2(1, desc_2.length(), desc_2.type());
+			cv::Mat cvDesc2(1, desc_2.length(), CV_32F);
 			cvDesc2.data = (uchar*)desc_2.data();
 
 			cvDescMean = cvDesc1 / 2 + cvDesc2 / 2;
@@ -336,18 +336,18 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 		if (descriptor1->getDescriptorDataType() == DescriptorDataType::TYPE_8U) {
 			DescriptorView8U desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_8U>(goodMatches[i].getIndexInDescriptorA());
 			DescriptorView8U desc_2 = descriptor2->getDescriptor<DescriptorDataType::TYPE_8U>(goodMatches[i].getIndexInDescriptorB());
-			cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
+			cv::Mat cvDesc1(1, desc_1.length(), CV_8U);
 			cvDesc1.data = (uchar*)desc_1.data();
-			cv::Mat cvDesc2(1, desc_2.length(), desc_2.type());
+			cv::Mat cvDesc2(1, desc_2.length(), CV_8U);
 			cvDesc2.data = (uchar*)desc_2.data();
 			cvDescMean = cvDesc1 / 2 + cvDesc2 / 2;
 		}
 		else {
 			DescriptorView32F desc_1 = descriptor1->getDescriptor<DescriptorDataType::TYPE_32F>(goodMatches[i].getIndexInDescriptorA());
 			DescriptorView32F desc_2 = descriptor2->getDescriptor<DescriptorDataType::TYPE_32F>(goodMatches[i].getIndexInDescriptorB());
-			cv::Mat cvDesc1(1, desc_1.length(), desc_1.type());
+			cv::Mat cvDesc1(1, desc_1.length(), CV_32F);
 			cvDesc1.data = (uchar*)desc_1.data();
-			cv::Mat cvDesc2(1, desc_2.length(), desc_2.type());
+			cv::Mat cvDesc2(1, desc_2.length(), CV_32F);
 			cvDesc2.data = (uchar*)desc_2.data();
 			cvDescMean = cvDesc1 / 2 + cvDesc2 / 2;
 		}
