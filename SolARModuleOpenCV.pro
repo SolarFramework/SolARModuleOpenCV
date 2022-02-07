@@ -43,6 +43,11 @@ INCLUDEPATH += interfaces/
 
 include (SolARModuleOpenCV.pri)
 
+unix {
+    # Avoids adding install steps manually. To be commented to have a better control over them.
+    QMAKE_POST_LINK += "make install install_deps"
+}
+
 unix:!android {
     QMAKE_CXXFLAGS += -Wignored-qualifiers
 #    QMAKE_LINK=clang++
@@ -91,7 +96,9 @@ OTHER_FILES += \
     packagedependencies-linux.txt \
     packagedependencies-mac.txt \
     packagedependencies-win.txt \
-    packagedependencies-android.txt
+    packagedependencies-android.txt \
+    installpackages.txt \
+    installpackages-linux.txt
 
 #NOTE : Must be placed at the end of the .pro
 include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/remaken_install_target.pri)))) # Shell_quote & shell_path required for visual on windows
