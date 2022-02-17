@@ -75,6 +75,9 @@
 #include "SolARStereoDescriptorMatcherOpencv.h"
 #include "SolARStereo2DPointsRectificationOpencv.h"
 #include "SolARStereoImageRectificationOpencv.h"
+#include "SolARYOLACTSegmentationOpencv.h"
+#include "SolARMaskOverlayOpencv.h"
+#include "SolARFCNSegmentationOpencv.h"
 
 namespace xpcf=org::bcom::xpcf;
 
@@ -320,6 +323,18 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARStereoImageRectificationOpencv>(componentUUID, interfaceRef);
     }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARYOLACTSegmentationOpencv>(componentUUID, interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMaskOverlayOpencv>(componentUUID, interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARFCNSegmentationOpencv>(componentUUID, interfaceRef);
+    }
     return errCode;
 }
 
@@ -383,4 +398,7 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereoCalibrationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereoDescriptorMatcherOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereo2DPointsRectificationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereoImageRectificationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARYOLACTSegmentationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMaskOverlayOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARFCNSegmentationOpencv)
 XPCF_END_COMPONENTS_DECLARATION
