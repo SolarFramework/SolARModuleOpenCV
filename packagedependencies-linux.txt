@@ -1,1 +1,2 @@
-opencv|4.5.2|opencv|conan-solar@conan|conan-solar|default|with_gtk=True#gtk_version=system#with_ffmpeg=True
+opencv|4.5.2|opencv%WITHOUTCUDA|conan-solar@conan|conan-solar|default|with_gtk=True#gtk_version=system#with_ffmpeg=True
+opencv|4.5.2|opencv%WITHCUDA|thirdParties@github|https://github.com/SolarFramework/binaries/releases/download
