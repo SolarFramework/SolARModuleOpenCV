@@ -78,7 +78,11 @@
 
 namespace xpcf=org::bcom::xpcf;
 
+#ifdef WITHCUDA
+XPCF_DECLARE_MODULE("fde83ee6-3e22-4531-9e1c-54cb0a3bf3fa", "SolARModuleOpenCVCuda", "SolARModuleOpenCVCuda module description");
+#else
 XPCF_DECLARE_MODULE("15e1990b-86b2-445c-8194-0cbe80ede970", "SolARModuleOpenCV", "SolARModuleOpenCV module description");
+#endif // WITHCUDA
 
 extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boost::uuids::uuid& componentUUID,SRef<xpcf::IComponentIntrospect>& interfaceRef)
 {

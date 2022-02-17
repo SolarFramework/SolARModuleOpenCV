@@ -18,7 +18,7 @@
 #define SOLAR_OPENCV_API_H
 
 #if _WIN32
-#ifdef SolARModuleOpenCV_API_DLLEXPORT
+#if defined(SolARModuleOpenCV_API_DLLEXPORT) || defined(SolARModuleOpenCVCuda_API_DLLEXPORT)
 #define SOLAROPENCV_EXPORT_API __declspec(dllexport)
 #else //SOLAROPENCV_API_DLLEXPORT
 #define SOLAROPENCV_EXPORT_API __declspec(dllimport)
