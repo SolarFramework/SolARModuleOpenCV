@@ -92,7 +92,7 @@ using namespace datastructure;
         }
         else
         {
-            LOG_ERROR("Cannot open video file {]", m_videoPath);
+            LOG_ERROR("Cannot open video file {}", m_videoPath);
             return FrameworkReturnCode::_ERROR_;
         }
     }
