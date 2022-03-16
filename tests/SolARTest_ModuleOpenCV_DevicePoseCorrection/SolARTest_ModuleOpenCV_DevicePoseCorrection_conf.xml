@@ -98,8 +98,8 @@
 	
     <properties>
         <configure component="SolARDeviceDataLoader">
-            <property name="calibrationFile" type="string" value="../../data/hololens_calibration.json"/>
-            <property name="pathToData" type="string" value="../../data/loop_desktop_A"/>
+            <property name="calibrationFile" type="string" value="../../../../data/hololens_calibration.json"/>
+            <property name="pathToData" type="string" value="../../../../data/loop_desktop_A"/>
 			<property name="delayTime" type="int" value="100"/>
 		</configure>
 		<configure component="SolARImageViewerOpencv">
@@ -171,7 +171,7 @@
 			<property name="maxThreshold" type="int" value="220"/>
 		</configure>
 		<configure component="SolARFiducialMarkerLoaderOpencv">
-			<property name="filePath" type="string" value="../../data/fiducialMarkerA.yml" description="Path of the .yml file describing the fiducial marker."/>
+                        <property name="filePath" type="string" value="../../../../data/fiducialMarkerA.yml" description="Path of the .yml file describing the fiducial marker."/>
 		</configure>	
 		<configure component="SolARImageFilterBinaryOpencv">
 			<property name="min" type="int" value="-1" description="minimum threshold (-1 to automatically compute it on the global image"/>
