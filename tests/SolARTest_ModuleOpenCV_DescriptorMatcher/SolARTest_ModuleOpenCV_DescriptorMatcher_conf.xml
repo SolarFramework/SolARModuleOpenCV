@@ -59,10 +59,10 @@
 	
     <properties>
         <configure component="SolARImageLoaderOpencv" name="image1">
-			<property name="filePath" type="string" value="../../data/notredame1.jpg"/>
+                        <property name="filePath" type="string" value="../../../../data/notredame1.jpg"/>
         </configure>
         <configure component="SolARImageLoaderOpencv" name="image2">
-			<property name="filePath" type="string" value="../../data/notredame2.jpg"/>
+                        <property name="filePath" type="string" value="../../../../data/notredame2.jpg"/>
         </configure>
         <configure component="SolARKeypointDetectorOpencv" name="AKAZEDescProperties">
 			<property name="type" type="string" value="AKAZE2"/>
