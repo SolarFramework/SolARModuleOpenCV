@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
             LOG_ERROR("Cannot load image from configuration file with path {}", imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->getStringValue());
             return -1;
         }
-
+/*
         // JPEG COMPRESSION
 		inputImageSRef->setImageEncoding(Image::ENCODING_JPEG); 
         inputImageSRef->setImageEncodingQuality(encodingQuality);
@@ -109,8 +109,8 @@ int main(int argc, char *argv[])
 
 		// PNG Compression
 		inputImageSRef->setImageEncoding(Image::ENCODING_PNG); 
-        inputImageSRef->setImageEncodingQuality(floor(encodingQuality));
-        LOG_INFO("PNG Encoding quality: {}", floor(encodingQuality));
+        inputImageSRef->setImageEncodingQuality(encodingQuality);
+        LOG_INFO("PNG Encoding quality: {}", encodingQuality);
         std::ofstream out_png(png_filename, std::ios_base::out | std::ios_base::binary);
         boost::archive::binary_oarchive output_archive_PNG(out_png);
         start = std::chrono::high_resolution_clock::now();
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
         std::ifstream in_png(png_filename, std::ios_base::in | std::ios_base::binary);
         boost::archive::binary_iarchive input_archive_PNG(in_png);
         Image PNGImage;
-		start = std::chrono::high_resolution_clock::now();
+        start = std::chrono::high_resolution_clock::now();
         input_archive_PNG & BOOST_SERIALIZATION_NVP(PNGImage);
 		end = std::chrono::high_resolution_clock::now();
 		LOG_INFO("PNG decompression time :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
