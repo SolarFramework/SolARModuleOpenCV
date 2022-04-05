@@ -106,16 +106,16 @@ int main(int argc, char *argv[])
         LOG_INFO("JPEG decompression time :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
         JPEGImageSRef = JPEGImage.copy();
         in_jpeg.close();
-/*
+
 		// PNG Compression
 		inputImageSRef->setImageEncoding(Image::ENCODING_PNG); 
         inputImageSRef->setImageEncodingQuality(floor(encodingQuality));
         LOG_INFO("PNG Encoding quality: {}", floor(encodingQuality));
         std::ofstream out_png(png_filename, std::ios_base::out | std::ios_base::binary);
         boost::archive::binary_oarchive output_archive_PNG(out_png);
-        auto start = std::chrono::high_resolution_clock::now();
+        start = std::chrono::high_resolution_clock::now();
         output_archive_PNG & BOOST_SERIALIZATION_NVP(*inputImageSRef);
-        auto end = std::chrono::high_resolution_clock::now();
+        end = std::chrono::high_resolution_clock::now();
 		LOG_INFO("PNG compression time :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
         out_png.close();
 
@@ -129,12 +129,12 @@ int main(int argc, char *argv[])
 		LOG_INFO("PNG decompression time :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
         PNGImageSRef = PNGImage.copy();
         in_png.close();
-*/
+
         // Display images in dedicated windows
         while (true)
         {
-            if (viewerJPEGImage->display(JPEGImageSRef) == FrameworkReturnCode::_STOP)
-            //if (viewerJPEGImage->display(JPEGImageSRef) == FrameworkReturnCode::_STOP || viewerPNGImage->display(PNGImageSRef) == FrameworkReturnCode::_STOP)
+            //if (viewerJPEGImage->display(PNGImageSRef) == FrameworkReturnCode::_STOP)
+            if (viewerJPEGImage->display(JPEGImageSRef) == FrameworkReturnCode::_STOP || viewerPNGImage->display(PNGImageSRef) == FrameworkReturnCode::_STOP)
             {
                 LOG_INFO("end of SolARImageopenCV test");
                 break;
