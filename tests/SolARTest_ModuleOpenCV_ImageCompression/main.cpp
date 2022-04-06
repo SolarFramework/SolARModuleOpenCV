@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
             LOG_ERROR("Cannot load image from configuration file with path {}", imageLoader->bindTo<xpcf::IConfigurable>()->getProperty("filePath")->getStringValue());
             return -1;
         }
-/*
+
         // JPEG COMPRESSION
 		inputImageSRef->setImageEncoding(Image::ENCODING_JPEG); 
         inputImageSRef->setImageEncodingQuality(encodingQuality);
