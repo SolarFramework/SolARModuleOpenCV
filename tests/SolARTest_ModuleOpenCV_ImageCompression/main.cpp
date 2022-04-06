@@ -133,7 +133,6 @@ int main(int argc, char *argv[])
         // Display images in dedicated windows
         while (true)
         {
-            //if (viewerJPEGImage->display(PNGImageSRef) == FrameworkReturnCode::_STOP)
             if (viewerJPEGImage->display(JPEGImageSRef) == FrameworkReturnCode::_STOP || viewerPNGImage->display(PNGImageSRef) == FrameworkReturnCode::_STOP)
             {
                 LOG_INFO("end of SolARImageopenCV test");
