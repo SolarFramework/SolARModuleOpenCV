@@ -6,7 +6,7 @@ QMAKE_PROJECT_DEPTH = 0
 
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_QRCodePoseEstimation
-VERSION=0.10.0
+VERSION=0.11.0
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
@@ -50,6 +50,7 @@ SOURCES += \
 unix {
     LIBS += -ldl
     QMAKE_CXXFLAGS += -DBOOST_ALL_DYN_LINK
+    QMAKE_POST_LINK += "make install install_deps"
 }
 
 linux {

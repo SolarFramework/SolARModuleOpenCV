@@ -76,10 +76,17 @@
 #include "SolARStereoDescriptorMatcherOpencv.h"
 #include "SolARStereo2DPointsRectificationOpencv.h"
 #include "SolARStereoImageRectificationOpencv.h"
+#include "SolARYOLACTSegmentationOpencv.h"
+#include "SolARMaskOverlayOpencv.h"
+#include "SolARFCNSegmentationOpencv.h"
 
 namespace xpcf=org::bcom::xpcf;
 
+#ifdef WITHCUDA
+XPCF_DECLARE_MODULE("fde83ee6-3e22-4531-9e1c-54cb0a3bf3fa", "SolARModuleOpenCVCuda", "SolARModuleOpenCVCuda module description");
+#else
 XPCF_DECLARE_MODULE("15e1990b-86b2-445c-8194-0cbe80ede970", "SolARModuleOpenCV", "SolARModuleOpenCV module description");
+#endif // WITHCUDA
 
 extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boost::uuids::uuid& componentUUID,SRef<xpcf::IComponentIntrospect>& interfaceRef)
 {
@@ -321,6 +328,18 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARStereoImageRectificationOpencv>(componentUUID, interfaceRef);
     }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARYOLACTSegmentationOpencv>(componentUUID, interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARMaskOverlayOpencv>(componentUUID, interfaceRef);
+    }
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    {
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARFCNSegmentationOpencv>(componentUUID, interfaceRef);
+    }
     return errCode;
 }
 
@@ -385,4 +404,7 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereoCalibrationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereoDescriptorMatcherOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereo2DPointsRectificationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereoImageRectificationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARYOLACTSegmentationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMaskOverlayOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARFCNSegmentationOpencv)
 XPCF_END_COMPONENTS_DECLARATION

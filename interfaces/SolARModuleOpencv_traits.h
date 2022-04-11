@@ -88,6 +88,9 @@ class SolARStereoDescriptorMatcherOpencv;
 class SolARQRCodeLoaderOpencv;
 class SolARQRCodePoseEstimatorOpencv;
 class SolARMultiQRCodesPoseEstimatorOpencv;
+class SolARYOLACTSegmentationOpencv;
+class SolARMaskOverlayOpencv;
+class SolARFCNSegmentationOpencv;
 }
 }
 }
@@ -386,5 +389,17 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARStereoImageRectificati
                             "427cbbb8-6afe-4b3b-8b04-cb93ed925b40",
                             "SolARStereoImageRectificationOpencv",
                             "Rectify image.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARYOLACTSegmentationOpencv,
+                            "b6288dde-4e58-4ead-8e41-f2ce98f43626",
+                            "SolARYOLACTSegmentationOpencv",
+                            "Perform 2D instance segmentation based on the YOLACT network.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARFCNSegmentationOpencv,
+                            "77a8b776-6b0c-4bc0-b0a8-437a796b8e29",
+                            "SolARFCNSegmentationOpencv",
+                            "Perform 2D semantic segmentation based on the FCN network.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMaskOverlayOpencv,
+                            "ed445504-daba-4855-af88-052d4e3e5b7a",
+                            "SolARMaskOverlayOpencv",
+                            "Draws masks on top of an image.")
 
 #endif // SOLARMODULEOPENCV_TRAITS_H

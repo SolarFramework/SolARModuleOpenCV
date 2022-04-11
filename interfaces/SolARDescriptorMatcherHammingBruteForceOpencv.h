@@ -24,6 +24,9 @@
 #include "opencv2/features2d.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
+#ifdef WITHCUDA
+#include <opencv2/cudafeatures2d.hpp>
+#endif
 
 namespace SolAR {
 namespace MODULES {
@@ -59,6 +62,7 @@ public:
                               const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
                               std::vector<SolAR::datastructure::DescriptorMatch> & matches) override;
 
+	org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 	void unloadComponent() override;
 
 private:
@@ -67,7 +71,11 @@ private:
     /// But here, we can also retain the next matches if their distances or scores is greater than the score of the best match * m_distanceRatio.
     float m_distanceRatio = 0.75f;
     int m_id;
-    cv::BFMatcher m_matcher;
+#ifdef WITHCUDA
+	cv::Ptr<cv::cuda::DescriptorMatcher> m_matcher;
+#else
+	cv::Ptr<cv::DescriptorMatcher> m_matcher;
+#endif 
 
 };
 

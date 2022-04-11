@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_ImageFilter
-VERSION=0.9.3
+VERSION=0.11.0
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
