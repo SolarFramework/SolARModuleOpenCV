@@ -84,9 +84,6 @@ int main(int argc, char *argv[])
             return -1;
         }
 
-        inputImageSRef->save("savedImage.jpg");
-        inputImageSRef->save("savedImage.png");
-
         // JPEG COMPRESSION
 		inputImageSRef->setImageEncoding(Image::ENCODING_JPEG); 
         inputImageSRef->setImageEncodingQuality(encodingQuality);
@@ -98,9 +95,6 @@ int main(int argc, char *argv[])
         auto end = std::chrono::high_resolution_clock::now();
         LOG_INFO("JPEG compression time :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
         out_jpeg.close();
-
-
-
 
         std::ifstream in_jpeg(jpeg_filename, std::ios_base::in | std::ios_base::binary);
         boost::archive::binary_iarchive input_archive_JPEG(in_jpeg);
@@ -138,7 +132,6 @@ int main(int argc, char *argv[])
         // Display images in dedicated windows
         while (true)
         {
-            //if (viewerJPEGImage->display(PNGImageSRef) == FrameworkReturnCode::_STOP)
             if (viewerJPEGImage->display(JPEGImageSRef) == FrameworkReturnCode::_STOP || viewerPNGImage->display(PNGImageSRef) == FrameworkReturnCode::_STOP)
             {
                 LOG_INFO("end of SolARImageopenCV test");
