@@ -78,7 +78,6 @@ public:
 private:
     SolAR::datastructure::CamCalibration						m_camMatrix;
     SolAR::datastructure::CamDistortion                         m_camDistortion;
-    std::vector<SRef<SolAR::datastructure::QRCode>>             m_QRCodes;
     SRef<SolAR::api::solver::pose::I3DTransformFinderFrom2D3D>	m_pnp;
     SRef<SolAR::api::features::I2DTrackablesDetector>           m_trackablesDetector;
     SRef<SolAR::api::geom::IProject>							m_projector;
