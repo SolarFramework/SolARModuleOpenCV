@@ -30,9 +30,8 @@ namespace OPENCV {
 SolARMultiQRCodesPoseEstimatorOpencv::SolARMultiQRCodesPoseEstimatorOpencv():ConfigurableBase(xpcf::toUUID<SolARMultiQRCodesPoseEstimatorOpencv>())
 {
     addInterface<SolAR::api::solver::pose::IMultiTrackablesPose>(this);
-    declareInjectable<SolAR::api::image::IImageConvertor>(m_imageConvertor);
     declareInjectable<SolAR::api::solver::pose::I3DTransformFinderFrom2D3D>(m_pnp);
-    declareInjectable<SolAR::api::features::ICornerRefinement>(m_cornerRefinement);
+    declareInjectable<SolAR::api::features::I2DTrackablesDetector>(m_trackablesDetector);
     declareInjectable<SolAR::api::geom::IProject>(m_projector);
     declareProperty("maxReprojError", m_maxReprojError);
     LOG_DEBUG("SolARMultiQRCodesPoseEstimatorOpencv constructor");
@@ -50,67 +49,53 @@ FrameworkReturnCode SolARMultiQRCodesPoseEstimatorOpencv::setTrackables(const st
 	m_nbMarkers = trackables.size();
 	if (m_nbMarkers == 0)
 		return FrameworkReturnCode::_ERROR_;
-	
-    if (trackables[0]->getType() == TrackableType::QRCODE_MARKER)
-    {
-		for (const auto &trackable : trackables) {
-			SRef<QRCode> qrCode = xpcf::utils::dynamic_pointer_cast<QRCode>(trackable);
-			m_QRCodes.push_back(qrCode);
-			LOG_DEBUG("Decoding code: {}", qrCode->getCode());			
+	    
+    int nbFloatingTrackables(0);
+    for (const auto &trackable : trackables)
+        if (trackable->getType() == TrackableType::QRCODE_MARKER) {
+			SRef<QRCode> qrCode = xpcf::utils::dynamic_pointer_cast<QRCode>(trackable);			
 			// get 3D pattern points
 			std::vector<Point3Df> pts3D;
-			qrCode->getWorldCorners(pts3D);
+            if (!qrCode->getTransform3D().matrix().isZero())
+                qrCode->getWorldCorners(pts3D);
+            else
+                nbFloatingTrackables++;
 			m_pattern3DPoints.push_back(pts3D);
-		}
-    }
-    else {
-        LOG_ERROR("The SolARMultiQRCodesPoseEstimatorOpencv should only use a trackable of type QRCODE")
-        return FrameworkReturnCode::_ERROR_;
-    }
+        }
+        else {
+            LOG_ERROR("The SolARMultiQRCodesPoseEstimatorOpencv should only use a trackable of type QRCODE")
+            return FrameworkReturnCode::_ERROR_;
+        }
+    LOG_DEBUG("Number of QR codes: {}", m_nbMarkers);
+    LOG_DEBUG("Number of floating QR codes: {}", nbFloatingTrackables);
+    // set trackables to detector
+    m_trackablesDetector->setTrackables(trackables);
     return FrameworkReturnCode::_SUCCESS;
 }
 
 FrameworkReturnCode SolARMultiQRCodesPoseEstimatorOpencv::estimate(const SRef<Image> image, Transform3Df & pose)
 {
-    SRef<Image>				greyImage;    
     std::vector<Point2Df>	pts2D;
     std::vector<Point3Df>	pts3D;
 	int nbFoundMarkers(0);
 
-    // Convert Image from RGB to grey
-    if (image->getNbChannels() != 1)
-        m_imageConvertor->convert(image, greyImage, Image::ImageLayout::LAYOUT_GREY);
-    else
-        greyImage = image->copy();
+    //  detect qr codes
+    std::vector<std::vector<Point2Df>> corners;
+    m_trackablesDetector->detect(image, corners);
 
-	cv::Mat cvImage = SolAROpenCVHelper::mapToOpenCV(greyImage);
-	std::vector<cv::Point2f> corners;
-	std::vector<std::string> codes;
-	std::vector<cv::Mat> rectifiedImage;
-	m_qrDetector.detectAndDecodeMulti(cvImage, codes, corners, rectifiedImage);
+    if (corners.size() != m_pattern3DPoints.size())
+        return FrameworkReturnCode::_ERROR_;
 
 	for (int i = 0; i < m_nbMarkers; ++i) {
-		for (int j = 0; j < codes.size(); ++j)
-			if (m_QRCodes[i]->getCode() == codes[j]) {
-				// get 2D points
-				std::vector<cv::Point2f> img2Dpts(corners.begin() + j * 4, corners.begin() + j * 4 + 4);
-				for (const auto& pt : img2Dpts)
-					pts2D.push_back(Point2Df(pt.x, pt.y));
-				// get 3D corresponding points
-				const std::vector<Point3Df>& pattern3DPts = m_pattern3DPoints[i];
-				pts3D.insert(pts3D.end(), pattern3DPts.begin(), pattern3DPts.end());
-				nbFoundMarkers++;
-				break;
-			}
+        if ((corners[i].size() > 0) && (m_pattern3DPoints[i].size() > 0)) {
+            pts2D.insert(pts2D.end(), corners[i].begin(), corners[i].end());
+            pts3D.insert(pts3D.end(), m_pattern3DPoints[i].begin(), m_pattern3DPoints[i].end());
+            nbFoundMarkers++;
+        }
 	}
-
-	LOG_DEBUG("Number of detected markers: {}", nbFoundMarkers);
-	LOG_DEBUG("Number of corners: {}", pts2D.size());
+    LOG_DEBUG("Number of detected markers: {}", nbFoundMarkers);
 	if (nbFoundMarkers == 0)
 		return FrameworkReturnCode::_ERROR_;
-
-	// Refine corner locations
-	m_cornerRefinement->refine(greyImage, pts2D);
 
 	// Compute the pose of the camera using a Perspective n Points algorithm using all corners of the detected markers
 	if (m_pnp->estimate(pts2D, pts3D, pose) == FrameworkReturnCode::_SUCCESS)

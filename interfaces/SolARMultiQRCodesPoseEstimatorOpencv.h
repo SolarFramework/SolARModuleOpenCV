@@ -17,11 +17,9 @@
 #ifndef SOLARMULTIQRCODESPOSEESTIMATOROPENCV_H
 #define SOLARMULTIQRCODESPOSEESTIMATOROPENCV_H
 #include "api/solver/pose/IMultiTrackablesPose.h"
-#include "api/image/IImageConvertor.h"
+#include "api/features/I2DTrackablesDetector.h"
 #include "api/geom/IProject.h"
 #include "api/solver/pose/I3DTransformFinderFrom2D3D.h"
-#include "api/features/ICornerRefinement.h"
-#include "datastructure/Image.h"
 #include "datastructure/QRCode.h"
 #include "SolAROpencvAPI.h"
 #include "xpcf/component/ConfigurableBase.h"
@@ -37,16 +35,15 @@ namespace OPENCV {
 * <TT>UUID: 73e66f7f-be35-4d76-97f2-ef864e043d57</TT>
 *
 * @SolARComponentInjectablesBegin
-* @SolARComponentInjectable{SolAR::api::image::IImageConvertor}
+* @SolARComponentInjectable{SolAR::api::features::IMultiTrackablesPose}
 * @SolARComponentInjectable{SolAR::api::solver::pose::I3DTransformFinderFrom2D3D}
-* @SolARComponentInjectable{SolAR::api::features::ICornerRefinement}
 * * @SolARComponentInjectable{SolAR::api::geom::IProject}
 * @SolARComponentInjectablesEnd
 *
 * @SolARComponentPropertiesBegin
 * @SolARComponentProperty{ maxReprojError,
 *                          ,
-*                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 0.5 }}
+*                          @SolARComponentPropertyDescNum{ float, [0..MAX FLOAT], 1.0 }}
 * @SolARComponentPropertiesEnd
 *
 */
@@ -82,12 +79,10 @@ private:
     SolAR::datastructure::CamCalibration						m_camMatrix;
     SolAR::datastructure::CamDistortion                         m_camDistortion;
     std::vector<SRef<SolAR::datastructure::QRCode>>             m_QRCodes;
-    SRef<SolAR::api::image::IImageConvertor>					m_imageConvertor;
     SRef<SolAR::api::solver::pose::I3DTransformFinderFrom2D3D>	m_pnp;
-    SRef<SolAR::api::features::ICornerRefinement>				m_cornerRefinement;
+    SRef<SolAR::api::features::I2DTrackablesDetector>           m_trackablesDetector;
     SRef<SolAR::api::geom::IProject>							m_projector;
-    float                                                       m_maxReprojError = 0.5f;
-	cv::QRCodeDetector											m_qrDetector;
+    float                                                       m_maxReprojError = 1.0f;
 	std::vector<std::vector<SolAR::datastructure::Point3Df>>	m_pattern3DPoints;
 	int															m_nbMarkers;
 };

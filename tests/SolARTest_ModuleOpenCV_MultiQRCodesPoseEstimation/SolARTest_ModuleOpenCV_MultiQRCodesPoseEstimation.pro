@@ -6,7 +6,8 @@ QMAKE_PROJECT_DEPTH = 0
 
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_MultiQRCodesPoseEstimation
-VERSION=0.10.0
+VERSION=0.11.0
+PROJECTDEPLOYDIR = $${PWD}/..
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z
@@ -15,13 +16,11 @@ CONFIG += console
 include(findremakenrules.pri)
 
 CONFIG(debug,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}/../bin/Debug
     DEFINES += _DEBUG=1
     DEFINES += DEBUG=1
 }
 
 CONFIG(release,debug|release) {
-    TARGETDEPLOYDIR = $${PWD}/../bin/Release
     DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
 }
@@ -42,14 +41,15 @@ DEFINES += BOOST_ALL_DYN_LINK
 DEFINES += BOOST_AUTO_LINK_NOMANGLE
 DEFINES += BOOST_LOG_DYN_LINK
 
-HEADERS += \
-
 SOURCES += \
     main.cpp
 
 unix {
     LIBS += -ldl
     QMAKE_CXXFLAGS += -DBOOST_ALL_DYN_LINK
+	
+	# Avoids adding install steps manually. To be commented to have a better control over them.
+    QMAKE_POST_LINK += "make install install_deps"
 }
 
 linux {
@@ -66,7 +66,6 @@ win32 {
     QMAKE_LFLAGS += /MACHINE:X64
     DEFINES += WIN64 UNICODE _UNICODE
     QMAKE_COMPILER_DEFINES += _WIN64
-    QMAKE_CXXFLAGS += -wd4250 -wd4251 -wd4244 -wd4275
 
     # Windows Kit (msvc2013 64)
     LIBS += -L$$(WINDOWSSDKDIR)lib/winv6.3/um/x64 -lshell32 -lgdi32 -lComdlg32

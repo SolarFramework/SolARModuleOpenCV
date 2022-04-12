@@ -87,6 +87,7 @@ class SolARStereoImageRectificationOpencv;
 class SolARStereoDescriptorMatcherOpencv;
 class SolARQRCodeLoaderOpencv;
 class SolARQRCodePoseEstimatorOpencv;
+class SolARQRCodesDetectorOpencv;
 class SolARMultiQRCodesPoseEstimatorOpencv;
 class SolARYOLACTSegmentationOpencv;
 class SolARMaskOverlayOpencv;
@@ -200,6 +201,11 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARQRCodePoseEstimatorOpe
                              "7cd9c6ea-9287-4058-9e18-c64129c017c8",
                              "SolARQRCodePoseEstimatorOpencv",
                              "Estimate camera pose based on a QR code.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARQRCodesDetectorOpencv,
+                             "0ff5ae31-f469-4d9b-86fc-feca1fa74a04",
+                             "SolARQRCodesDetectorOpencv",
+                             "Detect a set of given 2D trackables in an image.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMultiQRCodesPoseEstimatorOpencv,
                              "73e66f7f-be35-4d76-97f2-ef864e043d57",
