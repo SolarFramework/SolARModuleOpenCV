@@ -24,6 +24,9 @@
 #include "opencv2/features2d.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
+#ifdef WITHCUDA
+#include <opencv2/cudafeatures2d.hpp>
+#endif
 
 namespace SolAR {
 namespace MODULES {
@@ -64,7 +67,11 @@ private:
     /// @brief Threshold for the distance between matched descriptors. Distance means here metric distance (e.g. Hamming distance), not the distance between coordinates (which is measured in Pixels)
     float m_maxDistance = 1.0f;
 	std::string m_type = "BruteForce";
+#ifdef WITHCUDA
+	cv::Ptr<cv::cuda::DescriptorMatcher> m_matcher;
+#else
 	cv::Ptr<cv::DescriptorMatcher> m_matcher;
+#endif 
 };
 
 }

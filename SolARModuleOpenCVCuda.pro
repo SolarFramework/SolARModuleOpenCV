@@ -6,7 +6,7 @@ QMAKE_PROJECT_DEPTH = 0
 
 ## global defintions : target lib name, version
 INSTALLSUBDIR = SolARBuild
-TARGET = SolARModuleOpenCV
+TARGET = SolARModuleOpenCVCuda
 FRAMEWORK = $$TARGET
 VERSION=0.11.0
 
@@ -14,7 +14,7 @@ DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
 CONFIG += c++1z
 
-DEFINES += WITHOUTCUDA
+DEFINES += WITHCUDA
 
 include(findremakenrules.pri)
 
@@ -99,13 +99,13 @@ OTHER_FILES += \
     packagedependencies-mac.txt \
     packagedependencies-win.txt \
     packagedependencies-android.txt \
-    extra-packages.txt \
-    extra-packages-linux.txt
+    installpackages.txt \
+    installpackages-linux.txt
 
 #NOTE : Must be placed at the end of the .pro
 include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/remaken_install_target.pri)))) # Shell_quote & shell_path required for visual on windows
 
 DISTFILES += \
-    xpcf_SolARModuleOpenCV_registry.xml
+    xpcf_SolARModuleOpenCVCuda_registry.xml
 
 

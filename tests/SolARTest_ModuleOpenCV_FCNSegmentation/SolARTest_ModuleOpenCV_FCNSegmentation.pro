@@ -5,7 +5,7 @@ CONFIG -= qt
 QMAKE_PROJECT_DEPTH = 0
 
 ## global defintions : target lib name, version
-TARGET = SolARTest_ModuleOpenCV_QRCodePoseEstimation
+TARGET = SolARTest_ModuleOpenCV_FCNSegmentation
 VERSION=0.11.0
 
 DEFINES += MYVERSION=$${VERSION}
@@ -50,7 +50,6 @@ SOURCES += \
 unix {
     LIBS += -ldl
     QMAKE_CXXFLAGS += -DBOOST_ALL_DYN_LINK
-    QMAKE_POST_LINK += "make install install_deps"
 }
 
 linux {
@@ -91,14 +90,11 @@ linux {
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $${PWD}/SolARTest_ModuleOpenCV_QRCodePoseEstimation_conf.xml \
-					$${PWD}/qrcode.yml \ 
-					$${PWD}/qrcode.png \ 
-					$${PWD}/camera_calibration.json
+configfile.files = $${PWD}/SolARTest_ModuleOpenCV_FCNSegmentation_conf.xml
 INSTALLS += configfile
 
 DISTFILES += \
-    SolARTest_ModuleOpenCV_QRCodePoseEstimation.xml \
+    SolARTest_ModuleOpenCV_FCNSegmentation_conf.xml \
     packagedependencies.txt
 
 #NOTE : Must be placed at the end of the .pro

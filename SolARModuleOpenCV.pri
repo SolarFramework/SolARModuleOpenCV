@@ -61,6 +61,9 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARUnprojectPlanarPointsOpencv.h \
     interfaces/SolARSVDTriangulationOpencv.h \
     interfaces/SolARVideoAsCameraOpencv.h \
+    interfaces/SolARYOLACTSegmentationOpencv.h \
+    interfaces/SolARMaskOverlayOpencv.h \
+    interfaces/SolARFCNSegmentationOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
     src/AKAZE2/AKAZEFeatures.h \
     src/AKAZE2/fed.h \
@@ -133,7 +136,10 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
     src/SolARUndistortPointsOpencv.cpp \
     src/SolARUnprojectplanarPointsOpencv.cpp \
-    src/SolARVideoAsCameraOpencv.cpp
+    src/SolARVideoAsCameraOpencv.cpp \
+    src/SolARYOLACTSegmentationOpencv.cpp \
+    src/SolARMaskOverlayOpencv.cpp \
+    src/SolARFCNSegmentationOpencv.cpp
 
 
 
