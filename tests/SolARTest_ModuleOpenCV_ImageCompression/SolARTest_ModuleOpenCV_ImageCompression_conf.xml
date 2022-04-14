@@ -12,22 +12,36 @@
     </module>
     <factory>
         <bindings>
-            <bind name="imageJPEG" interface="IImageViewer" to="SolARImageViewerOpencv" properties="ImageJPEG_prop"/>
-            <bind name="imagePNG" interface="IImageViewer" to="SolARImageViewerOpencv" properties="ImagePNG_prop"/>
+            <bind name="imageJPEGfromFile" interface="IImageViewer" to="SolARImageViewerOpencv" properties="ImageJPEGfromFile_prop"/>
+            <bind name="imagePNGfromFile" interface="IImageViewer" to="SolARImageViewerOpencv" properties="ImagePNGfromFile_prop"/>
+            <bind name="imageJPEGfromArchive" interface="IImageViewer" to="SolARImageViewerOpencv" properties="ImageJPEGfromArchive_prop"/>
+            <bind name="imagePNGfromArchive" interface="IImageViewer" to="SolARImageViewerOpencv" properties="ImagePNGfromArchive_prop"/>
         </bindings>
     </factory>
     <properties>
         <configure component="SolARImageLoaderOpencv">
             <property name="filePath" type="string" value="../../../../data/notredame1.jpg"/>
         </configure>
-        <configure component="SolARImageViewerOpencv" name="ImageJPEG_prop">
-            <property name="title" type="string" value="JPEG compression (press esc key to exit)"/>
+        <configure component="SolARImageViewerOpencv" name="ImageJPEGfromFile_prop">
+            <property name="title" type="string" value="JPEG compression from file (press esc key to exit)"/>
             <property name="exitKey" type="int" value="27"/>
             <property name="width" type="int" value="0"/>
             <property name="height" type="int" value="0"/>
         </configure>
-        <configure component="SolARImageViewerOpencv" name="ImagePNG_prop">
-            <property name="title" type="string" value="PNG compression (press esc key to exit)"/>
+        <configure component="SolARImageViewerOpencv" name="ImagePNGfromFile_prop">
+            <property name="title" type="string" value="PNG compression from file (press esc key to exit)"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
+        </configure>
+        <configure component="SolARImageViewerOpencv" name="ImageJPEGfromArchive_prop">
+            <property name="title" type="string" value="JPEG compression from archive (press esc key to exit)"/>
+            <property name="exitKey" type="int" value="27"/>
+            <property name="width" type="int" value="0"/>
+            <property name="height" type="int" value="0"/>
+        </configure>
+        <configure component="SolARImageViewerOpencv" name="ImagePNGfromArchive_prop">
+            <property name="title" type="string" value="PNG compression from Archive (press esc key to exit)"/>
             <property name="exitKey" type="int" value="27"/>
             <property name="width" type="int" value="0"/>
             <property name="height" type="int" value="0"/>

@@ -61,10 +61,11 @@ int main(int argc, char *argv[])
         LOG_INFO("Start creating components");
 
         SRef<image::IImageLoader> imageLoader = xpcfComponentManager->resolve<image::IImageLoader>();
-        SRef<display::IImageViewer> viewerJPEGImage = xpcfComponentManager->resolve<display::IImageViewer>("imageJPEG");
-        SRef<display::IImageViewer> viewerPNGImage = xpcfComponentManager->resolve<display::IImageViewer>("imagePNG");
-
-        if (!imageLoader || !viewerJPEGImage || !viewerPNGImage)
+        SRef<display::IImageViewer> viewerJPEGImagefromArchive = xpcfComponentManager->resolve<display::IImageViewer>("imageJPEGfromArchive");
+        SRef<display::IImageViewer> viewerPNGImagefromArchive = xpcfComponentManager->resolve<display::IImageViewer>("imagePNGfromArchive");
+        SRef<display::IImageViewer> viewerJPEGImagefromFile = xpcfComponentManager->resolve<display::IImageViewer>("imageJPEGfromFile");
+        SRef<display::IImageViewer> viewerPNGImagefromFile = xpcfComponentManager->resolve<display::IImageViewer>("imagePNGfromFile");
+        if (!imageLoader || !viewerJPEGImagefromArchive || !viewerPNGImagefromArchive || !viewerJPEGImagefromFile || !viewerPNGImagefromFile)
         {
             LOG_ERROR("One or more component creations have failed");
             return -1;
@@ -72,8 +73,11 @@ int main(int argc, char *argv[])
 
         // Data structure declaration
         SRef<Image> inputImageSRef;
-        SRef<Image> JPEGImageSRef;
-        SRef<Image> PNGImageSRef;
+        SRef<Image> JPEGImagefromArchiveSRef;
+        SRef<Image> PNGImagefromArchiveSRef;
+        SRef<Image> JPEGImagefromFileSRef = xpcf::utils::make_shared<Image>();
+        SRef<Image> PNGImagefromFileSRef = xpcf::utils::make_shared<Image>();
+
         std::string jpeg_filename = "jpegImage.archive";
         std::string png_filename = "pngImage.archive";
 
@@ -93,7 +97,7 @@ int main(int argc, char *argv[])
         auto start = std::chrono::high_resolution_clock::now();
         output_archive_JPEG & BOOST_SERIALIZATION_NVP(*inputImageSRef);
         auto end = std::chrono::high_resolution_clock::now();
-        LOG_INFO("JPEG compression time :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+        LOG_INFO("JPEG compression time to archive:{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
         out_jpeg.close();
 
         std::ifstream in_jpeg(jpeg_filename, std::ios_base::in | std::ios_base::binary);
@@ -102,8 +106,8 @@ int main(int argc, char *argv[])
         start = std::chrono::high_resolution_clock::now();
         input_archive_JPEG & BOOST_SERIALIZATION_NVP(JPEGImage);
         end = std::chrono::high_resolution_clock::now();
-        LOG_INFO("JPEG decompression time :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
-        JPEGImageSRef = JPEGImage.copy();
+        LOG_INFO("JPEG decompression time from archive :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+        JPEGImagefromArchiveSRef = JPEGImage.copy();
         in_jpeg.close();
 
 		// PNG Compression
@@ -115,9 +119,8 @@ int main(int argc, char *argv[])
         start = std::chrono::high_resolution_clock::now();
         output_archive_PNG & BOOST_SERIALIZATION_NVP(*inputImageSRef);
         end = std::chrono::high_resolution_clock::now();
-		LOG_INFO("PNG compression time :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+        LOG_INFO("PNG compression time to archive:{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
         out_png.close();
-
 
         std::ifstream in_png(png_filename, std::ios_base::in | std::ios_base::binary);
         boost::archive::binary_iarchive input_archive_PNG(in_png);
@@ -125,14 +128,38 @@ int main(int argc, char *argv[])
         start = std::chrono::high_resolution_clock::now();
         input_archive_PNG & BOOST_SERIALIZATION_NVP(PNGImage);
 		end = std::chrono::high_resolution_clock::now();
-		LOG_INFO("PNG decompression time :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
-        PNGImageSRef = PNGImage.copy();
+        LOG_INFO("PNG decompression time from archive:{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+        PNGImagefromArchiveSRef = PNGImage.copy();
         in_png.close();
+
+        start = std::chrono::high_resolution_clock::now();
+        inputImageSRef->save("savedImage.jpg");
+        end = std::chrono::high_resolution_clock::now();
+        LOG_INFO("JPEG compression time to file :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+
+        start = std::chrono::high_resolution_clock::now();
+        inputImageSRef->save("savedImage.png");
+        end = std::chrono::high_resolution_clock::now();
+        LOG_INFO("PNG compression time to file :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+
+        start = std::chrono::high_resolution_clock::now();
+        JPEGImagefromFileSRef->load("savedImage.jpg");
+        end = std::chrono::high_resolution_clock::now();
+        LOG_INFO("JPEG decompression time from file :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+
+        start = std::chrono::high_resolution_clock::now();
+        PNGImagefromFileSRef->load("savedImage.png");
+        end = std::chrono::high_resolution_clock::now();
+        LOG_INFO("PNG decompression time from file :{}ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+
 
         // Display images in dedicated windows
         while (true)
         {
-            if (viewerJPEGImage->display(JPEGImageSRef) == FrameworkReturnCode::_STOP || viewerPNGImage->display(PNGImageSRef) == FrameworkReturnCode::_STOP)
+            if (viewerJPEGImagefromArchive->display(JPEGImagefromArchiveSRef) == FrameworkReturnCode::_STOP
+             || viewerPNGImagefromArchive->display(PNGImagefromArchiveSRef) == FrameworkReturnCode::_STOP
+             || viewerJPEGImagefromFile->display(JPEGImagefromFileSRef) == FrameworkReturnCode::_STOP
+             || viewerPNGImagefromFile->display(PNGImagefromFileSRef) == FrameworkReturnCode::_STOP)
             {
                 LOG_INFO("end of SolARImageopenCV test");
                 break;
