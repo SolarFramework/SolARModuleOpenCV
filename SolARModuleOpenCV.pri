@@ -23,6 +23,8 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARFiducialMarkerLoaderOpencv.h \
     interfaces/SolARQRCodeLoaderOpencv.h \
     interfaces/SolARQRCodePoseEstimatorOpencv.h \
+    interfaces/SolARQRCodesDetectorOpencv.h \
+    interfaces/SolARMultiQRCodesPoseEstimatorOpencv.h \
     interfaces/SolARFundamentalMatrixEstimationOpencv.h \
     interfaces/SolARGeometricMatchesFilterOpencv.h \
     interfaces/SolARHomographyEstimationOpencv.h \
@@ -101,6 +103,8 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARFiducialMarkerLoaderOpencv.cpp \
     src/SolARQRCodeLoaderOpencv.cpp \
     src/SolARQRCodePoseEstimatorOpencv.cpp \
+    src/SolARQRCodesDetectorOpencv.cpp \
+    src/SolARMultiQRCodesPoseEstimatorOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \

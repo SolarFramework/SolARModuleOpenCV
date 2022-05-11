@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xpcf-registry autoAlias="true">
+	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV module" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/0.11.0/lib/x86_64/shared">
+		<component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" name="SolARCameraOpencv" description="SolARCameraOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+		</component>
+		<component uuid="b8a8b963-ba55-4ea4-b045-d9e7e8f6db02" name="SolARImagesAsCameraOpencv" description="SolARImagesAsCameraOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+		</component>
+		<component uuid="fa4a780a-9720-11e8-9eb6-529269fb1459" name="SolARVideoAsCameraOpencv" description="SolARVideoAsCameraOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+		</component>		
+		<component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="SolARImageViewerOpencv" description="SolARImageViewerOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
+		</component>
+		<component uuid="0ff5ae31-f469-4d9b-86fc-feca1fa74a04" name="SolARQRCodesDetectorOpencv" description="SolARQRCodesDetectorOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="607d0b0d-766d-4ff2-9b72-45c555f9726f" name="I2DTrackablesDetector" description="I2DTrackablesDetector"/>
+		</component>
+		<component uuid="fd7fb607-144f-418c-bcf2-f7cf71532c22" name="SolARImageConvertorOpencv" description="SolARImageConvertorOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="9c982719-6cb4-4831-aa88-9e01afacbd16" name="IImageConvertor" description="IImageConvertor"/>
+		</component>		
+		<component uuid="ddae46ca-1657-4301-a87d-f2dcfa6265d0" name="SolARCornerRefinementOpencv" description="SolARCornerRefinementOpencv">
+            <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+            <interface uuid="6ed0413a-751e-4c33-b91b-97b3ea949bc2" name="ICornerRefinement" description="ICornerRefinement"/>
+        </component>
+		<component uuid="e42d6526-9eb1-4f8a-bb68-53e06f09609c" name="SolARImageLoaderOpencv" description="SolARImageLoaderOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="6FCDAA8D-6EA9-4C3F-97B0-46CD11B67A9B" name="IImageLoader" description="IImageLoader"/>
+        </component>
+		<component uuid="cc51d685-9797-4ffd-a9dd-cec4f367fa6a" name="SolAR2DOverlayOpencv" description="SolAR2DOverlayOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="62b8b0b5-9344-40e6-a288-e609eb3ff0f1" name="I2DOverlay" description="I2DOverlay"/>
+		</component>
+    </module>
+	
+	<module uuid="28b89d39-41bd-451d-b19e-d25a3d7c5797" name="SolARModuleTools"  description="SolARModuleTools"  path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleTools/0.11.0/lib/x86_64/shared">
+		<component uuid="8ee6aa50-f6bb-4b01-a1fe-727b54ed0457" name="SolARWorldGraphLoader" description="SolARWorldGraphLoader">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="b68a0544-c9f2-48eb-9542-c2048ff25c08" name="IWorldGraphLoader" description="IWorldGraphLoader"/>
+		</component>
+    </module>
+	
+	<factory>
+		<bindings>
+			<bind interface="ICamera" to="SolARCameraOpencv"/>
+			<!--bind interface="ICamera" to="SolARImagesAsCameraOpencv"/-->
+			<!--bind interface="ICamera" to="SolARVideoAsCameraOpencv"/-->			
+		</bindings>		
+	</factory>
+	
+    <properties>
+		<configure component="SolARCameraOpencv">
+			<property name="calibrationFile" type="string" value="camera_calibration.json"/>
+			<property name="deviceID" type="uint" value="0"/>
+		</configure>
+		<configure component="SolARVideoAsCameraOpencv">
+			<property name="calibrationFile" type="string" value="camera_calibration.json"/>
+			<property name="videoPath" type="string" value="path to videos"/>
+			<property name="delayTime" type="int" value="33"/>
+		</configure>
+        <configure component="SolARWorldGraphLoader">
+            <property name="filePath" type="string" value="qrcodes.json"/>
+        </configure>		
+		<configure component="SolARImageViewerOpencv">
+			<property name="title" type="string" value="Multi QR codes detection (press esc to exit)"/>
+			<property name="exitKey" type="int" value="27"/>
+			<property name="width" type="int" value="0"/>
+			<property name="height" type="int" value="0"/>
+		</configure>
+		<configure component="SolAR2DOverlayOpencv">
+			<property name="thickness" type="UnsignedInteger" value="2"/>
+			<property name="radius" type="UnsignedInteger" value="2"/>
+			<property name="color"  type="UnsignedInteger">
+				<value>0</value>
+				<value>0</value>
+				<value>255</value>
+			</property>
+		</configure>
+    </properties>
+</xpcf-registry>
