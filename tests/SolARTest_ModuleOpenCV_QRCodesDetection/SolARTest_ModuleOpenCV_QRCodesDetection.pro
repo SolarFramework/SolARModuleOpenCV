@@ -5,7 +5,7 @@ CONFIG -= qt
 QMAKE_PROJECT_DEPTH = 0
 
 ## global defintions : target lib name, version
-TARGET = SolARTest_ModuleOpenCV_YolactSegmentation
+TARGET = SolARTest_ModuleOpenCV_QRCodesDetection
 VERSION=0.11.0
 PROJECTDEPLOYDIR = $${PWD}/..
 
@@ -47,8 +47,8 @@ SOURCES += \
 unix {
     LIBS += -ldl
     QMAKE_CXXFLAGS += -DBOOST_ALL_DYN_LINK
-
-    # Avoids adding install steps manually. To be commented to have a better control over them.
+	
+	# Avoids adding install steps manually. To be commented to have a better control over them.
     QMAKE_POST_LINK += "make install install_deps"
 }
 
@@ -90,11 +90,14 @@ linux {
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $${PWD}/SolARTest_ModuleOpenCV_YolactSegmentation_conf.xml
+configfile.files = $${PWD}/SolARTest_ModuleOpenCV_QRCodesDetection_conf.xml \
+                                        $${PWD}/camera_calibration.json \
+					$${PWD}/qrcodes.json \ 
+					$${PWD}/qrcodes.png
 INSTALLS += configfile
 
 DISTFILES += \
-    SolARTest_ModuleOpenCV_YolactSegmentation_conf.xml \
+    SolARTest_ModuleOpenCV_QRCodesDetection_conf.xml \
     packagedependencies.txt
 
 #NOTE : Must be placed at the end of the .pro
