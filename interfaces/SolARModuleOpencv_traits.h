@@ -88,6 +88,11 @@ class SolARStereoImageRectificationOpencv;
 class SolARStereoDescriptorMatcherOpencv;
 class SolARQRCodeLoaderOpencv;
 class SolARQRCodePoseEstimatorOpencv;
+class SolARQRCodesDetectorOpencv;
+class SolARMultiQRCodesPoseEstimatorOpencv;
+class SolARYOLACTSegmentationOpencv;
+class SolARMaskOverlayOpencv;
+class SolARFCNSegmentationOpencv;
 }
 }
 }
@@ -197,6 +202,16 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARQRCodePoseEstimatorOpe
                              "7cd9c6ea-9287-4058-9e18-c64129c017c8",
                              "SolARQRCodePoseEstimatorOpencv",
                              "Estimate camera pose based on a QR code.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARQRCodesDetectorOpencv,
+                             "0ff5ae31-f469-4d9b-86fc-feca1fa74a04",
+                             "SolARQRCodesDetectorOpencv",
+                             "Detect a set of given 2D trackables in an image.")
+
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMultiQRCodesPoseEstimatorOpencv,
+                             "73e66f7f-be35-4d76-97f2-ef864e043d57",
+                             "SolARMultiQRCodesPoseEstimatorOpencv",
+                             "Estimate camera pose based on a set of QR codes.")
 
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARFundamentalMatrixEstimationOpencv,
                              "79b29b50-cf4d-441e-b5de-1de829b91c41",
@@ -381,5 +396,17 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARStereoImageRectificati
                             "427cbbb8-6afe-4b3b-8b04-cb93ed925b40",
                             "SolARStereoImageRectificationOpencv",
                             "Rectify image.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARYOLACTSegmentationOpencv,
+                            "b6288dde-4e58-4ead-8e41-f2ce98f43626",
+                            "SolARYOLACTSegmentationOpencv",
+                            "Perform 2D instance segmentation based on the YOLACT network.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARFCNSegmentationOpencv,
+                            "77a8b776-6b0c-4bc0-b0a8-437a796b8e29",
+                            "SolARFCNSegmentationOpencv",
+                            "Perform 2D semantic segmentation based on the FCN network.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMaskOverlayOpencv,
+                            "ed445504-daba-4855-af88-052d4e3e5b7a",
+                            "SolARMaskOverlayOpencv",
+                            "Draws masks on top of an image.")
 
 #endif // SOLARMODULEOPENCV_TRAITS_H

@@ -55,10 +55,7 @@ FrameworkReturnCode SolARQRCodePoseEstimatorOpencv::setTrackable(const SRef<SolA
 		float height = m_QRCode->getHeight();
         LOG_DEBUG("Size (width x height): {} x {}", width, height);
 		// calculate 3D pattern points
-		m_pattern3DPoints.push_back(Point3Df(-width / 2, -height / 2, 0.f));
-		m_pattern3DPoints.push_back(Point3Df(width / 2, -height / 2, 0.f));
-		m_pattern3DPoints.push_back(Point3Df(width / 2, height / 2, 0.f));
-		m_pattern3DPoints.push_back(Point3Df(-width / 2, height / 2, 0.f));
+		m_QRCode->getWorldCorners(m_pattern3DPoints);
     }
     else {
         LOG_ERROR("The SolARQRCodePoseEstimatorOpencv should only use a trackable of type QRCODE")

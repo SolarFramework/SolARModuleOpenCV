@@ -23,6 +23,8 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARFiducialMarkerLoaderOpencv.h \
     interfaces/SolARQRCodeLoaderOpencv.h \
     interfaces/SolARQRCodePoseEstimatorOpencv.h \
+    interfaces/SolARQRCodesDetectorOpencv.h \
+    interfaces/SolARMultiQRCodesPoseEstimatorOpencv.h \
     interfaces/SolARFundamentalMatrixEstimationOpencv.h \
     interfaces/SolARGeometricMatchesFilterOpencv.h \
     interfaces/SolARHomographyEstimationOpencv.h \
@@ -61,6 +63,9 @@ HEADERS += interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     interfaces/SolARUnprojectPlanarPointsOpencv.h \
     interfaces/SolARSVDTriangulationOpencv.h \
     interfaces/SolARVideoAsCameraOpencv.h \
+    interfaces/SolARYOLACTSegmentationOpencv.h \
+    interfaces/SolARMaskOverlayOpencv.h \
+    interfaces/SolARFCNSegmentationOpencv.h \
     src/AKAZE2/AKAZEConfig.h \
     src/AKAZE2/AKAZEFeatures.h \
     src/AKAZE2/fed.h \
@@ -98,6 +103,8 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARFiducialMarkerLoaderOpencv.cpp \
     src/SolARQRCodeLoaderOpencv.cpp \
     src/SolARQRCodePoseEstimatorOpencv.cpp \
+    src/SolARQRCodesDetectorOpencv.cpp \
+    src/SolARMultiQRCodesPoseEstimatorOpencv.cpp \
     src/SolARFundamentalMatrixEstimationOpencv.cpp \
     src/SolARGeometricMatchesFilterOpencv.cpp \
     src/SolARHomographyEstimationOpencv.cpp \
@@ -133,7 +140,10 @@ SOURCES +=  src/AKAZE2/akaze.cpp \
     src/SolARSVDTriangulationOpencv.cpp \
     src/SolARUndistortPointsOpencv.cpp \
     src/SolARUnprojectplanarPointsOpencv.cpp \
-    src/SolARVideoAsCameraOpencv.cpp
+    src/SolARVideoAsCameraOpencv.cpp \
+    src/SolARYOLACTSegmentationOpencv.cpp \
+    src/SolARMaskOverlayOpencv.cpp \
+    src/SolARFCNSegmentationOpencv.cpp
 
 
 

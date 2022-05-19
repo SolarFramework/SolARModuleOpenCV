@@ -45,8 +45,8 @@ namespace OPENCV {
 
         unsigned int w=cvFrame.cols;
         unsigned int h=cvFrame.rows;
-        if(w!=m_parameters.resolution.width || h!=m_parameters.resolution.height)
-            cv::resize(cvFrame, cvFrame, cv::Size((int)m_parameters.resolution.width,(int)m_parameters.resolution.height), 0, 0);
+        if (m_is_resolution_set && (w!=m_parameters.resolution.width || h!=m_parameters.resolution.height))
+                cv::resize(cvFrame, cvFrame, cv::Size((int)m_parameters.resolution.width,(int)m_parameters.resolution.height), 0, 0);
 
         return SolAROpenCVHelper::convertToSolar(cvFrame,img);
     }

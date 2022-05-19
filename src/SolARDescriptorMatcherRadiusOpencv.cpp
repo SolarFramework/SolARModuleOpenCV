@@ -42,10 +42,14 @@ SolARDescriptorMatcherRadiusOpencv::~SolARDescriptorMatcherRadiusOpencv()
 xpcf::XPCFErrorCode SolARDescriptorMatcherRadiusOpencv::onConfigured()
 {
 	LOG_DEBUG(" SolARDescriptorMatcherRadiusOpencv onConfigured");
+#ifdef WITHCUDA
+	m_matcher = cv::cuda::DescriptorMatcher::createBFMatcher(cv::NORM_L2);
+#else
 	if (SolAROpenCVHelper::createMatcher(m_type, m_matcher) != FrameworkReturnCode::_SUCCESS) {
 		LOG_ERROR("Descriptor matcher type {} is not supported", m_type);
 		return xpcf::XPCFErrorCode::_FAIL;
 	}
+#endif // WITHCUDA	
 	return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
@@ -80,7 +84,14 @@ FrameworkReturnCode SolARDescriptorMatcherRadiusOpencv::match(
         cvDescriptors2.convertTo(cvDescriptors2, CV_32F);
     }
 
-    m_matcher->radiusMatch(cvDescriptors1, cvDescriptors2, cv_matches, m_maxDistance);
+#ifdef WITHCUDA
+	cv::cuda::GpuMat cvDescriptor1Gpu, cvDescriptor2Gpu;
+	cvDescriptor1Gpu.upload(cvDescriptors1);
+	cvDescriptor2Gpu.upload(cvDescriptors2);
+	m_matcher->radiusMatch(cvDescriptor1Gpu, cvDescriptor2Gpu, cv_matches, m_maxDistance);
+#else
+	m_matcher->radiusMatch(cvDescriptors1, cvDescriptors2, cv_matches, m_maxDistance);
+#endif // WITHCUDA	    
 
     matches.clear();
     for (std::vector<std::vector<cv::DMatch>>::iterator itr=cv_matches.begin();itr!=cv_matches.end();++itr){

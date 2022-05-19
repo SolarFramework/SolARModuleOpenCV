@@ -14,6 +14,8 @@ DEFINES += MYVERSION=$${VERSION}
 DEFINES += TEMPLATE_LIBRARY
 CONFIG += c++1z
 
+DEFINES += WITHOUTCUDA
+
 include(findremakenrules.pri)
 
 CONFIG(debug,debug|release) {
