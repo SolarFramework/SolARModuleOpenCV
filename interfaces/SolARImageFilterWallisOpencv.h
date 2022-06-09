@@ -17,7 +17,7 @@
 #ifndef INTERFACESSolARImageFilterWallisOpencv_H
 #define INTERFACESSolARImageFilterWallisOpencv_H
 #include <xpcf/component/ConfigurableBase.h>
-#include "interfaces/SolARImageConvertorOpencv.h"
+#include "SolARImageConvertorOpencv.h"
 #include "api/image/IImageFilter.h"
 
 

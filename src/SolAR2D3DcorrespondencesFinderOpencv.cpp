@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "SolAR2D3DcorrespondencesFinderOpencv.h"
+#include <SolAR2D3DcorrespondencesFinderOpencv.h>
 #include "core/Log.h"
 
 namespace xpcf  = org::bcom::xpcf;

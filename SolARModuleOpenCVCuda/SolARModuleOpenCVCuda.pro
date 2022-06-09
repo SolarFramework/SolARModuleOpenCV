@@ -16,7 +16,7 @@ CONFIG += c++1z
 
 DEFINES += WITHCUDA
 
-include(findremakenrules.pri)
+include(../findremakenrules.pri)
 
 CONFIG(debug,debug|release) {
     DEFINES += _DEBUG=1
@@ -41,9 +41,9 @@ msvc {
 DEFINES += "_BCOM_SHARED=__declspec(dllexport)"
 }
 
-INCLUDEPATH += interfaces/
+INCLUDEPATH += ../interfaces/
 
-include (SolARModuleOpenCV.pri)
+include (../SolARModuleOpenCV.pri)
 
 unix {
     # Avoids adding install steps manually. To be commented to have a better control over them.
@@ -85,7 +85,7 @@ android {
 }
 
 header_files.path = $${PROJECTDEPLOYDIR}/interfaces
-header_files.files = $$files($${PWD}/interfaces/*.h*)
+header_files.files = $$files($${PWD}/../interfaces/*.h*)
 
 xpcf_xml_files.path = $${USERHOMEFOLDER}/.xpcf/SolAR
 xpcf_xml_files.files=$$files($${PWD}/xpcf*.xml)

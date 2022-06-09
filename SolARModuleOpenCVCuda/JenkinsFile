@@ -1,0 +1,6 @@
+SolArModulePipeline {
+    moduleName="SolARModuleOpenCVCuda"
+    dirName="SolARBuild"
+    runTests=true
+    android=false
+}
