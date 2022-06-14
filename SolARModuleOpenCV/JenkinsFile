@@ -1,6 +1,0 @@
-SolArModulePipeline {
-    moduleName="SolARModuleOpenCV"
-    dirName="SolARBuild"
-    runTests=true
-    android=true
-}
