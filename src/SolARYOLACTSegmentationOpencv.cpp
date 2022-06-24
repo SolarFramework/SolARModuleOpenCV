@@ -46,6 +46,7 @@ SolARYOLACTSegmentationOpencv::~SolARYOLACTSegmentationOpencv()
 
 xpcf::XPCFErrorCode SolARYOLACTSegmentationOpencv::onConfigured()
 {
+#ifndef __ANDROID__
 	LOG_DEBUG(" SolARYOLACTSegmentationOpencv onConfigured");
 	// read and initialize network
 	m_net = cv::dnn::readNet(m_modelFile, m_modelConfig);
@@ -66,6 +67,10 @@ xpcf::XPCFErrorCode SolARYOLACTSegmentationOpencv::onConfigured()
 	m_nbChannels = 32;
 	m_outputLayerNames = { "conf", "mask", "proto", "boxes" };
 	return xpcf::XPCFErrorCode::_SUCCESS;
+#else
+    LOG_ERROR ("SolARYOLACTSegemntationOpencv is not avialble for Android");
+    return xpcf::XPCFErrorCode::_FAIL;
+#endif
 }
 
 bool checkJaccard(const Rectanglei& box, const uint32_t& id, const std::vector<Rectanglei>& boxes, const std::vector<uint32_t> &ids)
@@ -93,6 +98,7 @@ FrameworkReturnCode SolARYOLACTSegmentationOpencv::segment(const SRef<SolAR::dat
                                                            std::vector<uint32_t> &classIds,
                                                            std::vector<float> &scores)
 {
+#ifndef __ANDROID__
 	boxes.clear();
 	masks.clear();
 	classIds.clear();
@@ -177,6 +183,10 @@ FrameworkReturnCode SolARYOLACTSegmentationOpencv::segment(const SRef<SolAR::dat
 	}
 	LOG_DEBUG("Number of output detections: {}", boxes.size());
 	return FrameworkReturnCode::_SUCCESS;
+#else
+    LOG_ERROR ("SolARYOLACTSegemntationOpencv is not avialble for Android");
+    return FrameworkReturnCode::_ERROR_;
+#endif
 }
 
 }
