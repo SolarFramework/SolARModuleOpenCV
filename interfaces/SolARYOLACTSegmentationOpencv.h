@@ -30,7 +30,7 @@ namespace OPENCV {
 
 /**
  * @class SolARYOLACTSegmentationOpencv
- * @brief <B>Perform 2D instance segmentation based on the YOLACT network.</B>
+ * @brief <B>Perform 2D instance segmentation based on the YOLACT network (Not available for Android!).</B>
  * <TT>UUID: b6288dde-4e58-4ead-8e41-f2ce98f43626</TT>
  *
  * @SolARComponentPropertiesBegin

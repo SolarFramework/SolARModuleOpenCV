@@ -30,7 +30,7 @@ namespace OPENCV {
 
 /**
  * @class SolARFCNSegmentationOpencv
- * @brief <B>Perform 2D semantic segmentation based on the FCN network.</B>
+ * @brief <B>Perform 2D semantic segmentation based on the FCN network (Not available for Android!).</B>
  * <TT>UUID: 77a8b776-6b0c-4bc0-b0a8-437a796b8e29</TT>
  *
  * @SolARComponentPropertiesBegin

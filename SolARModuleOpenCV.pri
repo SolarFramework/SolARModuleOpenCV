@@ -63,9 +63,7 @@ HEADERS += $$PWD/interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     $$PWD/interfaces/SolARUnprojectPlanarPointsOpencv.h \
     $$PWD/interfaces/SolARSVDTriangulationOpencv.h \
     $$PWD/interfaces/SolARVideoAsCameraOpencv.h \
-    $$PWD/interfaces/SolARYOLACTSegmentationOpencv.h \
     $$PWD/interfaces/SolARMaskOverlayOpencv.h \
-    $$PWD/interfaces/SolARFCNSegmentationOpencv.h \
     $$PWD/interfaces/features2d_akaze2.hpp \
     $$PWD/src/AKAZE2/AKAZEConfig.h \
     $$PWD/src/AKAZE2/AKAZEFeatures.h \
@@ -142,10 +140,18 @@ SOURCES +=  $$PWD/src/AKAZE2/akaze.cpp \
     $$PWD/src/SolARUndistortPointsOpencv.cpp \
     $$PWD/src/SolARUnprojectplanarPointsOpencv.cpp \
     $$PWD/src/SolARVideoAsCameraOpencv.cpp \
+    $$PWD/src/SolARMaskOverlayOpencv.cpp
+
+!android {
+
+HEADERS += \
+    $$PWD/interfaces/SolARYOLACTSegmentationOpencv.h \
+    $$PWD/interfaces/SolARFCNSegmentationOpencv.h
+
+SOURCES += \
     $$PWD/src/SolARYOLACTSegmentationOpencv.cpp \
-    $$PWD/src/SolARMaskOverlayOpencv.cpp \
     $$PWD/src/SolARFCNSegmentationOpencv.cpp
 
-
+}
 
 
