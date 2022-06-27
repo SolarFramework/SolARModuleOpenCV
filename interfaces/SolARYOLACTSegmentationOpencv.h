@@ -21,8 +21,10 @@
 #include "SolAROpencvAPI.h"
 #include "api/segm/IInstanceSegmentation.h"
 #include <opencv2/opencv.hpp>
+#ifndef __ANDROID__
 #include <opencv2/dnn.hpp>
 #include <opencv2/dnn/shape_utils.hpp>
+#endif
 
 namespace SolAR {
 namespace MODULES {
@@ -30,7 +32,7 @@ namespace OPENCV {
 
 /**
  * @class SolARYOLACTSegmentationOpencv
- * @brief <B>Perform 2D instance segmentation based on the YOLACT network.</B>
+ * @brief <B>Perform 2D instance segmentation based on the YOLACT network (Not available for Android!).</B>
  * <TT>UUID: b6288dde-4e58-4ead-8e41-f2ce98f43626</TT>
  *
  * @SolARComponentPropertiesBegin
@@ -78,7 +80,9 @@ private:
     float			m_maskThresh = 0.f;
     std::string		m_modelFile = "";
     std::string		m_modelConfig = "";
-	cv::dnn::Net	m_net;
+#ifndef __ANDROID__
+    cv::dnn::Net	m_net;
+#endif
 	float			m_scale;	
 	cv::Scalar		m_mean;
 	cv::Size		m_inputSize;

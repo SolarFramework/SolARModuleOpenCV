@@ -44,6 +44,7 @@ SolARFCNSegmentationOpencv::~SolARFCNSegmentationOpencv()
 
 xpcf::XPCFErrorCode SolARFCNSegmentationOpencv::onConfigured()
 {
+#ifndef __ANDROID__
     LOG_DEBUG(" SolARFCNSegmentationOpencv onConfigured");
 	// read and initialize network
 	m_net = cv::dnn::readNet(m_modelFile, m_modelConfig);
@@ -62,11 +63,16 @@ xpcf::XPCFErrorCode SolARFCNSegmentationOpencv::onConfigured()
 	m_inputSize = cv::Size(500, 500);	
 	m_outputLayerNames = { "output" };
 	return xpcf::XPCFErrorCode::_SUCCESS;
+#else
+    LOG_ERROR ("SolARYOLACTSegemntationOpencv is not avialble for Android");
+    return xpcf::XPCFErrorCode::_FAIL;
+#endif
 }
 
 FrameworkReturnCode SolARFCNSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image,
                                                         SRef<SolAR::datastructure::Image> &mask)
 {
+#ifndef __ANDROID__
 	/// convert to opencv image
 	cv::Mat imageCV;
 	SolAROpenCVHelper::mapToOpenCV(image, imageCV);
@@ -108,6 +114,10 @@ FrameworkReturnCode SolARFCNSegmentationOpencv::segment(const SRef<SolAR::datast
 	cv::resize(maxClass, maskCV, imageCV.size(), 0.0, 0.0, cv::INTER_NEAREST);
 	SolAROpenCVHelper::convertToSolar(maskCV, mask);
 	return FrameworkReturnCode::_SUCCESS;
+#else
+    LOG_ERROR ("SolARYOLACTSegemntationOpencv is not avialble for Android");
+    return FrameworkReturnCode::_ERROR_;
+#endif
 }
 
 }

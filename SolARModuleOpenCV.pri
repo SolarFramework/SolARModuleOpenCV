@@ -19,6 +19,7 @@ HEADERS += $$PWD/interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     $$PWD/interfaces/SolARDescriptorsExtractorSIFTOpencv.h \
     $$PWD/interfaces/SolARDescriptorsExtractorFromImageOpencv.h \
     $$PWD/interfaces/SolARDeviceDataLoader.h \
+    $$PWD/interfaces/SolARFCNSegmentationOpencv.h \
     $$PWD/interfaces/SolARFiducialMarkerLoaderOpencv.h \
     $$PWD/interfaces/SolARQRCodeLoaderOpencv.h \
     $$PWD/interfaces/SolARQRCodePoseEstimatorOpencv.h \
@@ -43,6 +44,7 @@ HEADERS += $$PWD/interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     $$PWD/interfaces/SolARKeypointDetectorRegionOpencv.h \
     $$PWD/interfaces/SolARMapFusionOpencv.h \
     $$PWD/interfaces/SolARImageMarkerLoaderOpencv.h \
+    $$PWD/interfaces/SolARMaskOverlayOpencv.h \
     $$PWD/interfaces/SolARMatchesOverlayOpencv.h \
     $$PWD/interfaces/SolARModuleOpencv_traits.h \
     $$PWD/interfaces/SolAROpencvAPI.h \
@@ -64,8 +66,6 @@ HEADERS += $$PWD/interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     $$PWD/interfaces/SolARSVDTriangulationOpencv.h \
     $$PWD/interfaces/SolARVideoAsCameraOpencv.h \
     $$PWD/interfaces/SolARYOLACTSegmentationOpencv.h \
-    $$PWD/interfaces/SolARMaskOverlayOpencv.h \
-    $$PWD/interfaces/SolARFCNSegmentationOpencv.h \
     $$PWD/interfaces/features2d_akaze2.hpp \
     $$PWD/src/AKAZE2/AKAZEConfig.h \
     $$PWD/src/AKAZE2/AKAZEFeatures.h \
@@ -100,6 +100,7 @@ SOURCES +=  $$PWD/src/AKAZE2/akaze.cpp \
     $$PWD/src/SolARDescriptorsExtractorSIFTOpencv.cpp \
     $$PWD/src/SolARDescriptorsExtractorFromImageOpencv.cpp \
     $$PWD/src/SolARDeviceDataLoader.cpp \
+    $$PWD/src/SolARFCNSegmentationOpencv.cpp \
     $$PWD/src/SolARFiducialMarkerLoaderOpencv.cpp \
     $$PWD/src/SolARQRCodeLoaderOpencv.cpp \
     $$PWD/src/SolARQRCodePoseEstimatorOpencv.cpp \
@@ -123,6 +124,7 @@ SOURCES +=  $$PWD/src/AKAZE2/akaze.cpp \
     $$PWD/src/SolARKeypointDetectorOpencv.cpp \
     $$PWD/src/SolARKeypointDetectorRegionOpencv.cpp \
     $$PWD/src/SolARMapFusionOpencv.cpp \
+    $$PWD/src/SolARMaskOverlayOpencv.cpp \
     $$PWD/src/SolARMatchesOverlayOpencv.cpp \
     $$PWD/src/SolARModuleOpencv.cpp \
     $$PWD/src/SolAROpenCVHelper.cpp \
@@ -142,10 +144,6 @@ SOURCES +=  $$PWD/src/AKAZE2/akaze.cpp \
     $$PWD/src/SolARUndistortPointsOpencv.cpp \
     $$PWD/src/SolARUnprojectplanarPointsOpencv.cpp \
     $$PWD/src/SolARVideoAsCameraOpencv.cpp \
-    $$PWD/src/SolARYOLACTSegmentationOpencv.cpp \
-    $$PWD/src/SolARMaskOverlayOpencv.cpp \
-    $$PWD/src/SolARFCNSegmentationOpencv.cpp
-
-
+    $$PWD/src/SolARYOLACTSegmentationOpencv.cpp
 
 

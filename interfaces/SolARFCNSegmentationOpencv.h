@@ -21,8 +21,10 @@
 #include "SolAROpencvAPI.h"
 #include "api/segm/ISemanticSegmentation.h"
 #include <opencv2/opencv.hpp>
+#ifndef __ANDROID__
 #include <opencv2/dnn.hpp>
 #include <opencv2/dnn/shape_utils.hpp>
+#endif
 
 namespace SolAR {
 namespace MODULES {
@@ -30,7 +32,7 @@ namespace OPENCV {
 
 /**
  * @class SolARFCNSegmentationOpencv
- * @brief <B>Perform 2D semantic segmentation based on the FCN network.</B>
+ * @brief <B>Perform 2D semantic segmentation based on the FCN network (Not available for Android!).</B>
  * <TT>UUID: 77a8b776-6b0c-4bc0-b0a8-437a796b8e29</TT>
  *
  * @SolARComponentPropertiesBegin
@@ -63,8 +65,10 @@ public:
 private:
     std::string		m_modelFile = "";
     std::string		m_modelConfig = "";
-	cv::dnn::Net	m_net;
-	float			m_scale;	
+#ifndef __ANDROID__
+    cv::dnn::Net	m_net;
+#endif
+    float			m_scale;
 	cv::Scalar		m_mean;
 	cv::Size		m_inputSize;
 	std::vector<std::string> m_outputLayerNames;
