@@ -89,17 +89,20 @@ private:
     /// @brief Number of iterations
     int m_iterationsCount = 1000;
 
-    /// @brief Inlier threshold value used by the RANSAC procedure. The parameter value is the maximum allowed distance between the observed and computed point projections to consider it an inlier.
+    /// @brief Inlier threshold value used by the RANSAC procedure. The parameter value is the maximum allowed distance between the observed and computed point projections to consider it an inlier. If less than 0, no reprojection test is applied.
     float m_reprojError = 4.0;
 
     /// @brief The probability that the algorithm produces a useful result.
-    float m_confidence = 0.99f;
+    float m_confidence = 0.99f; 
 
     /// @brief The minimum of number of inliers to valid a good pose estimation
     int m_NbInliersToValidPose = 10;
 
-    /// @brief The method for solving the PnP problem (ITERATIVE, P3P, AP3P, EPNP, DLS, UPNP, IPPE, IPPE_SQUARE)
+    /// @brief The method for solving the PnP Ransac problem (ITERATIVE, P3P, AP3P, EPNP, DLS, UPNP, IPPE, IPPE SQUARE, USAC, USAC PARALLEL, USAC FM 8PTS, USAC FAST, USAC ACCURATE, USAC PROSAC, USAC MAGSAC)
     std::string m_method = "ITERATIVE";
+
+    /// @brief The method for solving the PnP problem post PNP Ransac on output inliers (NONE, ITERATIVE, P3P, AP3P, EPNP, DLS, UPNP, IPPE, IPPE SQUARE)
+    std::string m_postPNPMethod = "ITERATIVE";
 
     cv::Mat m_camMatrix;
     cv::Mat m_camDistorsion;
