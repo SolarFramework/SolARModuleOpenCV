@@ -320,6 +320,11 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 		// Compute reprojection error
 		const Keypoint& kpUn1 = kpsUn1[goodMatches[i].getIndexInDescriptorA()];
 		const Keypoint& kpUn2 = kpsUn2[goodMatches[i].getIndexInDescriptorB()];
+		
+		// if different semantic id, either segmentation or the matching is bad 
+		if (kpUn1.getClassId() != kpUn2.getClassId())
+			continue;
+
 		float reprj_err = ((kpUn1 - ptsIn1[i]).norm() + (kpUn2 - ptsIn2[i]).norm()) / 2;
 		reproj_error.push_back(reprj_err);
 
@@ -357,6 +362,7 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 		SRef<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>(pts3D[i].getX(), pts3D[i].getY(), pts3D[i].getZ(), 
 			rgbMean[0], rgbMean[1], rgbMean[2], meanCamCenter(0) - pts3D[i].getX(), meanCamCenter(1) - pts3D[i].getY(), meanCamCenter(2) - pts3D[i].getZ(), 
 			reprj_err, visibility, descMean);
+		cp->setSemanticId(kpUn1.getClassId());
 		pcloud.push_back(cp);
 	}
 	cv::Scalar mse = cv::mean(reproj_error);
