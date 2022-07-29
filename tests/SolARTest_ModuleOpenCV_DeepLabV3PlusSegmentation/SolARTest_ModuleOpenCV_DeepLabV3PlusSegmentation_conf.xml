@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xpcf-registry autoAlias="true">
+	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV module" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/1.0.0/lib/x86_64/shared">
+		<component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" name="SolARCameraOpencv" description="SolARCameraOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+		</component>
+		<component uuid="b8a8b963-ba55-4ea4-b045-d9e7e8f6db02" name="SolARImagesAsCameraOpencv" description="SolARImagesAsCameraOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+		</component>
+		<component uuid="fa4a780a-9720-11e8-9eb6-529269fb1459" name="SolARVideoAsCameraOpencv" description="SolARVideoAsCameraOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+		</component>
+		<component uuid="ed445504-daba-4855-af88-052d4e3e5b7a" name="SolARMaskOverlayOpencv" description="SolARMaskOverlayOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="35a2454a-cb09-44ac-b2ce-0b0732175f94" name="IMaskOverlay" description="IMaskOverlay"/>
+		</component>
+		<component uuid="063d3086-6c87-49ff-87db-9a4ff224b5c8" name="SolARDeepLabV3PlusSegmentationOpencv" description="SolARDeepLabV3PlusSegmentationOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="2fd30b7c-c6e4-4af7-a711-0b69964e68c2" name="ISemanticSegmentation" description="ISemanticSegmentation"/>
+		</component>
+		<component uuid="19ea4e13-7085-4e3f-92ca-93f200ffb01b" name="SolARImageViewerOpencv" description="SolARImageViewerOpencv">
+			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+			<interface uuid="b05f3dbb-f93d-465c-aee1-fb58e1480c42" name="IImageViewer" description="IImageViewer"/>
+		</component>
+    </module>
+	
+	<factory>
+		<bindings>
+			<bind interface="ICamera" to="SolARCameraOpencv"/>
+			<!--bind interface="ICamera" to="SolARImagesAsCameraOpencv"/-->
+			<!--bind interface="ICamera" to="SolARVideoAsCameraOpencv"/-->			
+		</bindings>		
+	</factory>
+	
+    <properties>
+		<configure component="SolARCameraOpencv">
+			<property name="calibrationFile" type="string" value="D:/SolAR/Data/camera_calibration_rs_D435i_color.json"/>
+			<property name="deviceID" type="uint" value="0"/>
+		</configure>
+        <configure component="SolARDeepLabV3PlusSegmentationOpencv">
+            <property name="modelFile" type="string" value="D:/SolAR/Data/onnx_model_solar/deeplabv3plus_r50_d8_ade20k.onnx"/>
+			<property name="mean" type="float" description="normalize input RGB image by subtracting mean">
+				<value>123.675</value>
+				<value>116.28</value>
+				<value>103.53</value>
+			</property>
+			<property name="std" type="float" description="normalize input RGB image by dividing std">
+				<value>58.395</value>
+				<value>57.12</value>
+				<value>57.375</value>
+			</property>
+        </configure>
+		<configure component="SolARMaskOverlayOpencv">
+			<property name="classFile" type="string" value="D:/SolAR/Data/ade20k-classes.txt"/>
+			<property name="colorFile" type="string" value="D:/SolAR/Data/ade20k-colors.txt"/>
+		</configure>		
+		<configure component="SolARImageViewerOpencv">
+			<property name="title" type="string" value="DeepLabV3+ semantic segmentation (press esc to exit)"/>
+			<property name="exitKey" type="int" value="27"/>
+			<property name="width" type="int" value="-1"/>
+			<property name="height" type="int" value="-1"/>
+		</configure>
+    </properties>
+</xpcf-registry>

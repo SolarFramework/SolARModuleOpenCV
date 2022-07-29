@@ -7,6 +7,7 @@ HEADERS += $$PWD/interfaces/SolAR2D3DcorrespondencesFinderOpencv.h \
     $$PWD/interfaces/SolARContoursExtractorOpencv.h \
     $$PWD/interfaces/SolARContoursFilterBinaryMarkerOpencv.h \
     $$PWD/interfaces/SolARCornerRefinementOpencv.h \
+	$$PWD/interfaces/SolARDeepLabV3PlusSegmentationOpencv.h \
     $$PWD/interfaces/SolARDescriptorMatcherHammingBruteForceOpencv.h \
     $$PWD/interfaces/SolARDescriptorMatcherKNNOpencv.h \
     $$PWD/interfaces/SolARDescriptorMatcherRadiusOpencv.h \
@@ -88,6 +89,7 @@ SOURCES +=  $$PWD/src/AKAZE2/akaze.cpp \
     $$PWD/src/SolARContoursExtractorOpencv.cpp \
     $$PWD/src/SolARContoursFilterBinaryMarkerOpencv.cpp \
     $$PWD/src/SolARCornerRefinementOpencv.cpp \
+	$$PWD/src/SolARDeepLabV3PlusSegmentationOpencv.cpp \
     $$PWD/src/SolARDescriptorMatcherHammingBruteForceOpencv.cpp \
     $$PWD/src/SolARDescriptorMatcherKNNOpencv.cpp \
     $$PWD/src/SolARDescriptorMatcherRadiusOpencv.cpp \

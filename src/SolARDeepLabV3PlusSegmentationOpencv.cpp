@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "SolARFCNSegmentationOpencv.h"
+#include "SolARDeepLabV3PlusSegmentationOpencv.h"
 #include "core/Log.h"
 #include "SolAROpenCVHelper.h"
 #include <numeric>
@@ -22,32 +22,38 @@
 
 namespace xpcf  = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARFCNSegmentationOpencv)
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDeepLabV3PlusSegmentationOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARFCNSegmentationOpencv::SolARFCNSegmentationOpencv():ConfigurableBase(xpcf::toUUID<SolARFCNSegmentationOpencv>())
+SolARDeepLabV3PlusSegmentationOpencv::SolARDeepLabV3PlusSegmentationOpencv():ConfigurableBase(xpcf::toUUID<SolARDeepLabV3PlusSegmentationOpencv>())
 {
-    LOG_DEBUG("SolARFCNSegmentationOpencv constructor")
+    LOG_DEBUG("SolARDeepLabV3PlusSegmentationOpencv constructor")
     declareInterface<api::segm::ISemanticSegmentation>(this);
     declareProperty("modelFile", m_modelFile);
     declareProperty("modelConfig", m_modelConfig);
+	declarePropertySequence("mean", m_mean);
+	declarePropertySequence("std", m_std);
 }
 
-SolARFCNSegmentationOpencv::~SolARFCNSegmentationOpencv()
+SolARDeepLabV3PlusSegmentationOpencv::~SolARDeepLabV3PlusSegmentationOpencv()
 {
-    LOG_DEBUG(" SolARFCNSegmentationOpencv destructor")
+    LOG_DEBUG(" SolARDeepLabV3PlusSegmentationOpencv destructor")
 }
 
-xpcf::XPCFErrorCode SolARFCNSegmentationOpencv::onConfigured()
+xpcf::XPCFErrorCode SolARDeepLabV3PlusSegmentationOpencv::onConfigured()
 {
 #ifndef __ANDROID__
-    LOG_DEBUG(" SolARFCNSegmentationOpencv onConfigured");
+    LOG_DEBUG(" SolARDeepLabV3PlusSegmentationOpencv onConfigured");
 	// read and initialize network
 	m_net = cv::dnn::readNet(m_modelFile, m_modelConfig);
+	if (std::any_of(m_std.begin(), m_std.end(), [](const auto& v) {return v < 1e-5;})) {
+		LOG_ERROR("SolARDeepLabV3PlusSegmentationOpencv normalization std values too small");
+		return xpcf::XPCFErrorCode::_FAIL;
+	}
 #ifdef WITHCUDA
 	LOG_INFO("Using GPU device");
 	m_net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
@@ -58,18 +64,15 @@ xpcf::XPCFErrorCode SolARFCNSegmentationOpencv::onConfigured()
 	m_net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 #endif // WITHCUDA
 	// set network parameters
-	m_scale = 0.017391f;
-	m_mean = cv::Scalar(0.485, 0.456, 0.406) * 255;
-	m_inputSize = cv::Size(500, 500);	
 	m_outputLayerNames = { "output" };
 	return xpcf::XPCFErrorCode::_SUCCESS;
 #else
-    LOG_ERROR ("SolARYOLACTSegemntationOpencv is not avialble for Android");
+    LOG_ERROR ("SolARDeepLabV3PlusSegmentationOpencv is not avialble for Android");
     return xpcf::XPCFErrorCode::_FAIL;
 #endif
 }
 
-FrameworkReturnCode SolARFCNSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image,
+FrameworkReturnCode SolARDeepLabV3PlusSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image,
                                                         SRef<SolAR::datastructure::Image> &mask)
 {
 #ifndef __ANDROID__
@@ -82,40 +85,17 @@ FrameworkReturnCode SolARFCNSegmentationOpencv::segment(const SRef<SolAR::datast
 	}
 	/// fcn prediction
 	// input preparation
-	cv::Mat blobInput = cv::dnn::blobFromImage(imageCV, m_scale, m_inputSize, m_mean, true);
+	cv::Mat blobInput = cv::dnn::blobFromImage(imageCV, 1., cv::Size(imageCV.cols, imageCV.rows), cv::Scalar(m_mean[0], m_mean[1], m_mean[2]), true);
+	cv::multiply(blobInput, cv::Scalar(1.f / m_std[0], 1.f / m_std[1], 1.f / m_std[2]), blobInput);
 	m_net.setInput(blobInput);	
 	std::vector<cv::Mat> outs;
-	m_net.forward(outs, m_outputLayerNames);
-	cv::Mat score = outs[0];	
-	/// post-processing
-	const int rows = score.size[2];
-	const int cols = score.size[3];
-	const int chns = score.size[1];
-	cv::Mat maxClass = cv::Mat::zeros(rows, cols, CV_8UC1);
-	cv::Mat maxVal(rows, cols, CV_32FC1, score.data);
-	for (int ch = 1; ch < chns; ch++)
-	{
-		for (int row = 0; row < rows; row++)
-		{
-			const float *ptrScore = score.ptr<float>(0, ch, row);
-			uint8_t *ptrMaxClass = maxClass.ptr<uint8_t>(row);
-			float *ptrMaxVal = maxVal.ptr<float>(row);
-			for (int col = 0; col < cols; col++)
-			{
-				if (ptrScore[col] > ptrMaxVal[col])
-				{
-					ptrMaxVal[col] = ptrScore[col];
-					ptrMaxClass[col] = (uchar)ch;
-				}
-			}
-		}
-	}
+	m_net.forward(outs, m_outputLayerNames);	
 	cv::Mat maskCV;
-	cv::resize(maxClass, maskCV, imageCV.size(), 0.0, 0.0, cv::INTER_NEAREST);
+	outs[0].convertTo(maskCV, CV_8UC1);
 	SolAROpenCVHelper::convertToSolar(maskCV, mask);
 	return FrameworkReturnCode::_SUCCESS;
 #else
-    LOG_ERROR ("SolARFCNSegemntationOpencv is not avialble for Android");
+    LOG_ERROR ("SolARDeepLabV3PlusSegmentationOpencv is not avialble for Android");
     return FrameworkReturnCode::_ERROR_;
 #endif
 }

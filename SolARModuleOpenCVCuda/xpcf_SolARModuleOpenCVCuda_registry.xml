@@ -169,5 +169,9 @@
 		<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 		<interface uuid="2fd30b7c-c6e4-4af7-a711-0b69964e68c2" name="ISemanticSegmentation" description="ISemanticSegmentation"/>
 	</component>
+	<component uuid="063d3086-6c87-49ff-87db-9a4ff224b5c8" name="SolARDeepLabV3PlusSegmentationOpencv" description="SolARDeepLabV3PlusSegmentationOpencv">
+		<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+		<interface uuid="2fd30b7c-c6e4-4af7-a711-0b69964e68c2" name="ISemanticSegmentation" description="ISemanticSegmentation"/>
+	</component>
   </module>    
 </xpcf-registry>
