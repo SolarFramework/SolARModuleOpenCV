@@ -64,6 +64,7 @@ xpcf::XPCFErrorCode SolARDeepLabV3PlusSegmentationOpencv::onConfigured()
 	m_net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 #endif // WITHCUDA
 	// set network parameters
+	m_inputSize = cv::Size(512, 512);	
 	m_outputLayerNames = { "output" };
 	return xpcf::XPCFErrorCode::_SUCCESS;
 #else
@@ -83,15 +84,17 @@ FrameworkReturnCode SolARDeepLabV3PlusSegmentationOpencv::segment(const SRef<Sol
 		LOG_ERROR("Input image must be RGB image");
 		return FrameworkReturnCode::_ERROR_;
 	}
-	/// fcn prediction
+	/// deeplabv3 prediction
 	// input preparation
-	cv::Mat blobInput = cv::dnn::blobFromImage(imageCV, 1., cv::Size(imageCV.cols, imageCV.rows), cv::Scalar(m_mean[0], m_mean[1], m_mean[2]), true);
+	cv::Mat blobInput = cv::dnn::blobFromImage(imageCV, 1., m_inputSize, cv::Scalar(m_mean[0], m_mean[1], m_mean[2]), true);
 	cv::multiply(blobInput, cv::Scalar(1.f / m_std[0], 1.f / m_std[1], 1.f / m_std[2]), blobInput);
-	m_net.setInput(blobInput);	
+	m_net.setInput(blobInput);
 	std::vector<cv::Mat> outs;
-	m_net.forward(outs, m_outputLayerNames);	
-	cv::Mat maskCV;
-	outs[0].convertTo(maskCV, CV_8UC1);
+	m_net.forward(outs, m_outputLayerNames);
+	cv::Mat bufferUchar;
+	outs[0].convertTo(bufferUchar, CV_8UC1);
+	cv::Mat maskCV(m_inputSize, CV_8UC1, bufferUchar.data);
+	cv::resize(maskCV, maskCV, cv::Size(imageCV.cols, imageCV.rows), cv::INTER_NEAREST);
 	SolAROpenCVHelper::convertToSolar(maskCV, mask);
 	return FrameworkReturnCode::_SUCCESS;
 #else

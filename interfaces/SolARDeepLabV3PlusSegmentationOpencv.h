@@ -70,6 +70,7 @@ private:
 #endif
 	std::vector<float>	m_std = {0.f, 0.f, 0.f};
 	std::vector<float>	m_mean = {0.f, 0.f, 0.f};
+	cv::Size		m_inputSize;
 	std::vector<std::string> m_outputLayerNames;
 };
 
