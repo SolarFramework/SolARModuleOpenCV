@@ -322,8 +322,9 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 		const Keypoint& kpUn2 = kpsUn2[goodMatches[i].getIndexInDescriptorB()];
 		
 		// if different semantic id, either segmentation or the matching is bad 
-		if (kpUn1.getClassId() != kpUn2.getClassId())
-			continue;
+		if (kpUn1.getClassId() >= 0 && kpUn2.getClassId() >= 0) 
+			if (kpUn1.getClassId() != kpUn2.getClassId())
+				continue;
 
 		float reprj_err = ((kpUn1 - ptsIn1[i]).norm() + (kpUn2 - ptsIn2[i]).norm()) / 2;
 		reproj_error.push_back(reprj_err);

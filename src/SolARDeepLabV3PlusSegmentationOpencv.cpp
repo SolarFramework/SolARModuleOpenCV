@@ -90,11 +90,12 @@ FrameworkReturnCode SolARDeepLabV3PlusSegmentationOpencv::segment(const SRef<Sol
 	cv::multiply(blobInput, cv::Scalar(1.f / m_std[0], 1.f / m_std[1], 1.f / m_std[2]), blobInput);
 	m_net.setInput(blobInput);
 	std::vector<cv::Mat> outs;
+	// Todo: fix DNN_BACKEND_CUDA issues, currently deeplabv3 onnx model works on cpu but not on gpu due to unsupported layer/funcs (ArgMax)
 	m_net.forward(outs, m_outputLayerNames);
 	cv::Mat bufferUchar;
 	outs[0].convertTo(bufferUchar, CV_8UC1);
 	cv::Mat maskCV(m_inputSize, CV_8UC1, bufferUchar.data);
-	cv::resize(maskCV, maskCV, cv::Size(imageCV.cols, imageCV.rows), cv::INTER_NEAREST);
+	cv::resize(maskCV, maskCV, cv::Size(imageCV.cols, imageCV.rows),0., 0., cv::INTER_NEAREST);
 	SolAROpenCVHelper::convertToSolar(maskCV, mask);
 	return FrameworkReturnCode::_SUCCESS;
 #else
