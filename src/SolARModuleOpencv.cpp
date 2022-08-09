@@ -80,7 +80,7 @@
 #include "SolARYOLACTSegmentationOpencv.h"
 #include "SolARMaskOverlayOpencv.h"
 #include "SolARFCNSegmentationOpencv.h"
-#include "SolARDeepLabV3PlusSegmentationOpencv.h"
+#include "SolARGenericSemanticSegmentationOpencv.h"
 
 namespace xpcf=org::bcom::xpcf;
 
@@ -348,7 +348,7 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     }
 	if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
-        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARDeepLabV3PlusSegmentationOpencv>(componentUUID, interfaceRef);
+        errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARGenericSemanticSegmentationOpencv>(componentUUID, interfaceRef);
     }
     return errCode;
 }
@@ -418,5 +418,5 @@ XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARStereoImageRectificationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARYOLACTSegmentationOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARMaskOverlayOpencv)
 XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARFCNSegmentationOpencv)
-XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARDeepLabV3PlusSegmentationOpencv)
+XPCF_ADD_COMPONENT(SolAR::MODULES::OPENCV::SolARGenericSemanticSegmentationOpencv)
 XPCF_END_COMPONENTS_DECLARATION

@@ -60,7 +60,7 @@ xpcf::XPCFErrorCode SolARFCNSegmentationOpencv::onConfigured()
 	// set network parameters
 	m_scale = 0.017391f;
 	m_mean = cv::Scalar(0.485, 0.456, 0.406) * 255;
-	m_inputSize = cv::Size(500, 500);	
+	m_inputSize = cv::Size(500, 500);		
 	m_outputLayerNames = { "output" };
 	return xpcf::XPCFErrorCode::_SUCCESS;
 #else

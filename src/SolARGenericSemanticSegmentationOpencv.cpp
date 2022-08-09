@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "SolARDeepLabV3PlusSegmentationOpencv.h"
+#include "SolARGenericSemanticSegmentationOpencv.h"
 #include "core/Log.h"
 #include "SolAROpenCVHelper.h"
 #include <numeric>
@@ -22,36 +22,37 @@
 
 namespace xpcf  = org::bcom::xpcf;
 
-XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDeepLabV3PlusSegmentationOpencv)
+XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARGenericSemanticSegmentationOpencv)
 
 namespace SolAR {
 using namespace datastructure;
 namespace MODULES {
 namespace OPENCV {
 
-SolARDeepLabV3PlusSegmentationOpencv::SolARDeepLabV3PlusSegmentationOpencv():ConfigurableBase(xpcf::toUUID<SolARDeepLabV3PlusSegmentationOpencv>())
+SolARGenericSemanticSegmentationOpencv::SolARGenericSemanticSegmentationOpencv():ConfigurableBase(xpcf::toUUID<SolARGenericSemanticSegmentationOpencv>())
 {
-    LOG_DEBUG("SolARDeepLabV3PlusSegmentationOpencv constructor")
+    LOG_DEBUG("SolARGenericSemanticSegmentationOpencv constructor")
     declareInterface<api::segm::ISemanticSegmentation>(this);
     declareProperty("modelFile", m_modelFile);
     declareProperty("modelConfig", m_modelConfig);
 	declarePropertySequence("mean", m_mean);
 	declarePropertySequence("std", m_std);
+	declarePropertySequence("inputSize", m_inputSize);
 }
 
-SolARDeepLabV3PlusSegmentationOpencv::~SolARDeepLabV3PlusSegmentationOpencv()
+SolARGenericSemanticSegmentationOpencv::~SolARGenericSemanticSegmentationOpencv()
 {
-    LOG_DEBUG(" SolARDeepLabV3PlusSegmentationOpencv destructor")
+    LOG_DEBUG(" SolARGenericSemanticSegmentationOpencv destructor")
 }
 
-xpcf::XPCFErrorCode SolARDeepLabV3PlusSegmentationOpencv::onConfigured()
+xpcf::XPCFErrorCode SolARGenericSemanticSegmentationOpencv::onConfigured()
 {
 #ifndef __ANDROID__
-    LOG_DEBUG(" SolARDeepLabV3PlusSegmentationOpencv onConfigured");
+    LOG_DEBUG(" SolARGenericSemanticSegmentationOpencv onConfigured");
 	// read and initialize network
 	m_net = cv::dnn::readNet(m_modelFile, m_modelConfig);
 	if (std::any_of(m_std.begin(), m_std.end(), [](const auto& v) {return v < 1e-5;})) {
-		LOG_ERROR("SolARDeepLabV3PlusSegmentationOpencv normalization std values too small");
+		LOG_ERROR("SolARGenericSemanticSegmentationOpencv normalization std values too small");
 		return xpcf::XPCFErrorCode::_FAIL;
 	}
 #ifdef WITHCUDA
@@ -63,17 +64,16 @@ xpcf::XPCFErrorCode SolARDeepLabV3PlusSegmentationOpencv::onConfigured()
 	m_net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
 	m_net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 #endif // WITHCUDA
-	// set network parameters
-	m_inputSize = cv::Size(512, 512);	
+	// set network parameters	
 	m_outputLayerNames = { "output" };
 	return xpcf::XPCFErrorCode::_SUCCESS;
 #else
-    LOG_ERROR ("SolARDeepLabV3PlusSegmentationOpencv is not avialble for Android");
+    LOG_ERROR ("SolARGenericSemanticSegmentationOpencv is not avialble for Android");
     return xpcf::XPCFErrorCode::_FAIL;
 #endif
 }
 
-FrameworkReturnCode SolARDeepLabV3PlusSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image,
+FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image,
                                                         SRef<SolAR::datastructure::Image> &mask)
 {
 #ifndef __ANDROID__
@@ -86,20 +86,21 @@ FrameworkReturnCode SolARDeepLabV3PlusSegmentationOpencv::segment(const SRef<Sol
 	}
 	/// deeplabv3 prediction
 	// input preparation
-	cv::Mat blobInput = cv::dnn::blobFromImage(imageCV, 1., m_inputSize, cv::Scalar(m_mean[0], m_mean[1], m_mean[2]), true);
+	cv::Size inputImageSize(m_inputSize[0], m_inputSize[1]);
+	cv::Mat blobInput = cv::dnn::blobFromImage(imageCV, 1., inputImageSize, cv::Scalar(m_mean[0], m_mean[1], m_mean[2]), true);
 	cv::multiply(blobInput, cv::Scalar(1.f / m_std[0], 1.f / m_std[1], 1.f / m_std[2]), blobInput);
 	m_net.setInput(blobInput);
 	std::vector<cv::Mat> outs;
-	// Todo: fix DNN_BACKEND_CUDA issues, currently deeplabv3 onnx model works on cpu but not on gpu due to unsupported layer/funcs (ArgMax)
+	// Todo: fix DNN_BACKEND_CUDA issues, currently onnx model converted from OpenMM lab pytorch models work on cpu but not on gpu due to unsupported layer/funcs (ArgMax)
 	m_net.forward(outs, m_outputLayerNames);
 	cv::Mat bufferUchar;
 	outs[0].convertTo(bufferUchar, CV_8UC1);
-	cv::Mat maskCV(m_inputSize, CV_8UC1, bufferUchar.data);
+	cv::Mat maskCV(inputImageSize, CV_8UC1, bufferUchar.data);
 	cv::resize(maskCV, maskCV, cv::Size(imageCV.cols, imageCV.rows),0., 0., cv::INTER_NEAREST);
 	SolAROpenCVHelper::convertToSolar(maskCV, mask);
 	return FrameworkReturnCode::_SUCCESS;
 #else
-    LOG_ERROR ("SolARDeepLabV3PlusSegmentationOpencv is not avialble for Android");
+    LOG_ERROR ("SolARGenericSemanticSegmentationOpencv is not avialble for Android");
     return FrameworkReturnCode::_ERROR_;
 #endif
 }

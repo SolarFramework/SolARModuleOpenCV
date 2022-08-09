@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SOLARDEEPLABV3PLUSSEGMENTATIONOPENCV_H
-#define SOLARDEEPLABV3PLUSSEGMENTATIONOPENCV_H
+#ifndef SOLARGENERICSEMANTICSEGMENTATIONOPENCV_H
+#define SOLARGENERICSEMANTICSEGMENTATIONOPENCV_H
 
 #include "xpcf/component/ConfigurableBase.h"
 #include "SolAROpencvAPI.h"
@@ -31,8 +31,8 @@ namespace MODULES {
 namespace OPENCV {
 
 /**
- * @class SolARDeepLabV3PlusSegmentationOpencv
- * @brief <B>Perform 2D semantic segmentation based on the DeepLabV3+ network.</B>
+ * @class SolARGenericSemanticSegmentationOpencv
+ * @brief <B>Perform 2D generic semantic segmentation based on neural network.</B>
  * <TT>UUID: 063d3086-6c87-49ff-87db-9a4ff224b5c8</TT>
  *
  * @SolARComponentPropertiesBegin
@@ -45,12 +45,12 @@ namespace OPENCV {
  * 
  */
 
-class SOLAROPENCV_EXPORT_API SolARDeepLabV3PlusSegmentationOpencv : public org::bcom::xpcf::ConfigurableBase,
+class SOLAROPENCV_EXPORT_API SolARGenericSemanticSegmentationOpencv : public org::bcom::xpcf::ConfigurableBase,
         public api::segm::ISemanticSegmentation
 {
 public:
-    SolARDeepLabV3PlusSegmentationOpencv();
-    ~SolARDeepLabV3PlusSegmentationOpencv() override;
+    SolARGenericSemanticSegmentationOpencv();
+    ~SolARGenericSemanticSegmentationOpencv() override;
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
     void unloadComponent () override;
@@ -70,7 +70,7 @@ private:
 #endif
 	std::vector<float>	m_std = {0.f, 0.f, 0.f};
 	std::vector<float>	m_mean = {0.f, 0.f, 0.f};
-	cv::Size		m_inputSize;
+	std::vector<int>	m_inputSize = {0, 0};
 	std::vector<std::string> m_outputLayerNames;
 };
 
@@ -78,4 +78,4 @@ private:
 }
 }  // end of namespace Solar
 
-#endif // SOLARDEEPLABV3PLUSSEGMENTATIONOPENCV_H
+#endif // SOLARGENERICSEMANTICSEGMENTATIONOPENCV_H
