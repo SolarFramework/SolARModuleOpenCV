@@ -40,30 +40,39 @@ class SOLAROPENCV_EXPORT_API SolARUnprojectPlanarPointsOpencv : public org::bcom
 public:
     ///@brief SolARUnprojectPlanarPointsOpencv constructor;
     SolARUnprojectPlanarPointsOpencv();
+
     ///@brief SolARUnprojectPlanarPointsOpencv destructor;
     ~SolARUnprojectPlanarPointsOpencv() override;
-
-    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
-    /// @param[in] Camera calibration matrix parameters.
-    /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const datastructure::CamCalibration & intrinsicParams, const datastructure::CamDistortion & distorsionParams) override;
 
     /// @brief This method unproject a set of 2D image points in the 3D world coordinate system
     /// @param[in] imagePoints the set of 2D points to unproject
     /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
+    /// @param[in] camParams the camera parameters
     /// @param[out] worldPoints a set of world 3D points resulting from the unprojection of the 2D image points
     /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
-    FrameworkReturnCode unproject(const std::vector<datastructure::Point2Df> & imagePoints, std::vector<datastructure::Point3Df> & worldPoints, const datastructure::Transform3Df & pose = datastructure::Transform3Df::Identity()) override;
+    FrameworkReturnCode unproject(const std::vector<SolAR::datastructure::Point2Df> & imagePoints,
+                                  const SolAR::datastructure::Transform3Df & pose,
+                                  const SolAR::datastructure::CameraParameters & camParams,
+                                  std::vector<SolAR::datastructure::Point3Df> & worldPoints) override;
 
     /// @brief This method unproject a set of 2D image points in the 3D world coordinate system
     /// @param[in] imageKeypoints the set of 2D keypoints to unproject
     /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
+    /// @param[in] camParams the camera parameters
     /// @param[out] worldPoints a set of world 3D points resulting from the unprojection of the 2D image points
     /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
-    FrameworkReturnCode unproject(const std::vector<datastructure::Keypoint> & imageKeypoints, std::vector<datastructure::Point3Df> & worldPoints, const datastructure::Transform3Df & pose = datastructure::Transform3Df::Identity()) override;
+    FrameworkReturnCode unproject(const std::vector<SolAR::datastructure::Keypoint> & imageKeypoints,
+                                  const SolAR::datastructure::Transform3Df & pose,
+                                  const SolAR::datastructure::CameraParameters & camParams,
+                                  std::vector<SolAR::datastructure::Point3Df> & worldPoints) override;
 
     void unloadComponent () override final;
+private:
+    void setCameraParameters(const SolAR::datastructure::CameraParameters & camParams);
 
+    FrameworkReturnCode unprojectOCV(const std::vector<cv::Point2f>& imagePoints,
+                                     std::vector<SolAR::datastructure::Point3Df>& worldPoints,
+                                     const SolAR::datastructure::Transform3Df& pose);
 
 private:
     cv::Mat m_camMatrix;

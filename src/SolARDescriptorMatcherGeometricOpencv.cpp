@@ -40,15 +40,16 @@ SolARDescriptorMatcherGeometricOpencv::~SolARDescriptorMatcherGeometricOpencv()
     LOG_DEBUG(" SolARDescriptorMatcherGeometricOpencv destructor")
 }
 
-FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1, 
-	const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2, 
-	const std::vector<SolAR::datastructure::Keypoint>& undistortedKeypoints1, 
-	const std::vector<SolAR::datastructure::Keypoint>& undistortedKeypoints2, 
-	const SolAR::datastructure::Transform3Df & pose1, 
-	const SolAR::datastructure::Transform3Df & pose2, 
-	const SolAR::datastructure::CameraParameters& camParams,
-	std::vector<SolAR::datastructure::DescriptorMatch>& matches, 
-	const std::vector<uint32_t>& mask)
+FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1,
+                                                                 const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
+                                                                 const std::vector<SolAR::datastructure::Keypoint> &undistortedKeypoints1,
+                                                                 const std::vector<SolAR::datastructure::Keypoint> &undistortedKeypoints2,
+                                                                 const SolAR::datastructure::Transform3Df& pose1,
+                                                                 const SolAR::datastructure::Transform3Df& pose2,
+                                                                 const SolAR::datastructure::CameraParameters & camParams1,
+                                                                 const SolAR::datastructure::CameraParameters & camParams2,
+                                                                 std::vector<SolAR::datastructure::DescriptorMatch> & matches,
+                                                                 const std::vector<uint32_t>& mask)
 {
 	matches.clear();
 	// check conditions
@@ -65,8 +66,9 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 	cv::Mat T12x = (cv::Mat_<float>(3, 3) << 0, -T12.at<float>(2), T12.at<float>(1),
 		T12.at<float>(2), 0, -T12.at<float>(0),
 		-T12.at<float>(1), T12.at<float>(0), 0);
-	cv::Mat K(3, 3, CV_32FC1, (void *)camParams.intrinsic.data());
-	cv::Mat F = K.t().inv() * T12x * R12 * K.inv();
+	cv::Mat K1(3, 3, CV_32FC1, (void *)camParams1.intrinsic.data());
+	cv::Mat K2(3, 3, CV_32FC1, (void *)camParams2.intrinsic.data());
+	cv::Mat F = K1.t().inv() * T12x * R12 * K2.inv();
 
 	// get input points in the first frame
 	std::vector<cv::Point2f> pts1;
@@ -96,7 +98,7 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 
 	// match
 	std::vector<bool> checkMatches(undistortedKeypoints2.size(), true);
-	float acceptedDist = m_paddingRatio * camParams.resolution.width;
+	float acceptedDist = m_paddingRatio * camParams2.resolution.width;
 	for (int i = 0; i < indices1.size(); i++) {
 		const cv::Mat cvDes1 = cvDescriptor1.row(indices1[i]);
 		float bestDist = std::numeric_limits<float>::max();

@@ -57,11 +57,12 @@ SolARPoseEstimationPnpOpencv::~SolARPoseEstimationPnpOpencv(){
 
 }
 
-FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Point2Df> & imagePoints,
-                                                            const std::vector<Point3Df> & worldPoints,
-                                                            Transform3Df & pose,
-                                                            const Transform3Df initialPose) {
-
+FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate(const std::vector<SolAR::datastructure::Point2Df> & imagePoints,
+                                                           const std::vector<SolAR::datastructure::Point3Df> & worldPoints,
+                                                           const SolAR::datastructure::CameraParameters & camParams,
+                                                           SolAR::datastructure::Transform3Df & pose,
+                                                           const Transform3Df initialPose)
+{
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
 
@@ -88,10 +89,12 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
         worldCVPoints.push_back(cv::Point3f(point3D.getX(), point3D.getY(),point3D.getZ()));
     }
 
+    // set camera parameters
+    setCameraParameters(camParams);
+
     cv::Mat Rvec;
     cv::Mat_<float> Tvec;
     cv::Mat raux, taux, r33;
-
     
     // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
     if (!initialPoseInverse.isApprox(Transform3Df::Identity())){
@@ -130,23 +133,23 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate( const std::vector<Po
 
 }
 
-void SolARPoseEstimationPnpOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
-    //TODO.. check to inverse
-    this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
-    this->m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
-    this->m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
-    this->m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
-    this->m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
+void SolARPoseEstimationPnpOpencv::setCameraParameters(const SolAR::datastructure::CameraParameters & camParams)
+{
+    this->m_camDistorsion.at<float>(0, 0) = camParams.distortion(0);
+    this->m_camDistorsion.at<float>(1, 0) = camParams.distortion(1);
+    this->m_camDistorsion.at<float>(2, 0) = camParams.distortion(2);
+    this->m_camDistorsion.at<float>(3, 0) = camParams.distortion(3);
+    this->m_camDistorsion.at<float>(4, 0) = camParams.distortion(4);
 
-    this->m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
-    this->m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
-    this->m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
-    this->m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
-    this->m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
-    this->m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
-    this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
-    this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
-    this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
+    this->m_camMatrix.at<float>(0, 0) = camParams.intrinsic(0, 0);
+    this->m_camMatrix.at<float>(0, 1) = camParams.intrinsic(0, 1);
+    this->m_camMatrix.at<float>(0, 2) = camParams.intrinsic(0, 2);
+    this->m_camMatrix.at<float>(1, 0) = camParams.intrinsic(1, 0);
+    this->m_camMatrix.at<float>(1, 1) = camParams.intrinsic(1, 1);
+    this->m_camMatrix.at<float>(1, 2) = camParams.intrinsic(1, 2);
+    this->m_camMatrix.at<float>(2, 0) = camParams.intrinsic(2, 0);
+    this->m_camMatrix.at<float>(2, 1) = camParams.intrinsic(2, 1);
+    this->m_camMatrix.at<float>(2, 2) = camParams.intrinsic(2, 2);
 }
 
 }

@@ -41,11 +41,11 @@
 			<property name="deviceID" type="uint" value="0"/>
 		</configure>
         <configure component="SolARFCNSegmentationOpencv">
-            <property name="modelFile" type="string" value="../../data/fcn_resnet50.onnx"/>
+            <property name="modelFile" type="string" value="../../../../data/fcn_resnet50.onnx"/>
         </configure>
 		<configure component="SolARMaskOverlayOpencv">
-			<property name="classFile" type="string" value="../../data/pascal-classes.txt"/>
-			<property name="colorFile" type="string" value="../../data/pascal-colors.txt"/>
+			<property name="classFile" type="string" value="../../../../data/pascal-classes.txt"/>
+			<property name="colorFile" type="string" value="../../../../data/pascal-colors.txt"/>
 		</configure>		
 		<configure component="SolARImageViewerOpencv">
 			<property name="title" type="string" value="FCN semantic segmentation (press esc to exit)"/>

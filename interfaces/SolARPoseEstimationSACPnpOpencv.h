@@ -63,27 +63,24 @@ public:
     ///@brief SolARPoseEstimationSACPnpOpencv destructor;
     ~SolARPoseEstimationSACPnpOpencv() override;
 
-	/// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
-	/// @param[in] imagePoints, set of 2d_points seen in view_1.
-	/// @param[in]  worldPoints, set of 3d_points corresponding to view_1.
-	/// @param[out] inliers: indices of inlier correspondences.
-	/// @param[out] pose, camera pose (pose of the camera defined in world corrdinate system) expressed as a Transform3D.
-	/// @param[in] initialPose (Optional), a transform3D to initialize the pose (reducing the convergence time and improving its success).
-	FrameworkReturnCode estimate(const std::vector<datastructure::Point2Df> & imagePoints,
-								const std::vector<datastructure::Point3Df> & worldPoints,
-								std::vector<uint32_t> & inliers,
-								datastructure::Transform3Df & pose,
-								const datastructure::Transform3Df initialPose = datastructure::Transform3Df::Identity()) override;
-
-
-    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
-    /// @param[in] Camera calibration matrix parameters.
-    /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const datastructure::CamCalibration & intrinsicParams,
-                             const datastructure::CamDistortion & distorsionParams)  override;
+    /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
+    /// @param[in] inputPoints the set of 3D cloud points to project
+    /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
+    /// @param[in] camParams the camera parameters.
+    /// @param[out] inliers indices of inlier correspondences.
+    /// @param[out] pose camera pose (pose of the camera defined in world corrdinate system) expressed as a Transform3D.
+    /// @param[in] initialPose (Optional) a transform3D to initialize the pose (reducing the convergence time and improving its success).
+    /// @return FrameworkReturnCode::_SUCCESS if succeed, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode estimate(const std::vector<SolAR::datastructure::Point2Df> & imagePoints,
+                                 const std::vector<SolAR::datastructure::Point3Df> & worldPoints,
+                                 const SolAR::datastructure::CameraParameters & camParams,
+                                 std::vector<uint32_t> & inliers,
+                                 SolAR::datastructure::Transform3Df & pose,
+                                 const SolAR::datastructure::Transform3Df initialPose = SolAR::datastructure::Transform3Df::Identity()) override;
 
     void unloadComponent () override final;
-
+private:
+    void setCameraParameters(const SolAR::datastructure::CameraParameters & camParams);
 
 private:
     /// @brief Number of iterations

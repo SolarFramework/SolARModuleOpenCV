@@ -68,42 +68,49 @@ FrameworkReturnCode projectCV(const std::vector<cv::Point3f> & inputPoints, std:
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARProjectOpencv::project(const std::vector<Point3Df> & inputPoints, std::vector<Point2Df> & imagePoints, const Transform3Df& pose)
+FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SolAR::datastructure::Point3Df> & inputPoints,
+												const SolAR::datastructure::Transform3Df& pose,
+												const SolAR::datastructure::CameraParameters & camParams,
+												std::vector<SolAR::datastructure::Point2Df> & imagePoints)
 {
     std::vector<cv::Point3f> cvWorldPoints;
-
     for (auto point : inputPoints)
         cvWorldPoints.push_back(cv::Point3f(point.getX(), point.getY(), point.getZ()));
 
-      return projectCV(cvWorldPoints, imagePoints, pose, m_camMatrix, m_camDistorsion);
+	setCameraParameters(camParams);
+	return projectCV(cvWorldPoints, imagePoints, pose, m_camMatrix, m_camDistorsion);
 }
 
-FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<CloudPoint>> & inputPoints, std::vector<Point2Df> & imagePoints, const Transform3Df& pose)
+FrameworkReturnCode SolARProjectOpencv::project(const std::vector<SRef<SolAR::datastructure::CloudPoint>> & inputPoints,
+												const SolAR::datastructure::Transform3Df& pose,
+												const SolAR::datastructure::CameraParameters & camParams,
+												std::vector<SolAR::datastructure::Point2Df> & imagePoints)
 {
     std::vector<cv::Point3f> cvWorldPoints;
-
     for (auto point : inputPoints)
         cvWorldPoints.push_back(cv::Point3f(point->getX(), point->getY(), point->getZ()));
 
-      return projectCV(cvWorldPoints, imagePoints, pose, m_camMatrix, m_camDistorsion);
+	setCameraParameters(camParams);
+    return projectCV(cvWorldPoints, imagePoints, pose, m_camMatrix, m_camDistorsion);
 }
 
-void SolARProjectOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
-    this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
-    this->m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
-    this->m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
-    this->m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
-    this->m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
+void SolARProjectOpencv::setCameraParameters(const SolAR::datastructure::CameraParameters & camParams) 
+{
+	this->m_camDistorsion.at<float>(0, 0) = camParams.distortion(0);
+	this->m_camDistorsion.at<float>(1, 0) = camParams.distortion(1);
+	this->m_camDistorsion.at<float>(2, 0) = camParams.distortion(2);
+	this->m_camDistorsion.at<float>(3, 0) = camParams.distortion(3);
+	this->m_camDistorsion.at<float>(4, 0) = camParams.distortion(4);
 
-    this->m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
-    this->m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
-    this->m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
-    this->m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
-    this->m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
-    this->m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
-    this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
-    this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
-    this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
+	this->m_camMatrix.at<float>(0, 0) = camParams.intrinsic(0, 0);
+	this->m_camMatrix.at<float>(0, 1) = camParams.intrinsic(0, 1);
+	this->m_camMatrix.at<float>(0, 2) = camParams.intrinsic(0, 2);
+	this->m_camMatrix.at<float>(1, 0) = camParams.intrinsic(1, 0);
+	this->m_camMatrix.at<float>(1, 1) = camParams.intrinsic(1, 1);
+	this->m_camMatrix.at<float>(1, 2) = camParams.intrinsic(1, 2);
+	this->m_camMatrix.at<float>(2, 0) = camParams.intrinsic(2, 0);
+	this->m_camMatrix.at<float>(2, 1) = camParams.intrinsic(2, 1);
+	this->m_camMatrix.at<float>(2, 2) = camParams.intrinsic(2, 2);
 }
 
 }

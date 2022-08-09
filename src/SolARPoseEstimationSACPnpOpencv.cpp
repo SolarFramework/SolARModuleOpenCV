@@ -55,15 +55,17 @@ SolARPoseEstimationSACPnpOpencv::~SolARPoseEstimationSACPnpOpencv(){
 
 }
 
-FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<Point2Df> & imagePoints,
-                                                            const std::vector<Point3Df> & worldPoints,
-															std::vector<uint32_t> & inliers,
-                                                            Transform3Df & pose,
-                                                            const Transform3Df initialPose) {
+FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<SolAR::datastructure::Point2Df> & imagePoints,
+                                                              const std::vector<SolAR::datastructure::Point3Df> & worldPoints,
+                                                              const SolAR::datastructure::CameraParameters & camParams,
+                                                              std::vector<uint32_t> & inliers,
+                                                              SolAR::datastructure::Transform3Df & pose,
+                                                              const SolAR::datastructure::Transform3Df initialPose)
+{
+    // set camera parameters
+    setCameraParameters(camParams);
 
-    std::vector<cv::Point2f> imageCVPoints;
-    std::vector<cv::Point3f> worldCVPoints;
-
+    // get pnp method
     int method;
     auto itr = convertPnPSACMethod.find(m_method);
     if (itr != convertPnPSACMethod.end())
@@ -73,6 +75,8 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
 
     Transform3Df initialPoseInverse = initialPose.inverse();
 
+    std::vector<cv::Point2f> imageCVPoints;
+    std::vector<cv::Point3f> worldCVPoints;
     if (worldPoints.size()!=imagePoints.size() || worldPoints.size()< 4 ){
         LOG_WARNING("world/image points must be valid ( equal and > to 4)");
         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
@@ -152,24 +156,23 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
     return FrameworkReturnCode::_SUCCESS;
 }
 
+void SolARPoseEstimationSACPnpOpencv::setCameraParameters(const SolAR::datastructure::CameraParameters & camParams)
+{
+    this->m_camDistorsion.at<float>(0, 0) = camParams.distortion(0);
+    this->m_camDistorsion.at<float>(1, 0) = camParams.distortion(1);
+    this->m_camDistorsion.at<float>(2, 0) = camParams.distortion(2);
+    this->m_camDistorsion.at<float>(3, 0) = camParams.distortion(3);
+    this->m_camDistorsion.at<float>(4, 0) = camParams.distortion(4);
 
-void SolARPoseEstimationSACPnpOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
-    //TODO.. check to inverse
-    this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
-    this->m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
-    this->m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
-    this->m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
-    this->m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
-
-    this->m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
-    this->m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
-    this->m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
-    this->m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
-    this->m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
-    this->m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
-    this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
-    this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
-    this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
+    this->m_camMatrix.at<float>(0, 0) = camParams.intrinsic(0, 0);
+    this->m_camMatrix.at<float>(0, 1) = camParams.intrinsic(0, 1);
+    this->m_camMatrix.at<float>(0, 2) = camParams.intrinsic(0, 2);
+    this->m_camMatrix.at<float>(1, 0) = camParams.intrinsic(1, 0);
+    this->m_camMatrix.at<float>(1, 1) = camParams.intrinsic(1, 1);
+    this->m_camMatrix.at<float>(1, 2) = camParams.intrinsic(1, 2);
+    this->m_camMatrix.at<float>(2, 0) = camParams.intrinsic(2, 0);
+    this->m_camMatrix.at<float>(2, 1) = camParams.intrinsic(2, 1);
+    this->m_camMatrix.at<float>(2, 2) = camParams.intrinsic(2, 2);
 }
 
 }

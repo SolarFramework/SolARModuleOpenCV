@@ -97,32 +97,28 @@ cv::Mat SolARSVDTriangulationOpencv::linearTriangulation(const cv::Point3f & u1,
     return X;
 }
 
-Point3Df SolARSVDTriangulationOpencv::unproject3DPoint(const Keypoint & kp, const Transform3Df & pose)
+Point3Df SolARSVDTriangulationOpencv::unproject3DPoint(const Keypoint & kp, 
+													   const datastructure::CameraParameters & camParams,
+													   const Transform3Df & pose)
 {
 	float Z = kp.getDepth();
-	float X = (kp.getX() - m_intrinsicParams(0, 2)) * Z / m_intrinsicParams(0, 0);
-	float Y = (kp.getY() - m_intrinsicParams(1, 2)) * Z / m_intrinsicParams(1, 1);
+	float X = (kp.getX() - camParams.intrinsic(0, 2)) * Z / camParams.intrinsic(0, 0);
+	float Y = (kp.getY() - camParams.intrinsic(1, 2)) * Z / camParams.intrinsic(1, 1);
 	Vector3f pos3D(X, Y, Z);
 	Vector3f pos3DTrans = pose * pos3D;
 	return Point3Df(pos3DTrans[0], pos3DTrans[1], pos3DTrans[2]);
 }
 
-float SolARSVDTriangulationOpencv::getReprojectionErrorCloud(const std::vector<SRef<CloudPoint>> & original){
-    double err = 0.f;
-    for(auto const & cloudpoint : original){
-        err += cloudpoint->getReprojError();
-    }
-    return (err/=double(original.size()));
-}
-
-
-double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & pointsView1,
-                                                const std::vector<Point2Df> & pointsView2,
-                                                const std::vector<DescriptorMatch> & matches,
-                                                const std::pair<uint32_t,uint32_t> & working_views,
-                                                const Transform3Df & poseView1,
-                                                const Transform3Df & poseView2,
-                                                std::vector<SRef<CloudPoint>> & pcloud){
+double SolARSVDTriangulationOpencv::triangulate(const std::vector<SolAR::datastructure::Point2Df> & pointsView1,
+                                                const std::vector<SolAR::datastructure::Point2Df> & pointsView2,
+                                                const std::vector<SolAR::datastructure::DescriptorMatch> & matches,
+                                                const std::pair<uint32_t, uint32_t> & working_views,
+                                                const SolAR::datastructure::Transform3Df & poseView1,
+                                                const SolAR::datastructure::Transform3Df & poseView2,
+                                                const SolAR::datastructure::CameraParameters & camParams1,
+                                                const SolAR::datastructure::CameraParameters & camParams2,
+                                                std::vector<SRef<SolAR::datastructure::CloudPoint>> & pcloud)
+{
 	pcloud.clear();
 	Transform3Df poseView1Inverse = poseView1.inverse();
 	Transform3Df poseView2Inverse = poseView2.inverse();
@@ -152,16 +148,16 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
     for (uint32_t i = 0; i < pts_size; i++) {
 		cv::Point2f ptUn1 = pts1[i];
 		cv::Point2f ptUn2 = pts2[i];
-		cv::Point3f u1((ptUn1.x - m_intrinsicParams(0, 2)) / m_intrinsicParams(0, 0), (ptUn1.y - m_intrinsicParams(1, 2)) / m_intrinsicParams(1, 1), 1.0);
-		cv::Point3f u2((ptUn2.x - m_intrinsicParams(0, 2)) / m_intrinsicParams(0, 0), (ptUn2.y - m_intrinsicParams(1, 2)) / m_intrinsicParams(1, 1), 1.0);
+		cv::Point3f u1((ptUn1.x - camParams1.intrinsic(0, 2)) / camParams1.intrinsic(0, 0), (ptUn1.y - camParams1.intrinsic(1, 2)) / camParams1.intrinsic(1, 1), 1.0);
+		cv::Point3f u2((ptUn2.x - camParams2.intrinsic(0, 2)) / camParams2.intrinsic(0, 0), (ptUn2.y - camParams2.intrinsic(1, 2)) / camParams2.intrinsic(1, 1), 1.0);
 		cv::Mat X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
 		pts3D.push_back(Point3Df(X.at<float>(0), X.at<float>(1), X.at<float>(2)));
 	}
 
 	// Reproject 3D points
 	std::vector<Point2Df> ptsIn1, ptsIn2;
-	m_projector->project(pts3D, ptsIn1, poseView1);
-	m_projector->project(pts3D, ptsIn2, poseView2);
+	m_projector->project(pts3D, poseView1, camParams1, ptsIn1);
+	m_projector->project(pts3D, poseView2, camParams2, ptsIn2);
 
 	// Create cloud points
 	std::vector<float> reproj_error;
@@ -187,13 +183,15 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
     return mse[0];
 }
 
-double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & keypointsView1,
-                                                const std::vector<Keypoint> & keypointsView2,
-                                                const std::vector<DescriptorMatch> & matches,
-                                                const std::pair<uint32_t,uint32_t> & working_views,
-                                                const Transform3Df & poseView1,
-                                                const Transform3Df & poseView2,
-                                                std::vector<SRef<CloudPoint>> & pcloud){
+double SolARSVDTriangulationOpencv::triangulate(const std::vector<SolAR::datastructure::Keypoint> & keypointsView1,
+                                                const std::vector<SolAR::datastructure::Keypoint> & keypointsView2,
+                                                const std::vector<SolAR::datastructure::DescriptorMatch> &matches,
+                                                const std::pair<uint32_t, uint32_t> & working_views,
+                                                const SolAR::datastructure::Transform3Df & poseView1,
+                                                const SolAR::datastructure::Transform3Df & poseView2,
+                                                const SolAR::datastructure::CameraParameters & camParams1,
+                                                const SolAR::datastructure::CameraParameters & camParams2,
+                                                std::vector<SRef<SolAR::datastructure::CloudPoint>> & pcloud){
 	// Get position of keypoints
 	std::vector<Point2Df> pointsView1, pointsView2;
 	for (const auto & kp : keypointsView1)
@@ -202,7 +200,8 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
 		pointsView2.push_back(Point2Df(kp));
 
 	// triangulate
-	double meanError = this->triangulate(pointsView1, pointsView2, matches, working_views, poseView1, poseView2, pcloud);
+	double meanError = this->triangulate(pointsView1, pointsView2, matches, working_views, 
+		poseView1, poseView2, camParams1, camParams2, pcloud);
 	assert(pcloud.size() == matches.size());
 
 	// compute RGB for each cloud point
@@ -215,18 +214,21 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint> & ke
 	return meanError;
 }
 
-double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& keypointsView1, 
-												const std::vector<Keypoint>& keypointsView2, 
-												const SRef<DescriptorBuffer>& descriptor1,
-												const SRef<DescriptorBuffer>& descriptor2,
-												const std::vector<DescriptorMatch>& matches, 
-												const std::pair<uint32_t, uint32_t>& working_views, 
-												const Transform3Df & poseView1, 
-												const Transform3Df & poseView2, 
-												std::vector<SRef<CloudPoint>>& pcloud)
+double SolARSVDTriangulationOpencv::triangulate(const std::vector<SolAR::datastructure::Keypoint> & keypointsView1,
+                                                const std::vector<SolAR::datastructure::Keypoint> & keypointsView2,
+                                                const SRef<SolAR::datastructure::DescriptorBuffer> & descriptor1,
+                                                const SRef<SolAR::datastructure::DescriptorBuffer> & descriptor2,
+                                                const std::vector<SolAR::datastructure::DescriptorMatch> & matches,
+                                                const std::pair<uint32_t, uint32_t> & working_views,
+                                                const SolAR::datastructure::Transform3Df & poseView1,
+                                                const SolAR::datastructure::Transform3Df & poseView2,
+                                                const SolAR::datastructure::CameraParameters & camParams1,
+                                                const SolAR::datastructure::CameraParameters & camParams2,
+                                                std::vector<SRef<SolAR::datastructure::CloudPoint>> & pcloud)
 {
 	// triangulate
-	double meanError = this->triangulate(keypointsView1, keypointsView2, matches, working_views, poseView1, poseView2, pcloud);
+	double meanError = this->triangulate(keypointsView1, keypointsView2, matches, working_views, 
+		poseView1, poseView2, camParams1, camParams2, pcloud);
 	assert(pcloud.size() == matches.size());
 
 	// compute descriptor for each cloud point
@@ -262,7 +264,12 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Keypoint>& key
 	return meanError;
 }
 
-double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame> frame1, SRef<SolAR::datastructure::Frame> frame2, const std::vector<SolAR::datastructure::DescriptorMatch>& matches, const std::pair<uint32_t, uint32_t>& working_views, std::vector<SRef<SolAR::datastructure::CloudPoint>>& pcloud, const bool & onlyDepth)
+double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame> frame1,
+                                                SRef<SolAR::datastructure::Frame> frame2,
+                                                const std::vector<SolAR::datastructure::DescriptorMatch>& matches,
+                                                const std::pair<uint32_t, uint32_t>& working_views,
+                                                std::vector<SRef<SolAR::datastructure::CloudPoint>>& pcloud,
+                                                const bool & onlyDepth)
 {
 	pcloud.clear();
 	Transform3Df poseView1 = frame1->getPose();
@@ -282,20 +289,22 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 	const std::vector<Keypoint>& kpsUn1 = frame1->getUndistortedKeypoints();
 	const std::vector<Keypoint>& kpsUn2 = frame2->getUndistortedKeypoints();
 	std::vector<SolAR::datastructure::DescriptorMatch> goodMatches;
+	const CameraParameters& camParams1 = frame1->getCameraParameters();
+	const CameraParameters& camParams2 = frame2->getCameraParameters();
 	std::vector<Point3Df> pts3D;
 	for (int i = 0; i < matches.size(); ++i) {
 		const Keypoint &kp1 = kpsUn1[matches[i].getIndexInDescriptorA()];
 		const Keypoint &kp2 = kpsUn2[matches[i].getIndexInDescriptorB()];
 		Point3Df pt3D;		
 		if (kp1.getDepth() > 0) {	// using only depth of keypoint1
-			pt3D = unproject3DPoint(kp1, poseView1);
+			pt3D = unproject3DPoint(kp1, camParams1, poseView1);
 		}
 		else if (kp2.getDepth() > 0) {	// using only depth of keypoint2
-			pt3D = unproject3DPoint(kp2, poseView2);
+			pt3D = unproject3DPoint(kp2, camParams2, poseView2);
 		}
 		else if (!onlyDepth) {	// triangulation
-			cv::Point3f u1((kp1.getX() - m_intrinsicParams(0, 2)) / m_intrinsicParams(0, 0), (kp1.getY() - m_intrinsicParams(1, 2)) / m_intrinsicParams(1, 1), 1.0);
-			cv::Point3f u2((kp2.getX() - m_intrinsicParams(0, 2)) / m_intrinsicParams(0, 0), (kp2.getY() - m_intrinsicParams(1, 2)) / m_intrinsicParams(1, 1), 1.0);
+			cv::Point3f u1((kp1.getX() - camParams1.intrinsic(0, 2)) / camParams1.intrinsic(0, 0), (kp1.getY() - camParams1.intrinsic(1, 2)) / camParams1.intrinsic(1, 1), 1.0);
+			cv::Point3f u2((kp2.getX() - camParams2.intrinsic(0, 2)) / camParams2.intrinsic(0, 0), (kp2.getY() - camParams2.intrinsic(1, 2)) / camParams2.intrinsic(1, 1), 1.0);
 			cv::Mat X = iterativeLinearTriangulation(u1, Pose1, u2, Pose2);
 			pt3D = Point3Df(X.at<float>(0), X.at<float>(1), X.at<float>(2));
 		}
@@ -308,8 +317,8 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 		return 0.0;
 	// Reproject 3D points
 	std::vector<Point2Df> ptsIn1, ptsIn2;
-	m_projector->project(pts3D, ptsIn1, poseView1);
-	m_projector->project(pts3D, ptsIn2, poseView2);
+	m_projector->project(pts3D, poseView1, camParams1, ptsIn1);
+	m_projector->project(pts3D, poseView2, camParams2, ptsIn2);
 
 	// Mean camera center to calculate view direction
 	Vector3f meanCamCenter((poseView1(0, 3) + poseView2(0, 3)) / 2, (poseView1(1, 3) + poseView2(1, 3)) / 2, (poseView1(2, 3) + poseView2(2, 3)) / 2);
@@ -362,14 +371,6 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 	cv::Scalar mse = cv::mean(reproj_error);
 	return mse[0];
 }
-
-void SolARSVDTriangulationOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distortionParams) {
-	m_intrinsicParams = intrinsicParams;
-	m_distortionParams = distortionParams;
-	// set zero distortion for projector
-	m_projector->setCameraParameters(intrinsicParams, CamDistortion::Zero());
-}
-
 
 }
 }

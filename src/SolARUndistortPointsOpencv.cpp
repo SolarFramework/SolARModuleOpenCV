@@ -36,7 +36,9 @@ SolARUndistortPointsOpencv::SolARUndistortPointsOpencv():ComponentBase(xpcf::toU
     m_camDistortion.create(5, 1, CV_32FC1);
 }
 
-FrameworkReturnCode SolARUndistortPointsOpencv::undistort(const std::vector<Point2Df> & inputPoints, std::vector<Point2Df> & outputPoints)
+FrameworkReturnCode SolARUndistortPointsOpencv::undistort(const std::vector<SolAR::datastructure::Point2Df> & inputPoints,
+                                                          const SolAR::datastructure::CameraParameters & camParams,
+                                                          std::vector<SolAR::datastructure::Point2Df> & outputPoints)
 {
     std::vector<cv::Point2f> ptvec; 
     std::vector<cv::Point2f> out_ptvec; 
@@ -49,6 +51,8 @@ FrameworkReturnCode SolARUndistortPointsOpencv::undistort(const std::vector<Poin
         ptvec[k].x = inputPoints[k].getX();
         ptvec[k].y = inputPoints[k].getY();
     }
+
+	setCameraParameters(camParams);
     
     cv::undistortPoints(ptvec,out_ptvec, m_camMatrix, m_camDistortion, cv::Mat(), m_camMatrix);
 
@@ -58,12 +62,14 @@ FrameworkReturnCode SolARUndistortPointsOpencv::undistort(const std::vector<Poin
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARUndistortPointsOpencv::undistort(const std::vector<datastructure::Keypoint> & inputKeypoints, std::vector<datastructure::Keypoint> & outputKeypoints)
+FrameworkReturnCode SolARUndistortPointsOpencv::undistort(const std::vector<SolAR::datastructure::Keypoint> & inputKeypoints,
+                                                          const SolAR::datastructure::CameraParameters & camParams,
+                                                          std::vector<SolAR::datastructure::Keypoint> & outputKeypoints)
 {
 	std::vector<Point2Df> inputPoints, outputPoints;
 	for (const auto &it : inputKeypoints)
 		inputPoints.push_back(Point2Df(it.getX(), it.getY()));
-	undistort(inputPoints, outputPoints);
+	undistort(inputPoints, camParams, outputPoints);
 	outputKeypoints.resize(inputKeypoints.size());
 	for (int i = 0; i < inputKeypoints.size(); ++i) {
 		Keypoint kp = inputKeypoints[i];
@@ -74,26 +80,23 @@ FrameworkReturnCode SolARUndistortPointsOpencv::undistort(const std::vector<data
 	return FrameworkReturnCode::_SUCCESS;
 }
 
-void SolARUndistortPointsOpencv::setCameraParameters(const datastructure::CamCalibration & intrinsicParams, const datastructure::CamDistortion & distorsionParams)
+void SolARUndistortPointsOpencv::setCameraParameters(const SolAR::datastructure::CameraParameters & camParams)
 {
-	// set intrinsic parameters
-	m_intrinsic_parameters = intrinsicParams;
-	this->m_camMatrix.at<float>(0, 0) = m_intrinsic_parameters(0, 0);
-	this->m_camMatrix.at<float>(0, 1) = m_intrinsic_parameters(0, 1);
-	this->m_camMatrix.at<float>(0, 2) = m_intrinsic_parameters(0, 2);
-	this->m_camMatrix.at<float>(1, 0) = m_intrinsic_parameters(1, 0);
-	this->m_camMatrix.at<float>(1, 1) = m_intrinsic_parameters(1, 1);
-	this->m_camMatrix.at<float>(1, 2) = m_intrinsic_parameters(1, 2);
-	this->m_camMatrix.at<float>(2, 0) = m_intrinsic_parameters(2, 0);
-	this->m_camMatrix.at<float>(2, 1) = m_intrinsic_parameters(2, 1);
-	this->m_camMatrix.at<float>(2, 2) = m_intrinsic_parameters(2, 2);
-	// set distortion parameters
-	m_distortion_parameters = distorsionParams;
-	this->m_camDistortion.at<float>(0, 0) = m_distortion_parameters(0);
-	this->m_camDistortion.at<float>(1, 0) = m_distortion_parameters(1);
-	this->m_camDistortion.at<float>(2, 0) = m_distortion_parameters(2);
-	this->m_camDistortion.at<float>(3, 0) = m_distortion_parameters(3);
-	this->m_camDistortion.at<float>(4, 0) = m_distortion_parameters(4);
+    this->m_camDistortion.at<float>(0, 0) = camParams.distortion(0);
+    this->m_camDistortion.at<float>(1, 0) = camParams.distortion(1);
+    this->m_camDistortion.at<float>(2, 0) = camParams.distortion(2);
+    this->m_camDistortion.at<float>(3, 0) = camParams.distortion(3);
+    this->m_camDistortion.at<float>(4, 0) = camParams.distortion(4);
+
+    this->m_camMatrix.at<float>(0, 0) = camParams.intrinsic(0, 0);
+    this->m_camMatrix.at<float>(0, 1) = camParams.intrinsic(0, 1);
+    this->m_camMatrix.at<float>(0, 2) = camParams.intrinsic(0, 2);
+    this->m_camMatrix.at<float>(1, 0) = camParams.intrinsic(1, 0);
+    this->m_camMatrix.at<float>(1, 1) = camParams.intrinsic(1, 1);
+    this->m_camMatrix.at<float>(1, 2) = camParams.intrinsic(1, 2);
+    this->m_camMatrix.at<float>(2, 0) = camParams.intrinsic(2, 0);
+    this->m_camMatrix.at<float>(2, 1) = camParams.intrinsic(2, 1);
+    this->m_camMatrix.at<float>(2, 2) = camParams.intrinsic(2, 2);
 }
 
 }

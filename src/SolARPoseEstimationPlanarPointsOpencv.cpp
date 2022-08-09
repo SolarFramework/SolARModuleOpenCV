@@ -48,9 +48,27 @@ SolARPoseEstimationPlanarPointsOpencv::~SolARPoseEstimationPlanarPointsOpencv(){
 
 FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::vector<Point2Df> & imagePoints,
                                                                     const std::vector<Point3Df> & worldPoints,
+																	const SolAR::datastructure::CameraParameters & camParams,
 																	std::vector<uint32_t> & inliers,
                                                                     Transform3Df & pose,
-                                                                    ATTRIBUTE(maybe_unused) const Transform3Df initialPose) {
+                                                                    ATTRIBUTE(maybe_unused) const Transform3Df initialPose) 
+{
+	// set camera parameters
+	this->m_camDistorsion.at<float>(0, 0) = camParams.distortion(0);
+	this->m_camDistorsion.at<float>(1, 0) = camParams.distortion(1);
+	this->m_camDistorsion.at<float>(2, 0) = camParams.distortion(2);
+	this->m_camDistorsion.at<float>(3, 0) = camParams.distortion(3);
+	this->m_camDistorsion.at<float>(4, 0) = camParams.distortion(4);
+
+	this->m_camMatrix.at<float>(0, 0) = camParams.intrinsic(0, 0);
+	this->m_camMatrix.at<float>(0, 1) = camParams.intrinsic(0, 1);
+	this->m_camMatrix.at<float>(0, 2) = camParams.intrinsic(0, 2);
+	this->m_camMatrix.at<float>(1, 0) = camParams.intrinsic(1, 0);
+	this->m_camMatrix.at<float>(1, 1) = camParams.intrinsic(1, 1);
+	this->m_camMatrix.at<float>(1, 2) = camParams.intrinsic(1, 2);
+	this->m_camMatrix.at<float>(2, 0) = camParams.intrinsic(2, 0);
+	this->m_camMatrix.at<float>(2, 1) = camParams.intrinsic(2, 1);
+	this->m_camMatrix.at<float>(2, 2) = camParams.intrinsic(2, 2);
 
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point2f> worldCVPoints;
@@ -128,24 +146,6 @@ FrameworkReturnCode SolARPoseEstimationPlanarPointsOpencv::estimate(const std::v
     pose = pose.inverse();
 
     return FrameworkReturnCode::_SUCCESS;
-}
-void SolARPoseEstimationPlanarPointsOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
-
-    this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
-    this->m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
-    this->m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
-    this->m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
-    this->m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
-
-    this->m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
-    this->m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
-    this->m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
-    this->m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
-    this->m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
-    this->m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
-    this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
-    this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
-    this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
 }
 
 }

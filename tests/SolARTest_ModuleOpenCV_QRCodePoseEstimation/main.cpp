@@ -75,9 +75,7 @@ int main(int argc,char* argv[])
 		// get camera parameters
 		CameraParameters camParams = camera->getParameters();
 
-		// set trackable and camera params to pose estimator
-		overlay3D->setCameraParameters(camParams.intrinsic, camParams.distortion);
-		poseEstimator->setCameraParameters(camParams.intrinsic, camParams.distortion);
+		// set trackable to pose estimator
 		poseEstimator->setTrackable(trackable);
 
 		// open camera
@@ -95,8 +93,8 @@ int main(int argc,char* argv[])
 				return -1;
 			}
 			Transform3Df pose;
-			if (poseEstimator->estimate(image, pose) == FrameworkReturnCode::_SUCCESS)
-				overlay3D->draw(pose, image);
+			if (poseEstimator->estimate(image, camParams, pose) == FrameworkReturnCode::_SUCCESS)
+				overlay3D->draw(pose, camParams, image);
 			if (imageViewer->display(image) == FrameworkReturnCode::_STOP)
 				break;
 		}
