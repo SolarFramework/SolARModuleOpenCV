@@ -18,7 +18,7 @@
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="35a2454a-cb09-44ac-b2ce-0b0732175f94" name="IMaskOverlay" description="IMaskOverlay"/>
 		</component>
-		<component uuid="063d3086-6c87-49ff-87db-9a4ff224b5c8" name="SolARDeepLabV3PlusSegmentationOpencv" description="SolARDeepLabV3PlusSegmentationOpencv">
+		<component uuid="063d3086-6c87-49ff-87db-9a4ff224b5c8" name="SolARGenericSemanticSegmentationOpencv" description="SolARGenericSemanticSegmentationOpencv">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="2fd30b7c-c6e4-4af7-a711-0b69964e68c2" name="ISemanticSegmentation" description="ISemanticSegmentation"/>
 		</component>
@@ -38,11 +38,11 @@
 	
     <properties>
 		<configure component="SolARCameraOpencv">
-			<property name="calibrationFile" type="string" value="D:/SolAR/Data/camera_calibration_rs_D435i_color.json"/>
+			<property name="calibrationFile" type="string" value="../../../../data/camera_calibration.json"/>
 			<property name="deviceID" type="uint" value="0"/>
 		</configure>
-        <configure component="SolARDeepLabV3PlusSegmentationOpencv">
-            <property name="modelFile" type="string" value="D:/SolAR/Data/onnx_model_solar/deeplabv3plus_r50_d8_ade20k_512x512.onnx"/>
+        <configure component="SolARGenericSemanticSegmentationOpencv">
+            <property name="modelFile" type="string" value="../../../../data/fcn_r101-d8_480x480_80k_pascal_context_59_512x512.onnx"/>
 			<property name="mean" type="float" description="normalize input RGB image by subtracting mean">
 				<value>123.675</value>
 				<value>116.28</value>
@@ -53,13 +53,17 @@
 				<value>57.12</value>
 				<value>57.375</value>
 			</property>
+			<property name="inputSize" type="int" description="size of input image passed to the cnn input layer">
+				<value>512</value>
+				<value>512</value>
+			</property>
         </configure>
 		<configure component="SolARMaskOverlayOpencv">
-			<property name="classFile" type="string" value="D:/SolAR/Data/ade20k-classes.txt"/>
-			<property name="colorFile" type="string" value="D:/SolAR/Data/ade20k-colors.txt"/>
+			<property name="classFile" type="string" value="../../../../data/pascalcontext59-classes.txt"/>
+			<property name="colorFile" type="string" value="../../../../data/pascalcontext59-colors.txt"/>
 		</configure>		
 		<configure component="SolARImageViewerOpencv">
-			<property name="title" type="string" value="DeepLabV3+ semantic segmentation (press esc to exit)"/>
+			<property name="title" type="string" value="FCN_r101-d8 semantic segmentation (press esc to exit)"/>
 			<property name="exitKey" type="int" value="27"/>
 			<property name="width" type="int" value="-1"/>
 			<property name="height" type="int" value="-1"/>

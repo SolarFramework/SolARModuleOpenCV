@@ -5,7 +5,7 @@ CONFIG -= qt
 QMAKE_PROJECT_DEPTH = 0
 
 ## global defintions : target lib name, version
-TARGET = SolARTest_ModuleOpenCV_DeepLabV3PlusSegmentation
+TARGET = SolARTest_ModuleOpenCV_GenericSemanticSegmentation
 VERSION=1.0.0
 PROJECTDEPLOYDIR = $${PWD}/..
 
@@ -89,11 +89,11 @@ linux {
 }
 
 configfile.path = $${TARGETDEPLOYDIR}/
-configfile.files = $${PWD}/SolARTest_ModuleOpenCV_DeepLabV3PlusSegmentation_conf.xml
+configfile.files = $${PWD}/SolARTest_ModuleOpenCV_GenericSemanticSegmentation_conf.xml
 INSTALLS += configfile
 
 DISTFILES += \
-    SolARTest_ModuleOpenCV_DeepLabV3PlusSegmentation_conf.xml \
+    SolARTest_ModuleOpenCV_GenericSemanticSegmentation_conf.xml \
     packagedependencies.txt
 
 #NOTE : Must be placed at the end of the .pro

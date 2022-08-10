@@ -136,20 +136,35 @@ FrameworkReturnCode SolARMaskOverlayOpencv::draw(SRef<SolAR::datastructure::Imag
 	}
 	cv::addWeighted(imageCV, 0.3, overlay, 0.7, 0.0, imageCV);
 	// show legend
-	static const int kBlockHeight = rows / m_classes.size();
-	static cv::Mat legend;
+	static const int numClassesPerLegend = 30;
+	static const int kBlockHeight = rows / numClassesPerLegend;
+	static cv::Mat legend, legend2;
+
+	auto fnGenLegend = [&](auto& lgd, int nclasses, int offset) {
+		lgd.create(rows, 100, CV_8UC3);
+		lgd.setTo(cv::Scalar(0,0,0));
+		for (int i = 0; i < nclasses; i++) {
+			cv::Mat block = lgd.rowRange(i * kBlockHeight, (i + 1) * kBlockHeight);
+			block.setTo(cv::Vec3b(m_colors[i+ offset][0], m_colors[i+ offset][1], m_colors[i+ offset][2]));
+			putText(block, m_classes[i+ offset], cv::Point(0, kBlockHeight / 2), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Vec3b(255, 255, 255));
+		}
+	};
+
 	if (legend.empty())
 	{
-		const int numClasses = (int)m_classes.size();
-		legend.create(rows, 100, CV_8UC3);
-		for (int i = 0; i < numClasses; i++)
-		{
-			cv::Mat block = legend.rowRange(i * kBlockHeight, (i + 1) * kBlockHeight);
-			block.setTo(cv::Vec3b(m_colors[i][0], m_colors[i][1], m_colors[i][2]));
-			putText(block, m_classes[i], cv::Point(0, kBlockHeight / 2), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Vec3b(255, 255, 255));
-		}
+		const int numClasses = std::min<int>(numClassesPerLegend,(int)m_classes.size());
+		fnGenLegend(legend, numClasses, 0);
 	}
 	legend.copyTo(imageCV(cv::Rect(cols - 100, 0, 100, rows)));
+	// number of classes between 31 and 60, need a second legend
+	if (static_cast<int>(m_classes.size()) > numClassesPerLegend) {
+		if (legend2.empty()) {
+			const int numClasses2 = std::min<int>(numClassesPerLegend, (int)m_classes.size() - numClassesPerLegend);
+			fnGenLegend(legend2, numClasses2, numClassesPerLegend);
+		}
+		legend2.copyTo(imageCV(cv::Rect(0, 0, 100, rows)));
+	}
+	// TODO: if more than 60 classes, need to handle it properly
 	return FrameworkReturnCode::_SUCCESS;
 }
 

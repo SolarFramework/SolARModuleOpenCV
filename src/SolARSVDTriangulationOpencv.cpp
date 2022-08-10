@@ -181,6 +181,7 @@ double SolARSVDTriangulationOpencv::triangulate(const std::vector<Point2Df> & po
 		// make a new cloud point
 		SRef<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>(pts3D[i].getX(), pts3D[i].getY(), pts3D[i].getZ(), 0.0, 0.0, 0.0, meanCamCenter(0) - pts3D[i].getX(),
 			meanCamCenter(1) - pts3D[i].getY(), meanCamCenter(2) - pts3D[i].getZ(), reprj_err, visibility);
+		cp->setSemanticId(-1);
 		pcloud.push_back(cp);
 	}
     cv::Scalar mse = cv::mean(reproj_error);
