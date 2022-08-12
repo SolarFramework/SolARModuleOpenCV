@@ -34,6 +34,7 @@ SolARGenericSemanticSegmentationOpencv::SolARGenericSemanticSegmentationOpencv()
     LOG_DEBUG("SolARGenericSemanticSegmentationOpencv constructor")
     declareInterface<api::segm::ISemanticSegmentation>(this);
     declareProperty("modelFile", m_modelFile);
+	declareProperty("argMaxRemoved", m_argMaxRemoved);
     declareProperty("modelConfig", m_modelConfig);
 	declarePropertySequence("mean", m_mean);
 	declarePropertySequence("std", m_std);
@@ -91,10 +92,31 @@ FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<S
 	cv::multiply(blobInput, cv::Scalar(1.f / m_std[0], 1.f / m_std[1], 1.f / m_std[2]), blobInput);
 	m_net.setInput(blobInput);
 	std::vector<cv::Mat> outs;
-	// Todo: fix DNN_BACKEND_CUDA issues, currently onnx model converted from OpenMM lab pytorch models work on cpu but not on gpu due to unsupported layer/funcs (ArgMax)
 	m_net.forward(outs, m_outputLayerNames);
 	cv::Mat bufferUchar;
-	outs[0].convertTo(bufferUchar, CV_8UC1);
+	if (m_argMaxRemoved > 0) {
+		int numPixels = m_inputSize[0] * m_inputSize[1];
+		int numClasses = outs[0].total() / numPixels;
+		bufferUchar = cv::Mat::zeros(1, numPixels, CV_8UC1);
+		float* buffer = outs[0].ptr<float>();
+		for (int h = 0; h < m_inputSize[1]; h++) {
+			for (int w = 0; w < m_inputSize[0]; w++) {
+				int idxmax = 0;
+				float valuemax = buffer[idxmax * numPixels + h * m_inputSize[0] + w];
+				for (int c = 1; c < numClasses; c++) {
+					float valueclass = buffer[c * numPixels + h * m_inputSize[0] + w];
+					if (valueclass > valuemax) {
+						idxmax = c;
+						valuemax = valueclass;
+					}
+				}
+				bufferUchar.at<unsigned char>(0, h*m_inputSize[0]+w) = static_cast<unsigned char>(idxmax);
+			}
+		}
+	}
+	else {
+		outs[0].convertTo(bufferUchar, CV_8UC1);
+	}
 	cv::Mat maskCV(inputImageSize, CV_8UC1, bufferUchar.data);
 	cv::resize(maskCV, maskCV, cv::Size(imageCV.cols, imageCV.rows),0., 0., cv::INTER_NEAREST);
 	SolAROpenCVHelper::convertToSolar(maskCV, mask);
