@@ -34,6 +34,13 @@ const static std::map<std::string,int> convertPnPSACMethod = {{"ITERATIVE", cv::
                                                               {"UPNP", cv::SOLVEPNP_UPNP},
                                                               {"IPPE", cv::SOLVEPNP_IPPE},
                                                               {"IPPE SQUARE", cv::SOLVEPNP_IPPE_SQUARE},
+                                                              {"USAC", cv::USAC_DEFAULT},
+                                                              {"USAC PARALLEL", cv::USAC_PARALLEL},
+                                                              {"USAC FM 8PTS", cv::USAC_FM_8PTS},
+                                                              {"USAC FAST", cv::USAC_FAST},
+                                                              {"USAC ACCURATE", cv::USAC_ACCURATE},
+                                                              {"USAC PROSAC", cv::USAC_PROSAC},
+                                                              {"USAC MAGSAC",  cv::USAC_MAGSAC},
                                                              };
 
 SolARPoseEstimationSACPnpOpencv::SolARPoseEstimationSACPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationSACPnpOpencv>())
@@ -44,7 +51,7 @@ SolARPoseEstimationSACPnpOpencv::SolARPoseEstimationSACPnpOpencv():ConfigurableB
     declareProperty("confidence", m_confidence);
     declareProperty("minNbInliers", m_NbInliersToValidPose);
     declareProperty("method", m_method);
-
+    declareProperty("postPNPMethod", m_postPNPMethod);
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
 
@@ -69,7 +76,10 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
     if (itr != convertPnPSACMethod.end())
         method = itr->second;
     else
+    {
+        LOG_WARNING("Pnp method called {} does not exist. Method ITERATIVE will be used instead", m_method);
         method = cv::SOLVEPNP_ITERATIVE;
+    }
 
     Transform3Df initialPoseInverse = initialPose.inverse();
 
@@ -84,48 +94,90 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
         imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
         worldCVPoints.push_back(cv::Point3f(point3D.getX(), point3D.getY(),point3D.getZ()));
     }
-     cv::Mat Rvec;
-     cv::Mat_<float> Tvec;
-     cv::Mat raux, taux, r33;
-     cv::Mat inliers_cv;
+    cv::Mat Rvec;
+    cv::Mat_<float> Tvec;
+    cv::Mat raux, taux, r33;
+    cv::Mat inliers_cv;
 
-     // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
-     if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
-     {
-		 r33 = (cv::Mat_<float>(3, 3) << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
-										 initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
-										 initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2));
-		 taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
-		 cv::Rodrigues(r33, raux);
+    // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
+    if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
+    {
+     r33 = (cv::Mat_<float>(3, 3) << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
+                                     initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
+                                     initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2));
+     taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
+     cv::Rodrigues(r33, raux);
 
-         cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, true,
-                               m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
-     }
-     else
-         cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, false,
-                               m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
+     cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, true,
+                           m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
+    }
+    else
+     cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, false,
+                           m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
 
-     std::vector<cv::Point3f>in3d;
-     std::vector<cv::Point2f>in2d;
-     std::vector<cv::Point2f> projected3D;
-     cv::projectPoints(worldCVPoints, raux, taux, m_camMatrix, m_camDistorsion, projected3D);
+    inliers.clear();
 
-	 inliers.clear();
-     for (unsigned int i = 0; i < projected3D.size(); i++) {
-		 double err_reprj = norm(projected3D[i] - imageCVPoints[i]);
-         if (err_reprj < m_reprojError) {
-			 inliers.push_back(i);
+    std::vector<cv::Point3f>in3d;
+    std::vector<cv::Point2f>in2d;
+
+    if (m_reprojError >= 0)
+    {
+        std::vector<cv::Point2f> projected3D;
+        cv::projectPoints(worldCVPoints, raux, taux, m_camMatrix, m_camDistorsion, projected3D);
+        for (unsigned int i = 0; i < inliers_cv.rows; i++){
+            double err_reprj = norm(projected3D[inliers_cv.at<int>(i)] - imageCVPoints[inliers_cv.at<int>(i)]);
+            if (err_reprj < m_reprojError) {
+             inliers.push_back(inliers_cv.at<int>(i));
+             in2d.push_back(cv::Point2f(imagePoints[inliers_cv.at<int>(i)].getX(),imagePoints[inliers_cv.at<int>(i)].getY()));
+             in3d.push_back(cv::Point3f(worldPoints[inliers_cv.at<int>(i)].getX(),worldPoints[inliers_cv.at<int>(i)].getY(),worldPoints[inliers_cv.at<int>(i)].getZ()));
+            }
+        }
+        /*
+        for (unsigned int i = 0; i < projected3D.size(); i++){
+            double err_reprj = norm(projected3D[i] - imageCVPoints[i]);
+            if (err_reprj < m_reprojError) {
+             inliers.push_back(i);
              in2d.push_back(cv::Point2f(imagePoints[i].getX(),imagePoints[i].getY()));
              in3d.push_back(cv::Point3f(worldPoints[i].getX(),worldPoints[i].getY(),worldPoints[i].getZ()));
-         }
-     }
-	 
-     if (in3d.size()!=in2d.size() || in3d.size() < std::max(3, m_NbInliersToValidPose)){
-         LOG_WARNING("world/image inliers points must be valid ( equal and > to {}): {} inliers for {} input points", std::max(3, m_NbInliersToValidPose), in3d.size(), worldPoints.size());
-         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
-     }
+            }
+        }
+        */
+    }
+    else
+    {
+        for (unsigned int i = 0; i < inliers_cv.rows; i++){
+            inliers.push_back(inliers_cv.at<int>(i));
+            in2d.push_back(cv::Point2f(imagePoints[inliers_cv.at<int>(i)].getX(),imagePoints[inliers_cv.at<int>(i)].getY()));
+            in3d.push_back(cv::Point3f(worldPoints[inliers_cv.at<int>(i)].getX(),worldPoints[inliers_cv.at<int>(i)].getY(),worldPoints[inliers_cv.at<int>(i)].getZ()));
+        }
+    }
 
-     cv::solvePnP(in3d, in2d, m_camMatrix, m_camDistorsion, raux,taux, true, method);
+    if (in3d.size()!=in2d.size() || in3d.size() < std::max(3, m_NbInliersToValidPose)){
+        LOG_WARNING("world/image inliers points must be valid ( equal and > to {}): {} inliers for {} input points", std::max(3, m_NbInliersToValidPose), inliers.size(), worldPoints.size());
+        return FrameworkReturnCode::_ERROR_;
+    }
+
+    int postPNPMethod = -1;
+    itr = convertPnPSACMethod.find(m_postPNPMethod);
+    if (itr != convertPnPSACMethod.end())
+    {
+        postPNPMethod = itr->second;
+        // Test if method is adapted to non Ransac PNP (here non USAC methods)
+        if (postPNPMethod < cv::SOLVEPNP_ITERATIVE || postPNPMethod > cv::SOLVEPNP_IPPE_SQUARE)
+        {
+            postPNPMethod = -1;
+            LOG_WARNING("Post Pnp method called {} cannot be used, only non USAC mathods are possible. Post PNP will not applied ", m_postPNPMethod);
+        }
+    }
+
+    // Applied a post PNP processing on Ransac PNP inliers.
+    if (postPNPMethod != -1)
+    {
+        cv::solvePnP(in3d, in2d, m_camMatrix, m_camDistorsion, raux,taux, true, postPNPMethod);
+    }
+    else {
+
+    }
 
     raux.convertTo(Rvec, CV_32F);
     taux.convertTo(Tvec, CV_32F);
