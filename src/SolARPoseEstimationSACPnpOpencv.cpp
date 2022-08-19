@@ -137,9 +137,6 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
     raux.convertTo(Rvec, CV_32F);
     taux.convertTo(Tvec, CV_32F);
 
-	std::cout << "raux:\n" << raux << std::endl;
-	std::cout << "taux:\n" << taux << std::endl;
-
     cv::Mat_<float> rotMat(3, 3);
     cv::Rodrigues(Rvec, rotMat);
 
