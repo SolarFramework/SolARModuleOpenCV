@@ -1,6 +1,17 @@
-SolArModulePipeline {
-    moduleName="SolARModuleOpenCV"
-    dirName="SolARBuild"
-    runTests=true
-    android=true
+node("master") {
+	SolArModulePipeline {
+		moduleName="SolARModuleOpenCV"
+		dirName="SolARBuild"
+		runTests=true
+		buildDir="SolARModuleOpenCV"
+		android=true
+	}
+
+	SolArModulePipeline {
+		moduleName="SolARModuleOpenCVCuda"
+		dirName="SolARBuild"
+		runTests=true
+		buildDir="SolARModuleOpenCVCuda"
+		android=false
+	}
 }

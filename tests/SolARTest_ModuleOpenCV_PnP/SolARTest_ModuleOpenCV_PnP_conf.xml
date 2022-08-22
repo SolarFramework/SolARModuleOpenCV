@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xpcf-registry autoAlias="true">
+    <module uuid="1fd044d1-8e45-4380-b3df-2b8e997c1588" name="SolARModuleOpenCV" description="SolARModuleOpenCV" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/1.0.0/lib/x86_64/shared">
+        <component uuid="4d369049-809c-4e99-9994-5e8167bab808" name="SolARPoseEstimationSACPnpOpencv" description="PnP Ransac implemented in OpenCV.">
+                <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+                <interface uuid="8dd889c5-e8e6-4b3b-92e4-34cf7442f272" name="I3DTransformSACFinderFrom2D3D" description="I3DTransformFinderFrom2D3D"/>
+        </component>
+    </module>
+	
+    <factory>
+        <bindings>
+            <bind name="ITERATIVE" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="ITERATIVE"/>
+            <bind name="EPNP" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="EPNP"/>
+            <bind name="DLS" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="DLS"/>
+            <bind name="UPNP" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="UPNP"/>
+            <bind name="IPPE" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="IPPE"/>
+            <bind name="USAC" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="USAC"/>
+            <bind name="USAC PARALLEL" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="USAC PARALLEL"/>
+            <bind name="USAC FM 8PTS" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="USAC FM 8PTS"/>
+            <bind name="USAC FAST" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="USAC FAST"/>
+            <bind name="USAC ACCURATE" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="USAC ACCURATE"/>
+            <bind name="USAC PROSAC" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="USAC PROSAC"/>
+            <bind name="USAC MAGSAC" interface="I3DTransformSACFinderFrom2D3D" to="SolARPoseEstimationSACPnpOpencv" properties="USAC MAGSAC"/>
+        </bindings>
+    </factory>
+    <properties>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="ITERATIVE">
+            <property name="method" type="string" value="ITERATIVE"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="EPNP">
+            <property name="method" type="string" value="EPNP"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="DLS">
+            <property name="method" type="string" value="DLS"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="UPNP">
+            <property name="method" type="string" value="UPNP"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="IPPE">
+            <property name="method" type="string" value="IPPE"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC">
+            <property name="method" type="string" value="USAC"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC PARALLEL">
+            <property name="method" type="string" value="USAC PARALLEL"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC FM 8PTS">
+            <property name="method" type="string" value="USAC FM 8PTS"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC FAST">
+            <property name="method" type="string" value="USAC FAST"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC ACCURATE">
+            <property name="method" type="string" value="USAC ACCURATE"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC PROSAC">
+            <property name="method" type="string" value="USAC PROSAC"/>
+        </configure>
+        <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC MAGSAC">
+            <property name="method" type="string" value="USAC MAGSAC"/>
+        </configure>
+    </properties>
+</xpcf-registry>

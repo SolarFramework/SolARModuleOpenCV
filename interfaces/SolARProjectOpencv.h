@@ -42,28 +42,33 @@ public:
     ///@brief SolARProjectOpencv destructor;
     ~SolARProjectOpencv() override;
 
-    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
-    /// @param[in] Camera calibration matrix parameters.
-    /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const datastructure::CamCalibration & intrinsicParams, const datastructure::CamDistortion & distorsionParams) override;
-
     /// @brief This method project a set of 3D points in the image plane
     /// @param[in] inputPoints the set of 3D points to project
     /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
-    /// @param[out] outputPoints the resulting set of 2D points define in the image coordinate systemn
+    /// @param[in] camParams the camera parameters.
+    /// @param[out] imagePoints the resulting set of 2D points defined in the image coordinate systemn
     /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
-    FrameworkReturnCode project(const std::vector<datastructure::Point3Df> & inputPoints, std::vector<datastructure::Point2Df> & imagePoints, const datastructure::Transform3Df & pose = datastructure::Transform3Df::Identity()) override;
+    FrameworkReturnCode project(const std::vector<SolAR::datastructure::Point3Df> & inputPoints,
+                                const SolAR::datastructure::Transform3Df& pose,
+                                const SolAR::datastructure::CameraParameters & camParams,
+                                std::vector<SolAR::datastructure::Point2Df> & imagePoints) override;
 
     /// @brief This method project a set of 3D cloud points in the image plane
     /// @param[in] inputPoints the set of 3D cloud points to project
     /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
-    /// @param[out] outputPoints the resulting set of 2D points define in the image coordinate systemn
+    /// @param[in] camParams the camera parameters.
+    /// @param[out] imagePoints the resulting set of 2D points defined in the image coordinate systemn
     /// @return FrameworkReturnCode::_SUCCESS_ if 3D projection succeed, else FrameworkReturnCode::_ERROR.
-    FrameworkReturnCode project(const std::vector<SRef<datastructure::CloudPoint>> & inputPoints, std::vector<datastructure::Point2Df> & imagePoints, const datastructure::Transform3Df & pose = datastructure::Transform3Df::Identity()) override;
+    FrameworkReturnCode project(const std::vector<SRef<SolAR::datastructure::CloudPoint>> & inputPoints,
+                                const SolAR::datastructure::Transform3Df& pose,
+                                const SolAR::datastructure::CameraParameters & camParams,
+                                std::vector<SolAR::datastructure::Point2Df> & imagePoints) override;
 
 
     void unloadComponent () override final;
 
+private:
+	void setCameraParameters(const SolAR::datastructure::CameraParameters & camParams);
 
 private:
     cv::Mat m_camMatrix;

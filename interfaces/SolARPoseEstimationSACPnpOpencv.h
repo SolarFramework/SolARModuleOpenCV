@@ -63,42 +63,39 @@ public:
     ///@brief SolARPoseEstimationSACPnpOpencv destructor;
     ~SolARPoseEstimationSACPnpOpencv() override;
 
-	/// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
-	/// @param[in] imagePoints, set of 2d_points seen in view_1.
-	/// @param[in]  worldPoints, set of 3d_points corresponding to view_1.
-	/// @param[out] inliers: indices of inlier correspondences.
-	/// @param[out] pose, camera pose (pose of the camera defined in world corrdinate system) expressed as a Transform3D.
-	/// @param[in] initialPose (Optional), a transform3D to initialize the pose (reducing the convergence time and improving its success).
-	FrameworkReturnCode estimate(const std::vector<datastructure::Point2Df> & imagePoints,
-								const std::vector<datastructure::Point3Df> & worldPoints,
-								std::vector<uint32_t> & inliers,
-								datastructure::Transform3Df & pose,
-								const datastructure::Transform3Df initialPose = datastructure::Transform3Df::Identity()) override;
-
-
-    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
-    /// @param[in] Camera calibration matrix parameters.
-    /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const datastructure::CamCalibration & intrinsicParams,
-                             const datastructure::CamDistortion & distorsionParams)  override;
+    /// @brief Estimates camera pose from a set of 2D image points of their corresponding 3D  world points.
+    /// @param[in] inputPoints the set of 3D cloud points to project
+    /// @param[in] pose the 3D pose of the camera (a 4x4 float matrix)
+    /// @param[in] camParams the camera parameters.
+    /// @param[out] inliers indices of inlier correspondences.
+    /// @param[out] pose camera pose (pose of the camera defined in world corrdinate system) expressed as a Transform3D.
+    /// @param[in] initialPose (Optional) a transform3D to initialize the pose (reducing the convergence time and improving its success).
+    /// @return FrameworkReturnCode::_SUCCESS if succeed, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode estimate(const std::vector<SolAR::datastructure::Point2Df> & imagePoints,
+                                 const std::vector<SolAR::datastructure::Point3Df> & worldPoints,
+                                 const SolAR::datastructure::CameraParameters & camParams,
+                                 std::vector<uint32_t> & inliers,
+                                 SolAR::datastructure::Transform3Df & pose,
+                                 const SolAR::datastructure::Transform3Df initialPose = SolAR::datastructure::Transform3Df::Identity()) override;
 
     void unloadComponent () override final;
-
+private:
+    void setCameraParameters(const SolAR::datastructure::CameraParameters & camParams);
 
 private:
     /// @brief Number of iterations
     int m_iterationsCount = 1000;
 
-    /// @brief Inlier threshold value used by the RANSAC procedure. The parameter value is the maximum allowed distance between the observed and computed point projections to consider it an inlier.
+    /// @brief Inlier threshold value used by the RANSAC procedure. The parameter value is the maximum allowed distance between the observed and computed point projections to consider it an inlier. If less than 0, no reprojection test is applied.
     float m_reprojError = 4.0;
 
     /// @brief The probability that the algorithm produces a useful result.
-    float m_confidence = 0.99f;
+    float m_confidence = 0.99f; 
 
     /// @brief The minimum of number of inliers to valid a good pose estimation
     int m_NbInliersToValidPose = 10;
 
-    /// @brief The method for solving the PnP problem (ITERATIVE, P3P, AP3P, EPNP, DLS, UPNP, IPPE, IPPE_SQUARE)
+    /// @brief The method for solving the PnP Ransac problem (ITERATIVE, P3P, AP3P, EPNP, DLS, UPNP, IPPE, IPPE SQUARE, USAC, USAC PARALLEL, USAC FM 8PTS, USAC FAST, USAC ACCURATE, USAC PROSAC, USAC MAGSAC)
     std::string m_method = "ITERATIVE";
 
     cv::Mat m_camMatrix;

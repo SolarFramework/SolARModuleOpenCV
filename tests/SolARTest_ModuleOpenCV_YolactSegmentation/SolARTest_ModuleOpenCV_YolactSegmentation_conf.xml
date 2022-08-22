@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry autoAlias="true">
-	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV module" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/0.11.0/lib/x86_64/shared">
+	<module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV module" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/1.0.0/lib/x86_64/shared">
 		<component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" name="SolARCameraOpencv" description="SolARCameraOpencv">
 			<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
 			<interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
@@ -41,13 +41,13 @@
 			<property name="deviceID" type="uint" value="0"/>
 		</configure>
         <configure component="SolARYOLACTSegmentationOpencv">
-            <property name="modelFile" type="string" value="../../data/yolact.onnx"/>
+            <property name="modelFile" type="string" value="../../../../data/yolact.onnx"/>
             <property name="confThresh" type="float" value="0.5"/>
             <property name="maskThresh" type="float" value="0.0"/>
         </configure>
 		<configure component="SolARMaskOverlayOpencv">
-			<property name="classFile" type="string" value="../../data/mscoco_labels.names"/>
-			<property name="colorFile" type="string" value="../../data/colors.txt"/>
+			<property name="classFile" type="string" value="../../../../data/mscoco_labels.names"/>
+			<property name="colorFile" type="string" value="../../../../data/colors.txt"/>
 		</configure>		
 		<configure component="SolARImageViewerOpencv">
 			<property name="title" type="string" value="Yolact segmentation (press esc to exit)"/>
