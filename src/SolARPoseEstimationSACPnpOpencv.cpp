@@ -33,14 +33,14 @@ const static std::map<std::string,int> convertPnPSACMethod = {{"ITERATIVE", cv::
                                                               {"DLS", cv::SOLVEPNP_DLS},
                                                               {"UPNP", cv::SOLVEPNP_UPNP},
                                                               {"IPPE", cv::SOLVEPNP_IPPE},
-                                                              {"IPPE SQUARE", cv::SOLVEPNP_IPPE_SQUARE},
+                                                              {"IPPE_SQUARE", cv::SOLVEPNP_IPPE_SQUARE},
                                                               {"USAC", cv::USAC_DEFAULT},
-                                                              {"USAC PARALLEL", cv::USAC_PARALLEL},
-                                                              {"USAC FM 8PTS", cv::USAC_FM_8PTS},
-                                                              {"USAC FAST", cv::USAC_FAST},
-                                                              {"USAC ACCURATE", cv::USAC_ACCURATE},
-                                                              {"USAC PROSAC", cv::USAC_PROSAC},
-                                                              {"USAC MAGSAC",  cv::USAC_MAGSAC},
+                                                              {"USAC_PARALLEL", cv::USAC_PARALLEL},
+                                                              {"USAC_FM_8PTS", cv::USAC_FM_8PTS},
+                                                              {"USAC_FAST", cv::USAC_FAST},
+                                                              {"USAC_ACCURATE", cv::USAC_ACCURATE},
+                                                              {"USAC_PROSAC", cv::USAC_PROSAC},
+                                                              {"USAC_MAGSAC",  cv::USAC_MAGSAC},
                                                              };
 
 SolARPoseEstimationSACPnpOpencv::SolARPoseEstimationSACPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationSACPnpOpencv>())
@@ -78,8 +78,8 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
         method = itr->second;
     else
     {
-        LOG_WARNING("Pnp method called {} does not exist. Method ITERATIVE will be used instead", m_method);
-        method = cv::SOLVEPNP_ITERATIVE;
+        LOG_ERROR("Pnp method called {} does not exist.", m_method);
+		return FrameworkReturnCode::_ERROR_;
     }
 
     Transform3Df initialPoseInverse = initialPose.inverse();
@@ -87,7 +87,7 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
     std::vector<cv::Point2f> imageCVPoints;
     std::vector<cv::Point3f> worldCVPoints;
     if (worldPoints.size()!=imagePoints.size() || worldPoints.size()< 4 ){
-        LOG_WARNING("world/image points must be valid ( equal and > to 4)");
+        LOG_ERROR("world/image points must be valid ( equal and > to 4)");
         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
     }
 
@@ -120,11 +120,8 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
 
     inliers.clear();
 
-    std::vector<cv::Point3f>in3d;
-    std::vector<cv::Point2f>in2d;
-
 	// get inliers
-    for (unsigned int i = 0; i < inliers_cv.rows; i++){
+    for (unsigned int i = 0; i < inliers_cv.rows; ++i){
         inliers.push_back(inliers_cv.at<int>(i));       
     }
 
