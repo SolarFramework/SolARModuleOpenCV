@@ -1,52 +1,33 @@
-#include <iostream>
-#include <fstream>
-
-#include <string>
-#include <vector>
-
-
-//#include <boost/log/core.hpp>
-#include "xpcf/xpcf.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <iomanip>
-#include <sstream>
+/**
+ * @copyright Copyright (c) 2017 B-com http://www.b-com.com/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#include "random_generators.hpp"
+#include <boost/log/core.hpp>
+#include <core/Log.h>
+#include <xpcf/xpcf.h>
+#include <core/Timer.h>
+#include <api/solver/pose/I3DTransformSACFinderFrom2D3D.h>
 #include <algorithm>
 #include <random>
 
-#include "random_generators.hpp"
-#include "experiment_helpers.hpp"
-#include "time_measurement.hpp"
-
-#include <boost/log/core.hpp>
-
 using namespace Eigen;
 using namespace SolAR::PnPTest;
-
-#include "core/Log.h"
-
-// ADD COMPONENTS HEADERS HERE
-
-#include "xpcf/xpcf.h"
-
-#include "api/solver/pose/I3DTransformFinderFrom2D3D.h"
-#include "api/solver/pose/I3DTransformSACFinderFrom2D3D.h"
-
 using namespace SolAR;
 using namespace SolAR::datastructure;
 using namespace SolAR::api;
 namespace xpcf  = org::bcom::xpcf;
-
-void help()
-{
-    std::cout << "\n\n";
-    std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n";
-    std::cout << "Something went wrong with input files \n";
-    std::cout << "please refer to README.adoc in the project directory \n";
-    std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n";
-    exit(-1);
-}
 
 int main()
 {
@@ -54,36 +35,20 @@ int main()
     boost::log::core::get()->set_logging_enabled(false);
 #endif
 
+	LOG_ADD_LOG_TO_CONSOLE();
+
     //initialize random seed
     initializeRandomSeed();
 
     try {
 
-        SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
+		SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
 
         if(xpcfComponentManager->load("SolARTest_ModuleOpenCV_PnP_conf.xml")!=org::bcom::xpcf::_SUCCESS)
         {
             LOG_ERROR("Failed to load the configuration file SolARTest_ModuleOpenCV_PnP_conf.xml")
             return -1;
-        }
-
-        CamCalibration  intrinsicParams;
-        //set to identity Matrix
-        intrinsicParams(0,0) = 1; intrinsicParams(0,1) = 0; intrinsicParams(0,2) = 0;
-        intrinsicParams(1,0) = 0; intrinsicParams(1,1) = 1; intrinsicParams(1,2) = 0;
-        intrinsicParams(2,0) = 0; intrinsicParams(2,1) = 0; intrinsicParams(2,2) = 1;
-
-        CamDistortion   distortionParams;
-        distortionParams(0,0) =0;
-        distortionParams(1,0) =0;
-        distortionParams(2,0) =0;
-        distortionParams(3,0) =0;
-        distortionParams(4,0) =0;
-
-		CameraParameters camParams;
-		camParams.intrinsic = intrinsicParams;
-		camParams.distortion = distortionParams;
-
+        }        
 
         auto poseEstimation_iterative = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("ITERATIVE");
         auto poseEstimation_epnp = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("EPNP");
@@ -92,12 +57,17 @@ int main()
         auto poseEstimation_ippe = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("IPPE");
 
         auto poseEstimation_usac = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC");
-        auto poseEstimation_usac_parralel = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC PARALLEL");
-        auto poseEstimation_usac_fm_8pts = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC FM 8PTS");
-        auto poseEstimation_usac_fast = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC FAST");
-        auto poseEstimation_usac_accurate = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC ACCURATE");
-        auto poseEstimation_usac_prosac = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC PROSAC");
-        auto poseEstimation_usac_magsac = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC MAGSAC");
+        auto poseEstimation_usac_parralel = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC_PARALLEL");
+        auto poseEstimation_usac_fm_8pts = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC_FM_8PTS");
+        auto poseEstimation_usac_fast = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC_FAST");
+        auto poseEstimation_usac_accurate = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC_ACCURATE");
+        auto poseEstimation_usac_prosac = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC_PROSAC");
+        auto poseEstimation_usac_magsac = xpcfComponentManager->resolve<solver::pose::I3DTransformSACFinderFrom2D3D>("USAC_MAGSAC");
+
+		// Init camera parameters
+		CameraParameters camParams;
+		camParams.intrinsic = CamCalibration::Identity();
+		camParams.distortion = CamDistortion::Zero();
 
 		// generate a random pose
 		Transform3Df poseGT;
@@ -106,7 +76,6 @@ int main()
 		poseGT.translation() = position;
 		poseGT.linear() = rotation;
 		Transform3Df poseGTInv = poseGT.inverse();
-
 		std::cout << "Ground truth pose: \n" << poseGT.matrix() << std::endl;
 
         //synthetize 2d points and 3d points to test the components.
@@ -120,7 +89,7 @@ int main()
         worldPoints.resize(nbPoints);
 
         for(unsigned int kc =0; kc < nbPoints; kc++){
-            Eigen::Vector3f  current_random_point = poseGT * generateRandomPoint();
+            Eigen::Vector3f  current_random_point = generateRandom3DPointInFrontOfCam(poseGT);
             //project the point into the viewpoint frame
 			Eigen::Vector3f pt2D = poseGTInv * current_random_point;
 
@@ -184,15 +153,13 @@ int main()
          std::vector<uint32_t> inlier_usac_magsac;
 
          //timer
-         struct timeval tic;
-         struct timeval toc;
-         size_t iterations = 50;
+         size_t iterations = 500;
+		 Timer timer;
 
          std::cout<< "********************* pose_iterative **************************"<<std::endl;
-         gettimeofday(&tic, 0);
+		 timer.restart();
 		 poseEstimation_iterative->estimate(imagePoints, worldPoints, camParams, inlier_iterative, pose_iterative);			 	          
-         gettimeofday(&toc, 0);
-         std::cout<<"Computed in "<< TIMETODOUBLE(timeval_minus(toc, tic)) <<"s"<<std::endl;
+         std::cout<<"Computed in "<< timer.elapsed() <<"ms"<<std::endl;
 		 std::cout << pose_iterative.matrix() << std::endl;
 		 if (verifyPnP(poseGT, inliersGT, pose_iterative, inlier_iterative))
 			 std::cout << "====> OK\n\n";
@@ -200,10 +167,9 @@ int main()
 			 std::cout << "====> NOK\n\n";
 
          std::cout<< "********************* pose_epnp **************************"<<std::endl;
-         gettimeofday(&tic, 0);
+		 timer.restart();
          poseEstimation_epnp->estimate(imagePoints, worldPoints, camParams, inlier_epnp, pose_epnp);         
-         gettimeofday(&toc, 0);
-         std::cout<<"Computed in "<< TIMETODOUBLE(timeval_minus(toc, tic)) <<"s"<<std::endl;
+		 std::cout << "Computed in " << timer.elapsed() << "ms" << std::endl;
 		 std::cout << pose_epnp.matrix() << std::endl;
 		 if (verifyPnP(poseGT, inliersGT, pose_epnp, inlier_epnp))
 			 std::cout << "====> OK\n\n";
@@ -211,10 +177,9 @@ int main()
 			 std::cout << "====> NOK\n\n";
 
          std::cout<< "********************* pose_dls **************************"<<std::endl;
-         gettimeofday(&tic, 0);
+		 timer.restart();
          poseEstimation_dls->estimate(imagePoints, worldPoints, camParams, inlier_dls, pose_dls);         
-         gettimeofday(&toc, 0);
-         std::cout<<"Computed in "<< TIMETODOUBLE(timeval_minus(toc, tic)) <<"s"<<std::endl;
+		 std::cout << "Computed in " << timer.elapsed() << "ms" << std::endl;
 		 std::cout << pose_dls.matrix() << std::endl;
 		 if (verifyPnP(poseGT, inliersGT, pose_dls, inlier_dls))
 			 std::cout << "====> OK\n\n";
@@ -222,10 +187,9 @@ int main()
 			 std::cout << "====> NOK\n\n";
 
          std::cout<< "********************* pose_upnp **************************"<<std::endl;
-         gettimeofday(&tic, 0);
+		 timer.restart();
          poseEstimation_upnp->estimate(imagePoints, worldPoints, camParams, inlier_upnp, pose_upnp);         
-         gettimeofday(&toc, 0);
-         std::cout<<"Computed in "<< TIMETODOUBLE(timeval_minus(toc, tic)) <<"s"<<std::endl;
+		 std::cout << "Computed in " << timer.elapsed() << "ms" << std::endl;
 		 std::cout << pose_upnp.matrix() << std::endl;
 		 if (verifyPnP(poseGT, inliersGT, pose_upnp, inlier_upnp))
 			 std::cout << "====> OK\n\n";
@@ -233,10 +197,9 @@ int main()
 			 std::cout << "====> NOK\n\n";
 
          std::cout<< "********************* pose_usac **************************"<<std::endl;
-         gettimeofday(&tic, 0);
+		 timer.restart();
          poseEstimation_usac->estimate(imagePoints, worldPoints, camParams, inlier_usac, pose_usac);         
-         gettimeofday(&toc, 0);
-         std::cout<<"Computed in "<< TIMETODOUBLE(timeval_minus(toc, tic)) <<"s"<<std::endl;
+		 std::cout << "Computed in " << timer.elapsed() << "ms" << std::endl;
 		 std::cout << pose_usac.matrix() << std::endl;
 		 if (verifyPnP(poseGT, inliersGT, pose_usac, inlier_usac))
 			 std::cout << "====> OK\n\n";
@@ -244,10 +207,9 @@ int main()
 			 std::cout << "====> NOK\n\n";
 
          std::cout<< "********************* pose_usac_fm_8pts **************************"<<std::endl;
-         gettimeofday(&tic, 0);
+		 timer.restart();
          poseEstimation_usac_fm_8pts->estimate(imagePoints, worldPoints, camParams, inlier_usac_fm_8pts, pose_usac_fm_8pts);         
-         gettimeofday(&toc, 0);
-         std::cout<<"Computed in "<< TIMETODOUBLE(timeval_minus(toc, tic)) <<"s"<<std::endl;
+		 std::cout << "Computed in " << timer.elapsed() << "ms" << std::endl;
 		 std::cout << pose_usac_fm_8pts.matrix() << std::endl;
 		 if (verifyPnP(poseGT, inliersGT, pose_usac_fm_8pts, inlier_usac_fm_8pts))
 			 std::cout << "====> OK\n\n";
@@ -255,10 +217,9 @@ int main()
 			 std::cout << "====> NOK\n\n";
 
          std::cout<< "********************* pose_usac_fast **************************"<<std::endl;
-         gettimeofday(&tic, 0);
+		 timer.restart();
          poseEstimation_usac_fast->estimate(imagePoints, worldPoints, camParams, inlier_usac_fast, pose_usac_fast);         
-         gettimeofday(&toc, 0);
-         std::cout<<"Computed in "<< TIMETODOUBLE(timeval_minus(toc, tic)) <<"s"<<std::endl;
+		 std::cout << "Computed in " << timer.elapsed() << "ms" << std::endl;
 		 std::cout << pose_usac_fast.matrix() << std::endl;
 		 if (verifyPnP(poseGT, inliersGT, pose_usac_fast, inlier_usac_fast))
 			 std::cout << "====> OK\n\n";
@@ -266,10 +227,9 @@ int main()
 			 std::cout << "====> NOK\n\n";
 
          std::cout<< "********************* pose_usac_accurate **************************"<<std::endl;
-         gettimeofday(&tic, 0);
+		 timer.restart();
          poseEstimation_usac_accurate->estimate(imagePoints, worldPoints, camParams, inlier_usac_accurate, pose_usac_accurate);         
-         gettimeofday(&toc, 0);
-         std::cout<<"Computed in "<< TIMETODOUBLE(timeval_minus(toc, tic)) <<"s"<<std::endl;
+		 std::cout << "Computed in " << timer.elapsed() << "ms" << std::endl;
 		 std::cout << pose_usac_accurate.matrix() << std::endl;
 		 if (verifyPnP(poseGT, inliersGT, pose_usac_accurate, inlier_usac_accurate))
 			 std::cout << "====> OK\n\n";
@@ -277,10 +237,9 @@ int main()
 			 std::cout << "====> NOK\n\n";
 
          std::cout<< "********************* pose_usac_prosac **************************"<<std::endl;
-         gettimeofday(&tic, 0);
+		 timer.restart();
          poseEstimation_usac_prosac->estimate(imagePoints, worldPoints, camParams, inlier_usac_prosac, pose_usac_prosac);         
-         gettimeofday(&toc, 0);
-         std::cout<<"Computed in "<< TIMETODOUBLE(timeval_minus(toc, tic)) <<"s"<<std::endl;
+		 std::cout << "Computed in " << timer.elapsed() << "ms" << std::endl;
 		 std::cout << pose_usac_prosac.matrix() << std::endl;
 		 if (verifyPnP(poseGT, inliersGT, pose_usac_prosac, inlier_usac_prosac))
 			 std::cout << "====> OK\n\n";
@@ -288,10 +247,9 @@ int main()
 			 std::cout << "====> NOK\n\n";
 
          std::cout<< "********************* pose_usac_magsac **************************"<<std::endl;
-         gettimeofday(&tic, 0);
+		 timer.restart();
          poseEstimation_usac_magsac->estimate(imagePoints, worldPoints, camParams, inlier_usac_magsac, pose_usac_magsac);         
-         gettimeofday(&toc, 0);
-         std::cout<<"Computed in "<< TIMETODOUBLE(timeval_minus(toc, tic)) <<"s"<<std::endl;
+		 std::cout << "Computed in " << timer.elapsed() << "ms" << std::endl;
 		 std::cout << pose_usac_magsac.matrix() << std::endl;
 		 if (verifyPnP(poseGT, inliersGT, pose_usac_magsac, inlier_usac_magsac))
 			 std::cout << "====> OK\n\n";

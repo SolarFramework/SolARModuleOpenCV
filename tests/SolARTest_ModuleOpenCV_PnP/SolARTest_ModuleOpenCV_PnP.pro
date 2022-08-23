@@ -36,11 +36,9 @@ PROJECTCONFIG = QTVS
 #NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
 include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/templateappconfig.pri)))  # Shell_quote & shell_path required for visual on windows
 
-HEADERS += random_generators.hpp \
-time_measurement.hpp
+HEADERS += random_generators.hpp
 
 SOURCES += random_generators.cpp \
-time_measurement.cpp \
 main.cpp
 
 
