@@ -42,7 +42,8 @@
 			<property name="deviceID" type="uint" value="0"/>
 		</configure>
         <configure component="SolARGenericSemanticSegmentationOpencv">
-            <property name="modelFile" type="string" value="../../../../data/fcn_r101-d8_480x480_80k_pascal_context_59_512x512.onnx"/>
+            <property name="modelFile" type="string" value="../../../../data/pspnet_r50-d8_512x512_4x4_80k_coco-stuff164k_argmax_removed.onnx"/>
+			<property name="argMaxRemoved" type="int" value="1" description="if argmax layer has been removed in the above onnx model"/>
 			<property name="mean" type="float" description="normalize input RGB image by subtracting mean">
 				<value>123.675</value>
 				<value>116.28</value>
@@ -59,11 +60,16 @@
 			</property>
         </configure>
 		<configure component="SolARMaskOverlayOpencv">
-			<property name="classFile" type="string" value="../../../../data/pascalcontext59-classes.txt"/>
-			<property name="colorFile" type="string" value="../../../../data/pascalcontext59-colors.txt"/>
+			<property name="classFile" type="string" value="../../../../data/cocostuff164k-classes.txt"/>
+			<property name="colorFile" type="string" value="../../../../data/cocostuff164k-colors.txt"/>
+			<property name="otherClassColor" type="uint" description="in colorFile the RGB color that represents all other classes (one color for multiple unimportant classes)">
+				<value>255</value>
+				<value>255</value>
+				<value>255</value>
+			</property>
 		</configure>		
 		<configure component="SolARImageViewerOpencv">
-			<property name="title" type="string" value="FCN_r101-d8 semantic segmentation (press esc to exit)"/>
+			<property name="title" type="string" value="PSPNet semantic segmentation (press esc to exit)"/>
 			<property name="exitKey" type="int" value="27"/>
 			<property name="width" type="int" value="-1"/>
 			<property name="height" type="int" value="-1"/>

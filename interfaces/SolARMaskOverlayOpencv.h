@@ -77,6 +77,9 @@ private:
 	std::string					m_colorFile;
 	std::vector<std::string>	m_classes;
 	std::vector<cv::Scalar>		m_colors;
+	std::vector<int>			m_otherClassColor = {0, 0, 0}; 
+	std::vector<std::string>	m_classes_legend;
+	std::vector<cv::Scalar>		m_colors_legend;
 };
 
 }

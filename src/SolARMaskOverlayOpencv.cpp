@@ -33,6 +33,7 @@ SolARMaskOverlayOpencv::SolARMaskOverlayOpencv():ConfigurableBase(xpcf::toUUID<S
     declareInterface<api::display::IMaskOverlay>(this);
     declareProperty("classFile", m_classFile);
     declareProperty("colorFile", m_colorFile);
+	declarePropertySequence("otherClassColor", m_otherClassColor);
 }
 
 SolARMaskOverlayOpencv::~SolARMaskOverlayOpencv()
@@ -57,6 +58,19 @@ xpcf::XPCFErrorCode SolARMaskOverlayOpencv::onConfigured()
 		iss >> r >> g >> b;
 		m_colors.push_back(cv::Scalar(b, g, r, 255.0));
 	}
+	
+	// extract effective class and colors for legend display 
+	for (int i = 0; i < static_cast<int>(m_colors.size()); i++) {
+		if ((static_cast<int>(m_colors[i][2]) != m_otherClassColor[0]) ||
+			(static_cast<int>(m_colors[i][1]) != m_otherClassColor[1]) || 
+			(static_cast<int>(m_colors[i][0]) != m_otherClassColor[2])) {
+			m_classes_legend.push_back(m_classes[i]);
+			m_colors_legend.push_back(m_colors[i]);
+		}
+	}
+	m_classes_legend.push_back("Other");
+	m_colors_legend.push_back(cv::Scalar(m_otherClassColor[2], m_otherClassColor[1], m_otherClassColor[0], 255.0));
+	
 	return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
@@ -145,21 +159,21 @@ FrameworkReturnCode SolARMaskOverlayOpencv::draw(SRef<SolAR::datastructure::Imag
 		lgd.setTo(cv::Scalar(0,0,0));
 		for (int i = 0; i < nclasses; i++) {
 			cv::Mat block = lgd.rowRange(i * kBlockHeight, (i + 1) * kBlockHeight);
-			block.setTo(cv::Vec3b(m_colors[i+ offset][0], m_colors[i+ offset][1], m_colors[i+ offset][2]));
-			putText(block, m_classes[i+ offset], cv::Point(0, kBlockHeight / 2), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Vec3b(255, 255, 255));
+			block.setTo(cv::Vec3b(m_colors_legend[i+ offset][0], m_colors_legend[i+ offset][1], m_colors_legend[i+ offset][2]));
+			putText(block, m_classes_legend[i+ offset], cv::Point(0, kBlockHeight / 2), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Vec3b(0, 0, 0));
 		}
 	};
 
 	if (legend.empty())
 	{
-		const int numClasses = std::min<int>(numClassesPerLegend,(int)m_classes.size());
+		const int numClasses = std::min<int>(numClassesPerLegend,(int)m_classes_legend.size());
 		fnGenLegend(legend, numClasses, 0);
 	}
 	legend.copyTo(imageCV(cv::Rect(cols - 100, 0, 100, rows)));
 	// number of classes between 31 and 60, need a second legend
-	if (static_cast<int>(m_classes.size()) > numClassesPerLegend) {
+	if (static_cast<int>(m_classes_legend.size()) > numClassesPerLegend) {
 		if (legend2.empty()) {
-			const int numClasses2 = std::min<int>(numClassesPerLegend, (int)m_classes.size() - numClassesPerLegend);
+			const int numClasses2 = std::min<int>(numClassesPerLegend, (int)m_classes_legend.size() - numClassesPerLegend);
 			fnGenLegend(legend2, numClasses2, numClassesPerLegend);
 		}
 		legend2.copyTo(imageCV(cv::Rect(0, 0, 100, rows)));
