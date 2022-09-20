@@ -322,8 +322,9 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 		const Keypoint& kpUn1 = kpsUn1[goodMatches[i].getIndexInDescriptorA()];
 		const Keypoint& kpUn2 = kpsUn2[goodMatches[i].getIndexInDescriptorB()];
 		
-		// if different semantic id, either segmentation or the matching is bad 
-		if (kpUn1.getClassId() >= 0 && kpUn2.getClassId() >= 0) 
+		// if both key points have valid class id, id -1 means that this key point does not have corresponding object class  
+		// when both have class id, filter out those pair of key points with incoherent class id 
+		if (kpUn1.getClassId() >= 0 && kpUn2.getClassId() >= 0)
 			if (kpUn1.getClassId() != kpUn2.getClassId())
 				continue;
 
@@ -364,7 +365,10 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 		SRef<CloudPoint> cp = xpcf::utils::make_shared<CloudPoint>(pts3D[i].getX(), pts3D[i].getY(), pts3D[i].getZ(), 
 			rgbMean[0], rgbMean[1], rgbMean[2], meanCamCenter(0) - pts3D[i].getX(), meanCamCenter(1) - pts3D[i].getY(), meanCamCenter(2) - pts3D[i].getZ(), 
 			reprj_err, visibility, descMean);
-		cp->setSemanticId(kpUn1.getClassId());
+		int cid = kpUn1.getClassId();
+		if (cid < 0)
+			cid = kpUn2.getClassId();
+		cp->setSemanticId(cid);
 		pcloud.push_back(cp);
 	}
 	cv::Scalar mse = cv::mean(reproj_error);
