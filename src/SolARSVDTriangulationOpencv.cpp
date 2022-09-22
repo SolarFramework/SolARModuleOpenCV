@@ -268,6 +268,8 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
                                                 SRef<SolAR::datastructure::Frame> frame2,
                                                 const std::vector<SolAR::datastructure::DescriptorMatch>& matches,
                                                 const std::pair<uint32_t, uint32_t>& working_views,
+                                                const SolAR::datastructure::CameraParameters & camParams1,
+                                                const SolAR::datastructure::CameraParameters & camParams2,
                                                 std::vector<SRef<SolAR::datastructure::CloudPoint>>& pcloud,
                                                 const bool & onlyDepth)
 {
@@ -289,8 +291,6 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 	const std::vector<Keypoint>& kpsUn1 = frame1->getUndistortedKeypoints();
 	const std::vector<Keypoint>& kpsUn2 = frame2->getUndistortedKeypoints();
 	std::vector<SolAR::datastructure::DescriptorMatch> goodMatches;
-	const CameraParameters& camParams1 = frame1->getCameraParameters();
-	const CameraParameters& camParams2 = frame2->getCameraParameters();
 	std::vector<Point3Df> pts3D;
 	for (int i = 0; i < matches.size(); ++i) {
 		const Keypoint &kp1 = kpsUn1[matches[i].getIndexInDescriptorA()];

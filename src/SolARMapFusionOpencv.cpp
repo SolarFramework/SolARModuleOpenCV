@@ -164,7 +164,12 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 	globalMap->getKeyframeCollection(globalKeyframeCollection);
 	globalKeyframeCollection->getAllKeyframes(globalKeyframes);
 
-	// get covisibility graph
+    // get Camera Parameters
+    const SRef<CameraParametersCollection>& cameraParametersCollection = map->getConstCameraParametersCollection();
+    SRef<CameraParametersCollection> globalCameraParametersCollection;
+    globalMap->getCameraParametersCollection(globalCameraParametersCollection);
+
+    // get covisibility graph
 	const SRef<CovisibilityGraph>& covisibilityGraph = map->getConstCovisibilityGraph();
 	SRef<CovisibilityGraph> globalCovisibilityGraph;
 	globalMap->getCovisibilityGraph(globalCovisibilityGraph);
@@ -193,8 +198,33 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 
 	// add keyframes of local map to global map
 	std::map<uint32_t, uint32_t> idxKfOldNew;
+    std::map<uint32_t, uint32_t> local2GlobalMapCameraID; // A table matching camera ID between the local and global map
 	for (const auto &kf : keyframes) {
-		// unscale keyframe pose
+        // Check if CameraID already exists
+        uint32_t newCameraID;
+        std::map<uint32_t, uint32_t>::iterator camIt = local2GlobalMapCameraID.find(kf->getCameraID());
+        if (camIt == local2GlobalMapCameraID.end())
+        {
+            // This camera model has not been added yet to the global map
+            CameraParameters kfCameraParameters;
+            if (cameraParametersCollection->getCameraParameters(kf->getCameraID(), kfCameraParameters) == FrameworkReturnCode :: _SUCCESS)
+            {
+                SRef<CameraParameters> newCameraParameters = xpcf::utils::make_shared<CameraParameters>(kfCameraParameters);
+                globalCameraParametersCollection->addCameraParameters(newCameraParameters);
+                newCameraID = newCameraParameters->id;
+                local2GlobalMapCameraID.insert(std::make_pair(kf->getCameraID(), newCameraID));
+            }
+            else {
+                LOG_ERROR("camera parameters with ID {} does not exists in local map", kf->getCameraID());
+                continue;
+            }
+        }
+        else {
+            newCameraID = camIt->second;
+        }
+        kf->setCameraID(newCameraID);
+
+        // unscale keyframe pose
 		Transform3Df kfPose = kf->getPose();
 		Eigen::Matrix3f scale;
 		Eigen::Matrix3f rot;
