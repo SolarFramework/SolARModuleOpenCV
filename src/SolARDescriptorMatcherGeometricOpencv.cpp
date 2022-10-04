@@ -20,6 +20,9 @@
 
 namespace xpcf  = org::bcom::xpcf;
 
+// test optimization code implemented by yzhou 
+#define OPTIM_ON
+
 XPCF_DEFINE_FACTORY_CREATE_INSTANCE(SolAR::MODULES::OPENCV::SolARDescriptorMatcherGeometricOpencv)
 
 namespace SolAR {
@@ -38,6 +41,22 @@ SolARDescriptorMatcherGeometricOpencv::SolARDescriptorMatcherGeometricOpencv(): 
 SolARDescriptorMatcherGeometricOpencv::~SolARDescriptorMatcherGeometricOpencv()
 {
     LOG_DEBUG(" SolARDescriptorMatcherGeometricOpencv destructor")
+}
+
+xpcf::XPCFErrorCode SolARDescriptorMatcherGeometricOpencv::onConfigured()
+{
+#ifdef OPTIM_ON
+	LOG_DEBUG(" SolARDescriptorMatcherGeometricOpencv onConfigured");
+#ifdef WITHCUDA
+	m_matcher = cv::cuda::DescriptorMatcher::createBFMatcher(cv::NORM_L2);
+#else
+	if (SolAROpenCVHelper::createMatcher(m_type, m_matcher) != FrameworkReturnCode::_SUCCESS) {
+		LOG_ERROR("Descriptor matcher type {} is not supported", m_type);
+		return xpcf::XPCFErrorCode::_FAIL;
+	}
+#endif // WITHCUDA
+#endif	
+	return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
 FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1,
@@ -96,7 +115,49 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 	cv::Mat cvDescriptor2(descriptors2->getNbDescriptors(), descriptors2->getNbElements(), type_conversion);
 	cvDescriptor2.data = (uchar*)descriptors2->data();
 
-	// match
+#ifdef OPTIM_ON
+	// perform descriptor matching first on GPU using Cuda if SolARModuleOpenCVCuda
+	std::vector< std::vector<cv::DMatch> > nn_matches;
+#ifdef WITHCUDA
+	if (descriptors1->getDescriptorDataType() != DescriptorDataType::TYPE_32F)
+		cvDescriptor1.convertTo(cvDescriptor1, CV_32F);
+	if (descriptors2->getDescriptorDataType() != DescriptorDataType::TYPE_32F)
+		cvDescriptor2.convertTo(cvDescriptor2, CV_32F);
+	cv::cuda::GpuMat cvDescriptor1Gpu, cvDescriptor2Gpu;
+	cvDescriptor1Gpu.upload(cvDescriptor1);
+	cvDescriptor2Gpu.upload(cvDescriptor2);
+	m_matcher->knnMatch(cvDescriptor1Gpu, cvDescriptor2Gpu, nn_matches, 2);
+#else
+	m_matcher->knnMatch(cvDescriptor1, cvDescriptor2, nn_matches, 2);
+#endif
+	
+	// filter the matches by three conditions (best distance, 2nd best distance and epipolar constraint)
+	std::vector<bool> checkMatches(undistortedKeypoints2.size(), true);
+	float acceptedDist = m_paddingRatio * camParams2.resolution.width;
+	for (auto i = 0; i < indices1.size(); i++) {
+		const auto& best_matches = nn_matches[indices1[i]];
+		if (!checkMatches[best_matches[0].trainIdx])
+			continue;
+		if (best_matches[0].distance >= m_matchingDistanceMax)
+			continue;
+		if (best_matches[0].distance >= m_distanceRatio * best_matches[1].distance) // no big difference between best and 2nd best 
+			continue;
+		// the match is accepted 
+		// now we should check the epipolar constraint 
+		int idx1 = best_matches[0].queryIdx;
+		int idx2 = best_matches[0].trainIdx;
+		float distance = best_matches[0].distance;
+		cv::Point3f l = lines2[i];  // line equation a*x + b*y +c = 0
+		float x = undistortedKeypoints2[idx2].getX();
+		float y = undistortedKeypoints2[idx2].getY();
+		float disPointLine = std::abs(x * l.x + y * l.y + l.z) / std::sqrt(l.x * l.x + l.y * l.y);
+		if (disPointLine < acceptedDist) {
+			matches.push_back(DescriptorMatch(idx1, idx2, distance));
+			checkMatches[idx2] = false;
+		}
+	}
+#else 
+	// first apply epipolar constraint then apply descriptor matching  
 	std::vector<bool> checkMatches(undistortedKeypoints2.size(), true);
 	float acceptedDist = m_paddingRatio * camParams2.resolution.width;
 	for (int i = 0; i < indices1.size(); i++) {
@@ -104,11 +165,13 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 		float bestDist = std::numeric_limits<float>::max();
 		float bestDist2 = std::numeric_limits<float>::max();
 		int bestIdx = -1;
+		cv::Point3f l = lines2[i];
+		float lxyz_norm = std::sqrt(l.x * l.x + l.y * l.y);
+		
 		for (int j = 0; j < undistortedKeypoints2.size(); j++) {
 			float x = undistortedKeypoints2[j].getX();
 			float y = undistortedKeypoints2[j].getY();
-			cv::Point3f l = lines2[i];
-			float disPointLine = std::abs(x * l.x + y * l.y + l.z) / std::sqrt(l.x * l.x + l.y * l.y);
+			float disPointLine = std::abs(x * l.x + y * l.y + l.z) / lxyz_norm;
 			if (disPointLine < acceptedDist) {
 				float dist = cv::norm(cvDes1, cvDescriptor2.row(j), cv::NORM_L2);
 				if (dist < bestDist)
@@ -128,7 +191,7 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 			checkMatches[bestIdx] = false;
 		}
 	}
-
+#endif 
 	return FrameworkReturnCode::_SUCCESS;
 }
 

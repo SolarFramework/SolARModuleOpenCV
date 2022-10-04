@@ -25,6 +25,9 @@
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include <opencv2/calib3d.hpp>
+#ifdef WITHCUDA
+#include <opencv2/cudafeatures2d.hpp>
+#endif
 
 namespace SolAR {
 namespace MODULES {
@@ -83,12 +86,21 @@ public:
                               std::vector<SolAR::datastructure::DescriptorMatch> & matches,
                               const std::vector<uint32_t>& mask = {}) override;
 
+	org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 	void unloadComponent() override;
 
 private:
     float m_distanceRatio = 0.75f;
     float m_paddingRatio = 0.003f;
 	float m_matchingDistanceMax = 500.f;
+	/// matcher type
+	std::string m_type = "BruteForce";
+	/// Matcher
+#ifdef WITHCUDA
+	cv::Ptr<cv::cuda::DescriptorMatcher> m_matcher;
+#else
+	cv::Ptr<cv::DescriptorMatcher> m_matcher;
+#endif  
 };
 
 }
