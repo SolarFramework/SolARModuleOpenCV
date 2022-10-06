@@ -77,7 +77,20 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 		return FrameworkReturnCode::_ERROR_;
 	}
 	// calculate fundametal matrix
+#ifdef OPTIM_ON
+	Transform3Df pose1Inv;
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
+			pose1Inv(i, j) = pose1(j, i);
+	for (int i = 0; i < 3; i++)
+		pose1Inv(3, i) = 0.f;
+	pose1Inv(3, 3) = 1.f;
+	for (int i = 0; i < 3; i++)
+		pose1Inv(i, 3) = -(pose1(0, 3)*pose1(0, i) + pose1(1, 3)*pose1(1, i) + pose1(2, 3)*pose1(2, i));
+	Transform3Df pose12 = pose1Inv * pose2;
+#else 
 	Transform3Df pose12 = pose1.inverse() * pose2;
+#endif
 	cv::Mat R12 = (cv::Mat_<float>(3, 3) << pose12(0, 0), pose12(0, 1), pose12(0, 2),
 		pose12(1, 0), pose12(1, 1), pose12(1, 2),
 		pose12(2, 0), pose12(2, 1), pose12(2, 2));
@@ -87,7 +100,23 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 		-T12.at<float>(1), T12.at<float>(0), 0);
 	cv::Mat K1(3, 3, CV_32FC1, (void *)camParams1.intrinsic.data());
 	cv::Mat K2(3, 3, CV_32FC1, (void *)camParams2.intrinsic.data());
+#ifdef OPTIM_ON
+	cv::Mat K1tInv = cv::Mat::zeros(3, 3, CV_32FC1);
+	K1tInv.at<float>(0, 0) = 1.f / K1.at<float>(0, 0);
+	K1tInv.at<float>(1, 1) = 1.f / K1.at<float>(1, 1);
+	K1tInv.at<float>(2, 2) = 1.f;
+	K1tInv.at<float>(2, 0) = -K1.at<float>(0, 2) / K1.at<float>(0, 0);
+	K1tInv.at<float>(2, 1) = -K1.at<float>(1, 2) / K1.at<float>(1, 1);
+	cv::Mat K2Inv = cv::Mat::zeros(3, 3, CV_32FC1);
+	K2Inv.at<float>(0, 0) = 1.f / K2.at<float>(0, 0);
+	K2Inv.at<float>(1, 1) = 1.f / K2.at<float>(1, 1);
+	K2Inv.at<float>(2, 2) = 1.f;
+	K2Inv.at<float>(0, 2) = -K2.at<float>(0, 2) / K2.at<float>(0, 0);
+	K2Inv.at<float>(1, 2) = -K2.at<float>(1, 2) / K2.at<float>(1, 1);
+	cv::Mat F = K1tInv * T12x * R12 * K2Inv;
+#else 
 	cv::Mat F = K1.t().inv() * T12x * R12 * K2.inv();
+#endif
 
 	// get input points in the first frame
 	std::vector<cv::Point2f> pts1;
@@ -119,7 +148,7 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 	// perform descriptor matching first on GPU using Cuda if SolARModuleOpenCVCuda
 	std::vector< std::vector<cv::DMatch> > nn_matches;
 #ifdef WITHCUDA
-	if (descriptors1->getDescriptorDataType() != DescriptorDataType::TYPE_32F)
+	if (descriptors1->getDescriptorDataType() != DescriptorDataType::TYPE_32F) // convert to float because cuda descriptor match only supports float type 
 		cvDescriptor1.convertTo(cvDescriptor1, CV_32F);
 	if (descriptors2->getDescriptorDataType() != DescriptorDataType::TYPE_32F)
 		cvDescriptor2.convertTo(cvDescriptor2, CV_32F);
@@ -140,7 +169,7 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 			continue;
 		if (best_matches[0].distance >= m_matchingDistanceMax)
 			continue;
-		if (best_matches[0].distance >= m_distanceRatio * best_matches[1].distance) // no big difference between best and 2nd best 
+		if (best_matches[0].distance >= m_distanceRatio * best_matches[1].distance) // no big difference between best and 2nd best, Lowe's ratio test
 			continue;
 		// the match is accepted 
 		// now we should check the epipolar constraint 
