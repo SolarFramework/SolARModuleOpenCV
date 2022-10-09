@@ -128,7 +128,10 @@ FrameworkReturnCode SolARImageViewerOpencv::displayKey(const SRef<Image> img, ch
         key = cv::waitKey(1);  // wait for a keystroke to display window
 
     if(key == (char)(m_exitKey))
+    {
+        cv::destroyWindow(m_title);
         return FrameworkReturnCode::_STOP;
+    }
 
     return FrameworkReturnCode::_SUCCESS;
 }
