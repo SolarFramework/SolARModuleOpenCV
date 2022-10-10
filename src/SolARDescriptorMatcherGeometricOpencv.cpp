@@ -68,7 +68,8 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
                                                                  const SolAR::datastructure::CameraParameters & camParams1,
                                                                  const SolAR::datastructure::CameraParameters & camParams2,
                                                                  std::vector<SolAR::datastructure::DescriptorMatch> & matches,
-                                                                 const std::vector<uint32_t>& mask)
+                                                                 const std::vector<uint32_t>& mask1,
+																 const std::vector<uint32_t>& mask2)
 {
 	matches.clear();
 	// check conditions
@@ -120,17 +121,24 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 
 	// get input points in the first frame
 	std::vector<cv::Point2f> pts1;
-	std::vector<uint32_t> indices1;
-	if (mask.size() == 0) {
+	std::vector<uint32_t> indices1, indices2;
+	if (mask1.size() == 0) {
 		for (int i = 0; i < undistortedKeypoints1.size(); ++i) {
 			pts1.push_back(cv::Point2f(undistortedKeypoints1[i].getX(), undistortedKeypoints1[i].getY()));
 			indices1.push_back(i);
 		}
 	}
 	else {
-		indices1 = mask;
-		for (int i = 0; i < mask.size(); ++i)
-			pts1.push_back(cv::Point2f(undistortedKeypoints1[mask[i]].getX(), undistortedKeypoints1[mask[i]].getY()));
+		indices1 = mask1;
+		for (int i = 0; i < mask1.size(); ++i)
+			pts1.push_back(cv::Point2f(undistortedKeypoints1[mask1[i]].getX(), undistortedKeypoints1[mask1[i]].getY()));
+	}
+	if (mask2.size() == 0) {
+		for (int i = 0; i < undistortedKeypoints2.size(); ++i)
+			indices2.push_back(i);
+	}
+	else {
+		indices2 = mask2;
 	}
 
 	// compute epipolar lines
@@ -139,10 +147,30 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 
 	// convert frame descriptor to opencv's descriptor
 	uint32_t type_conversion = SolAR::MODULES::OPENCV::SolAROpenCVHelper::deduceOpenDescriptorCVType(descriptors1->getDescriptorDataType());
+#ifdef OPTIM_ON
+	cv::Mat cvDescriptor1(indices1.size(), descriptors1->getNbElements(), type_conversion);
+	uchar* buf_in = (uchar*)descriptors1->data();
+	uchar* buf_out = cvDescriptor1.data;
+	uint32_t num_elements = static_cast<uint32_t>(descriptors1->getNbElements());
+	for (auto i = 0; i < indices1.size(); i++) {
+		std::memcpy(buf_out, buf_in + num_elements * indices1[i], num_elements);
+		buf_out += num_elements;
+	}
+	cv::Mat cvDescriptor2(indices2.size(), descriptors2->getNbElements(), type_conversion);
+	buf_in = (uchar*)descriptors2->data();
+	buf_out = cvDescriptor2.data;
+	num_elements = static_cast<uint32_t>(descriptors2->getNbElements());
+	for (auto i = 0; i < indices2.size(); i++) {
+		std::memcpy(buf_out, buf_in + num_elements * indices2[i], num_elements);
+		buf_out += num_elements;
+	}
+#else 
 	cv::Mat cvDescriptor1(descriptors1->getNbDescriptors(), descriptors1->getNbElements(), type_conversion);
 	cvDescriptor1.data = (uchar*)descriptors1->data();
 	cv::Mat cvDescriptor2(descriptors2->getNbDescriptors(), descriptors2->getNbElements(), type_conversion);
 	cvDescriptor2.data = (uchar*)descriptors2->data();
+#endif
+	
 
 #ifdef OPTIM_ON
 	// perform descriptor matching first on GPU using Cuda if SolARModuleOpenCVCuda
@@ -161,10 +189,10 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 #endif
 	
 	// filter the matches by three conditions (best distance, 2nd best distance and epipolar constraint)
-	std::vector<bool> checkMatches(undistortedKeypoints2.size(), true);
+	std::vector<bool> checkMatches(indices2.size(), true);
 	float acceptedDist = m_paddingRatio * camParams2.resolution.width;
 	for (auto i = 0; i < indices1.size(); i++) {
-		const auto& best_matches = nn_matches[indices1[i]];
+		const auto& best_matches = nn_matches[i];
 		if (!checkMatches[best_matches[0].trainIdx])
 			continue;
 		if (best_matches[0].distance >= m_matchingDistanceMax)
@@ -173,8 +201,8 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 			continue;
 		// the match is accepted 
 		// now we should check the epipolar constraint 
-		int idx1 = best_matches[0].queryIdx;
-		int idx2 = best_matches[0].trainIdx;
+		int idx1 = indices1[best_matches[0].queryIdx];
+		int idx2 = indices2[best_matches[0].trainIdx];
 		float distance = best_matches[0].distance;
 		cv::Point3f l = lines2[i];  // line equation a*x + b*y +c = 0
 		float x = undistortedKeypoints2[idx2].getX();
@@ -182,7 +210,7 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 		float disPointLine = std::abs(x * l.x + y * l.y + l.z) / std::sqrt(l.x * l.x + l.y * l.y);
 		if (disPointLine < acceptedDist) {
 			matches.push_back(DescriptorMatch(idx1, idx2, distance));
-			checkMatches[idx2] = false;
+			checkMatches[best_matches[0].trainIdx] = false;
 		}
 	}
 #else 

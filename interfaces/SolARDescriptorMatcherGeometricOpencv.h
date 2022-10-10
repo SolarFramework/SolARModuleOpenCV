@@ -73,8 +73,9 @@ public:
     /// @param[in] camParams1 The intrinsic parameters of the camera 1.
     /// @param[in] camParams2 The intrinsic parameters of the camera 2.
     /// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
-    /// @param[in] mask The indices of descriptors in the first frame are used for matching to the second frame. If it is empty then all will be used.
-    /// @return FrameworkReturnCode::_SUCCESS if matching succeed, else FrameworkReturnCode::_ERROR_
+    /// @param[in] mask1 The indices of descriptors in the first frame are used for matching to the second frame. If it is empty then all will be used.
+    /// @param[in] mask2 The indices of descriptors in the second frame are used for matching to the first frame. If it is empty then all will be used.
+	/// @return FrameworkReturnCode::_SUCCESS if matching succeed, else FrameworkReturnCode::_ERROR_
     FrameworkReturnCode match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1,
                               const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
                               const std::vector<SolAR::datastructure::Keypoint> &undistortedKeypoints1,
@@ -84,7 +85,8 @@ public:
                               const SolAR::datastructure::CameraParameters & camParams1,
                               const SolAR::datastructure::CameraParameters & camParams2,
                               std::vector<SolAR::datastructure::DescriptorMatch> & matches,
-                              const std::vector<uint32_t>& mask = {}) override;
+                              const std::vector<uint32_t>& mask1 = {},
+							  const std::vector<uint32_t>& mask2 = {}) override;
 
 	org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 	void unloadComponent() override;
