@@ -196,33 +196,52 @@ void SolARMapFusionOpencv::fuseMap(const std::vector<std::pair<uint32_t, uint32_
 		idxCPOldNew[idxOld] = cp->getId();
 	}
 
-	// add keyframes of local map to global map
-	std::map<uint32_t, uint32_t> idxKfOldNew;
+    // update global map camera parameters with local map ones
+    std::vector<SRef<CameraParameters>> localMapCameraParameters;
+    cameraParametersCollection->getAllCameraParameters(localMapCameraParameters);
+    std::vector<SRef<CameraParameters>> globalMapCameraParameters;
+    globalCameraParametersCollection->getAllCameraParameters(globalMapCameraParameters);
     std::map<uint32_t, uint32_t> local2GlobalMapCameraID; // A table matching camera ID between the local and global map
-	for (const auto &kf : keyframes) {
-        // Check if CameraID already exists
-        uint32_t newCameraID;
-        std::map<uint32_t, uint32_t>::iterator camIt = local2GlobalMapCameraID.find(kf->getCameraID());
-        if (camIt == local2GlobalMapCameraID.end())
-        {
-            // This camera model has not been added yet to the global map
-            CameraParameters kfCameraParameters;
-            if (cameraParametersCollection->getCameraParameters(kf->getCameraID(), kfCameraParameters) == FrameworkReturnCode :: _SUCCESS)
+    for (const auto &itLocal: localMapCameraParameters) {
+        bool foundCameraParam = false;
+        for (const auto &itGlobal: globalMapCameraParameters) {
+            if (itLocal->intrinsic == itGlobal->intrinsic &&
+                itLocal->distortion == itGlobal->distortion &&
+                itLocal->type == itGlobal->type &&
+                itLocal->resolution.width == itGlobal->resolution.width &&
+                itLocal->resolution.height == itGlobal->resolution.height &&
+                itLocal->name == itGlobal->name)
             {
-                SRef<CameraParameters> newCameraParameters = xpcf::utils::make_shared<CameraParameters>(kfCameraParameters);
-                globalCameraParametersCollection->addCameraParameters(newCameraParameters);
-                newCameraID = newCameraParameters->id;
-                local2GlobalMapCameraID.insert(std::make_pair(kf->getCameraID(), newCameraID));
-            }
-            else {
-                LOG_ERROR("camera parameters with ID {} does not exists in local map", kf->getCameraID());
+                LOG_DEBUG("Camera parameters found in global map with ID = {}", itGlobal->id);
+                local2GlobalMapCameraID.insert(std::make_pair(itLocal->id, itGlobal->id));
+                foundCameraParam = true;
                 continue;
             }
         }
-        else {
-            newCameraID = camIt->second;
+        if (!foundCameraParam) {
+            SRef<CameraParameters> newCameraParameters = xpcf::utils::make_shared<CameraParameters>(*itLocal);
+            globalCameraParametersCollection->addCameraParameters(newCameraParameters);
+            local2GlobalMapCameraID.insert(std::make_pair(itLocal->id, newCameraParameters->id));
+            LOG_DEBUG("Add new camera parameters in global map with ID = {}", newCameraParameters->id);
         }
-        kf->setCameraID(newCameraID);
+    }
+
+	// add keyframes of local map to global map
+	std::map<uint32_t, uint32_t> idxKfOldNew;
+    for (const auto &kf : keyframes) {
+        // Check if CameraID exists in matching table
+        std::map<uint32_t, uint32_t>::iterator camIt = local2GlobalMapCameraID.find(kf->getCameraID());
+
+        if (camIt != local2GlobalMapCameraID.end()) {
+            LOG_DEBUG("Camera parameters for current key frame found => set to global map ID ({} -> {})",
+                     kf->getCameraID(), camIt->second);
+
+            kf->setCameraID(camIt->second);
+        }
+        else {
+            LOG_ERROR("camera parameters with ID {} does not exists in local map", kf->getCameraID());
+            continue;
+        }
 
         // unscale keyframe pose
 		Transform3Df kfPose = kf->getPose();
