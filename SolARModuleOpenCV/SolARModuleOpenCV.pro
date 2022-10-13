@@ -28,10 +28,14 @@ CONFIG(release,debug|release) {
     DEFINES += NDEBUG=1
 }
 
-DEPENDENCIESCONFIG = shared install recurse
+DEPENDENCIESCONFIG = shared recurse
 
-## Configuration for Visual Studio to install binaries and dependencies. Work also for QT Creator by replacing QMAKE_INSTALL
-PROJECTCONFIG = QTVS
+_SOLAR_USE_QTVS = $$(SOLAR_USE_QTVS)
+
+!isEmpty(_SOLAR_USE_QTVS) {
+    ## Configuration for Visual Studio to install binaries and dependencies. Work also for QT Creator by replacing QMAKE_INSTALL
+    PROJECTCONFIG = QTVS
+}
 
 #NOTE : CONFIG as staticlib or sharedlib, DEPENDENCIESCONFIG as staticlib or sharedlib, QMAKE_TARGET.arch and PROJECTDEPLOYDIR MUST BE DEFINED BEFORE templatelibconfig.pri inclusion
 include ($$shell_quote($$shell_path($${QMAKE_REMAKEN_RULES_ROOT}/templatelibconfig.pri)))  # Shell_quote & shell_path required for visual on windows
@@ -48,6 +52,12 @@ include (../SolARModuleOpenCV.pri)
 unix {
     # Avoids adding install steps manually. To be commented to have a better control over them.
     QMAKE_POST_LINK += "make install"
+}
+
+isEmpty(_SOLAR_USE_QTVS) {
+    win32 {
+        QMAKE_POST_LINK += "jom install"
+    }
 }
 
 unix:!android {
