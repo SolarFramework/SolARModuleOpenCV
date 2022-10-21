@@ -24,8 +24,8 @@
 	
     <properties>
         <configure component="SolARDeviceDataLoader">
-            <property name="calibrationFile" type="string" value="../../../../data/hololens_calibration.json"/>
-            <property name="pathToData" type="string" value="../../../../data/loop_desktop_A"/>
+            <property name="calibrationFile" type="string" value="../../../../../data/hololens_calibration.json"/>
+            <property name="pathToData" type="string" value="../../../../../data/loop_desktop_A"/>
             <property name="delayTime" type="int" value="100"/>
         </configure>
         <configure component="SolARImageViewerOpencv">

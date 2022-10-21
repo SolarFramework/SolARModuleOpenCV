@@ -20,7 +20,7 @@
     </factory>
     <properties>
         <configure component="SolARImageLoaderOpencv">
-            <property name="filePath" type="string" value="../../../../data/notredame1.jpg"/>
+            <property name="filePath" type="string" value="../../../../../data/notredame1.jpg"/>
         </configure>
         <configure component="SolARImageViewerOpencv" name="ImageJPEGfromFile_prop">
             <property name="title" type="string" value="JPEG compression from file (press esc key to exit)"/>
