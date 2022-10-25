@@ -225,8 +225,9 @@ void SolARKeypointDetectorOpencv::detect(const SRef<Image> image, std::vector<Ke
 	   float px = keypoint.pt.x;
 	   float py = keypoint.pt.y;
 	   cv::Vec3b bgr{ 0, 0, 0 };
-	   if (opencvImage.channels() == 3)
+       if (opencvImage.channels() == 3) {
            bgr = image->getPixel<cv::Vec3b>((int)py, (int)px);
+       }
        else {
            uint8_t value = image->getPixel<uint8_t>((int)py, (int)px);
            bgr = cv::Vec3b(value, value, value);
