@@ -95,13 +95,9 @@ private:
     float m_distanceRatio = 0.75f;
     float m_paddingRatio = 0.003f;
 	float m_matchingDistanceMax = 500.f;
-	/// matcher type
-	std::string m_type = "BruteForce";
-	/// Matcher
+	/// Matcher used only in case of cuda 
 #ifdef WITHCUDA
 	cv::Ptr<cv::cuda::DescriptorMatcher> m_matcher;
-#else
-	cv::Ptr<cv::DescriptorMatcher> m_matcher;
 #endif  
 };
 
