@@ -24,4 +24,4 @@ The SolARTest_ModuleOpenCV_DeviceDualMarkerCalibration & SolARTest_ModuleOpenCV_
 
 * <strong>Loop_Desktop_A</strong>: A video sequence captured with a Hololens 1 around a desktop starting and finishing with the fiducial Marker A with a loop trajectory. A fiducial marker B is captured during the trajectory.
 
-Download the video sequences [loopDesktopA.zip](https://artifact.b-com.com/solar-generic-local/captures/hololens/bcomLab/loopDesktopA.zip) and extract it into the `./data` folder.
+Download the video sequences [loopDesktopA.zip](https://repository.solarframework.org/generic/captures/hololens/bcomLab/loopDesktopA.zip) and extract it into the `./data` folder.
