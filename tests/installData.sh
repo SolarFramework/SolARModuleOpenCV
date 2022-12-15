@@ -1,5 +1,5 @@
 # Download AR device capture
-curl https://artifact.b-com.com/solar-generic-local/captures/hololens/bcomLab/loopDesktopA.zip -L -o loopDesktopA.zip
+curl https://repository.solarframework.org/generic/captures/hololens/bcomLab/loopDesktopA.zip -L -o loopDesktopA.zip
 unzip -o loopDesktopA.zip -d ./data
 rm loopDesktopA.zip
 
