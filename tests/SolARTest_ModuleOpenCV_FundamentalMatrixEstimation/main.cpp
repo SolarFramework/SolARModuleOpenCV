@@ -59,8 +59,8 @@ int main() {
     LOG_ADD_LOG_TO_CONSOLE();
 
     try {
-        std::string path_points1 = "../../data/pt1_F.txt";
-        std::string path_points2 = "../../data/pt2_F.txt";
+        std::string path_points1 = "../../../../data/pt1_F.txt";
+        std::string path_points2 = "../../../../data/pt2_F.txt";
 
         /* instantiate component manager*/
         SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();

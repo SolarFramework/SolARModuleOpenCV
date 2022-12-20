@@ -5,7 +5,7 @@ CONFIG -= qt
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_FeatureMatchingStabilization
 VERSION=1.0.0
-PROJECTDEPLOYDIR = $${PWD}/..
+PROJECTDEPLOYDIR = $${PWD}/../deploy
 
 DEFINES += MYVERSION=$${VERSION}
 CONFIG += c++1z

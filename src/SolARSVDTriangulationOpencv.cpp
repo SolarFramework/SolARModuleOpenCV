@@ -20,7 +20,7 @@
 #include "SolAROpenCVHelper.h"
 #include "core/Log.h"
 #include "opencv2/calib3d/calib3d.hpp"
-
+#define OPTIM_ON
 namespace xpcf  = org::bcom::xpcf;
 
 #define EPSILON 0.0001
@@ -268,14 +268,38 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
                                                 SRef<SolAR::datastructure::Frame> frame2,
                                                 const std::vector<SolAR::datastructure::DescriptorMatch>& matches,
                                                 const std::pair<uint32_t, uint32_t>& working_views,
+                                                const SolAR::datastructure::CameraParameters & camParams1,
+                                                const SolAR::datastructure::CameraParameters & camParams2,
                                                 std::vector<SRef<SolAR::datastructure::CloudPoint>>& pcloud,
                                                 const bool & onlyDepth)
 {
 	pcloud.clear();
 	Transform3Df poseView1 = frame1->getPose();
 	Transform3Df poseView2 = frame2->getPose();
+#ifdef OPTIM_ON
+	// compute inverse of pose using pose's property (rigid transformation)
+	Transform3Df poseView1Inverse, poseView2Inverse;
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			poseView1Inverse(i, j) = poseView1(j, i);
+			poseView2Inverse(i, j) = poseView2(j, i);
+		}
+	}
+	for (int i = 0; i < 3; i++) {
+		poseView1Inverse(3, i) = 0.f;
+		poseView2Inverse(3, i) = 0.f;
+	}
+	poseView1Inverse(3, 3) = 1.f;
+	poseView2Inverse(3, 3) = 1.f;
+	for (int i = 0; i < 3; i++) {
+		poseView1Inverse(i, 3) = -(poseView1(0, 3)*poseView1(0, i) + poseView1(1, 3)*poseView1(1, i) + poseView1(2, 3)*poseView1(2, i));
+		poseView2Inverse(i, 3) = -(poseView2(0, 3)*poseView2(0, i) + poseView2(1, 3)*poseView2(1, i) + poseView2(2, 3)*poseView2(2, i));
+	}
+#else 
 	Transform3Df poseView1Inverse = poseView1.inverse();
 	Transform3Df poseView2Inverse = poseView2.inverse();
+#endif
+	
 	cv::Mat Pose1 = (cv::Mat_<float>(3, 4) << poseView1Inverse(0, 0), poseView1Inverse(0, 1), poseView1Inverse(0, 2), poseView1Inverse(0, 3),
 		poseView1Inverse(1, 0), poseView1Inverse(1, 1), poseView1Inverse(1, 2), poseView1Inverse(1, 3),
 		poseView1Inverse(2, 0), poseView1Inverse(2, 1), poseView1Inverse(2, 2), poseView1Inverse(2, 3));
@@ -289,8 +313,6 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 	const std::vector<Keypoint>& kpsUn1 = frame1->getUndistortedKeypoints();
 	const std::vector<Keypoint>& kpsUn2 = frame2->getUndistortedKeypoints();
 	std::vector<SolAR::datastructure::DescriptorMatch> goodMatches;
-	const CameraParameters& camParams1 = frame1->getCameraParameters();
-	const CameraParameters& camParams2 = frame2->getCameraParameters();
 	std::vector<Point3Df> pts3D;
 	for (int i = 0; i < matches.size(); ++i) {
 		const Keypoint &kp1 = kpsUn1[matches[i].getIndexInDescriptorA()];

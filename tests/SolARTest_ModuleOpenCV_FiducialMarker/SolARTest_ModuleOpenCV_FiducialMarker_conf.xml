@@ -9,7 +9,7 @@
 	
     <properties>
         <configure component="SolARFiducialMarkerLoaderOpencv">
-            <property name="filePath" type="string" value="../../../../data/fiducialMarker.yml"/>
+            <property name="filePath" type="string" value="../../../../../data/fiducialMarker.yml"/>
         </configure>
     </properties>
 </xpcf-registry>
