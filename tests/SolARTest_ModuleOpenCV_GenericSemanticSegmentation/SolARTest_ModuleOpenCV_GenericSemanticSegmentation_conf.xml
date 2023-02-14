@@ -43,6 +43,7 @@
 		</configure>
         <configure component="SolARGenericSemanticSegmentationOpencv">
             <property name="modelFile" type="string" value="../../../../data/pspnet_r50-d8_512x512_4x4_80k_coco-stuff164k_argmax_removed.onnx"/>
+			<!--property name="modelFile" type="string" value="../../../../data/deeplabv3_r50-d8_512x512_4x4_80k_coco-stuff164k_argmax_removed.onnx"/-->
 			<property name="argMaxRemoved" type="int" value="1" description="if argmax layer has been removed in the above onnx model"/>
 			<property name="mean" type="float" description="normalize input RGB image by subtracting mean">
 				<value>123.675</value>

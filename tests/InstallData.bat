@@ -5,8 +5,18 @@ powershell Expand-Archive loopDesktopA.zip -DestinationPath .\data -F
 del loopDesktopA.zip
 
 :: Download yolact and fcn models
-curl https://repository.solarframework.org/generic/learnedModels/FCN/fcn_resnet50.onnx -L -o .\data\fcn_resnet50.onnx
-curl https://repository.solarframework.org/generic/learnedModels/yolact/yolact.onnx -L -o .\data\yolact.onnx
+curl https://repository.solarframework.org/generic/LearnedModels/FCN/fcn_resnet50.onnx -L -o .\data\fcn_resnet50.onnx
+curl https://repository.solarframework.org/generic/LearnedModels/yolact/yolact.onnx -L -o .\data\yolact.onnx
+
+:: Download PSPNet and DeepLabV3 models 
+echo Download PSPNet model 
+curl https://repository.solarframework.org/generic/LearnedModels/PSPNet.zip -L -o PSPNet.zip
+powershell Expand-Archive PSPNet.zip -DestinationPath .\data -F
+del PSPNet.zip
+echo Download DeepLabV3 model 
+curl https://repository.solarframework.org/generic/LearnedModels/DeepLabV3.zip -L -o DeepLabV3.zip
+powershell Expand-Archive DeepLabV3.zip -DestinationPath .\data -F
+del DeepLabV3.zip
 
 :: Install required external modules
 remaken install packagedependencies.txt
