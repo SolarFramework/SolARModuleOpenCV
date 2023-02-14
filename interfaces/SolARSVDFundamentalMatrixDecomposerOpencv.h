@@ -43,18 +43,14 @@ public:
     ///@brief SolARSVDFundamentalMatrixDecomposerOpencv destructor.
     ~SolARSVDFundamentalMatrixDecomposerOpencv();
 
-    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
-    /// @param[in] Camera calibration matrix parameters.
-    /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const datastructure::CamCalibration & intrinsicParams, const datastructure::CamDistortion & distorsionParams)  override;
-
     /// @brief Decomposes Fundamental matrix four possible camera poses based on opencv svd solving.
     /// @param[in] The Fundamental matrix.
     /// @param[in] Camera calibration matrix parameters.
     /// @param[in] Camera distorsion parameters.
     /// @param[out] Decomposed camera poses in the world coordinate system.
-    bool decompose(const datastructure::Transform2Df & F,
-                   std::vector<datastructure::Transform3Df> & decomposedPoses) override;
+    bool decompose(const SolAR::datastructure::Transform2Df & F,
+                   const SolAR::datastructure::CameraParameters & camParams,
+                   std::vector<SolAR::datastructure::Transform3Df> & decomposedPoses) override;
 
     void unloadComponent () override final;
 

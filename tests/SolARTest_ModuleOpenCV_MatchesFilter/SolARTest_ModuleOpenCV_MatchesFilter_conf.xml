@@ -40,10 +40,10 @@
     </factory>
     <properties>
         <configure component="SolARImageLoaderOpencv" name="image1_prop">
-            <property name="filePath" type="string" value="../../../../data/image1.png"/>
+            <property name="filePath" type="string" value="../../../../../data/image1.png"/>
         </configure>
         <configure component="SolARImageLoaderOpencv" name="image2_prop">
-            <property name="filePath" type="string" value="../../../../data/image2.png"/>
+            <property name="filePath" type="string" value="../../../../../data/image2.png"/>
         </configure>
         <configure component="SolARKeypointDetectorOpencv">
             <property name="type" type="string" value="AKAZE2"/>

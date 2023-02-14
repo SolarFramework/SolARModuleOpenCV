@@ -59,8 +59,8 @@ int main() {
 
     LOG_ADD_LOG_TO_CONSOLE();
 
-    std::string path_points1 = "../../data/pt1_F.txt";
-    std::string path_points2 = "../../data/pt2_F.txt";
+    std::string path_points1 = "../../../../data/pt1_F.txt";
+    std::string path_points2 = "../../../../data/pt2_F.txt";
 
     try{
         /* instantiate component manager*/
@@ -95,14 +95,12 @@ int main() {
         std::vector<Point2Df>                       points_view2;
 
      // Initialization
-       fundamentalDecomposer->setCameraParameters(camera->getIntrinsicsParameters(), camera->getDistortionParameters());
-
        const int nb_points = 6953;
        load_2dpoints(path_points1, nb_points, points_view1);
        load_2dpoints(path_points2, nb_points, points_view2);
 
        fundamentalFinder->find(points_view1, points_view2, F);
-       fundamentalDecomposer->decompose(F,poses);
+       fundamentalDecomposer->decompose(F, camera->getParameters(), poses);
 
        for(int k = 0; k <poses.size(); ++k)
            LOG_INFO("pose {} \n {}", k, poses[k].matrix());

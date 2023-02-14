@@ -61,26 +61,22 @@ public:
     ///@brief SolARQRCodePoseEstimatorOpencv destructor;
     ~SolARQRCodePoseEstimatorOpencv() = default;
 
-    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
-    /// @param[in] Camera calibration matrix parameters.
-    /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const SolAR::datastructure::CamCalibration & intrinsicParams, const SolAR::datastructure::CamDistortion & distorsionParams) override;;
-
     /// @brief this method is used to set the trackable used to estimate the pose.
     /// @param[in] the trackable used to estimate the pose.
     FrameworkReturnCode setTrackable(const SRef<SolAR::datastructure::Trackable> trackable) override;
 
     /// @brief Estimates camera pose based on a fiducial marker.
-    /// @param[in] image: input image.
-    /// @param[out] pose: camera pose.
+    /// @param[in] image input image.
+    /// @param[in] camParams the camera parameters.
+    /// @param[out] pose camera pose.
     /// @return FrameworkReturnCode::_SUCCESS if the estimation succeed, else FrameworkReturnCode::_ERROR_
-    FrameworkReturnCode estimate(const SRef<SolAR::datastructure::Image> image, SolAR::datastructure::Transform3Df & pose) override;
+    FrameworkReturnCode estimate(const SRef<SolAR::datastructure::Image> image,
+                                 const SolAR::datastructure::CameraParameters & camParams,
+                                 SolAR::datastructure::Transform3Df & pose) override;
 
     void unloadComponent() override final;
 
 private:
-    SolAR::datastructure::CamCalibration						m_camMatrix;
-    SolAR::datastructure::CamDistortion                         m_camDistortion;
     SRef<SolAR::datastructure::QRCode>                          m_QRCode;
     SRef<SolAR::api::image::IImageConvertor>					m_imageConvertor;
     SRef<SolAR::api::solver::pose::I3DTransformFinderFrom2D3D>	m_pnp;

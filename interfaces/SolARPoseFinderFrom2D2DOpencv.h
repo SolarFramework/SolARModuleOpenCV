@@ -63,41 +63,40 @@ public:
     ///@brief SolARPoseFinderFrom2D2DOpencv destructor;
     ~SolARPoseFinderFrom2D2DOpencv() override;
 
-    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
-    /// @param[in] Camera calibration matrix parameters.
-    /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const datastructure::CamCalibration & intrinsicParams, const datastructure::CamDistortion & distorsionParams) override;
-
     /// @brief Estimates camera pose from a set of 2D points of the first image which match with a set of 2D points of the second image.
-    /// @param[in] pointsView1, Set of 2D points seen in view 1.
-    /// @param[in] pointsView2, Set of 2D points seen in view 2 and matching with the 2D points of the view 1.
-    /// @param[in] poseView1, Camera pose (3D transform of the camera of the view1 defined in world corrdinate system).
-    /// @param[out] poseView2, Camera pose (3D transform of the camera of the view2 defined in world corrdinate system).
-    /// @param[in|out] inlierMatches, a vector of matches that will be used for the pose estimation. This vector wll be updates as some input matches will be considered as outliers. If this vector is empty, we consider that the ith point of pointsView1 matches with the ith point of pointsView2.
-    FrameworkReturnCode estimate(const std::vector<datastructure::Point2Df> & matchedPointsView1,
-                                 const std::vector<datastructure::Point2Df> & matchedPointsView2,
-                                 const datastructure::Transform3Df& poseView1,
-                                 datastructure::Transform3Df & poseView2,
-                                 std::vector<datastructure::DescriptorMatch>& inlierMatches) override;
+    /// @param[in] pointsView1 Set of 2D points seen in view 1.
+    /// @param[in] pointsView2 Set of 2D points seen in view 2 and matching with the 2D points of the view 1.
+    /// @param[in] camParams the camera parameters.
+    /// @param[in] poseView1 Camera pose (3D transform of the camera of the view1 defined in world corrdinate system).
+    /// @param[out] poseView2 Camera pose (3D transform of the camera of the view2 defined in world corrdinate system).
+    /// @param[in,out] inlierMatches a vector of matches that will be used for the pose estimation. This vector wll be updates as some input matches will be considered as outliers. If this vector is empty, we consider that the ith point of pointsView1 matches with the ith point of pointsView2.
+    /// @return FrameworkReturnCode::_SUCCESS if succeed, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode estimate(const std::vector<SolAR::datastructure::Point2Df> & pointsView1,
+                                 const std::vector<SolAR::datastructure::Point2Df> & pointsView2,
+                                 const SolAR::datastructure::CameraParameters & camParams,
+                                 const SolAR::datastructure::Transform3Df & poseView1,
+                                 SolAR::datastructure::Transform3Df & poseView2,
+                                 std::vector<SolAR::datastructure::DescriptorMatch> & inlierMatches) override;
 
     /// @brief Estimates camera pose from a set of keypoints of the first image which match with a set of keypoints of the second image.
-    /// @param[in] pointsView1, Set of keypoints seen in view 1.
-    /// @param[in] pointsView2, Set of keypoints seen in view 2 and matching with the 2D points of the view 1.
-    /// @param[in] poseView1, Camera pose (3D transform of the camera of the view1 defined in world corrdinate system).
-    /// @param[out] poseView2, Camera pose (3D transform of the camera of the view2 defined in world corrdinate system).
-    /// @param[in|out] inlierMatches, a vector of matches that will be used for the pose estimation. This vector wll be updates as some input matches will be considered as outliers. If this vector is empty, we consider that the ith point of pointsView1 matches with the ith point of pointsView2.
-    FrameworkReturnCode estimate(const std::vector<datastructure::Keypoint> & matchedPointsView1,
-                                 const std::vector<datastructure::Keypoint> & matchedPointsView2,
-                                 const datastructure::Transform3Df& poseView1,
-                                 datastructure::Transform3Df & poseView2,
-                                 std::vector<datastructure::DescriptorMatch>& inlierMatches) override;
+    /// @param[in] pointsView1 Set of keypoints seen in view 1.
+    /// @param[in] pointsView2 Set of keypoints seen in view 2 and matching with the 2D points of the view 1.
+    /// @param[in] camParams the camera parameters.
+    /// @param[in] poseView1 Camera pose (3D transform of the camera of the view1 defined in world corrdinate system).
+    /// @param[out] poseView2 Camera pose (3D transform of the camera of the view2 defined in world corrdinate system).
+    /// @param[in,out] inlierMatches a vector of matches that will be used for the pose estimation. This vector wll be updates as some input matches will be considered as outliers. If this vector is empty, we consider that the ith point of pointsView1 matches with the ith point of pointsView2.
+    /// @return FrameworkReturnCode::_SUCCESS if succeed, else FrameworkReturnCode::_ERROR_
+    FrameworkReturnCode estimate(const std::vector<SolAR::datastructure::Keypoint> & pointsView1,
+                                 const std::vector<SolAR::datastructure::Keypoint> & pointsView2,
+                                 const SolAR::datastructure::CameraParameters & camParams,
+                                 const SolAR::datastructure::Transform3Df& poseView1,
+                                 SolAR::datastructure::Transform3Df & poseView2,
+                                 std::vector<SolAR::datastructure::DescriptorMatch>& inlierMatches) override;
 
     void unloadComponent () override final;
 
 
 private:
-
-
     ///  @brief threshold to define which point are ouliers
     ///  Here we are using a RANSAC method to remove outlier.
     ///  This attribute is the ratio between the maximum distance in pixels between source points and the maximum distance in pixels to the epipolar line for which point is considered as a outlier.
@@ -107,9 +106,6 @@ private:
 
     /// @brief The probability that the algorithm produces a useful result.
     float m_confidence = 0.99f;
-
-    datastructure::CamCalibration m_camCalibration;
-    datastructure::CamDistortion m_camDistorsion;
 };
 
 }

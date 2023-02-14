@@ -86,8 +86,24 @@ xpcf::XPCFErrorCode SolAR3DOverlayBoxOpencv::onConfigured()
     return xpcf::XPCFErrorCode::_SUCCESS;
 }
 
-void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displayImage)
+void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, const SolAR::datastructure::CameraParameters & camParams, SRef<Image> displayImage)
 {
+	// set camera parameters
+	this->m_camDistorsion.at<float>(0, 0) = camParams.distortion(0);
+	this->m_camDistorsion.at<float>(1, 0) = camParams.distortion(1);
+	this->m_camDistorsion.at<float>(2, 0) = camParams.distortion(2);
+	this->m_camDistorsion.at<float>(3, 0) = camParams.distortion(3);
+	this->m_camDistorsion.at<float>(4, 0) = camParams.distortion(4);
+
+	this->m_camMatrix.at<float>(0, 0) = camParams.intrinsic(0, 0);
+	this->m_camMatrix.at<float>(0, 1) = camParams.intrinsic(0, 1);
+	this->m_camMatrix.at<float>(0, 2) = camParams.intrinsic(0, 2);
+	this->m_camMatrix.at<float>(1, 0) = camParams.intrinsic(1, 0);
+	this->m_camMatrix.at<float>(1, 1) = camParams.intrinsic(1, 1);
+	this->m_camMatrix.at<float>(1, 2) = camParams.intrinsic(1, 2);
+	this->m_camMatrix.at<float>(2, 0) = camParams.intrinsic(2, 0);
+	this->m_camMatrix.at<float>(2, 1) = camParams.intrinsic(2, 1);
+	this->m_camMatrix.at<float>(2, 2) = camParams.intrinsic(2, 2);
 
 	Transform3Df poseInverse = pose.inverse();
 
@@ -121,25 +137,6 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, SRef<Image> displ
         SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i + 4], imagePoints[4 + (i + 1) % 4], cv::Scalar(0,255,0), 4);
         SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[i + 4], cv::Scalar(255,0,0), 4);
     }
-}
-
-void SolAR3DOverlayBoxOpencv::setCameraParameters(const CamCalibration & intrinsic_param, const CamDistortion & distorsion_param)
-{
-    m_camDistorsion.at<float>(0, 0)  = distorsion_param(0);
-    m_camDistorsion.at<float>(1, 0)  = distorsion_param(1);
-    m_camDistorsion.at<float>(2, 0)  = distorsion_param(2);
-    m_camDistorsion.at<float>(3, 0)  = distorsion_param(3);
-    m_camDistorsion.at<float>(4, 0)  = distorsion_param(4);
-
-    m_camMatrix.at<float>(0, 0) = intrinsic_param(0,0);
-    m_camMatrix.at<float>(0, 1) = intrinsic_param(0,1);
-    m_camMatrix.at<float>(0, 2) = intrinsic_param(0,2);
-    m_camMatrix.at<float>(1, 0) = intrinsic_param(1,0);
-    m_camMatrix.at<float>(1, 1) = intrinsic_param(1,1);
-    m_camMatrix.at<float>(1, 2) = intrinsic_param(1,2);
-    m_camMatrix.at<float>(2, 0) = intrinsic_param(2,0);
-    m_camMatrix.at<float>(2, 1) = intrinsic_param(2,1);
-    m_camMatrix.at<float>(2, 2) = intrinsic_param(2,2);
 }
 
 }

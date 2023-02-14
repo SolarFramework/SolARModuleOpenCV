@@ -55,16 +55,14 @@ class SOLAROPENCV_EXPORT_API SolAR3DOverlayBoxOpencv : public org::bcom::xpcf::C
 public:
     SolAR3DOverlayBoxOpencv();
 
-
-    ///@brief draw  a projection of 3D box based on 3D pose on an image.
-    /// @param[in] pose: 3D camera pose expressed in the world coordinate.
-    /// @param[in,out] displayImage The image on which the projection of a 3D box will be drawn.
-    void draw(const datastructure::Transform3Df & pose, SRef<datastructure::Image> displayImage) override;
-
-    /// @brief this method is used to set intrinsic parameters and distorsion of the camera
-    /// @param[in] Camera calibration matrix parameters.
-    /// @param[in] Camera distorsion parameters.
-    void setCameraParameters(const datastructure::CamCalibration & intrinsic_parameters, const datastructure::CamDistortion & distorsion_parameters);
+    /// @brief Draw a box on the given Image
+    /// The box is displayed according to the pose given in parameter. The reference of the box is positionned on the center of its bottom face.
+    /// @param[in] Transfomr3Df The pose of the camera from which the box is viewed.
+    /// @param[in] camParams The camera parameters.
+    /// @param[in,out] displayImage The image on which the box will be drawn
+    void draw (const SolAR::datastructure::Transform3Df & pose,
+               const SolAR::datastructure::CameraParameters & camParams,
+               SRef<SolAR::datastructure::Image> displayImage) override;
 
     org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
     void unloadComponent () override final;

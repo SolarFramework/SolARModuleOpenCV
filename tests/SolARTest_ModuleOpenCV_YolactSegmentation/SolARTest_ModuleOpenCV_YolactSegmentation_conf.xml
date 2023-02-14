@@ -41,13 +41,13 @@
 			<property name="deviceID" type="uint" value="0"/>
 		</configure>
         <configure component="SolARYOLACTSegmentationOpencv">
-            <property name="modelFile" type="string" value="../../data/yolact.onnx"/>
+            <property name="modelFile" type="string" value="../../../../../data/yolact.onnx"/>
             <property name="confThresh" type="float" value="0.5"/>
             <property name="maskThresh" type="float" value="0.0"/>
         </configure>
 		<configure component="SolARMaskOverlayOpencv">
-			<property name="classFile" type="string" value="../../data/mscoco_labels.names"/>
-			<property name="colorFile" type="string" value="../../data/colors.txt"/>
+			<property name="classFile" type="string" value="../../../../../data/mscoco_labels.names"/>
+			<property name="colorFile" type="string" value="../../../../../data/colors.txt"/>
 		</configure>		
 		<configure component="SolARImageViewerOpencv">
 			<property name="title" type="string" value="Yolact segmentation (press esc to exit)"/>

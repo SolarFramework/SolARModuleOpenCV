@@ -91,9 +91,7 @@ int main(int argc, char *argv[])
 			LOG_ERROR("Cannot load parameters of camera {}", INDEX_USE_CAMERA);
 			return -1;
 		}
-		CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
-		overlay3D->setCameraParameters(camParams.intrinsic, camParams.distortion);
-		fiducialMarkerPoseEstimator->setCameraParameters(camParams.intrinsic, camParams.distortion);
+        CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
 
 		// Display images and poses
 		std::vector<SRef<CloudPoint>> pointCloud;
@@ -122,7 +120,7 @@ int main(int argc, char *argv[])
 			// find T_W_M
 			if (!isFoundTransform) {
 				Transform3Df T_M_C;
-				if (fiducialMarkerPoseEstimator->estimate(image, T_M_C) == FrameworkReturnCode::_SUCCESS) {
+                if (fiducialMarkerPoseEstimator->estimate(image, camParams, T_M_C) == FrameworkReturnCode::_SUCCESS) {
 					T_M_W = T_M_C * pose.inverse();
 					isFoundTransform = true;
 				}
@@ -132,7 +130,7 @@ int main(int argc, char *argv[])
 			pose = T_M_W * pose;
 
 			// draw pose and display
-			overlay3D->draw(pose, image);
+            overlay3D->draw(pose, camParams, image);
 			if (imageViewer->display(image) == SolAR::FrameworkReturnCode::_STOP)
 				isStop = true;
 

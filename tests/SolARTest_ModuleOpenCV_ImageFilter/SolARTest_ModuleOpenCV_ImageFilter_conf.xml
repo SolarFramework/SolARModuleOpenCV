@@ -23,7 +23,7 @@
     </factory>
     <properties>
         <configure component="SolARImageLoaderOpencv">
-            <property name="filePath" type="string" value="../../data/notredame1.jpg"/>
+            <property name="filePath" type="string" value="../../../../../data/notredame1.jpg"/>
         </configure>
         <configure component="SolARImageFilterWallisOpencv" name="wallis">
             <property name="windowWidth" type="unsigned int" value="14"/>
