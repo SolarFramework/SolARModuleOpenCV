@@ -68,11 +68,11 @@ private:
 #ifndef __ANDROID__
     cv::dnn::Net	m_net;
 #endif
-	std::vector<float>	m_std = {0.f, 0.f, 0.f};
-	std::vector<float>	m_mean = {0.f, 0.f, 0.f};
-	std::vector<int>	m_inputSize = {0, 0};  // width, height
-	std::vector<std::string> m_outputLayerNames;
-	int m_argMaxRemoved = 0;
+    std::vector<float>	m_std = {0.f, 0.f, 0.f};
+    std::vector<float>	m_mean = {0.f, 0.f, 0.f};
+    std::vector<int>	m_inputSize = {0, 0};  // width, height
+    std::vector<std::string> m_outputLayerNames;
+    int m_argMaxRemoved = 0;
 };
 
 }

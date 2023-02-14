@@ -33,7 +33,7 @@ SolARMaskOverlayOpencv::SolARMaskOverlayOpencv():ConfigurableBase(xpcf::toUUID<S
     declareInterface<api::display::IMaskOverlay>(this);
     declareProperty("classFile", m_classFile);
     declareProperty("colorFile", m_colorFile);
-	declarePropertySequence("otherClassColor", m_otherClassColor);
+    declarePropertySequence("otherClassColor", m_otherClassColor);
 }
 
 SolARMaskOverlayOpencv::~SolARMaskOverlayOpencv()
@@ -44,10 +44,10 @@ SolARMaskOverlayOpencv::~SolARMaskOverlayOpencv()
 xpcf::XPCFErrorCode SolARMaskOverlayOpencv::onConfigured()
 {
     LOG_DEBUG(" SolARMaskOverlayOpencv onConfigured");
-	// Load names of classes
-	std::ifstream ifs(m_classFile.c_str());
-	std::string line;	
-	while (std::getline(ifs, line)) 
+    // Load names of classes
+    std::ifstream ifs(m_classFile.c_str());
+    std::string line;	
+    while (std::getline(ifs, line)) 
         m_classes.push_back(line);
 
     // Load the colors	
@@ -58,7 +58,7 @@ xpcf::XPCFErrorCode SolARMaskOverlayOpencv::onConfigured()
         iss >> r >> g >> b;
         m_colors.push_back(cv::Scalar(b, g, r, 255.0));
     }
-	
+    
     // extract effective class and colors for legend display 
     for (int i = 0; i < static_cast<int>(m_colors.size()); i++) {
         if ((static_cast<int>(m_colors[i][2]) != m_otherClassColor[0]) ||
