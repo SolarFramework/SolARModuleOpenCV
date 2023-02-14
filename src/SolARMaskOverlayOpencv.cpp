@@ -59,17 +59,25 @@ xpcf::XPCFErrorCode SolARMaskOverlayOpencv::onConfigured()
         m_colors.push_back(cv::Scalar(b, g, r, 255.0));
     }
     
-    // extract effective class and colors for legend display 
-    for (int i = 0; i < static_cast<int>(m_colors.size()); i++) {
-        if ((static_cast<int>(m_colors[i][2]) != m_otherClassColor[0]) ||
-            (static_cast<int>(m_colors[i][1]) != m_otherClassColor[1]) ||
-            (static_cast<int>(m_colors[i][0]) != m_otherClassColor[2])) {
-            m_classes_legend.push_back(m_classes[i]);
-            m_colors_legend.push_back(m_colors[i]);
+    // extract effective class and colors for legend display
+    // if other class color (for unimportant classes) is set 
+    // in color file, lines which equal to m_otherClassColor will be considered as unimportant class
+    if (std::all_of(m_otherClassColor.begin(), m_otherClassColor.end(), [](const auto& c) {return c>=0 && c<=255;})) {
+        for (int i = 0; i < static_cast<int>(m_colors.size()); i++) {
+            if ((static_cast<int>(m_colors[i][2]) != m_otherClassColor[0]) ||
+                (static_cast<int>(m_colors[i][1]) != m_otherClassColor[1]) ||
+                (static_cast<int>(m_colors[i][0]) != m_otherClassColor[2])) {
+                m_classes_legend.push_back(m_classes[i]);
+                m_colors_legend.push_back(m_colors[i]);
+            }
         }
+        m_classes_legend.push_back("Other");
+        m_colors_legend.push_back(cv::Scalar(m_otherClassColor[2], m_otherClassColor[1], m_otherClassColor[0], 255.0));
     }
-    m_classes_legend.push_back("Other");
-    m_colors_legend.push_back(cv::Scalar(m_otherClassColor[2], m_otherClassColor[1], m_otherClassColor[0], 255.0));
+    else { // other class color is not set display all classes and all colors in legend 
+        m_classes_legend = m_classes;
+        m_colors_legend = m_colors;
+    }
 
     return xpcf::XPCFErrorCode::_SUCCESS;
 }
