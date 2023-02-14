@@ -346,7 +346,7 @@ extern "C" XPCF_MODULEHOOKS_API xpcf::XPCFErrorCode XPCF_getComponent(const boos
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARFCNSegmentationOpencv>(componentUUID, interfaceRef);
     }
-	if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
+    if (errCode != xpcf::XPCFErrorCode::_SUCCESS)
     {
         errCode = xpcf::tryCreateComponent<SolAR::MODULES::OPENCV::SolARGenericSemanticSegmentationOpencv>(componentUUID, interfaceRef);
     }

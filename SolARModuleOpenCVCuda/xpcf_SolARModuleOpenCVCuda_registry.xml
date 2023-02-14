@@ -165,13 +165,13 @@
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
       <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
     </component>
-	<component uuid="77a8b776-6b0c-4bc0-b0a8-437a796b8e29" name="SolARFCNSegmentationOpencv" description="SolARFCNSegmentationOpencv">
-		<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-		<interface uuid="2fd30b7c-c6e4-4af7-a711-0b69964e68c2" name="ISemanticSegmentation" description="ISemanticSegmentation"/>
-	</component>
-	<component uuid="063d3086-6c87-49ff-87db-9a4ff224b5c8" name="SolARGenericSemanticSegmentationOpencv" description="SolARGenericSemanticSegmentationOpencv">
-		<interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
-		<interface uuid="2fd30b7c-c6e4-4af7-a711-0b69964e68c2" name="ISemanticSegmentation" description="ISemanticSegmentation"/>
-	</component>
+    <component uuid="77a8b776-6b0c-4bc0-b0a8-437a796b8e29" name="SolARFCNSegmentationOpencv" description="SolARFCNSegmentationOpencv">
+      <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+      <interface uuid="2fd30b7c-c6e4-4af7-a711-0b69964e68c2" name="ISemanticSegmentation" description="ISemanticSegmentation"/>
+    </component>
+    <component uuid="063d3086-6c87-49ff-87db-9a4ff224b5c8" name="SolARGenericSemanticSegmentationOpencv" description="SolARGenericSemanticSegmentationOpencv">
+      <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+      <interface uuid="2fd30b7c-c6e4-4af7-a711-0b69964e68c2" name="ISemanticSegmentation" description="ISemanticSegmentation"/>
+    </component>
   </module>    
 </xpcf-registry>

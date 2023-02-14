@@ -54,29 +54,29 @@ int main(int argc,char* argv[])
 
         auto camera = xpcfComponentManager->resolve<input::devices::ICamera>();
         auto segmentation = xpcfComponentManager->resolve<segm::ISemanticSegmentation>();
-		auto maskOverlay = xpcfComponentManager->resolve<display::IMaskOverlay>();
-		auto imageViewer = xpcfComponentManager->resolve<display::IImageViewer>();
+        auto maskOverlay = xpcfComponentManager->resolve<display::IMaskOverlay>();
+        auto imageViewer = xpcfComponentManager->resolve<display::IImageViewer>();
 
-		// open camera
-		if (camera->start() == FrameworkReturnCode::_ERROR_)
-		{
-			LOG_ERROR("Cannot open camera");
-			return -1;
-		}
+        // open camera
+        if (camera->start() == FrameworkReturnCode::_ERROR_)
+        {
+            LOG_ERROR("Cannot open camera");
+            return -1;
+        }
 
         // pose estimation
-		while (true) {
-			SRef<Image> image;
-			if (camera->getNextImage(image) != FrameworkReturnCode::_SUCCESS) {
-				LOG_ERROR("Error during capture");
-				return -1;
-			}		
-			SRef<Image> mask;
-			if (segmentation->segment(image, mask) == FrameworkReturnCode::_SUCCESS)
-				maskOverlay->draw(image, mask);
-			if (imageViewer->display(image) == FrameworkReturnCode::_STOP)
-				break;
-		}
+        while (true) {
+            SRef<Image> image;
+            if (camera->getNextImage(image) != FrameworkReturnCode::_SUCCESS) {
+                LOG_ERROR("Error during capture");
+                return -1;
+            }
+            SRef<Image> mask;
+            if (segmentation->segment(image, mask) == FrameworkReturnCode::_SUCCESS)
+                maskOverlay->draw(image, mask);
+            if (imageViewer->display(image) == FrameworkReturnCode::_STOP)
+                break;
+        }
     }
 
     catch (xpcf::Exception e)

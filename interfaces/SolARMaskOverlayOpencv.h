@@ -73,13 +73,13 @@ public:
 							 const SRef<SolAR::datastructure::Image> mask) override;
 
 private:
-	std::string					m_classFile;
-	std::string					m_colorFile;
-	std::vector<std::string>	m_classes;
-	std::vector<cv::Scalar>		m_colors;
-	std::vector<int>			m_otherClassColor = {0, 0, 0}; 
-	std::vector<std::string>	m_classes_legend;
-	std::vector<cv::Scalar>		m_colors_legend;
+       std::string                 m_classFile;
+       std::string                 m_colorFile;
+       std::vector<std::string>    m_classes;
+       std::vector<cv::Scalar>     m_colors;
+       std::vector<int>            m_otherClassColor = {0, 0, 0};
+       std::vector<std::string>    m_classes_legend;
+       std::vector<cv::Scalar>     m_colors_legend;
 };
 
 }

@@ -34,11 +34,11 @@ SolARGenericSemanticSegmentationOpencv::SolARGenericSemanticSegmentationOpencv()
     LOG_DEBUG("SolARGenericSemanticSegmentationOpencv constructor")
     declareInterface<api::segm::ISemanticSegmentation>(this);
     declareProperty("modelFile", m_modelFile);
-	declareProperty("argMaxRemoved", m_argMaxRemoved);
+    declareProperty("argMaxRemoved", m_argMaxRemoved);
     declareProperty("modelConfig", m_modelConfig);
-	declarePropertySequence("mean", m_mean);
-	declarePropertySequence("std", m_std);
-	declarePropertySequence("inputSize", m_inputSize);
+    declarePropertySequence("mean", m_mean);
+    declarePropertySequence("std", m_std);
+    declarePropertySequence("inputSize", m_inputSize);
 }
 
 SolARGenericSemanticSegmentationOpencv::~SolARGenericSemanticSegmentationOpencv()
@@ -50,77 +50,76 @@ xpcf::XPCFErrorCode SolARGenericSemanticSegmentationOpencv::onConfigured()
 {
 #ifndef __ANDROID__
     LOG_DEBUG(" SolARGenericSemanticSegmentationOpencv onConfigured");
-	// read and initialize network
-	m_net = cv::dnn::readNet(m_modelFile, m_modelConfig);
-	if (std::any_of(m_std.begin(), m_std.end(), [](const auto& v) {return v < 1e-5;})) {
-		LOG_ERROR("SolARGenericSemanticSegmentationOpencv normalization std values too small");
-		return xpcf::XPCFErrorCode::_FAIL;
-	}
+    // read and initialize network
+    m_net = cv::dnn::readNet(m_modelFile, m_modelConfig);
+    if (std::any_of(m_std.begin(), m_std.end(), [](const auto& v) {return v < 1e-5;})) {
+        LOG_ERROR("SolARGenericSemanticSegmentationOpencv normalization std values too small");
+        return xpcf::XPCFErrorCode::_FAIL;
+    }
 #ifdef WITHCUDA
-	LOG_INFO("Using GPU device");
-	m_net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-	m_net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+    LOG_INFO("Using GPU device");
+    m_net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
+    m_net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
 #else
-	LOG_INFO("Using CPU device");
-	m_net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-	m_net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+    LOG_INFO("Using CPU device");
+    m_net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+    m_net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 #endif // WITHCUDA
-	// set network parameters	
-	m_outputLayerNames = { "output" };
-	return xpcf::XPCFErrorCode::_SUCCESS;
+    // set network parameters	
+    m_outputLayerNames = { "output" };
+    return xpcf::XPCFErrorCode::_SUCCESS;
 #else
     LOG_ERROR ("SolARGenericSemanticSegmentationOpencv is not avialble for Android");
     return xpcf::XPCFErrorCode::_FAIL;
 #endif
 }
 
-FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image,
-                                                        SRef<SolAR::datastructure::Image> &mask)
+FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image, SRef<SolAR::datastructure::Image> &mask)
 {
 #ifndef __ANDROID__
-	/// convert to opencv image
-	cv::Mat imageCV;
-	SolAROpenCVHelper::mapToOpenCV(image, imageCV);
-	if (imageCV.channels() != 3) {
-		LOG_ERROR("Input image must be RGB image");
-		return FrameworkReturnCode::_ERROR_;
-	}
-	/// deeplabv3 prediction
-	// input preparation
-	cv::Size inputImageSize(m_inputSize[0], m_inputSize[1]);
-	cv::Mat blobInput = cv::dnn::blobFromImage(imageCV, 1., inputImageSize, cv::Scalar(m_mean[0], m_mean[1], m_mean[2]), true);
-	cv::multiply(blobInput, cv::Scalar(1.f / m_std[0], 1.f / m_std[1], 1.f / m_std[2]), blobInput);
-	m_net.setInput(blobInput);
-	std::vector<cv::Mat> outs;
-	m_net.forward(outs, m_outputLayerNames);
-	cv::Mat bufferUchar;
-	if (m_argMaxRemoved > 0) {
-		int numPixels = m_inputSize[0] * m_inputSize[1];
-		int numClasses = outs[0].total() / numPixels;
-		bufferUchar = cv::Mat::zeros(1, numPixels, CV_8UC1);
-		float* buffer = outs[0].ptr<float>();
-		for (int h = 0; h < m_inputSize[1]; h++) {
-			for (int w = 0; w < m_inputSize[0]; w++) {
-				int idxmax = 0;
-				float valuemax = buffer[idxmax * numPixels + h * m_inputSize[0] + w];
-				for (int c = 1; c < numClasses; c++) {
-					float valueclass = buffer[c * numPixels + h * m_inputSize[0] + w];
-					if (valueclass > valuemax) {
-						idxmax = c;
-						valuemax = valueclass;
-					}
-				}
-				bufferUchar.at<unsigned char>(0, h*m_inputSize[0]+w) = static_cast<unsigned char>(idxmax);
-			}
-		}
-	}
-	else {
-		outs[0].convertTo(bufferUchar, CV_8UC1);
-	}
-	cv::Mat maskCV(inputImageSize, CV_8UC1, bufferUchar.data);
-	cv::resize(maskCV, maskCV, cv::Size(imageCV.cols, imageCV.rows),0., 0., cv::INTER_NEAREST);
-	SolAROpenCVHelper::convertToSolar(maskCV, mask);
-	return FrameworkReturnCode::_SUCCESS;
+    /// convert to opencv image
+    cv::Mat imageCV;
+    SolAROpenCVHelper::mapToOpenCV(image, imageCV);
+    if (imageCV.channels() != 3) {
+        LOG_ERROR("Input image must be RGB image");
+        return FrameworkReturnCode::_ERROR_;
+    }
+    /// mmsegmentation model prediction
+    // input preparation
+    cv::Size inputImageSize(m_inputSize[0], m_inputSize[1]);
+    cv::Mat blobInput = cv::dnn::blobFromImage(imageCV, 1., inputImageSize, cv::Scalar(m_mean[0], m_mean[1], m_mean[2]), true);
+    cv::multiply(blobInput, cv::Scalar(1.f / m_std[0], 1.f / m_std[1], 1.f / m_std[2]), blobInput);
+    m_net.setInput(blobInput);
+    std::vector<cv::Mat> outs;
+    m_net.forward(outs, m_outputLayerNames);
+    cv::Mat bufferUchar;
+    if (m_argMaxRemoved > 0) {
+        int numPixels = m_inputSize[0] * m_inputSize[1];
+        int numClasses = outs[0].total() / numPixels;
+        bufferUchar = cv::Mat::zeros(1, numPixels, CV_8UC1);
+        float* buffer = outs[0].ptr<float>();
+        for (int h = 0; h < m_inputSize[1]; h++) {
+            for (int w = 0; w < m_inputSize[0]; w++) {
+                int idxmax = 0;
+                float valuemax = buffer[idxmax * numPixels + h * m_inputSize[0] + w];
+                for (int c = 1; c < numClasses; c++) {
+                    float valueclass = buffer[c * numPixels + h * m_inputSize[0] + w];
+                    if (valueclass > valuemax) {
+                        idxmax = c;
+                        valuemax = valueclass;
+                    }
+                }
+                bufferUchar.at<unsigned char>(0, h*m_inputSize[0]+w) = static_cast<unsigned char>(idxmax);
+            }
+        }
+    }
+    else {
+        outs[0].convertTo(bufferUchar, CV_8UC1);
+    }
+    cv::Mat maskCV(inputImageSize, CV_8UC1, bufferUchar.data);
+    cv::resize(maskCV, maskCV, cv::Size(imageCV.cols, imageCV.rows),0., 0., cv::INTER_NEAREST);
+    SolAROpenCVHelper::convertToSolar(maskCV, mask);
+    return FrameworkReturnCode::_SUCCESS;
 #else
     LOG_ERROR ("SolARGenericSemanticSegmentationOpencv is not avialble for Android");
     return FrameworkReturnCode::_ERROR_;
