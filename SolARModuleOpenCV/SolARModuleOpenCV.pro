@@ -28,7 +28,7 @@ CONFIG(release,debug|release) {
     DEFINES += NDEBUG=1
 }
 
-DEPENDENCIESCONFIG = shared install_recurse
+DEPENDENCIESCONFIG = static install_recurse
 
 ## Configuration for Visual Studio to install binaries and dependencies. Work also for QT Creator by replacing QMAKE_INSTALL
 PROJECTCONFIG = QTVS
@@ -78,6 +78,7 @@ win32 {
     QMAKE_CXXFLAGS += -wd4250 -wd4251 -wd4244 -wd4275 -wd5030
     QMAKE_CXXFLAGS_DEBUG += /Od
     QMAKE_CXXFLAGS_RELEASE += /O2
+    LIBS += -ladvapi32 -lcomdlg32
 }
 
 android {

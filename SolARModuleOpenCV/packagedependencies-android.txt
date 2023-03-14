@@ -1,1 +1,1 @@
-opencv|4.5.5|opencv|conan-solar@conan|conan-solar#https://repository.solarframework.org/conan#0|default|dnn=False#with_ade=False
+opencv|4.7.0|opencv|conan|conan-center|static|dnn=False#with_ade=False
