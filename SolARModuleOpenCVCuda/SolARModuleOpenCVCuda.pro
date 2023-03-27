@@ -59,6 +59,10 @@ unix:!android {
 linux {
     QMAKE_LFLAGS += -ldl
     LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
+    contains(DEFINES,WITHCUDA){
+        LIBS += -L$(CUDA_PATH)lib64
+        LIBS += -lcudart
+    }
 }
 
 macx {
