@@ -53,7 +53,7 @@ xpcf::XPCFErrorCode SolARGenericSemanticSegmentationOpencv::onConfigured()
     // read and initialize network
     m_net = cv::dnn::readNet(m_modelFile, m_modelConfig);
     if (std::any_of(m_std.begin(), m_std.end(), [](const auto& v) {return v < 1e-5;})) {
-        LOG_ERROR("SolARGenericSemanticSegmentationOpencv normalization std values too small");
+        LOG_ERROR("SolARGenericSemanticSegmentationOpencv normalization standard deviation values too small");
         return xpcf::XPCFErrorCode::_FAIL;
     }
 #ifdef WITHCUDA
@@ -100,16 +100,19 @@ FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<S
         float* buffer = outs[0].ptr<float>();
         for (int h = 0; h < m_inputSize[1]; h++) {
             for (int w = 0; w < m_inputSize[0]; w++) {
+                auto curIdx = h * m_inputSize[0] + w;
+                // assume that class with max proba value is 0 
                 int idxmax = 0;
-                float valuemax = buffer[idxmax * numPixels + h * m_inputSize[0] + w];
+                float valuemax = buffer[curIdx];
+                // loop over all other classes to find class with bigger proba value  
                 for (int c = 1; c < numClasses; c++) {
-                    float valueclass = buffer[c * numPixels + h * m_inputSize[0] + w];
+                    float valueclass = buffer[c * numPixels + curIdx];
                     if (valueclass > valuemax) {
                         idxmax = c;
                         valuemax = valueclass;
                     }
                 }
-                bufferUchar.at<unsigned char>(0, h*m_inputSize[0]+w) = static_cast<unsigned char>(idxmax);
+                bufferUchar.at<unsigned char>(0, curIdx) = static_cast<unsigned char>(idxmax);
             }
         }
     }
@@ -117,6 +120,7 @@ FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<S
         outs[0].convertTo(bufferUchar, CV_8UC1);
     }
     cv::Mat maskCV(inputImageSize, CV_8UC1, bufferUchar.data);
+    // resize back to original image size 
     cv::resize(maskCV, maskCV, cv::Size(imageCV.cols, imageCV.rows),0., 0., cv::INTER_NEAREST);
     SolAROpenCVHelper::convertToSolar(maskCV, mask);
     return FrameworkReturnCode::_SUCCESS;

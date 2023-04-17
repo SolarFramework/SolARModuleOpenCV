@@ -396,10 +396,10 @@ double SolARSVDTriangulationOpencv::triangulate(SRef<SolAR::datastructure::Frame
 			rgbMean[0], rgbMean[1], rgbMean[2], meanCamCenter(0) - pts3D[i].getX(), meanCamCenter(1) - pts3D[i].getY(), meanCamCenter(2) - pts3D[i].getZ(), 
 			reprj_err, visibility, descMean);
         // cloud point's semantic id is set from the two keypoints, by default it takes the 1st keypoint's semantic id 
-		int cid = kpUn1.getClassId();
-		if (cid < 0)
+        int cid = kpUn1.getClassId();
+        if (cid < 0 && kpUn2.getClassId() >= 0)
             cid = kpUn2.getClassId(); // if 1st id is not available take the 2nd point's id 
-		cp->setSemanticId(cid);
+        cp->setSemanticId(cid);
 		pcloud.push_back(cp);
 	}
 	cv::Scalar mse = cv::mean(reproj_error);

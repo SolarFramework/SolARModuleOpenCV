@@ -37,7 +37,7 @@ namespace OPENCV {
  *
  * @SolARComponentPropertiesBegin
  * @SolARComponentProperty{ m_modelFile,
- *                          the path to the DeepLabV3+ model file,
+ *                          the path to the onnx model file,
  *                          @SolARComponentPropertyDescString{ "" }}
  * @SolARComponentProperty{ m_modelConfig,
  *                          the path to the model configuration file,
@@ -59,20 +59,19 @@ public:
     /// @param[in] image The input image.
     /// @param[out] mask The mask has same size as the input image, in which the value of each pixel is corresponding to the class id.
     /// @return FrameworkReturnCode::_SUCCESS if the segmentation succeed, else FrameworkReturnCode::_ERROR_
-    FrameworkReturnCode segment(const SRef<SolAR::datastructure::Image> image,
-                                SRef<SolAR::datastructure::Image> &mask) override;
+    FrameworkReturnCode segment(const SRef<SolAR::datastructure::Image> image, SRef<SolAR::datastructure::Image> &mask) override;
 
 private:
-    std::string		m_modelFile = "";
-    std::string		m_modelConfig = "";
+    std::string		m_modelFile = ""; // path to the onnx model file 
+    std::string		m_modelConfig = ""; // optional, path to config file used by opencv dnn
 #ifndef __ANDROID__
     cv::dnn::Net	m_net;
 #endif
-    std::vector<float>	m_std = {0.f, 0.f, 0.f};
-    std::vector<float>	m_mean = {0.f, 0.f, 0.f};
-    std::vector<int>	m_inputSize = {0, 0};  // width, height
+    std::vector<float>	m_std = {0.f, 0.f, 0.f};  // RGB intensity normalization standard deviation
+    std::vector<float>	m_mean = {0.f, 0.f, 0.f}; // RGB intensity normalization mean 
+    std::vector<int>	m_inputSize = {0, 0};  // image width & height at the input layer of cnn
     std::vector<std::string> m_outputLayerNames;
-    int m_argMaxRemoved = 0;
+    int m_argMaxRemoved = 0; // flag indicating if argmax layer has been removed from the onnx model 
 };
 
 }

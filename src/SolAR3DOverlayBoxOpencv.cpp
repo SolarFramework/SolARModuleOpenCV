@@ -125,14 +125,11 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, const SolAR::data
     // draw parallelepiped
     // circle around corners
     for(auto & element : imagePoints)
-    {
         if (element.x >= 0 && element.x < displayedImage.cols && element.y >= 0 && element.y < displayedImage.rows)
             circle(displayedImage, element, 8, cv::Scalar(128, 0, 128), -1);
-    }
 
     // finally draw cube
-    for (int i = 0; i < 4; i++)
-    {
+    for (int i = 0; i < 4; i++) {
         SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[(i + 1) % 4], cv::Scalar(0,0,255), 4);
         SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i + 4], imagePoints[4 + (i + 1) % 4], cv::Scalar(0,255,0), 4);
         SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[i + 4], cv::Scalar(255,0,0), 4);

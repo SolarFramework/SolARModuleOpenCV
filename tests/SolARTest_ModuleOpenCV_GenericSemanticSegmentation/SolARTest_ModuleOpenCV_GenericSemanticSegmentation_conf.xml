@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry autoAlias="true">
     <module uuid="15e1990b-86b2-445c-8194-0cbe80ede970" name="SolARModuleOpenCV" description="SolARModuleOpenCV module" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCV/1.0.0/lib/x86_64/shared">
-    <!--module uuid="fde83ee6-3e22-4531-9e1c-54cb0a3bf3fa" name="SolARModuleOpenCVCuda" description="SolARModuleOpenCVCuda module" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCVCuda/1.0.0/lib/x86_64/shared"-->
         <component uuid="5B7396F4-A804-4F3C-A0EB-FB1D56042BB4" name="SolARCameraOpencv" description="SolARCameraOpencv">
             <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
             <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
@@ -43,7 +42,6 @@
         </configure>
         <configure component="SolARGenericSemanticSegmentationOpencv">
             <property name="modelFile" type="string" value="../../../../data/pspnet_r50-d8_512x512_4x4_80k_coco-stuff164k_argmax_removed.onnx"/>
-            <!--property name="modelFile" type="string" value="../../../../data/deeplabv3_r50-d8_512x512_4x4_80k_coco-stuff164k_argmax_removed.onnx"/-->
             <property name="argMaxRemoved" type="int" value="1" description="if argmax layer has been removed in the above onnx model"/>
             <property name="mean" type="float" description="normalize input RGB image by subtracting mean">
                 <value>123.675</value>
