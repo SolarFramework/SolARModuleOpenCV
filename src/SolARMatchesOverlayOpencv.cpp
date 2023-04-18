@@ -202,7 +202,31 @@ void SolARMatchesOverlayOpencv::draw(const SRef<Image> image1, const SRef<Image>
     outImg.setTo(0);
 
     img1.copyTo(outImg(cv::Rect(0, 0, img1_width, image1->getHeight())));
-    img2.copyTo(outImg(cv::Rect(img1_width, 0, image2->getWidth(), image2->getHeight())));
+    if (img2.channels() == outImg.channels()) {
+        img2.copyTo(outImg(cv::Rect(img1_width, 0, image2->getWidth(), image2->getHeight())));
+    }
+    else if (img2.channels() > outImg.channels()) {
+        if (img2.channels() == 3 && outImg.channels() == 1) {
+            cv::Mat img2Grayscale;
+            cv::cvtColor(img2, img2Grayscale, cv::COLOR_BGR2GRAY);
+            img2Grayscale.copyTo(outImg(cv::Rect(img1_width, 0, image2->getWidth(), image2->getHeight())));
+        }
+        else {
+            LOG_ERROR("Cannot handle the case where one of the images is neither grayscale nor BGR/RGB");
+            return;
+        }
+    }
+    else {
+        if (img2.channels() == 1 && outImg.channels() == 3) {
+            cv::Mat img2BGR;
+            cv::cvtColor(img2, img2BGR, cv::COLOR_GRAY2BGR);
+            img2BGR.copyTo(outImg(cv::Rect(img1_width, 0, image2->getWidth(), image2->getHeight())));
+        }
+        else {
+            LOG_ERROR("Cannot handle the case where one of the images is neither grayscale nor BGR/RGB");
+            return;
+        }
+    }
 
     int nbPoints;
 

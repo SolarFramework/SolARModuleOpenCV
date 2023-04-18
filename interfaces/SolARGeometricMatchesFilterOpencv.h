@@ -62,14 +62,15 @@ public:
 		/// @param[in] Original keypoints associated to desc_2.
 		/// @param[in] camera pose 1.
 		/// @param[in] camera pose 2.
-		/// @param[in] camera's intrinsic parameters.
+		/// @param[in] first camera's intrinsic parameters.
+               /// @param[in] second camera's intrinsic parameters.
 		virtual void filter(const std::vector<datastructure::DescriptorMatch> & inputMatches,
 							std::vector<datastructure::DescriptorMatch> & outputMatches,
 							const std::vector<datastructure::Keypoint> & inputKeyPoints1,
 							const std::vector<datastructure::Keypoint> & inputKeyPoints2,
 							const datastructure::Transform3Df &pose1,
 							const datastructure::Transform3Df &pose2,
-							const datastructure::CamCalibration &intrinsicParams) override;
+                            const datastructure::CamCalibration &intrinsicParams1, const datastructure::CamCalibration &intrinsicParams2 = datastructure::CamCalibration::Zero()) override;
 
         void unloadComponent () override final;
 
