@@ -84,7 +84,7 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
     return;
 }
 
-void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch>& inputMatches, std::vector<DescriptorMatch>& outputMatches, const std::vector<Keypoint>& inputKeyPoints1, const std::vector<Keypoint>& inputKeyPoints2, const Transform3Df & pose1, const Transform3Df & pose2, const CamCalibration & intrinsicParams)
+void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch>& inputMatches, std::vector<DescriptorMatch>& outputMatches, const std::vector<Keypoint>& inputKeyPoints1, const std::vector<Keypoint>& inputKeyPoints2, const Transform3Df & pose1, const Transform3Df & pose2, const CamCalibration & intrinsicParams1, const CamCalibration & intrinsicParams2)
 {
 	std::vector<DescriptorMatch> tmpMatches;
 	// compute fundamental matrice
@@ -98,9 +98,15 @@ void SolARGeometricMatchesFilterOpencv::filter(const std::vector<DescriptorMatch
 											T12.at<float>(2), 0, -T12.at<float>(0),
 											-T12.at<float>(1), T12.at<float>(0), 0);
 
-	cv::Mat K(3, 3, CV_32FC1, (void *)intrinsicParams.data());		
-	cv::Mat F12 = K.t().inv() * T12x * R12 * K.inv();
-	
+    cv::Mat K1(3, 3, CV_32FC1, (void *)intrinsicParams1.data());
+    cv::Mat F12;
+    if (intrinsicParams2 == datastructure::CamCalibration::Zero())
+        F12 = K1.t().inv() * T12x * R12 * K1.inv();  // frame1 and frame2 has the same intrinsics
+    else { // frame1 and frame2 has different intrinsics
+        cv::Mat K2(3, 3, CV_32FC1, (void *)intrinsicParams2.data());
+        F12 = K1.t().inv() * T12x * R12 * K2.inv();
+    }
+
 	// check matches based on distance to epipolar lines
     for (unsigned int i = 0; i < inputMatches.size(); ++i) {
 		Keypoint kp1 = inputKeyPoints1[inputMatches[i].getIndexInDescriptorA()];
