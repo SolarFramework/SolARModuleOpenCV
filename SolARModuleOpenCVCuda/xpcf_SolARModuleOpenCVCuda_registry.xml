@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry>
-  <module uuid="fde83ee6-3e22-4531-9e1c-54cb0a3bf3fa" name="SolARModuleOpenCVCuda" description="SolARModuleOpenCVCuda" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCVCuda/1.1.0/lib/x86_64/shared">
+  <module uuid="fde83ee6-3e22-4531-9e1c-54cb0a3bf3fa" name="SolARModuleOpenCVCuda" description="SolARModuleOpenCVCuda" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCVCuda/1.0.0/lib/x86_64/shared">
     <component uuid="cedd8c47-e7b0-47bf-abb1-7fb54d198117" name="SolAR2D3DCorrespondencesFinderOpencv" description="SolAR2D3DCorrespondencesFinderOpencv">
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
       <interface uuid="0404e8b9-b824-4852-a34d-6eafa7563918" name="I2D3DCorrespondencesFinder" description="I2D3DCorrespondencesFinder"/>
