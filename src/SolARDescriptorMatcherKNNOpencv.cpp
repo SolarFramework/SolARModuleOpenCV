@@ -75,7 +75,7 @@ FrameworkReturnCode SolARDescriptorMatcherKNNOpencv::match(SRef<DescriptorBuffer
     cv::Mat cvDescriptor1(desc1->getNbDescriptors(), desc1->getNbElements(), type_conversion);
     cvDescriptor1.data=(uchar*)desc1->data();
 
-    cv::Mat cvDescriptor2(desc2->getNbDescriptors(), desc1->getNbElements(), type_conversion);
+    cv::Mat cvDescriptor2(desc2->getNbDescriptors(), desc2->getNbElements(), type_conversion);
     cvDescriptor2.data=(uchar*)desc2->data();
 
     if (desc1->getDescriptorDataType() != DescriptorDataType::TYPE_32F)
