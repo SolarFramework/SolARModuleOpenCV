@@ -48,7 +48,7 @@ namespace OPENCV {
 *                          the minimum of number of inliers to valid a good pose estimation,
 *                          @SolARComponentPropertyDescNum{ int, [0..MAX INT], 10 }}
 * @SolARComponentProperty{ method,
-*                          the method for solving the PnP problem (ITERATIVE\, P3P\, AP3P\, EPNP\, DLS\, UPNP\, IPPE\, IPPE_SQUARE),
+*                          the method for solving the PnP problem (ITERATIVE\, P3P\, AP3P\, EPNP\, DLS\, UPNP\, IPPE\, IPPE_SQUARE\, USAC\, USAC_PARALLEL\, USAC_FM 8PTS\, USAC_FAST\, USAC_ACCURATE\, USAC_PROSAC\, USAC_MAGSAC\),
 *                          @SolARComponentPropertyDescString{ "ITERATIVE" }}
 * @SolARComponentPropertiesEnd
 * 
@@ -95,7 +95,7 @@ private:
     /// @brief The minimum of number of inliers to valid a good pose estimation
     int m_NbInliersToValidPose = 10;
 
-    /// @brief The method for solving the PnP Ransac problem (ITERATIVE, P3P, AP3P, EPNP, DLS, UPNP, IPPE, IPPE SQUARE, USAC, USAC PARALLEL, USAC FM 8PTS, USAC FAST, USAC ACCURATE, USAC PROSAC, USAC MAGSAC)
+    /// @brief The method for solving the PnP Ransac problem (ITERATIVE, P3P, AP3P, EPNP, DLS, UPNP, IPPE, IPPE_SQUARE, USAC, USAC_PARALLEL, USAC_FM 8PTS, USAC_FAST, USAC_ACCURATE, USAC_PROSAC, USAC_MAGSAC)
     std::string m_method = "ITERATIVE";
 
     cv::Mat m_camMatrix;
