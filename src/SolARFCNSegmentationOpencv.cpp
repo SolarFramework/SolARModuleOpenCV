@@ -115,7 +115,7 @@ FrameworkReturnCode SolARFCNSegmentationOpencv::segment(const SRef<SolAR::datast
 	SolAROpenCVHelper::convertToSolar(maskCV, mask);
 	return FrameworkReturnCode::_SUCCESS;
 #else
-    LOG_ERROR ("SolARFCNSegemntationOpencv is not avialble for Android");
+    LOG_ERROR ("SolARFCNSegmentationOpencv is not available for Android");
     return FrameworkReturnCode::_ERROR_;
 #endif
 }

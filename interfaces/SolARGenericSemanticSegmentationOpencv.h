@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2020 B-com http://www.b-com.com/
+ * @copyright Copyright (c) 2023 B-com http://www.b-com.com/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public:
     /// @param[in] image The input image.
     /// @param[out] mask The mask has same size as the input image, in which the value of each pixel is corresponding to the class id.
     /// @return FrameworkReturnCode::_SUCCESS if the segmentation succeed, else FrameworkReturnCode::_ERROR_
-    FrameworkReturnCode segment(const SRef<SolAR::datastructure::Image> image, SRef<SolAR::datastructure::Image> &mask) override;
+    FrameworkReturnCode segment(const SRef<SolAR::datastructure::Image> image, SRef<SolAR::datastructure::Image> mask) override;
 
 private:
     std::string		m_modelFile = ""; // path to the onnx model file 

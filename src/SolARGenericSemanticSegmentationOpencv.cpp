@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2020 B-com http://www.b-com.com/
+ * @copyright Copyright (c) 2023 B-com http://www.b-com.com/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,13 +43,13 @@ SolARGenericSemanticSegmentationOpencv::SolARGenericSemanticSegmentationOpencv()
 
 SolARGenericSemanticSegmentationOpencv::~SolARGenericSemanticSegmentationOpencv()
 {
-    LOG_DEBUG(" SolARGenericSemanticSegmentationOpencv destructor")
+    LOG_DEBUG("SolARGenericSemanticSegmentationOpencv destructor")
 }
 
 xpcf::XPCFErrorCode SolARGenericSemanticSegmentationOpencv::onConfigured()
 {
 #ifndef __ANDROID__
-    LOG_DEBUG(" SolARGenericSemanticSegmentationOpencv onConfigured");
+    LOG_DEBUG("SolARGenericSemanticSegmentationOpencv onConfigured");
     // read and initialize network
     m_net = cv::dnn::readNet(m_modelFile, m_modelConfig);
     if (std::any_of(m_std.begin(), m_std.end(), [](const auto& v) {return v < 1e-5;})) {
@@ -69,12 +69,12 @@ xpcf::XPCFErrorCode SolARGenericSemanticSegmentationOpencv::onConfigured()
     m_outputLayerNames = { "output" };
     return xpcf::XPCFErrorCode::_SUCCESS;
 #else
-    LOG_ERROR ("SolARGenericSemanticSegmentationOpencv is not avialble for Android");
+    LOG_ERROR("SolARGenericSemanticSegmentationOpencv is not available for Android");
     return xpcf::XPCFErrorCode::_FAIL;
 #endif
 }
 
-FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image, SRef<SolAR::datastructure::Image> &mask)
+FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image, SRef<SolAR::datastructure::Image> mask)
 {
 #ifndef __ANDROID__
     /// convert to opencv image
@@ -125,7 +125,7 @@ FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<S
     SolAROpenCVHelper::convertToSolar(maskCV, mask);
     return FrameworkReturnCode::_SUCCESS;
 #else
-    LOG_ERROR ("SolARGenericSemanticSegmentationOpencv is not avialble for Android");
+    LOG_ERROR("SolARGenericSemanticSegmentationOpencv is not available for Android");
     return FrameworkReturnCode::_ERROR_;
 #endif
 }

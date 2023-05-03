@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2017 B-com http://www.b-com.com/
+ * @copyright Copyright (c) 2023 B-com http://www.b-com.com/
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ int main(int argc,char* argv[])
     LOG_ADD_LOG_TO_CONSOLE();
 
     try {
-
         /* instantiate component manager*/
         /* this is needed in dynamic mode */
         SRef<xpcf::IComponentManager> xpcfComponentManager = xpcf::getComponentManagerInstance();
@@ -78,10 +77,9 @@ int main(int argc,char* argv[])
                 break;
         }
     }
-
     catch (xpcf::Exception e)
     {
-        LOG_ERROR ("The following exception has been catch : {}", e.what());
+        LOG_ERROR ("The following exception has been caught : {}", e.what());
         return -1;
     }
 

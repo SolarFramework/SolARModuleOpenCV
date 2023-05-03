@@ -79,8 +79,8 @@ xpcf::XPCFErrorCode SolAR3DOverlayBoxOpencv::onConfigured()
     parallelepiped.push_back(transform * Vector4f( half_X,  half_Y,   -Z, 1.0f));
     parallelepiped.push_back(transform * Vector4f(-half_X,  half_Y,   -Z, 1.0f));
 
-    for (unsigned int i = 0; i < parallelepiped.size(); i++)
-		for (int j = 0; j < 3; j++)
+    for (unsigned int i = 0; i < parallelepiped.size(); ++i)
+		for (int j = 0; j < 3; ++j)
 			m_parallelepiped.at< float >(i, j) = parallelepiped[i](j);
 
     return xpcf::XPCFErrorCode::_SUCCESS;
@@ -114,7 +114,7 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, const SolAR::data
     std::vector<cv::Point2f> imagePoints;
 
     // compute the projection of the points of the cube
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; ++i) {
         Vector3f x_world(m_parallelepiped.at<float>(i, 0), m_parallelepiped.at<float>(i, 1), m_parallelepiped.at<float>(i, 2));
         auto x_camera = poseInverse*x_world;
         float px = x_camera(0)/x_camera(2) * m_camMatrix.at<float>(0,0) + m_camMatrix.at<float>(0,2);
@@ -129,7 +129,7 @@ void SolAR3DOverlayBoxOpencv::draw (const Transform3Df & pose, const SolAR::data
             circle(displayedImage, element, 8, cv::Scalar(128, 0, 128), -1);
 
     // finally draw cube
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; ++i) {
         SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[(i + 1) % 4], cv::Scalar(0,0,255), 4);
         SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i + 4], imagePoints[4 + (i + 1) % 4], cv::Scalar(0,255,0), 4);
         SolAROpenCVHelper::drawCVLine(displayedImage, imagePoints[i], imagePoints[i + 4], cv::Scalar(255,0,0), 4);
