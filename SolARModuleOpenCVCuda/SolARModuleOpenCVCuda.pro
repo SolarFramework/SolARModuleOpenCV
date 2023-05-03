@@ -61,7 +61,7 @@ linux {
     LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
     contains(DEFINES,WITHCUDA){
         LIBS += -L$(CUDA_PATH)lib64
-        LIBS += -lcudart
+        LIBS += -lcudart-static
     }
 }
 
@@ -82,7 +82,8 @@ win32 {
     QMAKE_CXXFLAGS += -wd4250 -wd4251 -wd4244 -wd4275 -wd5030
     QMAKE_CXXFLAGS_DEBUG += /Od
     QMAKE_CXXFLAGS_RELEASE += /O2
-    LIBS += -ladvapi32 -lcomdlg32
+    LIBS += -L$$(CUDA_PATH)/lib/x64
+    LIBS += -ladvapi32 -lcomdlg32 -lcudart -lcudnn -lcublas
 }
 
 android {
