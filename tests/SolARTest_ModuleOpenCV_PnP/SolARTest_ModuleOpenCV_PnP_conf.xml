@@ -25,39 +25,87 @@
     </factory>
     <properties>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="ITERATIVE">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="ITERATIVE"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="EPNP">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="EPNP"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="DLS">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="DLS"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="UPNP">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="UPNP"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="IPPE">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="IPPE"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="USAC"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC_PARALLEL">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="USAC_PARALLEL"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC_FM_8PTS">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="USAC_FM_8PTS"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC_FAST">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="USAC_FAST"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC_ACCURATE">
-            <property name="method" type="string" value="USAC_ACCURATE"/>
+          <property name="iterationsCount" type="int" value="100"/>
+          <property name="reprojError" type="float" value="8.0"/>
+          <property name="confidence" type="float" value="0.99"/>
+          <property name="minNbInliers" type="int" value="15"/>
+          <property name="method" type="string" value="USAC_ACCURATE"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC_PROSAC">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="USAC_PROSAC"/>
         </configure>
         <configure component="SolARPoseEstimationSACPnpOpencv" name="USAC_MAGSAC">
+            <property name="iterationsCount" type="int" value="100"/>
+            <property name="reprojError" type="float" value="8.0"/>
+            <property name="confidence" type="float" value="0.99"/>
+            <property name="minNbInliers" type="int" value="15"/>
             <property name="method" type="string" value="USAC_MAGSAC"/>
         </configure>
     </properties>
