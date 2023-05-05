@@ -74,7 +74,7 @@ xpcf::XPCFErrorCode SolARGenericSemanticSegmentationOpencv::onConfigured()
 #endif
 }
 
-FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image, SRef<SolAR::datastructure::Image> mask)
+FrameworkReturnCode SolARGenericSemanticSegmentationOpencv::segment(const SRef<SolAR::datastructure::Image> image, SRef<SolAR::datastructure::Image>& mask)
 {
 #ifndef __ANDROID__
     /// convert to opencv image

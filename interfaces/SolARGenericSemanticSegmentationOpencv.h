@@ -59,7 +59,7 @@ public:
     /// @param[in] image The input image.
     /// @param[out] mask The mask has same size as the input image, in which the value of each pixel is corresponding to the class id.
     /// @return FrameworkReturnCode::_SUCCESS if the segmentation succeed, else FrameworkReturnCode::_ERROR_
-    FrameworkReturnCode segment(const SRef<SolAR::datastructure::Image> image, SRef<SolAR::datastructure::Image> mask) override;
+    FrameworkReturnCode segment(const SRef<SolAR::datastructure::Image> image, SRef<SolAR::datastructure::Image>& mask) override;
 
 private:
     std::string		m_modelFile = ""; // path to the onnx model file 
