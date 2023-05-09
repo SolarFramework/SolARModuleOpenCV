@@ -49,6 +49,7 @@ class SolARDescriptorsExtractorFromImageOpencv;
 class SolARFiducialMarkerLoaderOpencv;
 class SolARFundamentalMatrixEstimationOpencv;
 class SolARGeometricMatchesFilterOpencv;
+class SolARGenericSemanticSegmentationOpencv;
 class SolARHomographyEstimationOpencv;
 class SolARHomographyMatrixDecomposerOpencv;
 class SolARImageConvertorOpencv;
@@ -404,6 +405,10 @@ XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARFCNSegmentationOpencv,
                             "77a8b776-6b0c-4bc0-b0a8-437a796b8e29",
                             "SolARFCNSegmentationOpencv",
                             "Perform 2D semantic segmentation based on the FCN network.")
+XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARGenericSemanticSegmentationOpencv,
+                            "063d3086-6c87-49ff-87db-9a4ff224b5c8",
+                            "SolARGenericSemanticSegmentationOpencv",
+                            "Perform generic 2D semantic segmentation network.")
 XPCF_DEFINE_COMPONENT_TRAITS(SolAR::MODULES::OPENCV::SolARMaskOverlayOpencv,
                             "ed445504-daba-4855-af88-052d4e3e5b7a",
                             "SolARMaskOverlayOpencv",

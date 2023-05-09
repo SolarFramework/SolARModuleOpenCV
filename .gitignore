@@ -76,6 +76,9 @@ doxygen/
 # Tests builds
 tests/bin
 
+# Tests data 
+tests/data
+
 # Others
 *.*pre1
 *.rej
