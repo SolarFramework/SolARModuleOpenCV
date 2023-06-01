@@ -190,25 +190,28 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
 	float acceptedDist = m_paddingRatio * camParams2.resolution.width;
 	for (auto i = 0; i < indices1.size(); i++) {
 		const auto& best_matches = nn_matches[i];
-		if (!checkMatches[best_matches[0].trainIdx])
-			continue;
-		if (best_matches[0].distance >= m_matchingDistanceMax)
-			continue;
-		if (best_matches[0].distance >= m_distanceRatio * best_matches[1].distance) // no big difference between best and 2nd best, Lowe's ratio test
-			continue;
-		// the match is accepted 
-		// now we should check the epipolar constraint 
-		int idx1 = indices1[best_matches[0].queryIdx];
-		int idx2 = indices2[best_matches[0].trainIdx];
-		float distance = best_matches[0].distance;
-		cv::Point3f l = lines2[i];  // line equation a*x + b*y +c = 0
-		float x = undistortedKeypoints2[idx2].getX();
-		float y = undistortedKeypoints2[idx2].getY();
-		float disPointLine = std::abs(x * l.x + y * l.y + l.z) / std::sqrt(l.x * l.x + l.y * l.y);
-		if (disPointLine < acceptedDist) {
-			matches.push_back(DescriptorMatch(idx1, idx2, distance));
-			checkMatches[best_matches[0].trainIdx] = false;
-		}
+        if (best_matches.size() > 0) {
+            if (!checkMatches[best_matches[0].trainIdx])
+                continue;
+            if (best_matches[0].distance >= m_matchingDistanceMax)
+                continue;
+            if ((best_matches.size() > 1)
+             && (best_matches[0].distance >= m_distanceRatio * best_matches[1].distance)) // no big difference between best and 2nd best, Lowe's ratio test
+                continue;
+            // the match is accepted
+            // now we should check the epipolar constraint
+            int idx1 = indices1[best_matches[0].queryIdx];
+            int idx2 = indices2[best_matches[0].trainIdx];
+            float distance = best_matches[0].distance;
+            cv::Point3f l = lines2[i];  // line equation a*x + b*y +c = 0
+            float x = undistortedKeypoints2[idx2].getX();
+            float y = undistortedKeypoints2[idx2].getY();
+            float disPointLine = std::abs(x * l.x + y * l.y + l.z) / std::sqrt(l.x * l.x + l.y * l.y);
+            if (disPointLine < acceptedDist) {
+                matches.push_back(DescriptorMatch(idx1, idx2, distance));
+                checkMatches[best_matches[0].trainIdx] = false;
+            }
+        }
 	}
 #else 
 	// first apply epipolar constraint then apply descriptor matching  
