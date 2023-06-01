@@ -212,6 +212,9 @@ FrameworkReturnCode SolARDescriptorMatcherGeometricOpencv::match(const SRef<SolA
                 checkMatches[best_matches[0].trainIdx] = false;
             }
         }
+        else {
+            LOG_WARNING("No best matches found");
+        }
 	}
 #else 
 	// first apply epipolar constraint then apply descriptor matching  
