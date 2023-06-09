@@ -1,2 +1,0 @@
-opencv|4.5.5|opencv|conan-solar@conan|conan-solar#https://repository.solarframework.org/conan#0
-
