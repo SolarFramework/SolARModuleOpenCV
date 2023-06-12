@@ -65,10 +65,6 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
-android {
-    ANDROID_ABIS="arm64-v8a"
-}
-
 linux {
   run_install.path = $${TARGETDEPLOYDIR}
   run_install.files = $${PWD}/../run.sh

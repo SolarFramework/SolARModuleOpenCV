@@ -67,10 +67,6 @@ win32 {
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 }
 
-android {
-    ANDROID_ABIS="arm64-v8a"
-}
-
 configfile.path = $${TARGETDEPLOYDIR}/
 configfile.files = $$files($${PWD}/SolARTest_ModuleOpenCV_StereoCameraCalibration_conf.xml)
 INSTALLS += configfile
