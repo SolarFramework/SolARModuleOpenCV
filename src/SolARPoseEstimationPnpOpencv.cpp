@@ -93,21 +93,16 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate(const std::vector<Sol
     cv::Mat raux, taux, r33;
     
     // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
-    bool pnpOk = false;
-    if (!initialPoseInverse.isApprox(Transform3Df::Identity())){
+    bool useExtrinsicGuess = !initialPoseInverse.isApprox(Transform3Df::Identity());
+    if (useExtrinsicGuess) {
 		r33 = (cv::Mat_<float>(3, 3) << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
 										initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
 										initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2));
 		taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
 		cv::Rodrigues(r33, raux);
-        
-        pnpOk = cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1, method);
-    }
-    else{
-        pnpOk = cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 0, method);
-    }
+    }        
 
-    if (!pnpOk) {
+    if (!cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, useExtrinsicGuess, method)) {
         LOG_ERROR("SolvePnP failed");
         return FrameworkReturnCode::_ERROR_;
     }
