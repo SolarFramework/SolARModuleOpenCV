@@ -41,10 +41,6 @@ const static std::map<std::string,int> convertPnPMethod = {{"ITERATIVE", cv::SOL
 SolARPoseEstimationPnpOpencv::SolARPoseEstimationPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationPnpOpencv>())
 {
     declareInterface<api::solver::pose::I3DTransformFinderFrom2D3D>(this);
-    declareProperty("iterationsCount", m_iterationsCount);
-    declareProperty("reprojError", m_reprojError);
-    declareProperty("confidence", m_confidence);
-    declareProperty("minNbInliers", m_NbInliersToValidPose);
     declareProperty("method", m_method);
 
     m_camMatrix.create(3, 3, CV_32FC1);
@@ -94,20 +90,21 @@ FrameworkReturnCode SolARPoseEstimationPnpOpencv::estimate(const std::vector<Sol
 
     cv::Mat Rvec;
     cv::Mat_<float> Tvec;
-    cv::Mat raux, taux, r33;
+    cv::Mat raux, taux;
     
     // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
-    if (!initialPoseInverse.isApprox(Transform3Df::Identity())){
-		r33 = (cv::Mat_<float>(3, 3) << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
-										initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
-										initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2));
-		taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
-		cv::Rodrigues(r33, raux);
-        
-        cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 1, method);
-    }
-    else{
-        cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, 0, method);
+    bool useExtrinsicGuess = !initialPoseInverse.isApprox(Transform3Df::Identity());
+    if (useExtrinsicGuess) {
+        cv::Mat r33 = ( cv::Mat_<float>(3, 3) << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
+                        initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
+                        initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2) );
+        taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
+        cv::Rodrigues(r33, raux);
+    }        
+
+    if (!cv::solvePnP(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux, taux, useExtrinsicGuess, method)) {
+        LOG_ERROR("SolvePnP failed");
+        return FrameworkReturnCode::_ERROR_;
     }
     
     raux.convertTo(Rvec, CV_32F);
