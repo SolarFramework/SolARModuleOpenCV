@@ -72,26 +72,24 @@ FrameworkReturnCode SolARDescriptorMatcherKNNOpencv::match(SRef<DescriptorBuffer
     //since it is an openCV implementation we need to convert back the descriptors from SolAR to Opencv
     uint32_t type_conversion= SolAROpenCVHelper::deduceOpenDescriptorCVType(desc1->getDescriptorDataType());
 
-    cv::Mat cvDescriptor1(desc1->getNbDescriptors(), desc1->getNbElements(), type_conversion);
-    cvDescriptor1.data=(uchar*)desc1->data();
+    cv::Mat cvDescriptor1(desc1->getNbDescriptors(), desc1->getNbElements(), type_conversion, (uchar*)desc1->data());
+    cv::Mat cvDescriptor2(desc2->getNbDescriptors(), desc2->getNbElements(), type_conversion, (uchar*)desc2->data());
 
-    cv::Mat cvDescriptor2(desc2->getNbDescriptors(), desc2->getNbElements(), type_conversion);
-    cvDescriptor2.data=(uchar*)desc2->data();
-
+    cv::Mat cvDescriptor1Float, cvDescriptor2Float;
     if (desc1->getDescriptorDataType() != DescriptorDataType::TYPE_32F)
-        cvDescriptor1.convertTo(cvDescriptor1, CV_32F);
+        cvDescriptor1.convertTo(cvDescriptor1Float, CV_32F);
     if (desc2->getDescriptorDataType() != DescriptorDataType::TYPE_32F)
-        cvDescriptor2.convertTo(cvDescriptor2, CV_32F);
+        cvDescriptor2.convertTo(cvDescriptor2Float, CV_32F);
 
     std::vector< std::vector<cv::DMatch> > nn_matches;
 
 #ifdef WITHCUDA
 	cv::cuda::GpuMat cvDescriptor1Gpu, cvDescriptor2Gpu;
-	cvDescriptor1Gpu.upload(cvDescriptor1);
-	cvDescriptor2Gpu.upload(cvDescriptor2);
+	cvDescriptor1Gpu.upload(cvDescriptor1Float);
+	cvDescriptor2Gpu.upload(cvDescriptor2Float);
 	m_matcher->knnMatch(cvDescriptor1Gpu, cvDescriptor2Gpu, nn_matches, 2);
 #else
-	m_matcher->knnMatch(cvDescriptor1, cvDescriptor2, nn_matches, 2);
+	m_matcher->knnMatch(cvDescriptor1Float, cvDescriptor2Float, nn_matches, 2);
 #endif // WITHCUDA	    
 	std::map<uint32_t, std::map<uint32_t, float>> matches21;
     for(unsigned i = 0; i < nn_matches.size(); i++) {
