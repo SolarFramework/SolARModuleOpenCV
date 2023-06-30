@@ -1,1 +1,1 @@
-opencv#1_0_0|4.5.5|opencv|conan-solar@conan|conan-solar|default|contrib=True#with_cuda=True#with_cublas=True#with_cudnn=True#dnn=True#dnn_cuda=True#cuda_arch_bin=75 80 86
+opencv#1_0_0|4.5.5|opencv|conan-solar@conan|conan-solar|default|contrib=True#with_cuda=True#with_cublas=True#with_cudnn=True#dnn=True#dnn_cuda=True
