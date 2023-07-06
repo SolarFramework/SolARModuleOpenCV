@@ -1,3 +1,3 @@
 SolARFramework|1.0.0|SolARFramework|SolARBuild@github|https://github.com/SolarFramework/SolarFramework/releases/download|shared|
 SolARModuleOpenCV|1.0.0|SolARModuleOpenCV|SolARBuild@github|https://github.com/SolarFramework/SolarModuleOpenCV/releases/download|shared|
-opencv|4.5.5|opencv|conan-solar@conan|conan-solar|shared|with_ffmpeg=False
+opencv#1_0_0|4.5.5|opencv|conan-solar@conan|conan-solar|shared|with_ffmpeg=False
