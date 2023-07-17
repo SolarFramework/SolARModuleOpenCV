@@ -33,7 +33,14 @@ const static std::map<std::string,int> convertPnPSACMethod = {{"ITERATIVE", cv::
                                                               {"DLS", cv::SOLVEPNP_DLS},
                                                               {"UPNP", cv::SOLVEPNP_UPNP},
                                                               {"IPPE", cv::SOLVEPNP_IPPE},
-                                                              {"IPPE SQUARE", cv::SOLVEPNP_IPPE_SQUARE},
+                                                              {"IPPE_SQUARE", cv::SOLVEPNP_IPPE_SQUARE},
+                                                              {"USAC", cv::USAC_DEFAULT},
+                                                              {"USAC_PARALLEL", cv::USAC_PARALLEL},
+                                                              {"USAC_FM_8PTS", cv::USAC_FM_8PTS},
+                                                              {"USAC_FAST", cv::USAC_FAST},
+                                                              {"USAC_ACCURATE", cv::USAC_ACCURATE},
+                                                              {"USAC_PROSAC", cv::USAC_PROSAC},
+                                                              {"USAC_MAGSAC",  cv::USAC_MAGSAC},
                                                              };
 
 SolARPoseEstimationSACPnpOpencv::SolARPoseEstimationSACPnpOpencv():ConfigurableBase(xpcf::toUUID<SolARPoseEstimationSACPnpOpencv>())
@@ -44,7 +51,6 @@ SolARPoseEstimationSACPnpOpencv::SolARPoseEstimationSACPnpOpencv():ConfigurableB
     declareProperty("confidence", m_confidence);
     declareProperty("minNbInliers", m_NbInliersToValidPose);
     declareProperty("method", m_method);
-
     m_camMatrix.create(3, 3, CV_32FC1);
     m_camDistorsion.create(5, 1, CV_32FC1);
 
@@ -55,26 +61,33 @@ SolARPoseEstimationSACPnpOpencv::~SolARPoseEstimationSACPnpOpencv(){
 
 }
 
-FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<Point2Df> & imagePoints,
-                                                            const std::vector<Point3Df> & worldPoints,
-															std::vector<uint32_t> & inliers,
-                                                            Transform3Df & pose,
-                                                            const Transform3Df initialPose) {
+FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<SolAR::datastructure::Point2Df> & imagePoints,
+                                                              const std::vector<SolAR::datastructure::Point3Df> & worldPoints,
+                                                              const SolAR::datastructure::CameraParameters & camParams,
+                                                              std::vector<uint32_t> & inliers,
+                                                              SolAR::datastructure::Transform3Df & pose,
+                                                              const SolAR::datastructure::Transform3Df initialPose)
+{
+    // set camera parameters
+    setCameraParameters(camParams);
 
-    std::vector<cv::Point2f> imageCVPoints;
-    std::vector<cv::Point3f> worldCVPoints;
-
+    // get pnp method
     int method;
     auto itr = convertPnPSACMethod.find(m_method);
     if (itr != convertPnPSACMethod.end())
         method = itr->second;
     else
-        method = cv::SOLVEPNP_ITERATIVE;
+    {
+        LOG_ERROR("Pnp method called {} does not exist.", m_method);
+		return FrameworkReturnCode::_ERROR_;
+    }
 
     Transform3Df initialPoseInverse = initialPose.inverse();
 
+    std::vector<cv::Point2f> imageCVPoints;
+    std::vector<cv::Point3f> worldCVPoints;
     if (worldPoints.size()!=imagePoints.size() || worldPoints.size()< 4 ){
-        LOG_WARNING("world/image points must be valid ( equal and > to 4)");
+        LOG_ERROR("world/image points must be valid ( equal and > to 4)");
         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
     }
 
@@ -84,57 +97,45 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
         imageCVPoints.push_back(cv::Point2f(point2D.getX(), point2D.getY()));
         worldCVPoints.push_back(cv::Point3f(point3D.getX(), point3D.getY(),point3D.getZ()));
     }
-     cv::Mat Rvec;
-     cv::Mat_<float> Tvec;
-     cv::Mat raux, taux, r33;
-     cv::Mat inliers_cv;
+    cv::Mat Rvec;
+    cv::Mat_<float> Tvec;
+    cv::Mat raux, taux, r33;
+    cv::Mat inliers_cv;
 
-     // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
-     if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
-     {
-		 r33 = (cv::Mat_<float>(3, 3) << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
-										 initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
-										 initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2));
-		 taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
-		 cv::Rodrigues(r33, raux);
+    // If initialPose is not Identity, set the useExtrinsicGuess to true. Warning, does not work on coplanar points
+    if (!initialPoseInverse.isApprox(Transform3Df::Identity()))
+    {
+		r33 = (cv::Mat_<float>(3, 3) << initialPoseInverse(0, 0), initialPoseInverse(0, 1), initialPoseInverse(0, 2),
+										initialPoseInverse(1, 0), initialPoseInverse(1, 1), initialPoseInverse(1, 2),
+										initialPoseInverse(2, 0), initialPoseInverse(2, 1), initialPoseInverse(2, 2));
+		taux = (cv::Mat_<float>(3, 1) << initialPoseInverse(0, 3), initialPoseInverse(1, 3), initialPoseInverse(2, 3));
+		cv::Rodrigues(r33, raux);
 
-         cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, true,
-                               m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
-     }
-     else
-         cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, false,
-                               m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
+		cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, true,
+							m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
+    }
+    else
+		cv::solvePnPRansac(worldCVPoints, imageCVPoints, m_camMatrix, m_camDistorsion, raux,taux, false,
+                           m_iterationsCount, m_reprojError, m_confidence, inliers_cv, method);
 
-     std::vector<cv::Point3f>in3d;
-     std::vector<cv::Point2f>in2d;
-     std::vector<cv::Point2f> projected3D;
-     cv::projectPoints(worldCVPoints, raux, taux, m_camMatrix, m_camDistorsion, projected3D);
+    inliers.clear();
 
-	 inliers.clear();
-     for (unsigned int i = 0; i < projected3D.size(); i++) {
-		 double err_reprj = norm(projected3D[i] - imageCVPoints[i]);
-         if (err_reprj < m_reprojError) {
-			 inliers.push_back(i);
-             in2d.push_back(cv::Point2f(imagePoints[i].getX(),imagePoints[i].getY()));
-             in3d.push_back(cv::Point3f(worldPoints[i].getX(),worldPoints[i].getY(),worldPoints[i].getZ()));
-         }
-     }
-	 
-     if (in3d.size()!=in2d.size() || in3d.size() < std::max(3, m_NbInliersToValidPose)){
-         LOG_WARNING("world/image inliers points must be valid ( equal and > to {}): {} inliers for {} input points", std::max(3, m_NbInliersToValidPose), in3d.size(), worldPoints.size());
-         return FrameworkReturnCode::_ERROR_  ; // vector of 2D and 3D points must have same size
-     }
+	// get inliers
+    for (unsigned int i = 0; i < inliers_cv.rows; ++i){
+        inliers.push_back(inliers_cv.at<int>(i));       
+    }
 
-     cv::solvePnP(in3d, in2d, m_camMatrix, m_camDistorsion, raux,taux, true, method);
+    if (inliers.size() < std::max(3, m_NbInliersToValidPose)){
+        LOG_WARNING("world/image inliers points must be valid ( equal and > to {}): {} inliers for {} input points", std::max(3, m_NbInliersToValidPose), inliers.size(), worldPoints.size());
+        return FrameworkReturnCode::_ERROR_;
+    }
 
+	// get pose
     raux.convertTo(Rvec, CV_32F);
     taux.convertTo(Tvec, CV_32F);
 
     cv::Mat_<float> rotMat(3, 3);
     cv::Rodrigues(Rvec, rotMat);
-
-    Eigen::Matrix3f Rpose;
-    Eigen::Vector3f Tpose;
 
     for (int row = 0; row<3; row++){
         for (int col = 0; col<3; col++){
@@ -152,24 +153,23 @@ FrameworkReturnCode SolARPoseEstimationSACPnpOpencv::estimate(const std::vector<
     return FrameworkReturnCode::_SUCCESS;
 }
 
+void SolARPoseEstimationSACPnpOpencv::setCameraParameters(const SolAR::datastructure::CameraParameters & camParams)
+{
+    this->m_camDistorsion.at<float>(0, 0) = camParams.distortion(0);
+    this->m_camDistorsion.at<float>(1, 0) = camParams.distortion(1);
+    this->m_camDistorsion.at<float>(2, 0) = camParams.distortion(2);
+    this->m_camDistorsion.at<float>(3, 0) = camParams.distortion(3);
+    this->m_camDistorsion.at<float>(4, 0) = camParams.distortion(4);
 
-void SolARPoseEstimationSACPnpOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
-    //TODO.. check to inverse
-    this->m_camDistorsion.at<float>(0, 0)  = distorsionParams(0);
-    this->m_camDistorsion.at<float>(1, 0)  = distorsionParams(1);
-    this->m_camDistorsion.at<float>(2, 0)  = distorsionParams(2);
-    this->m_camDistorsion.at<float>(3, 0)  = distorsionParams(3);
-    this->m_camDistorsion.at<float>(4, 0)  = distorsionParams(4);
-
-    this->m_camMatrix.at<float>(0, 0) = intrinsicParams(0,0);
-    this->m_camMatrix.at<float>(0, 1) = intrinsicParams(0,1);
-    this->m_camMatrix.at<float>(0, 2) = intrinsicParams(0,2);
-    this->m_camMatrix.at<float>(1, 0) = intrinsicParams(1,0);
-    this->m_camMatrix.at<float>(1, 1) = intrinsicParams(1,1);
-    this->m_camMatrix.at<float>(1, 2) = intrinsicParams(1,2);
-    this->m_camMatrix.at<float>(2, 0) = intrinsicParams(2,0);
-    this->m_camMatrix.at<float>(2, 1) = intrinsicParams(2,1);
-    this->m_camMatrix.at<float>(2, 2) = intrinsicParams(2,2);
+    this->m_camMatrix.at<float>(0, 0) = camParams.intrinsic(0, 0);
+    this->m_camMatrix.at<float>(0, 1) = camParams.intrinsic(0, 1);
+    this->m_camMatrix.at<float>(0, 2) = camParams.intrinsic(0, 2);
+    this->m_camMatrix.at<float>(1, 0) = camParams.intrinsic(1, 0);
+    this->m_camMatrix.at<float>(1, 1) = camParams.intrinsic(1, 1);
+    this->m_camMatrix.at<float>(1, 2) = camParams.intrinsic(1, 2);
+    this->m_camMatrix.at<float>(2, 0) = camParams.intrinsic(2, 0);
+    this->m_camMatrix.at<float>(2, 1) = camParams.intrinsic(2, 1);
+    this->m_camMatrix.at<float>(2, 2) = camParams.intrinsic(2, 2);
 }
 
 }

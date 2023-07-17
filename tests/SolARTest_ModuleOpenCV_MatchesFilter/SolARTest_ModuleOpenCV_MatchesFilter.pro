@@ -6,7 +6,7 @@ QMAKE_PROJECT_DEPTH = 0
 
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_MatchesFilter
-VERSION=0.11.0
+VERSION=1.0.0
 PROJECTDEPLOYDIR = $${PWD}/../deploy
 
 DEFINES += MYVERSION=$${VERSION}
@@ -23,10 +23,6 @@ CONFIG(debug,debug|release) {
 CONFIG(release,debug|release) {
     DEFINES += _NDEBUG=1
     DEFINES += NDEBUG=1
-}
-
-android {
-    ANDROID_ABIS="arm64-v8a"
 }
 
 DEPENDENCIESCONFIG = sharedlib install_recurse
@@ -61,11 +57,6 @@ linux {
         LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
 }
 
-macx {
-    QMAKE_MAC_SDK= macosx
-    QMAKE_CXXFLAGS += -fasm-blocks -x objective-c++
-}
-
 win32 {
     QMAKE_LFLAGS += /MACHINE:X64
     DEFINES += WIN64 UNICODE _UNICODE
@@ -75,10 +66,6 @@ win32 {
     LIBS += -L$$(WINDOWSSDKDIR)lib/winv6.3/um/x64 -lshell32 -lgdi32 -lComdlg32
     INCLUDEPATH += $$(WINDOWSSDKDIR)lib/winv6.3/um/x64
 
-}
-
-android {
-    ANDROID_ABIS="arm64-v8a"
 }
 
 linux {

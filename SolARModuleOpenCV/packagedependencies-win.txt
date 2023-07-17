@@ -1,1 +1,1 @@
-opencv|4.5.5|opencv|conan-solar@conan|conan-solar|default|with_ffmpeg=False
+opencv#1_0_0|4.5.5|opencv|conan-solar@conan|conan-solar|default|with_ffmpeg=False

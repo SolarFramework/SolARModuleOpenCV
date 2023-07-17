@@ -73,7 +73,6 @@ int main(int argc, char *argv[])
 			return -1;
 		}
 		CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
-		overlay3D->setCameraParameters(camParams.intrinsic, camParams.distortion);
 
         // Display images and poses
 		std::vector<SRef<CloudPoint>> pointCloud;
@@ -100,7 +99,7 @@ int main(int argc, char *argv[])
 			Transform3Df pose = poses[INDEX_USE_CAMERA];
 
 			// draw pose and display
-			overlay3D->draw(pose, image);
+            overlay3D->draw(pose, camParams, image);
 			if (imageViewer->display(image) == SolAR::FrameworkReturnCode::_STOP)
 				isStop = true;
 			

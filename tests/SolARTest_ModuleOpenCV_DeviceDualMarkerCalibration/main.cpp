@@ -109,10 +109,6 @@ int main(int argc, char *argv[])
 			return -1;
 		}
 		CameraParameters camParams = camRigParams.cameraParams[INDEX_USE_CAMERA];
-		overlay3D->setCameraParameters(camParams.intrinsic, camParams.distortion);
-        fiducialMarkerPoseEstimator1->setCameraParameters(camParams.intrinsic, camParams.distortion);
-        fiducialMarkerPoseEstimator2->setCameraParameters(camParams.intrinsic, camParams.distortion);
-
 
 		// Display images and poses
 		std::vector<SRef<CloudPoint>> pointCloud;
@@ -160,7 +156,7 @@ int main(int argc, char *argv[])
             // T_M1_W = $T_W^M$ (W->M)
             // find T_M1_W
             Transform3Df T_M1_C;
-            if (fiducialMarkerPoseEstimator1->estimate(image, T_M1_C) == FrameworkReturnCode::_SUCCESS) {
+            if (fiducialMarkerPoseEstimator1->estimate(image, camParams, T_M1_C) == FrameworkReturnCode::_SUCCESS) {
                 double R_M1_C_3_3 = T_M1_C(2,2);
                 if(R_M1_C_3_3 > foundedTransformM1WQuality)
                 {
@@ -171,7 +167,7 @@ int main(int argc, char *argv[])
 
             // find T_M2_W
             Transform3Df T_M2_C;
-            if (fiducialMarkerPoseEstimator2->estimate(image, T_M2_C) == FrameworkReturnCode::_SUCCESS) {
+            if (fiducialMarkerPoseEstimator2->estimate(image, camParams, T_M2_C) == FrameworkReturnCode::_SUCCESS) {
                 double R_M2_C_3_3 = T_M2_C(2,2);
                 if(R_M2_C_3_3 > foundedTransformM2WQuality)
                 {
@@ -187,13 +183,13 @@ int main(int argc, char *argv[])
 
             // draw pose marker1 and display
             if (foundedTransformM1WQuality>-1.0)
-                overlay3D->draw(T_M1_C, image);
+                overlay3D->draw(T_M1_C, camParams, image);
 			if (imageViewer->display(image) == SolAR::FrameworkReturnCode::_STOP)
 				isStop = true;
 
             // draw pose marker1 and display
             if (foundedTransformM2WQuality>-1.0)
-                overlay3D->draw(T_M2_C, image);
+                overlay3D->draw(T_M2_C, camParams, image);
             if (imageViewer->display(image) == SolAR::FrameworkReturnCode::_STOP)
                 isStop = true;
 

@@ -25,6 +25,9 @@
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 #include <opencv2/calib3d.hpp>
+#ifdef WITHCUDA
+#include <opencv2/cudafeatures2d.hpp>
+#endif
 
 namespace SolAR {
 namespace MODULES {
@@ -60,16 +63,18 @@ public:
     /// @brief SolARDescriptorMatcherGeometricOpencv destructor
     ~SolARDescriptorMatcherGeometricOpencv() override;
 
-	/// @brief Match two sets of descriptors from two frames based on epipolar constraint.
-	/// @param[in] descriptors1 The first set of descriptors.
-	/// @param[in] descriptors2 The second set of descriptors.
-	/// @param[in] undistortedKeypoints1 The first set of undistorted keypoints.
-	/// @param[in] undistortedKeypoints2 The second set of undistorted keypoints.
-	/// @param[in] pose1 The first pose.
-	/// @param[in] pose2 The second pose.
-	/// @param[in] camParams The intrinsic parameters of the camera.
-	/// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
-	/// @param[in] mask The indices of descriptors in the first frame are used for matching to the second frame. If it is empty then all will be used.
+    /// @brief Match two sets of descriptors from two frames based on epipolar constraint.
+    /// @param[in] descriptors1 The first set of descriptors.
+    /// @param[in] descriptors2 The second set of descriptors.
+    /// @param[in] undistortedKeypoints1 The first set of undistorted keypoints.
+    /// @param[in] undistortedKeypoints2 The second set of undistorted keypoints.
+    /// @param[in] pose1 The first pose.
+    /// @param[in] pose2 The second pose.
+    /// @param[in] camParams1 The intrinsic parameters of the camera 1.
+    /// @param[in] camParams2 The intrinsic parameters of the camera 2.
+    /// @param[out] matches A vector of matches representing pairs of indices relatively to the first and second set of descriptors.
+    /// @param[in] mask1 The indices of descriptors in the first frame are used for matching to the second frame. If it is empty then all will be used.
+    /// @param[in] mask2 The indices of descriptors in the second frame are used for matching to the first frame. If it is empty then all will be used.
 	/// @return FrameworkReturnCode::_SUCCESS if matching succeed, else FrameworkReturnCode::_ERROR_
     FrameworkReturnCode match(const SRef<SolAR::datastructure::DescriptorBuffer> descriptors1,
                               const SRef<SolAR::datastructure::DescriptorBuffer> descriptors2,
@@ -77,16 +82,23 @@ public:
                               const std::vector<SolAR::datastructure::Keypoint> &undistortedKeypoints2,
                               const SolAR::datastructure::Transform3Df& pose1,
                               const SolAR::datastructure::Transform3Df& pose2,
-                              const SolAR::datastructure::CameraParameters& camParams,
+                              const SolAR::datastructure::CameraParameters & camParams1,
+                              const SolAR::datastructure::CameraParameters & camParams2,
                               std::vector<SolAR::datastructure::DescriptorMatch> & matches,
-                              const std::vector<uint32_t>& mask = {}) override;
+                              const std::vector<uint32_t>& mask1 = {},
+							  const std::vector<uint32_t>& mask2 = {}) override;
 
+	org::bcom::xpcf::XPCFErrorCode onConfigured() override final;
 	void unloadComponent() override;
 
 private:
     float m_distanceRatio = 0.75f;
     float m_paddingRatio = 0.003f;
 	float m_matchingDistanceMax = 500.f;
+	/// Matcher used only in case of cuda 
+#ifdef WITHCUDA
+	cv::Ptr<cv::cuda::DescriptorMatcher> m_matcher;
+#endif  
 };
 
 }

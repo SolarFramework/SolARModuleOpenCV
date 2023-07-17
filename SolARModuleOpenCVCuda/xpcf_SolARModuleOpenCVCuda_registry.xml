@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <xpcf-registry>
-  <module uuid="fde83ee6-3e22-4531-9e1c-54cb0a3bf3fa" name="SolARModuleOpenCVCuda" description="SolARModuleOpenCVCuda" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCVCuda/0.11.0/lib/x86_64/shared">
+  <module uuid="fde83ee6-3e22-4531-9e1c-54cb0a3bf3fa" name="SolARModuleOpenCVCuda" description="SolARModuleOpenCVCuda" path="$XPCF_MODULE_ROOT/SolARBuild/SolARModuleOpenCVCuda/1.0.0/lib/x86_64/shared">
     <component uuid="cedd8c47-e7b0-47bf-abb1-7fb54d198117" name="SolAR2D3DCorrespondencesFinderOpencv" description="SolAR2D3DCorrespondencesFinderOpencv">
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
       <interface uuid="0404e8b9-b824-4852-a34d-6eafa7563918" name="I2D3DCorrespondencesFinder" description="I2D3DCorrespondencesFinder"/>
@@ -164,6 +164,14 @@
     <component uuid="fa4a780a-9720-11e8-9eb6-529269fb1459" name="SolARVideoAsCameraOpencv" description="SolARVideoAsCameraOpencv">
       <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
       <interface uuid="5DDC7DF0-8377-437F-9C81-3643F7676A5B" name="ICamera" description="ICamera"/>
+    </component>
+    <component uuid="77a8b776-6b0c-4bc0-b0a8-437a796b8e29" name="SolARFCNSegmentationOpencv" description="SolARFCNSegmentationOpencv">
+      <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+      <interface uuid="2fd30b7c-c6e4-4af7-a711-0b69964e68c2" name="ISemanticSegmentation" description="ISemanticSegmentation"/>
+    </component>
+    <component uuid="063d3086-6c87-49ff-87db-9a4ff224b5c8" name="SolARGenericSemanticSegmentationOpencv" description="SolARGenericSemanticSegmentationOpencv">
+      <interface uuid="125f2007-1bf9-421d-9367-fbdc1210d006" name="IComponentIntrospect" description="IComponentIntrospect"/>
+      <interface uuid="2fd30b7c-c6e4-4af7-a711-0b69964e68c2" name="ISemanticSegmentation" description="ISemanticSegmentation"/>
     </component>
   </module>    
 </xpcf-registry>

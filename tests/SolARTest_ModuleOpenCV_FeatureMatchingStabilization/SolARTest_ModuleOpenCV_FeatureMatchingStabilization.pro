@@ -4,7 +4,7 @@ CONFIG -= qt
 
 ## global defintions : target lib name, version
 TARGET = SolARTest_ModuleOpenCV_FeatureMatchingStabilization
-VERSION=0.11.0
+VERSION=1.0.0
 PROJECTDEPLOYDIR = $${PWD}/../deploy
 
 DEFINES += MYVERSION=$${VERSION}
@@ -52,10 +52,6 @@ linux {
         LIBS += -L/home/linuxbrew/.linuxbrew/lib # temporary fix caused by grpc with -lre2 ... without -L in grpc.pc
 }
 
-macx {
-    QMAKE_MAC_SDK= macosx
-    QMAKE_CXXFLAGS += -fasm-blocks -x objective-c++
-}
 
 win32 {
     QMAKE_LFLAGS += /MACHINE:X64

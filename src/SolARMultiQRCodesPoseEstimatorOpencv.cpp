@@ -37,13 +37,6 @@ SolARMultiQRCodesPoseEstimatorOpencv::SolARMultiQRCodesPoseEstimatorOpencv():Con
     LOG_DEBUG("SolARMultiQRCodesPoseEstimatorOpencv constructor");
 }
 
-void SolARMultiQRCodesPoseEstimatorOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distortionParams) {
-    m_camMatrix = intrinsicParams;
-    m_camDistortion = distortionParams;
-    m_pnp->setCameraParameters(m_camMatrix, m_camDistortion);
-    m_projector->setCameraParameters(m_camMatrix, m_camDistortion);
-}
-
 FrameworkReturnCode SolARMultiQRCodesPoseEstimatorOpencv::setTrackables(const std::vector<SRef<SolAR::datastructure::Trackable>> trackables)
 {
 	m_nbMarkers = trackables.size();
@@ -73,7 +66,9 @@ FrameworkReturnCode SolARMultiQRCodesPoseEstimatorOpencv::setTrackables(const st
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARMultiQRCodesPoseEstimatorOpencv::estimate(const SRef<Image> image, Transform3Df & pose)
+FrameworkReturnCode SolARMultiQRCodesPoseEstimatorOpencv::estimate(const SRef<SolAR::datastructure::Image> image,
+                                                                   const SolAR::datastructure::CameraParameters & camParams,
+                                                                   SolAR::datastructure::Transform3Df & pose)
 {
     std::vector<Point2Df>	pts2D;
     std::vector<Point3Df>	pts3D;
@@ -98,10 +93,10 @@ FrameworkReturnCode SolARMultiQRCodesPoseEstimatorOpencv::estimate(const SRef<Im
 		return FrameworkReturnCode::_ERROR_;
 
 	// Compute the pose of the camera using a Perspective n Points algorithm using all corners of the detected markers
-	if (m_pnp->estimate(pts2D, pts3D, pose) == FrameworkReturnCode::_SUCCESS)
+	if (m_pnp->estimate(pts2D, pts3D, camParams, pose) == FrameworkReturnCode::_SUCCESS)
 	{
 		std::vector<Point2Df> projected2DPts;
-		m_projector->project(pts3D, projected2DPts, pose);
+		m_projector->project(pts3D, pose, camParams, projected2DPts);
 		float errorReproj(0.f);
 		for (int j = 0; j < projected2DPts.size(); ++j)
 			errorReproj += (projected2DPts[j] - pts2D[j]).norm();

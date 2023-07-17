@@ -117,47 +117,45 @@ bool SolARSVDFundamentalMatrixDecomposerOpencv::decomposeInternal(cv::Mat_<doubl
         return true;
 }
 
-bool SolARSVDFundamentalMatrixDecomposerOpencv::decompose(const Transform2Df & F, std::vector<Transform3Df> & decomposedPoses){
+bool SolARSVDFundamentalMatrixDecomposerOpencv::decompose(const Transform2Df & F, const SolAR::datastructure::CameraParameters & camParams, std::vector<Transform3Df> & decomposedPoses)
+{
+	// set camera parameters
+	this->m_camDistorsion.at<float>(0, 0) = camParams.distortion(0);
+	this->m_camDistorsion.at<float>(1, 0) = camParams.distortion(1);
+	this->m_camDistorsion.at<float>(2, 0) = camParams.distortion(2);
+	this->m_camDistorsion.at<float>(3, 0) = camParams.distortion(3);
+	this->m_camDistorsion.at<float>(4, 0) = camParams.distortion(4);
+
+	this->m_camMatrix.at<float>(0, 0) = camParams.intrinsic(0, 0);
+	this->m_camMatrix.at<float>(0, 1) = camParams.intrinsic(0, 1);
+	this->m_camMatrix.at<float>(0, 2) = camParams.intrinsic(0, 2);
+	this->m_camMatrix.at<float>(1, 0) = camParams.intrinsic(1, 0);
+	this->m_camMatrix.at<float>(1, 1) = camParams.intrinsic(1, 1);
+	this->m_camMatrix.at<float>(1, 2) = camParams.intrinsic(1, 2);
+	this->m_camMatrix.at<float>(2, 0) = camParams.intrinsic(2, 0);
+	this->m_camMatrix.at<float>(2, 1) = camParams.intrinsic(2, 1);
+	this->m_camMatrix.at<float>(2, 2) = camParams.intrinsic(2, 2);
+
     //Using HZ E decomposition
-       cv::Mat svd_u, svd_vt, svd_w;
-       cv::Mat _F(3,3,CV_64FC1);
-       for(int i  = 0; i < 3; ++i){
-           for(int j = 0; j < 3; ++j){
-               double e1 = F(i,j);
-               _F.at<double>(i,j) =e1;
-            }
-       }
+    cv::Mat svd_u, svd_vt, svd_w;
+    cv::Mat _F(3,3,CV_64FC1);
+    for(int i  = 0; i < 3; ++i){
+        for(int j = 0; j < 3; ++j){
+            double e1 = F(i,j);
+            _F.at<double>(i,j) =e1;
+        }
+    }
 
-      cv::Mat_<double> E = m_camMatrix.t() * _F * m_camMatrix; //
-      cv::Mat_<double> R1(3, 3);
-      cv::Mat_<double> R2(3, 3);
-      cv::Mat_<double> t(1, 3);
+    cv::Mat_<double> E = m_camMatrix.t() * _F * m_camMatrix; //
+    cv::Mat_<double> R1(3, 3);
+    cv::Mat_<double> R2(3, 3);
+    cv::Mat_<double> t(1, 3);
 
 
-      cv::decomposeEssentialMat(E, R1, R2, t);
-      fillposes(R1,R2,t,-t,decomposedPoses);
-      return true;
+    cv::decomposeEssentialMat(E, R1, R2, t);
+    fillposes(R1,R2,t,-t,decomposedPoses);
+    return true;
 }
-
-void SolARSVDFundamentalMatrixDecomposerOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distorsionParams) {
-    //TODO.. check to inverse
-    this->m_camDistorsion.at<double>(0, 0)  = (double)distorsionParams(0);
-    this->m_camDistorsion.at<double>(1, 0)  = (double)distorsionParams(1);
-    this->m_camDistorsion.at<double>(2, 0)  =(double) distorsionParams(2);
-    this->m_camDistorsion.at<double>(3, 0)  = (double)distorsionParams(3);
-    this->m_camDistorsion.at<double>(4, 0)  = (double)distorsionParams(4);
-
-    this->m_camMatrix.at<double>(0, 0) = (double)intrinsicParams(0,0);
-    this->m_camMatrix.at<double>(0, 1) = (double)intrinsicParams(0,1);
-    this->m_camMatrix.at<double>(0, 2) = (double)intrinsicParams(0,2);
-    this->m_camMatrix.at<double>(1, 0) = (double)intrinsicParams(1,0);
-    this->m_camMatrix.at<double>(1, 1) = (double)intrinsicParams(1,1);
-    this->m_camMatrix.at<double>(1, 2) = (double)intrinsicParams(1,2);
-    this->m_camMatrix.at<double>(2, 0) = (double)intrinsicParams(2,0);
-    this->m_camMatrix.at<double>(2, 1) = (double)intrinsicParams(2,1);
-    this->m_camMatrix.at<double>(2, 2) = (double)intrinsicParams(2,2);
-}
-
 
 }
 }

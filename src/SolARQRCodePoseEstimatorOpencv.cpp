@@ -38,13 +38,6 @@ SolARQRCodePoseEstimatorOpencv::SolARQRCodePoseEstimatorOpencv():ConfigurableBas
     LOG_DEBUG("SolARQRCodePoseEstimatorOpencv constructor");
 }
 
-void SolARQRCodePoseEstimatorOpencv::setCameraParameters(const CamCalibration & intrinsicParams, const CamDistortion & distortionParams) {
-    m_camMatrix = intrinsicParams;
-    m_camDistortion = distortionParams;
-    m_pnp->setCameraParameters(m_camMatrix, m_camDistortion);
-    m_projector->setCameraParameters(m_camMatrix, m_camDistortion);
-}
-
 FrameworkReturnCode SolARQRCodePoseEstimatorOpencv::setTrackable(const SRef<SolAR::datastructure::Trackable> trackable)
 {
     if (trackable->getType() == TrackableType::QRCODE_MARKER)
@@ -64,7 +57,9 @@ FrameworkReturnCode SolARQRCodePoseEstimatorOpencv::setTrackable(const SRef<SolA
     return FrameworkReturnCode::_SUCCESS;
 }
 
-FrameworkReturnCode SolARQRCodePoseEstimatorOpencv::estimate(const SRef<Image> image, Transform3Df & pose)
+FrameworkReturnCode SolARQRCodePoseEstimatorOpencv::estimate(const SRef<SolAR::datastructure::Image> image,
+															 const SolAR::datastructure::CameraParameters & camParams,
+															 SolAR::datastructure::Transform3Df & pose)
 {
     SRef<Image>				greyImage;    
     std::vector<Point2Df>	img2DPoints;
@@ -96,10 +91,10 @@ FrameworkReturnCode SolARQRCodePoseEstimatorOpencv::estimate(const SRef<Image> i
 
 	// Refine corner locations
 	m_cornerRefinement->refine(greyImage, img2DPoints);
-    if (m_pnp->estimate(img2DPoints, m_pattern3DPoints, pose) == FrameworkReturnCode::_SUCCESS)
+    if (m_pnp->estimate(img2DPoints, m_pattern3DPoints, camParams, pose) == FrameworkReturnCode::_SUCCESS)
     {
         std::vector<Point2Df> projected2DPts;
-        m_projector->project(m_pattern3DPoints, projected2DPts, pose);
+        m_projector->project(m_pattern3DPoints, pose, camParams, projected2DPts);
         float errorReproj(0.f);
 		// only calculate error repojection for confident corners
         for (int j = 0; j < projected2DPts.size(); ++j)
